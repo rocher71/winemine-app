@@ -1,0 +1,52 @@
+# --- 시크릿 (절대 commit 금지) ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# --- Node / npm / yarn ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.*
+.yarn/install-state.gz
+
+# --- Expo / RN ---
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# iOS / Android (Expo managed면 보통 빌드 산출물만)
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+*.orig.*
+
+# Metro
+.metro-health-check*
+
+# --- Supabase CLI ---
+supabase/.temp/
+supabase/.branches/
+
+# --- TypeScript ---
+*.tsbuildinfo
+shared/types/database.types.ts.bak
+
+# --- Editor ---
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# --- Test / Coverage ---
+coverage/
+.nyc_output/
+
+# --- EAS (build cache) ---
+.easignore
