@@ -257,8 +257,15 @@
     "rating": "Rating",
     "tastedAt": "Tasted on",
     "source": {
-      "title": "Where did you drink it?",
+      "title": "Choose source",
       "subtitle": "Pick a source",
+      "question": "Which wine are you recording?",
+      "fromCellar": "From my cellar",
+      "fromCellarSub": "{{count}} stored",
+      "fromCellarEmpty": "Cellar is empty",
+      "newEntry": "A new wine",
+      "newEntrySub": "Snap the label or enter manually",
+      "cellarListTitle": "Cellar wines",
       "cellar": "Cellar",
       "restaurant": "Restaurant",
       "shop": "Shop",
@@ -358,6 +365,29 @@
       "modeExpertBadge": "Expert",
       "noComment": "No comment",
       "noAroma": "No aromas selected"
+    }
+  },
+  "notesNew": {
+    "templatePicker": {
+      "title": "Choose a note style",
+      "subtitle": "Pick a tasting note template. You can edit or create your own in Settings.",
+      "byWinemine": "by winemine",
+      "customBadge": "Custom",
+      "cardHint": "Pick this template"
+    },
+    "sourcePicker": {
+      "subtitle": "Opening a wine from your cellar, or trying something new?",
+      "changeTemplate": "Change template",
+      "changeTemplateHint": "Return to template picker",
+      "cellarHint": "Open cellar wine picker",
+      "newEntryHint": "Start writing a note for a new wine",
+      "cellarRowHint": "Write a note for this wine"
+    },
+    "builtinTemplate": {
+      "beginnerTitle": "Beginner note",
+      "beginnerDesc": "A 5-minute log. First impression, palate, aroma, finish, rating, memo.",
+      "expertTitle": "Expert note",
+      "expertDesc": "Full WSET options. Aroma wheel, caudalies, fault check, opening timeline."
     }
   },
   "cellar": {

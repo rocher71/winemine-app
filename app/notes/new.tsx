@@ -1,140 +1,225 @@
-import { useCallback, useMemo, useRef } from 'react';
-import { View, Text, Pressable } from 'react-native';
+/**
+ * /notes/new — Note Source Picker (2-stage Template/Source/Cellar)
+ *
+ * 사양: design-spec notes-new.md (Option A verbatim 2-stage 채택).
+ * 키스크린 원본: ../winemine-keyscreen/src/app/notes/new/page.tsx (305 LOC).
+ *
+ * Stage 1: TemplatePicker (selectedTemplateId == null)
+ * Stage 2: SourcePicker (selectedTemplateId != null) — Cellar/NewWine 2-card
+ * Stage 3: Cellar BottomSheet (pickOpen) — cellar wine 선택
+ *
+ * Routing:
+ *   - NewWineCard press → /notes/new/write?from=newEntry&templateId={tid}{&wine_lwin}{&photo_url}
+ *   - CellarRow press   → /notes/new/write?from=cellar&itemId={id}&templateId={tid}&wine_lwin={lwin}{&photo_url}
+ */
+import { useCallback, useState } from 'react';
+import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import * as Haptics from 'expo-haptics';
+import { BackHeader } from '@/components/nav/back-header';
+import { TemplateCard } from '@/components/notes/template-card';
+import { SourcePicker } from '@/components/notes/source-picker';
+import { CellarBottomSheet } from '@/components/notes/cellar-bottom-sheet';
 import {
-  Wine,
-  Utensils,
-  Store,
-  Gift,
-  GlassWater,
-  MoreHorizontal,
-  type LucideIcon,
-} from 'lucide-react-native';
-import { useColorScheme } from 'react-native';
-import { brand, dark, light } from '@/lib/design-tokens';
-
-type Source = 'cellar' | 'restaurant' | 'shop' | 'gift' | 'tasting_event' | 'other';
-
-interface Option {
-  source: Source;
-  icon: LucideIcon;
-  labelKey: string;
-}
-
-const OPTIONS: Option[] = [
-  { source: 'cellar', icon: Wine, labelKey: 'notes.source.cellar' },
-  { source: 'restaurant', icon: Utensils, labelKey: 'notes.source.restaurant' },
-  { source: 'shop', icon: Store, labelKey: 'notes.source.shop' },
-  { source: 'gift', icon: Gift, labelKey: 'notes.source.gift' },
-  { source: 'tasting_event', icon: GlassWater, labelKey: 'notes.source.tasting_event' },
-  { source: 'other', icon: MoreHorizontal, labelKey: 'notes.source.other' },
-];
+  BUILTIN_TEMPLATES,
+  BUILTIN_BEGINNER_ID,
+  type BuiltinTemplateId,
+} from '@/lib/notes/builtin-templates';
+import { useCellarList, type CellarItemWithWine } from '@/hooks/use-cellar';
+import { brand } from '@/lib/design-tokens';
 
 export default function NoteSourcePickerScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ wine_lwin?: string; photo_url?: string }>();
-  const sheetRef = useRef<BottomSheet>(null);
-  const scheme = useColorScheme();
-  const handleColor = scheme === 'light' ? light.text.muted : dark.text.muted;
-  const sheetBg = scheme === 'light' ? light.bg.deep : dark.bg.deep;
 
-  const snapPoints = useMemo(() => ['50%'], []);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<BuiltinTemplateId | null>(null);
+  const [pickOpen, setPickOpen] = useState(false);
 
-  const handleClose = useCallback(() => {
-    router.back();
-  }, []);
+  const { items: cellarItems, loading: cellarLoading } = useCellarList('cellared');
+  const cellarCount = cellarItems.length;
 
-  const handlePick = useCallback(
-    (source: Source) => {
-      Haptics.selectionAsync().catch(() => undefined);
-      const query = new URLSearchParams({ source });
+  // query forward helper
+  const buildQuery = useCallback(
+    (extra: Record<string, string>) => {
+      const q = new URLSearchParams(extra);
       const wineLwin = typeof params.wine_lwin === 'string' ? params.wine_lwin : null;
       const photoUrl = typeof params.photo_url === 'string' ? params.photo_url : null;
-      if (wineLwin) query.set('wine_lwin', wineLwin);
-      if (photoUrl) query.set('photo_url', photoUrl);
-      router.replace(`/notes/new/write?${query.toString()}`);
+      if (wineLwin && !q.has('wine_lwin')) q.set('wine_lwin', wineLwin);
+      if (photoUrl) q.set('photo_url', photoUrl);
+      return q.toString();
     },
     [params.wine_lwin, params.photo_url],
   );
 
-  const renderBackdrop = useCallback(
-    (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
-      <BottomSheetBackdrop
-        {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        pressBehavior="close"
-        opacity={0.6}
-      />
-    ),
-    [],
-  );
+  // Stage transitions
+  const handlePickTemplate = (id: BuiltinTemplateId) => {
+    setSelectedTemplateId(id);
+  };
+
+  const handleBackToTemplate = () => {
+    Haptics.selectionAsync().catch(() => undefined);
+    setSelectedTemplateId(null);
+  };
+
+  const handlePickCellar = () => {
+    setPickOpen(true);
+  };
+
+  const handlePickNewEntry = () => {
+    const tid = selectedTemplateId ?? BUILTIN_BEGINNER_ID;
+    const qs = buildQuery({
+      from: 'newEntry',
+      templateId: encodeURIComponent(tid),
+    });
+    router.push(`/notes/new/write?${qs}` as never);
+  };
+
+  const handlePickCellarItem = (item: CellarItemWithWine) => {
+    const tid = selectedTemplateId ?? BUILTIN_BEGINNER_ID;
+    const wineLwin = item.wine?.lwin;
+    if (!wineLwin) return;
+    setPickOpen(false);
+    const qs = buildQuery({
+      from: 'cellar',
+      itemId: item.id,
+      templateId: encodeURIComponent(tid),
+      wine_lwin: wineLwin,
+    });
+    router.push(`/notes/new/write?${qs}` as never);
+  };
 
   return (
-    <View className="flex-1">
-      <BottomSheet
-        ref={sheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        enablePanDownToClose
-        onClose={handleClose}
-        backdropComponent={renderBackdrop}
-        backgroundStyle={{ backgroundColor: sheetBg }}
-        handleIndicatorStyle={{ backgroundColor: handleColor }}
+    <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
+      <BackHeader title={t('notes.source.title')} />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingTop: 12, paddingHorizontal: 16, paddingBottom: 32 }}
       >
-        <BottomSheetView style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 24 }}>
-          <Text className="font-playfair text-modal-title text-text-primary dark:text-text-primary">
-            {t('notes.source.title')}
-          </Text>
-          <Text className="font-inter text-card-body text-text-secondary dark:text-text-secondary mt-1">
-            {t('notes.source.subtitle')}
-          </Text>
-          <View className="mt-4 gap-2">
-            {OPTIONS.map((opt) => (
-              <SourceRow
-                key={opt.source}
-                icon={opt.icon}
-                label={t(opt.labelKey)}
-                onPress={() => handlePick(opt.source)}
-              />
-            ))}
-          </View>
-        </BottomSheetView>
-      </BottomSheet>
+        {selectedTemplateId === null ? (
+          <Stage1TemplatePicker onPick={handlePickTemplate} />
+        ) : (
+          <Stage2SourcePicker
+            cellarCount={cellarCount}
+            cellarLoading={cellarLoading}
+            onBack={handleBackToTemplate}
+            onPickCellar={handlePickCellar}
+            onPickNewEntry={handlePickNewEntry}
+          />
+        )}
+      </ScrollView>
+
+      {/* Stage 3 overlay */}
+      <CellarBottomSheet
+        open={pickOpen}
+        items={cellarItems}
+        onClose={() => setPickOpen(false)}
+        onPickItem={handlePickCellarItem}
+      />
     </View>
   );
 }
 
-interface RowProps {
-  icon: LucideIcon;
-  label: string;
-  onPress: () => void;
+interface Stage1Props {
+  onPick: (id: BuiltinTemplateId) => void;
 }
 
-function SourceRow({ icon: Icon, label, onPress }: RowProps) {
+function Stage1TemplatePicker({ onPick }: Stage1Props) {
+  const { t } = useTranslation();
   return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      className="flex-row items-center rounded-xl bg-surface px-4"
-      style={({ pressed }) => ({
-        height: 80,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
-    >
-      <View
-        className="h-12 w-12 items-center justify-center rounded-full"
-        style={{ backgroundColor: 'rgba(201,168,76,0.12)' }}
-      >
-        <Icon size={22} strokeWidth={1.8} color={brand.gold} />
+    <View>
+      {/* Header (mb-3.5 = 14) */}
+      <View style={{ marginBottom: 14 }}>
+        <Text className="font-playfair text-modal-title text-text-primary dark:text-text-primary">
+          {t('notesNew.templatePicker.title')}
+        </Text>
+        <Text
+          className="font-inter text-card-body text-text-muted dark:text-text-muted"
+          style={{ marginTop: 4, lineHeight: 19.5 }}
+        >
+          {t('notesNew.templatePicker.subtitle')}
+        </Text>
       </View>
-      <Text className="ml-4 font-inter-semibold text-card-title text-text-primary dark:text-text-primary">
-        {label}
-      </Text>
-    </Pressable>
+
+      {/* TemplateList (gap-2.5 = 10) */}
+      <View style={{ gap: 10 }}>
+        {BUILTIN_TEMPLATES.map((tpl) => (
+          <TemplateCard
+            key={tpl.id}
+            kind={tpl.kind}
+            title={t(tpl.titleKey)}
+            description={t(tpl.descKey)}
+            onPress={() => onPick(tpl.id)}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+interface Stage2Props {
+  cellarCount: number;
+  cellarLoading: boolean;
+  onBack: () => void;
+  onPickCellar: () => void;
+  onPickNewEntry: () => void;
+}
+
+function Stage2SourcePicker({
+  cellarCount,
+  cellarLoading,
+  onBack,
+  onPickCellar,
+  onPickNewEntry,
+}: Stage2Props) {
+  const { t } = useTranslation();
+  return (
+    <View>
+      {/* BackToTemplateLink (mb-3 = 12) */}
+      <Pressable
+        onPress={onBack}
+        accessibilityRole="button"
+        accessibilityLabel={t('notesNew.sourcePicker.changeTemplate')}
+        accessibilityHint={t('notesNew.sourcePicker.changeTemplateHint')}
+        hitSlop={8}
+        style={{ marginBottom: 12, alignSelf: 'flex-start' }}
+      >
+        <Text
+          className="font-inter-semibold"
+          style={{ fontSize: 11, lineHeight: 13.2, color: brand.gold }}
+        >
+          {`← ${t('notesNew.sourcePicker.changeTemplate')}`}
+        </Text>
+      </Pressable>
+
+      {/* Header (mb-1 = 4) */}
+      <View style={{ marginBottom: 4 }}>
+        <Text className="font-playfair text-modal-title text-text-primary dark:text-text-primary">
+          {t('notes.source.question')}
+        </Text>
+        <Text
+          className="font-inter text-card-body text-text-muted dark:text-text-muted"
+          style={{ marginTop: 4, lineHeight: 19.5 }}
+        >
+          {t('notesNew.sourcePicker.subtitle')}
+        </Text>
+      </View>
+
+      {/* Stage 2: 12 spacer */}
+      <View style={{ height: 12 }} />
+
+      {cellarLoading ? (
+        <View style={{ paddingVertical: 32, alignItems: 'center' }}>
+          <ActivityIndicator color={brand.gold} />
+        </View>
+      ) : (
+        <SourcePicker
+          cellarCount={cellarCount}
+          onPickCellar={onPickCellar}
+          onPickNewEntry={onPickNewEntry}
+        />
+      )}
+    </View>
   );
 }

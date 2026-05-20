@@ -257,8 +257,15 @@
     "rating": "별점",
     "tastedAt": "시음 일자",
     "source": {
-      "title": "어디에서 마셨나요?",
+      "title": "출처 선택",
       "subtitle": "출처를 선택해주세요",
+      "question": "어떤 와인을 기록할까요?",
+      "fromCellar": "내 셀러에서",
+      "fromCellarSub": "{{count}}병 보관 중",
+      "fromCellarEmpty": "셀러가 비어있어요",
+      "newEntry": "새 와인",
+      "newEntrySub": "라벨 사진을 찍거나 직접 입력해요",
+      "cellarListTitle": "셀러 와인",
       "cellar": "셀러",
       "restaurant": "레스토랑",
       "shop": "상점",
@@ -358,6 +365,29 @@
       "modeExpertBadge": "전문가",
       "noComment": "코멘트 없음",
       "noAroma": "선택된 향 없음"
+    }
+  },
+  "notesNew": {
+    "templatePicker": {
+      "title": "어떤 양식으로 적을까요?",
+      "subtitle": "테이스팅 노트 양식을 골라주세요. 설정에서 직접 만들 수도 있어요.",
+      "byWinemine": "winemine 제공",
+      "customBadge": "커스텀",
+      "cardHint": "양식 선택"
+    },
+    "sourcePicker": {
+      "subtitle": "셀러에 있는 와인을 따시거나, 새로운 와인을 만나셨나요?",
+      "changeTemplate": "양식 다시 선택",
+      "changeTemplateHint": "양식 선택 화면으로 돌아가기",
+      "cellarHint": "셀러 와인 선택 화면 열기",
+      "newEntryHint": "새 와인 노트 작성 시작",
+      "cellarRowHint": "이 와인으로 노트 작성"
+    },
+    "builtinTemplate": {
+      "beginnerTitle": "입문자용 노트",
+      "beginnerDesc": "5분이면 끝나는 짧은 기록. 첫 인상·맛·향·여운·평점·메모.",
+      "expertTitle": "전문가용 노트",
+      "expertDesc": "WSET 기반 풀 옵션. 아로마 휠, 카우달리, 결함 체크, 오프닝 타임라인까지."
     }
   },
   "cellar": {

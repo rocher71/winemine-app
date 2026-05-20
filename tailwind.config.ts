@@ -141,6 +141,18 @@ const config: Config = {
         // cellar-detail retroactive (design-spec cellar-detail.md §9-2 P0)
         'cellar-hero-producer': ['13px', { lineHeight: '15.6px' }],
         'timeline-year-label':  ['10px', { lineHeight: '12px' }],
+
+        // notes-new retroactive (design-spec notes-new.md §4-2 P0 — 10 신규)
+        'template-card-title':   ['14px', { lineHeight: '16.8px' }],
+        'template-card-author':  ['11px', { lineHeight: '13.2px' }],
+        'template-card-desc':    ['12px', { lineHeight: '17.4px' }],
+        'template-custom-badge': ['9px',  { lineHeight: '11px', letterSpacing: '0.45px' }],
+        'source-card-title':     ['16px', { lineHeight: '19.2px' }],
+        'source-card-sub':       ['12px', { lineHeight: '16.8px' }],
+        'bottom-sheet-title':    ['18px', { lineHeight: '21.6px' }],
+        'cellar-row-name':       ['13px', { lineHeight: '15.6px' }],
+        'cellar-row-meta':       ['11px', { lineHeight: '13.2px' }],
+        'back-to-template':      ['11px', { lineHeight: '13.2px' }],
       },
     },
   },

@@ -429,6 +429,24 @@ export const typography = {
   metaRowValue:        { family: 'Inter_400Regular',           size: 11, lineHeight: 15.4 },
   fileNotFoundTitle:   { family: 'Inter_700Bold',              size: 11, lineHeight: 16.5 },
   fileNotFoundBody:    { family: 'Inter_400Regular',           size: 11, lineHeight: 16.5 },
+
+  // ---- notes-new retroactive (design-spec notes-new.md §4-2 P0 — 10 신규) ----
+  //
+  // verbatim 원칙: keyscreen page.tsx line 257~290 (TemplateCard) + source-picker.tsx line 39~118
+  // (CellarCard / NewWineCard) + bottom-sheet line 117~206 (Cellar BottomSheet).
+  // Stage 1 4-tier (title/author/desc/badge) + Stage 2 2-tier (title/sub) + Stage 3 4 tier
+  // (sheetTitle/rowName/rowMeta/backLink).
+  // CustomBadge letter-spacing 0.05em → 9 × 0.05 = 0.45px. textTransform uppercase.
+  templateCardTitle:    { family: 'Inter_600SemiBold',          size: 14, lineHeight: 16.8 },
+  templateCardAuthor:   { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
+  templateCardDesc:     { family: 'Inter_400Regular',           size: 12, lineHeight: 17.4 },
+  templateCustomBadge:  { family: 'Inter_600SemiBold',          size: 9,  lineHeight: 11, letterSpacing: 0.45, textTransform: 'uppercase' as const },
+  sourceCardTitle:      { family: 'Inter_600SemiBold',          size: 16, lineHeight: 19.2 },
+  sourceCardSub:        { family: 'Inter_400Regular',           size: 12, lineHeight: 16.8 },
+  bottomSheetTitle:     { family: 'PlayfairDisplay_400Regular', size: 18, lineHeight: 21.6 },
+  cellarRowName:        { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 15.6 },
+  cellarRowMeta:        { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
+  backToTemplateLink:   { family: 'Inter_600SemiBold',          size: 11, lineHeight: 13.2 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----
