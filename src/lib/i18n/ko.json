@@ -1,0 +1,253 @@
+{
+  "app": {
+    "name": "winemine"
+  },
+  "common": {
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "수정",
+    "back": "뒤로",
+    "close": "닫기",
+    "next": "다음",
+    "skip": "건너뛰기",
+    "done": "완료",
+    "loading": "불러오는 중",
+    "retry": "다시 시도",
+    "empty": "아직 없습니다"
+  },
+  "nav": {
+    "home": "홈",
+    "capture": "라벨 촬영",
+    "cellar": "셀러",
+    "notes": "노트",
+    "settings": "설정"
+  },
+  "level": {
+    "L1": "입문자",
+    "L2": "애호가",
+    "L3": "감식가",
+    "L4": "소믈리에",
+    "L5": "마스터"
+  },
+  "mode": {
+    "firstTime": "처음 마셔봐요",
+    "heavy": "기록이 많아요"
+  },
+  "experience": {
+    "beginner": "초심자",
+    "expert": "전문가"
+  },
+  "theme": {
+    "system": "시스템",
+    "dark": "다크",
+    "light": "라이트"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English"
+  },
+  "wine": {
+    "type": {
+      "red": "레드",
+      "white": "화이트",
+      "rose": "로제",
+      "sparkling": "스파클링",
+      "fortified": "주정강화",
+      "dessert": "디저트"
+    },
+    "enFallbackChip": "EN"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "와인의 모든 순간을 기록합니다",
+      "subtitle": "촬영하고, 기록하고, 다시 떠올리는 와인 노트",
+      "cta": "시작하기"
+    },
+    "language": {
+      "title": "언어를 선택해주세요",
+      "subtitle": "언제든 설정에서 바꿀 수 있습니다"
+    },
+    "experience": {
+      "title": "와인 경험을 알려주세요",
+      "subtitle": "노트 작성 방식을 맞춰드립니다",
+      "beginnerDescription": "가볍게 즐기고 싶어요",
+      "expertDescription": "깊이 파고들고 싶어요"
+    },
+    "mode": {
+      "title": "어떻게 사용하시겠어요?",
+      "subtitle": "언제든 설정에서 바꿀 수 있습니다",
+      "firstTimeDescription": "이제 막 와인을 시작했어요",
+      "heavyDescription": "꾸준히 기록하고 있어요",
+      "finish": "시작하기"
+    },
+    "progress": "{{current}} / {{total}}"
+  },
+  "home": {
+    "anonymousFallback": "익명 사용자",
+    "firstTime": {
+      "greeting": "환영합니다, {{name}}",
+      "title": "첫 와인을 기록해보세요",
+      "description": "라벨을 촬영하면 시음 노트가 시작됩니다",
+      "cta": "라벨 촬영하기"
+    },
+    "heavy": {
+      "greeting": "다시 오셨네요, {{name}}",
+      "recentNotes": "최근 노트",
+      "recentNotesEmpty": "아직 노트가 없습니다",
+      "cellarSummary": "셀러",
+      "cellaredCount": "보관 중 {{count}}",
+      "viewAll": "전체 보기",
+      "recommended": "추천 와인",
+      "recommendedPlaceholder": "곧 만나보실 수 있습니다"
+    }
+  },
+  "capture": {
+    "title": "라벨 촬영",
+    "options": {
+      "camera": "카메라",
+      "gallery": "갤러리",
+      "manual": "직접 입력",
+      "cancel": "닫기"
+    },
+    "permission": {
+      "title": "카메라 접근 권한이 필요해요",
+      "description": "와인 라벨을 촬영해 인식하려면 카메라 권한을 허용해주세요.",
+      "grant": "권한 요청",
+      "openSettings": "설정 열기"
+    },
+    "analyzing": "라벨 분석 중...",
+    "manualPlaceholder": {
+      "title": "수동 입력은 곧 추가됩니다",
+      "description": "v0.1.0에서는 카메라 또는 갤러리로 시작해주세요."
+    },
+    "result": {
+      "title": "라벨 인식 완료",
+      "subtitle": "정보를 확인하고 노트를 작성하세요",
+      "writeNote": "노트 작성하기",
+      "retry": "다시 촬영"
+    },
+    "errors": {
+      "noPhoto": "사진을 가져오지 못했어요. 다시 시도해주세요.",
+      "uploadFailed": "사진 업로드에 실패했어요. 다시 시도해주세요.",
+      "scanFailed": "라벨을 인식하지 못했어요. 수동 입력으로 전환할 수 있어요.",
+      "wineNotFound": "와인 정보를 찾을 수 없어요.",
+      "switchToManual": "수동 입력으로 전환"
+    }
+  },
+  "notes": {
+    "new": "새 노트",
+    "write": "노트 작성",
+    "rating": "별점",
+    "tastedAt": "시음 일자",
+    "source": {
+      "title": "출처",
+      "cellar": "내 셀러",
+      "restaurant": "식당",
+      "shop": "상점",
+      "gift": "선물",
+      "tasting_event": "테이스팅 이벤트",
+      "other": "기타"
+    }
+  },
+  "cellar": {
+    "title": "셀러",
+    "tabs": {
+      "cellared": "보관 중",
+      "consumed": "음용 완료"
+    },
+    "actions": {
+      "addToCellar": "셀러에 추가",
+      "markConsumed": "음용 완료",
+      "undoConsumed": "보관으로 되돌리기"
+    },
+    "add": {
+      "title": "셀러에 추가",
+      "acquiredAt": "획득 일자",
+      "quantity": "수량",
+      "purchasePrice": "구매 가격 (원, 선택)",
+      "storage": "저장 위치 (선택)",
+      "submit": "추가",
+      "success": "셀러에 추가했어요",
+      "failed": "셀러 추가에 실패했어요. 다시 시도해주세요."
+    },
+    "search": {
+      "placeholder": "와인명·생산자로 검색"
+    },
+    "sort": {
+      "label": "정렬",
+      "recent": "최근 추가",
+      "vintage": "빈티지",
+      "price": "가격"
+    },
+    "empty": {
+      "cellared": {
+        "title": "아직 셀러가 비어있어요",
+        "description": "라벨을 촬영해 첫 와인을 추가해보세요",
+        "cta": "첫 와인 추가"
+      },
+      "consumed": {
+        "title": "아직 음용 기록이 없어요",
+        "description": "보관 중 와인에서 음용 완료를 선택해 기록해보세요"
+      },
+      "noResults": "검색 결과가 없어요"
+    },
+    "meta": {
+      "acquiredAt": "획득",
+      "consumedAt": "음용",
+      "price": "원"
+    },
+    "swipe": {
+      "markConsumed": "음용 완료",
+      "undoConsumed": "셀러로 되돌리기",
+      "updateFailed": "상태를 바꾸지 못했어요. 다시 시도해주세요."
+    }
+  },
+  "wineDetail": {
+    "notFound": {
+      "title": "와인 정보를 찾을 수 없어요",
+      "description": "잘못된 LWIN이거나 비공개 상태일 수 있습니다.",
+      "back": "뒤로 가기"
+    },
+    "meta": {
+      "producer": "생산자",
+      "region": "지역",
+      "country": "국가",
+      "vintage": "빈티지",
+      "classification": "등급",
+      "unknown": "정보 없음"
+    },
+    "drinkWindow": {
+      "title": "음용 적기",
+      "rangeLabel": "{{from}}년 ~ {{to}}년",
+      "peakLabel": "절정 {{peak}}년",
+      "empty": "음용 적기 정보 없음",
+      "before": "아직 일러요",
+      "during": "지금이 적기",
+      "after": "절정이 지났어요"
+    },
+    "community": {
+      "title": "커뮤니티 의견",
+      "comingSoon": "곧 출시 (v0.2.0)"
+    },
+    "actions": {
+      "writeNote": "노트 작성",
+      "addToCellar": "셀러에 추가"
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "sections": {
+      "preferences": "환경설정",
+      "account": "계정",
+      "linkAccount": "계정 연결",
+      "linkAccountHint": "v0.2.0에서 활성됩니다"
+    }
+  },
+  "errors": {
+    "generic": "문제가 생겼습니다",
+    "network": "네트워크 연결을 확인해주세요",
+    "notImplemented": "아직 준비되지 않은 기능입니다",
+    "onboardingSaveFailed": "설정을 저장하지 못했어요. 다시 시도해주세요."
+  }
+}

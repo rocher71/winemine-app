@@ -1,0 +1,253 @@
+{
+  "app": {
+    "name": "winemine"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "close": "Close",
+    "next": "Next",
+    "skip": "Skip",
+    "done": "Done",
+    "loading": "Loading",
+    "retry": "Retry",
+    "empty": "Nothing yet"
+  },
+  "nav": {
+    "home": "Home",
+    "capture": "Capture",
+    "cellar": "Cellar",
+    "notes": "Notes",
+    "settings": "Settings"
+  },
+  "level": {
+    "L1": "Novice",
+    "L2": "Enthusiast",
+    "L3": "Connoisseur",
+    "L4": "Sommelier",
+    "L5": "Master"
+  },
+  "mode": {
+    "firstTime": "Just starting out",
+    "heavy": "I keep many notes"
+  },
+  "experience": {
+    "beginner": "Beginner",
+    "expert": "Expert"
+  },
+  "theme": {
+    "system": "System",
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English"
+  },
+  "wine": {
+    "type": {
+      "red": "Red",
+      "white": "White",
+      "rose": "Rose",
+      "sparkling": "Sparkling",
+      "fortified": "Fortified",
+      "dessert": "Dessert"
+    },
+    "enFallbackChip": "EN"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Capture every moment of wine",
+      "subtitle": "Photograph, note, and revisit.",
+      "cta": "Get started"
+    },
+    "language": {
+      "title": "Choose your language",
+      "subtitle": "You can change this any time in Settings"
+    },
+    "experience": {
+      "title": "Tell us about your wine experience",
+      "subtitle": "We'll tune note-taking accordingly",
+      "beginnerDescription": "I want to enjoy it casually",
+      "expertDescription": "I want to dive deep"
+    },
+    "mode": {
+      "title": "How will you use winemine?",
+      "subtitle": "You can change this any time in Settings",
+      "firstTimeDescription": "I'm just getting into wine",
+      "heavyDescription": "I keep regular notes",
+      "finish": "Get started"
+    },
+    "progress": "{{current}} / {{total}}"
+  },
+  "home": {
+    "anonymousFallback": "Guest",
+    "firstTime": {
+      "greeting": "Welcome, {{name}}",
+      "title": "Record your first wine",
+      "description": "Scan a label and start tasting notes",
+      "cta": "Scan a label"
+    },
+    "heavy": {
+      "greeting": "Welcome back, {{name}}",
+      "recentNotes": "Recent notes",
+      "recentNotesEmpty": "No notes yet",
+      "cellarSummary": "Cellar",
+      "cellaredCount": "{{count}} in cellar",
+      "viewAll": "View all",
+      "recommended": "Recommended",
+      "recommendedPlaceholder": "Coming soon"
+    }
+  },
+  "capture": {
+    "title": "Scan label",
+    "options": {
+      "camera": "Camera",
+      "gallery": "Gallery",
+      "manual": "Manual",
+      "cancel": "Close"
+    },
+    "permission": {
+      "title": "Camera access required",
+      "description": "Allow camera access to capture and recognize wine labels.",
+      "grant": "Grant permission",
+      "openSettings": "Open settings"
+    },
+    "analyzing": "Analyzing label...",
+    "manualPlaceholder": {
+      "title": "Manual entry coming soon",
+      "description": "For v0.1.0, please start with camera or gallery."
+    },
+    "result": {
+      "title": "Label recognized",
+      "subtitle": "Review and write a note",
+      "writeNote": "Write note",
+      "retry": "Retake"
+    },
+    "errors": {
+      "noPhoto": "Could not get a photo. Please try again.",
+      "uploadFailed": "Photo upload failed. Please try again.",
+      "scanFailed": "Could not recognize the label. You can switch to manual entry.",
+      "wineNotFound": "Wine info not found.",
+      "switchToManual": "Switch to manual"
+    }
+  },
+  "notes": {
+    "new": "New note",
+    "write": "Write note",
+    "rating": "Rating",
+    "tastedAt": "Tasted on",
+    "source": {
+      "title": "Source",
+      "cellar": "My cellar",
+      "restaurant": "Restaurant",
+      "shop": "Shop",
+      "gift": "Gift",
+      "tasting_event": "Tasting event",
+      "other": "Other"
+    }
+  },
+  "cellar": {
+    "title": "Cellar",
+    "tabs": {
+      "cellared": "In cellar",
+      "consumed": "Consumed"
+    },
+    "actions": {
+      "addToCellar": "Add to cellar",
+      "markConsumed": "Mark consumed",
+      "undoConsumed": "Move back to cellar"
+    },
+    "add": {
+      "title": "Add to cellar",
+      "acquiredAt": "Acquired on",
+      "quantity": "Quantity",
+      "purchasePrice": "Purchase price (KRW, optional)",
+      "storage": "Storage (optional)",
+      "submit": "Add",
+      "success": "Added to your cellar",
+      "failed": "Could not add to cellar. Please try again."
+    },
+    "search": {
+      "placeholder": "Search wine or producer"
+    },
+    "sort": {
+      "label": "Sort",
+      "recent": "Recently added",
+      "vintage": "Vintage",
+      "price": "Price"
+    },
+    "empty": {
+      "cellared": {
+        "title": "Your cellar is empty",
+        "description": "Scan a label to add your first wine",
+        "cta": "Add first wine"
+      },
+      "consumed": {
+        "title": "No consumed wines yet",
+        "description": "Mark a wine as consumed from the cellar tab"
+      },
+      "noResults": "No results"
+    },
+    "meta": {
+      "acquiredAt": "Acquired",
+      "consumedAt": "Consumed",
+      "price": "KRW"
+    },
+    "swipe": {
+      "markConsumed": "Mark consumed",
+      "undoConsumed": "Move back to cellar",
+      "updateFailed": "Could not update status. Please try again."
+    }
+  },
+  "wineDetail": {
+    "notFound": {
+      "title": "Wine info not found",
+      "description": "The LWIN may be invalid or the wine may be unavailable.",
+      "back": "Go back"
+    },
+    "meta": {
+      "producer": "Producer",
+      "region": "Region",
+      "country": "Country",
+      "vintage": "Vintage",
+      "classification": "Classification",
+      "unknown": "Unknown"
+    },
+    "drinkWindow": {
+      "title": "Drinking window",
+      "rangeLabel": "{{from}} – {{to}}",
+      "peakLabel": "Peak {{peak}}",
+      "empty": "No drinking window info",
+      "before": "Too early",
+      "during": "Drink now",
+      "after": "Past peak"
+    },
+    "community": {
+      "title": "Community insights",
+      "comingSoon": "Coming soon (v0.2.0)"
+    },
+    "actions": {
+      "writeNote": "Write note",
+      "addToCellar": "Add to cellar"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "preferences": "Preferences",
+      "account": "Account",
+      "linkAccount": "Link account",
+      "linkAccountHint": "Available in v0.2.0"
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "network": "Check your network connection",
+    "notImplemented": "Not yet available",
+    "onboardingSaveFailed": "Failed to save your settings. Please try again."
+  }
+}
