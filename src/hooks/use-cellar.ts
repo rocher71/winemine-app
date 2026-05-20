@@ -115,3 +115,111 @@ export async function setCellarStatus(
   const { error } = await supabase.from('cellar_items').update(payload).eq('id', id);
   if (error) throw error;
 }
+
+export async function deleteCellarItem(id: string): Promise<void> {
+  const { error } = await supabase.from('cellar_items').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export interface UseCellarItemResult {
+  item: CellarItemWithWine | null;
+  loading: boolean;
+  error: Error | null;
+  refresh: () => Promise<void>;
+}
+
+export function useCellarItem(
+  lwin: string | null | undefined,
+  cellarItemId: string | null | undefined,
+): UseCellarItemResult {
+  const [item, setItem] = useState<CellarItemWithWine | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const load = useCallback(async () => {
+    if (!lwin) {
+      setItem(null);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const uid = await getCurrentUserId();
+      if (!uid) {
+        setItem(null);
+        return;
+      }
+      let query = supabase
+        .from('cellar_items')
+        .select(
+          '*, wine:wines_localized!inner(lwin, display_name, name_ko, producer_name, country, region, classification, bottle_color, type_canonical, vintage, drink_window_from_year, drink_window_peak_year, drink_window_to_year)',
+        )
+        .eq('user_id', uid)
+        .eq('wine_lwin', lwin);
+      if (cellarItemId) {
+        query = query.eq('id', cellarItemId);
+      } else {
+        query = query.order('acquired_at', { ascending: false }).limit(1);
+      }
+      const { data, error: err } = await query.maybeSingle();
+      if (err) throw err;
+      setItem((data ?? null) as unknown as CellarItemWithWine | null);
+    } catch (e) {
+      setError(e instanceof Error ? e : new Error(String(e)));
+    } finally {
+      setLoading(false);
+    }
+  }, [lwin, cellarItemId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  return { item, loading, error, refresh: load };
+}
+
+export interface UseNotesCountResult {
+  count: number;
+  loading: boolean;
+  refresh: () => Promise<void>;
+}
+
+export function useNotesCountForWine(lwin: string | null | undefined): UseNotesCountResult {
+  const [count, setCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    if (!lwin) {
+      setCount(0);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const uid = await getCurrentUserId();
+      if (!uid) {
+        setCount(0);
+        return;
+      }
+      const { count: c, error } = await supabase
+        .from('tasting_notes')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', uid)
+        .eq('wine_lwin', lwin);
+      if (error) throw error;
+      setCount(c ?? 0);
+    } catch (err) {
+      console.warn('[notes count] failed:', err);
+      setCount(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [lwin]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  return { count, loading, refresh: load };
+}

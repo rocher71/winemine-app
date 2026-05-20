@@ -201,6 +201,34 @@
       "markConsumed": "Mark consumed",
       "undoConsumed": "Move back to cellar",
       "updateFailed": "Could not update status. Please try again."
+    },
+    "detail": {
+      "notFound": {
+        "title": "Cellar item not found",
+        "description": "It may have been deleted or the link is invalid.",
+        "back": "Go back"
+      },
+      "section": {
+        "info": "Info",
+        "notes": "My notes",
+        "actions": "Actions"
+      },
+      "editTitle": "Edit cellar item",
+      "edit": "Edit",
+      "quantity": "Quantity",
+      "storageEmpty": "Not set",
+      "priceEmpty": "Not set",
+      "markConsumed": "Mark consumed",
+      "restoreToCellar": "Move back to cellar",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete this cellar item?",
+      "deleteConfirmDesc": "This action cannot be undone.",
+      "deleteCancel": "Cancel",
+      "deleteConfirm": "Delete",
+      "deleteFailed": "Could not delete. Please try again.",
+      "updateSuccess": "Changes saved",
+      "notesCountZero": "No notes yet",
+      "notesCountSome": "{{count}} note(s)"
     }
   },
   "wineDetail": {

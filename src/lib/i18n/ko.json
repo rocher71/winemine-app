@@ -201,6 +201,34 @@
       "markConsumed": "음용 완료",
       "undoConsumed": "셀러로 되돌리기",
       "updateFailed": "상태를 바꾸지 못했어요. 다시 시도해주세요."
+    },
+    "detail": {
+      "notFound": {
+        "title": "셀러 항목을 찾을 수 없어요",
+        "description": "삭제되었거나 잘못된 주소일 수 있습니다.",
+        "back": "뒤로 가기"
+      },
+      "section": {
+        "info": "정보",
+        "notes": "내 노트",
+        "actions": "액션"
+      },
+      "editTitle": "셀러 정보 편집",
+      "edit": "편집",
+      "quantity": "수량",
+      "storageEmpty": "없음",
+      "priceEmpty": "없음",
+      "markConsumed": "음용 완료로 표시",
+      "restoreToCellar": "셀러로 되돌리기",
+      "delete": "삭제",
+      "deleteConfirmTitle": "이 셀러 항목을 삭제할까요?",
+      "deleteConfirmDesc": "되돌릴 수 없습니다.",
+      "deleteCancel": "취소",
+      "deleteConfirm": "삭제",
+      "deleteFailed": "삭제하지 못했어요. 다시 시도해주세요.",
+      "updateSuccess": "변경 사항을 저장했어요",
+      "notesCountZero": "아직 노트가 없어요",
+      "notesCountSome": "노트 {{count}}개"
     }
   },
   "wineDetail": {
