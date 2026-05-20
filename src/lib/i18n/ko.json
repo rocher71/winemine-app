@@ -359,10 +359,42 @@
     }
   },
   "cellar": {
-    "title": "셀러",
+    "title": "내 셀러",
+    "addCta": "+ 등록",
+    "addToast": "셀러 등록은 추후 추가될 예정이에요",
+    "clearSearch": "검색 지우기",
+    "clearFilters": "필터 지우기",
+    "searchPlaceholder": "와인·생산자·지역·품종·빈티지 검색",
     "tabs": {
+      "cellar": "내 셀러",
+      "tasted": "마신 와인",
       "cellared": "보관 중",
       "consumed": "음용 완료"
+    },
+    "filterType": {
+      "all": "전체",
+      "red": "레드",
+      "white": "화이트",
+      "sparkling": "스파클링",
+      "rose": "로제",
+      "fortified": "주정강화",
+      "dessert": "디저트"
+    },
+    "resultCount": {
+      "total": "총 {{total}}병",
+      "filtered": "{{total}}병 중 {{shown}}개 결과"
+    },
+    "noResults": {
+      "title": "일치하는 와인이 없어요",
+      "body": "검색어를 바꾸거나 와인 타입 필터를 해제해 보세요."
+    },
+    "drinkWindow": {
+      "now": "지금 마시기 좋아요",
+      "fromYear": "{{year}}년부터",
+      "peak": "절정",
+      "pastPeak": "절정 지남",
+      "tooYoung": "아직 일러요",
+      "mature": "성숙기"
     },
     "actions": {
       "addToCellar": "셀러에 추가",
@@ -384,11 +416,17 @@
     },
     "sort": {
       "label": "정렬",
-      "recent": "최근 추가",
+      "recent": "최근",
+      "drinkSoon": "마시기 좋은 시점",
       "vintage": "빈티지",
-      "price": "가격"
+      "region": "지역",
+      "storage": "보관 위치",
+      "price": "가격대"
     },
     "empty": {
+      "title": "셀러가 비어있어요",
+      "sub": "와인을 등록하면 보관·음용 시점 알림을 받을 수 있어요",
+      "cta": "첫 와인 등록",
       "cellared": {
         "title": "아직 셀러가 비어있어요",
         "description": "라벨을 촬영해 첫 와인을 추가해보세요",
@@ -399,6 +437,9 @@
         "description": "보관 중 와인에서 음용 완료를 선택해 기록해보세요"
       },
       "noResults": "검색 결과가 없어요"
+    },
+    "tasted": {
+      "comingSoon": "마신 와인 탭은 곧 출시 (v0.2.0)"
     },
     "meta": {
       "acquiredAt": "획득",

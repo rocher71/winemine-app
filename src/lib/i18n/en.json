@@ -359,10 +359,42 @@
     }
   },
   "cellar": {
-    "title": "Cellar",
+    "title": "My cellar",
+    "addCta": "+ Add",
+    "addToast": "Cellar registration coming soon",
+    "clearSearch": "Clear search",
+    "clearFilters": "Clear filters",
+    "searchPlaceholder": "Wine, producer, region, grape, vintage",
     "tabs": {
+      "cellar": "My cellar",
+      "tasted": "Tasted",
       "cellared": "In cellar",
       "consumed": "Consumed"
+    },
+    "filterType": {
+      "all": "All",
+      "red": "Red",
+      "white": "White",
+      "sparkling": "Sparkling",
+      "rose": "Rosé",
+      "fortified": "Fortified",
+      "dessert": "Dessert"
+    },
+    "resultCount": {
+      "total": "{{total}} bottles total",
+      "filtered": "{{shown}} of {{total}}"
+    },
+    "noResults": {
+      "title": "No matching wines",
+      "body": "Try a different search or clear the wine type filter."
+    },
+    "drinkWindow": {
+      "now": "Drink now",
+      "fromYear": "From {{year}}",
+      "peak": "Peak",
+      "pastPeak": "Past peak",
+      "tooYoung": "Too young",
+      "mature": "Mature"
     },
     "actions": {
       "addToCellar": "Add to cellar",
@@ -384,11 +416,17 @@
     },
     "sort": {
       "label": "Sort",
-      "recent": "Recently added",
+      "recent": "Recent",
+      "drinkSoon": "Drink soon",
       "vintage": "Vintage",
+      "region": "Region",
+      "storage": "Storage",
       "price": "Price"
     },
     "empty": {
+      "title": "Your cellar is empty",
+      "sub": "Add wines to get notified when they reach their peak",
+      "cta": "Add first wine",
       "cellared": {
         "title": "Your cellar is empty",
         "description": "Scan a label to add your first wine",
@@ -399,6 +437,9 @@
         "description": "Mark a wine as consumed from the cellar tab"
       },
       "noResults": "No results"
+    },
+    "tasted": {
+      "comingSoon": "Tasted tab coming soon (v0.2.0)"
     },
     "meta": {
       "acquiredAt": "Acquired",

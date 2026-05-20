@@ -125,6 +125,19 @@ export const wineTypeDot = {
   dessert: '#a07030',
 } as const;
 
+// ---- Type filter dot (cellar TypeFilterChips dot — keyscreen page.tsx line 824~831 verbatim) ----
+//
+// cellar-list 사양 §3-5 + §9 P0. 같은 wine type을 가리키지만 채도가 더 높은 별도 그룹.
+// 의도적으로 wineTypeDot과 다름 (필터 chip은 더 또렷, 작은 dot은 부드러움).
+export const typeFilterDot = {
+  red: '#8B1A2A',          // brand.wineRed 동일
+  white: '#E8D89B',
+  sparkling: '#F5F0E8',    // brand.cream 동일
+  rose: '#D4707A',
+  fortified: '#6B1421',
+  dessert: '#C9A84C',      // brand.gold 동일
+} as const;
+
 // ---- Serving temperature 기본값 (wines.serving_temp_{min,max} 컬럼 부재 시 fallback) ----
 //
 // wine-detail 사양 §12 Q11 — wine type별 권장 시음 온도 (Celsius).
@@ -185,6 +198,65 @@ export const overlay = {
     dark:  'rgba(0, 0, 0, 0.45)',
     light: 'rgba(42, 26, 20, 0.10)',
   },
+} as const;
+
+// ---- Cellar list 전용 토큰 (design-spec cellar-list.md §9 P0 — retroactive hardening) ----
+//
+// DrinkWindowBadge bg (5 status 중 too-young, past-peak)는 raw alpha.
+// dark 모드는 keyscreen verbatim, light 모드는 사양 §12-8 권장값(text-muted alpha 0.18).
+// peak/opening/mature는 brand.wineRed / brand.gold 직접 사용 (별도 토큰 불필요).
+export const cellar = {
+  tooYoungBg: {
+    dark:  'rgba(155, 139, 122, 0.18)',  // = withAlpha('#9B8B7A', 0.18) — keyscreen verbatim
+    light: 'rgba(139, 119, 102, 0.18)',  // = withAlpha(light.text.muted, 0.18) — 사양 §12-8 권장
+  },
+  pastPeakBg: {
+    dark:  'rgba(45, 21, 64, 0.60)',     // dark.bg.deep alpha 0.6 — keyscreen verbatim
+    light: 'rgba(139, 119, 102, 0.22)',  // light bg에 대조 부드러움 — 사양 §12-8 권장
+  },
+  // ClearBtn (SearchInput X) bg — cream alpha 0.08 dark + textInk alpha 0.06 light
+  clearBtnBg: {
+    dark:  'rgba(245, 240, 232, 0.08)',  // = withAlpha(brand.cream, 0.08)
+    light: 'rgba(42, 26, 20, 0.08)',     // = withAlpha(light.text.primary, 0.08)
+  },
+  // Tab count badge text (active 시) — cream alpha 0.7
+  tabCountActive: 'rgba(245, 240, 232, 0.70)',  // = withAlpha(brand.cream, 0.7)
+  // TypeFilterChip active bg — gold alpha 0.12
+  typeFilterActiveBg: 'rgba(201, 168, 76, 0.12)',  // = withAlpha(brand.gold, 0.12)
+  // FlatList ItemSeparator (현재 RN hardcoded 'rgba(0,0,0,0.08)' 대체 토큰)
+  itemSeparator: {
+    dark:  'rgba(0, 0, 0, 0.08)',
+    light: 'rgba(42, 26, 20, 0.06)',  // light.bg.sunken 동일
+  },
+} as const;
+
+// ---- Cellar card BottleZone gradient factory (design-spec cellar-list.md §9 P0) ----
+//
+// CSS linear-gradient(160deg, ${bottleColor}28 0%, var(--color-bottle-shelf) 80%).
+// 160deg: 위→아래 약간 좌측 — start={x:0,y:0} end={x:0.34, y:0.94} (cos(160°)=-0.94, sin(160°)=0.34).
+// alpha 0.157 = hex8 "28" / 255 ≈ 0.157.
+export function cellarCardBottleGradient(
+  bottleColor: string,
+  scheme: 'dark' | 'light' = 'dark',
+) {
+  const end = scheme === 'dark' ? dark.bg.bottleShelf : light.bg.bottleShelf;
+  return {
+    colors: [withAlpha(bottleColor, 0.157), end] as readonly string[],
+    locations: [0, 0.8] as readonly number[],
+    start: { x: 0, y: 0 },
+    end:   { x: 0.34, y: 0.94 },
+  };
+}
+
+// ---- Type filter "all" dot gradient (3-stop, 135deg) ----
+//
+// CSS linear-gradient(135deg, #8B1A2A 0%, #C9A84C 50%, #F5F0E8 100%).
+// 135deg = 좌상→우하 (start={0,0} end={1,1}).
+export const typeFilterAllGradient = {
+  colors: [brand.wineRed, brand.gold, brand.cream] as readonly string[],
+  locations: [0, 0.5, 1] as readonly number[],
+  start: { x: 0, y: 0 },
+  end:   { x: 1, y: 1 },
 } as const;
 
 // ---- Expert blind mode background gradient ----
@@ -251,6 +323,7 @@ export const radius = {
   sm: 2,
   DEFAULT: 4,
   md: 6,
+  '7': 7,       // cellar TabSegment inner tab button (design-spec cellar-list.md §9 P0)
   lg: 8,
   '10': 10,     // capture SecondaryButton radius (design-spec capture.md §9-1)
   xl: 12,
@@ -306,6 +379,18 @@ export const typography = {
   wsetMiniDim:         { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 14.3 },
   microLabel:          { family: 'Inter_400Regular',           size: 9,  letterSpacing: 0.36, textTransform: 'uppercase' as const },
   servingTempPill:     { family: 'Inter_500Medium',            size: 11, lineHeight: 13.2 },
+
+  // ---- cellar retroactive (design-spec cellar-list.md §9 P0 — 5 신규) ----
+  // TabSegment + AddCta label (Inter 12 600)
+  tabSegmentLabel:  { family: 'Inter_600SemiBold', size: 12, lineHeight: 14.4 },
+  // TabSegment count badge (Inter 10 700)
+  tabCount:         { family: 'Inter_700Bold',     size: 10, lineHeight: 12 },
+  // TypeFilterChip + SortChip label (Inter 11 600)
+  chipLabel:        { family: 'Inter_600SemiBold', size: 11, lineHeight: 13.2 },
+  // CellarCard wine name (Playfair 12 lh 15) — keyscreen cellar-card.tsx verbatim
+  cellarCardName:   { family: 'PlayfairDisplay_400Regular', size: 12, lineHeight: 15 },
+  // DrinkWindowBadge label (Inter 10 600 lh 12 nowrap)
+  drinkWindowBadge: { family: 'Inter_600SemiBold', size: 10, lineHeight: 12 },
 
   // ---- capture retroactive (design-spec capture.md §9 P0 — 11 신규) ----
   captureHeaderTitle:  { family: 'Inter_600SemiBold',          size: 17, lineHeight: 20.4 },

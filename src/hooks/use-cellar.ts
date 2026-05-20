@@ -7,17 +7,39 @@ type WineLocalizedRow = Database['public']['Views']['wines_localized']['Row'];
 type CellarItemRow = Database['public']['Tables']['cellar_items']['Row'];
 
 export type CellarStatus = 'cellared' | 'consumed';
-export type CellarSortKey = 'recent' | 'vintage' | 'price';
+/**
+ * cellar 화면 sort key.
+ * - recent: acquired_at (or consumed_at) 최신 우선
+ * - drinkSoon: drink-window from year 임박 우선 (없으면 뒤로)
+ * - vintage: 빈티지 최신 우선
+ * - region: wines_localized.region 알파벳 순
+ * - storage: cellar_items.storage 알파벳 순
+ * - price: purchase_price_krw 높은 가격 우선
+ */
+export type CellarSortKey = 'recent' | 'drinkSoon' | 'vintage' | 'region' | 'storage' | 'price';
 
 export type CellarItemWithWine = CellarItemRow & {
   wine: Pick<
     WineLocalizedRow,
-    'lwin' | 'display_name' | 'name_ko' | 'producer_name' | 'country' | 'bottle_color' | 'type_canonical' | 'vintage'
+    | 'lwin'
+    | 'display_name'
+    | 'name_ko'
+    | 'producer_name'
+    | 'country'
+    | 'region'
+    | 'bottle_color'
+    | 'type_canonical'
+    | 'vintage'
+    | 'drink_window_from_year'
+    | 'drink_window_peak_year'
+    | 'drink_window_to_year'
   > | null;
 };
 
 export interface UseCellarSummaryResult {
   cellaredCount: number;
+  /** consumed 상태 cellar_items 수 (tasted 탭 placeholder count) */
+  consumedCount: number;
   loading: boolean;
   error: Error | null;
   refresh: () => Promise<void>;
@@ -25,6 +47,7 @@ export interface UseCellarSummaryResult {
 
 export function useCellarSummary(): UseCellarSummaryResult {
   const [cellaredCount, setCellaredCount] = useState(0);
+  const [consumedCount, setConsumedCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -35,15 +58,25 @@ export function useCellarSummary(): UseCellarSummaryResult {
       const uid = await getCurrentUserId();
       if (!uid) {
         setCellaredCount(0);
+        setConsumedCount(0);
         return;
       }
-      const { count, error: err } = await supabase
-        .from('cellar_items')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', uid)
-        .eq('status', 'cellared');
-      if (err) throw err;
-      setCellaredCount(count ?? 0);
+      const [cellared, consumed] = await Promise.all([
+        supabase
+          .from('cellar_items')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', uid)
+          .eq('status', 'cellared'),
+        supabase
+          .from('cellar_items')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', uid)
+          .eq('status', 'consumed'),
+      ]);
+      if (cellared.error) throw cellared.error;
+      if (consumed.error) throw consumed.error;
+      setCellaredCount(cellared.count ?? 0);
+      setConsumedCount(consumed.count ?? 0);
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
@@ -55,7 +88,7 @@ export function useCellarSummary(): UseCellarSummaryResult {
     void load();
   }, [load]);
 
-  return { cellaredCount, loading, error, refresh: load };
+  return { cellaredCount, consumedCount, loading, error, refresh: load };
 }
 
 export interface UseCellarListResult {
@@ -83,7 +116,7 @@ export function useCellarList(status: CellarStatus): UseCellarListResult {
       const { data, error: err } = await supabase
         .from('cellar_items')
         .select(
-          '*, wine:wines_localized!inner(lwin, display_name, name_ko, producer_name, country, bottle_color, type_canonical, vintage)',
+          '*, wine:wines_localized!inner(lwin, display_name, name_ko, producer_name, country, region, bottle_color, type_canonical, vintage, drink_window_from_year, drink_window_peak_year, drink_window_to_year)',
         )
         .eq('user_id', uid)
         .eq('status', status)

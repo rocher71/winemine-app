@@ -77,6 +77,7 @@ const config: Config = {
       // wine-detail retroactive: 18 (WineHero outer — 사양 §3-3, §9 P0).
       // capture retroactive: 10 (SecondaryButton — 사양 §9 P0).
       borderRadius: {
+        '7': '7px',
         '10': '10px',
         '14': '14px',
         '18': '18px',
@@ -129,6 +130,13 @@ const config: Config = {
         'wset-mini-dim':       ['13px', { lineHeight: '14.3px' }],
         'micro-label':         ['9px',  { letterSpacing: '0.36px' }],
         'serving-temp-pill':   ['11px', { lineHeight: '13.2px' }],
+
+        // cellar-list retroactive (design-spec cellar-list.md §9 P0)
+        'tab-segment-label':   ['12px', { lineHeight: '14.4px' }],
+        'tab-count':           ['10px', { lineHeight: '12px' }],
+        'chip-label':          ['11px', { lineHeight: '13.2px' }],
+        'cellar-card-name':    ['12px', { lineHeight: '15px' }],
+        'drink-window-badge':  ['10px', { lineHeight: '12px' }],
       },
     },
   },

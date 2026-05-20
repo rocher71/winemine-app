@@ -48,8 +48,15 @@
   - deferred (separate cycles): wines_localized appellation/grapes 컬럼 추가 → supabase-engineer, FallbackLabel word-wrap → v0.2.0
 
 ### P1 (중간)
-- [~] /cellar (list) — `app/(tabs)/cellar/index.tsx`
+- [x] /cellar (list) — `app/(tabs)/cellar/index.tsx`
   - started: 2026-05-20T12:27:13Z
+  - spec: _workspace/design-specs/cellar-list.md
+  - review reports: _workspace/design-review_cellar-list_20260520_214331.md (1차 FAIL 68), _workspace/design-review_cellar-list_20260520_220425_v2.md (PASS)
+  - qa report: _workspace/qa_day6_cellar_list_retroactive_20260520_220804.md (PASS)
+  - fix loops: 1
+  - changed files (~16): app/(tabs)/cellar/index.tsx, src/components/cellar/{cellar-card,cellar-tabs,drink-window-badge,cellar-search-input,type-filter-chips,sort-chips,add-cta,no-results,result-count}.tsx, src/components/cellar/search-sort-bar.tsx(deleted), src/components/shared/empty-state.tsx, src/lib/drink-window.ts(new), src/hooks/use-cellar.ts, src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json
+  - completed: 2026-05-20T13:13:13Z
+  - deferred (separate cycles): tasted 탭 → P1 분리(placeholder), AddCta BottomSheet form → 별도 cycle, swipe action → 영구 제거(2-col grid 부적합)
 - [ ] /cellar/[lwin] — `app/(tabs)/cellar/[lwin].tsx`
 - [ ] /notes/new (source picker) — `app/notes/new.tsx`
 - [ ] /notes/new/write — `app/notes/new/write.tsx`
