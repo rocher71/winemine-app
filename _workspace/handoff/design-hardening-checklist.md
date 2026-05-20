@@ -111,7 +111,8 @@
   - fix loops: 1
   - changed files: app/onboarding/2-language.tsx (rewrite), src/components/onboarding/{onboarding-step-layout,language-choice-card}.tsx (new), src/lib/design-tokens.ts (typography 3), tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T17:25:28Z
-- [ ] /onboarding/3-experience — `app/onboarding/3-experience.tsx`
+- [~] /onboarding/3-experience — `app/onboarding/3-experience.tsx`
+  - started: 2026-05-20T17:25:42Z
 - [ ] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
 
 ## 진행 메모
