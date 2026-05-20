@@ -84,7 +84,8 @@
   - changed files (~19): app/notes/new/write.tsx (rewrite), src/components/notes/{step-header,beginner-header,impression-triad,palate-triad,aroma-grid,finish-triad,auto-summary-card,price-capture,share-to-community,save-pill}.tsx (new), src/components/notes/{beginner-form,expert-form,note-body-beginner}.tsx (modified), src/components/wine/my-tasting-note-card.tsx, src/lib/notes/summarize.ts (new), src/lib/design-tokens.ts (5 typography), tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T16:20:32Z
   - deferred (separate cycles): tasting_notes.is_public 컬럼 → supabase-engineer, XP 시스템 / Expert 7-step / VariantTabs / DynamicTemplateForm → v0.2.0, iOS vs Android italic render → Day 7 EAS, light Switch trackColor 대비 / priceCaptureLabel "(+5 XP)" 미세 → 후속
-- [ ] /notes/[noteId] — `app/notes/[noteId].tsx`
+- [~] /notes/[noteId] — `app/notes/[noteId].tsx`
+  - started: 2026-05-20T16:20:54Z
 
 ### P2 (시각 차이 작음 예상)
 - [ ] /onboarding/1-welcome — `app/onboarding/1-welcome.tsx`
