@@ -50,3 +50,6 @@ coverage/
 
 # --- EAS (build cache) ---
 .easignore
+
+# --- 하네스 중간 산출물 (qa 보고서·진행 로그 등) ---
+_workspace/

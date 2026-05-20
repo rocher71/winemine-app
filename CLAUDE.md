@@ -196,3 +196,18 @@ v2.0 Spring 전환 비용 폭증 방지:
 | Phase 3 master plan (참고용 — Plan D와 일부 다름) | `specs/domain/wine-research/site/src/content/docs/misc/70-76*.md` |
 | Supabase 공식 docs | https://supabase.com/docs |
 | Expo 공식 docs | https://docs.expo.dev |
+
+---
+
+## 9. 하네스: winemine v0.1.0 빌드 팀
+
+**목표:** Plan D (Full Supabase 1-repo) 기준 v0.1.0 Internal Alpha를 1주 안에 빌드. 5명 에이전트 팀(infra-architect / supabase-engineer / rn-screen-builder / qa-inspector / release-engineer)으로 인프라 + 6개 마이그레이션 + Edge Function + 12 화면 + 통합 정합성 검증 + EAS Build를 Day 1~7에 진행.
+
+**트리거:** v0.1.0 빌드·구현·개발·Day N 작업 요청 시 `winemine-build` 스킬 사용. 후속(부분 재실행, Day N 다시, 마이그레이션 수정, 빌드 다시, QA 다시, 이전 결과 개선) 요청도 동일. 단순 질문은 직접 응답.
+
+**스펙:** [docs/spec/v0.1.0.md](./docs/spec/v0.1.0.md) (1100+ 줄, 모든 결정 포함)
+
+**변경 이력:**
+| 날짜 | 변경 내용 | 대상 | 사유 |
+|---|---|---|---|
+| 2026-05-19 | 초기 구성 (5 agents + 7 skills) | 전체 | v0.1.0 빌드 시작 |
