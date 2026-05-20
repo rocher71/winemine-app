@@ -103,7 +103,8 @@
   - fix loops: 1
   - changed files: app/onboarding/1-welcome.tsx (rewrite), src/components/onboarding/welcome-glass-glow.tsx (new), src/lib/i18n/{ko,en}.json (tagline)
   - completed: 2026-05-20T17:07:45Z
-- [ ] /onboarding/2-language — `app/onboarding/2-language.tsx`
+- [~] /onboarding/2-language — `app/onboarding/2-language.tsx`
+  - started: 2026-05-20T17:07:55Z
 - [ ] /onboarding/3-experience — `app/onboarding/3-experience.tsx`
 - [ ] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
 
