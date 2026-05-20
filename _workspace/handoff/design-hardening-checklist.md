@@ -120,7 +120,8 @@
   - changed files: app/onboarding/3-experience.tsx (rewrite), src/components/onboarding/experience-choice-card.tsx (new), src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T17:47:03Z
   - deferred: Q1 5-step vs 4-step 정책 → /onboarding/4-mode cycle에서 결정
-- [ ] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
+- [~] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
+  - started: 2026-05-20T17:47:20Z
 
 ## 진행 메모
 
