@@ -11,6 +11,9 @@ export default function TabsLayout() {
       <Tabs.Screen name="cellar" options={{ title: t('nav.cellar') }} />
       <Tabs.Screen name="notes" options={{ title: t('nav.notes') }} />
       <Tabs.Screen name="settings" options={{ title: t('nav.settings') }} />
+      <Tabs.Screen name="cellar/index" options={{ href: null }} />
+      <Tabs.Screen name="cellar/[lwin]" options={{ href: null }} />
+      <Tabs.Screen name="settings/index" options={{ href: null }} />
     </Tabs>
   );
 }

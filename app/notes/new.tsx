@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import * as Haptics from 'expo-haptics';
 import {
   Wine,
@@ -60,15 +60,28 @@ export default function NoteSourcePickerScreen() {
     [params.wine_lwin, params.photo_url],
   );
 
+  const renderBackdrop = useCallback(
+    (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        pressBehavior="close"
+        opacity={0.6}
+      />
+    ),
+    [],
+  );
+
   return (
-    <View className="flex-1" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
-      <Pressable className="absolute inset-0" onPress={handleClose} accessibilityLabel={t('common.close')} />
+    <View className="flex-1">
       <BottomSheet
         ref={sheetRef}
         index={0}
         snapPoints={snapPoints}
         enablePanDownToClose
         onClose={handleClose}
+        backdropComponent={renderBackdrop}
         backgroundStyle={{ backgroundColor: sheetBg }}
         handleIndicatorStyle={{ backgroundColor: handleColor }}
       >

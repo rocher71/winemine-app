@@ -15,9 +15,9 @@ interface PrimaryButtonProps {
 }
 
 const HEIGHT: Record<Size, string> = {
-  sm: 'h-9',
-  md: 'h-11',
-  lg: 'h-13',
+  sm: 'h-[36px]',
+  md: 'h-[44px]',
+  lg: 'h-[52px]',
 };
 const TEXT_SIZE: Record<Size, string> = {
   sm: 'text-[13px]',
