@@ -95,7 +95,8 @@
   - deferred (separate cycles): tasting_notes.is_public → supabase-engineer, Expert memo 필드 / shared notes / profiles.level_id → v0.2.0, E5 WSET 5-col 단어 vs dot bar → 사용자 결정
 
 ### P2 (시각 차이 작음 예상)
-- [ ] /onboarding/1-welcome — `app/onboarding/1-welcome.tsx`
+- [~] /onboarding/1-welcome — `app/onboarding/1-welcome.tsx`
+  - started: 2026-05-20T16:52:50Z
 - [ ] /onboarding/2-language — `app/onboarding/2-language.tsx`
 - [ ] /onboarding/3-experience — `app/onboarding/3-experience.tsx`
 - [ ] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
