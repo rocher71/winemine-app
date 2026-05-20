@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import nativewindPreset from 'nativewind/preset';
 
 /**
  * winemine NativeWind v4 tailwind 설정
@@ -7,6 +8,7 @@ import type { Config } from 'tailwindcss';
  */
 const config: Config = {
   content: ['./app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
+  presets: [nativewindPreset],
   darkMode: 'class',
   theme: {
     extend: {
