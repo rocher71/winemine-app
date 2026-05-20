@@ -200,6 +200,25 @@ export const overlay = {
   },
 } as const;
 
+// ---- shade() helper (design-spec cellar-detail.md §9-2 + §13-5) ----
+//
+// keyscreen src/components/shared/wine-label-art.tsx line 69~76 verbatim 포팅.
+// hex 색을 percent(%)만큼 밝게(+)/어둡게(-) 보정한 hex 문자열 반환.
+// 사용처: WineLabelArt inner gradient stop 계산 (bottle_color 0% → shade(-20) → shade(-40)).
+//
+// percent: -100 ~ +100. 음수는 어둡게, 양수는 밝게.
+export function shade(hex: string, percent: number): string {
+  const m = hex.replace('#', '');
+  if (m.length !== 6) return hex;
+  const num = parseInt(m, 16);
+  const amt = Math.round(2.55 * percent);
+  const r = Math.max(0, Math.min(255, (num >> 16) + amt));
+  const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00ff) + amt));
+  const b = Math.max(0, Math.min(255, (num & 0x0000ff) + amt));
+  const toHex = (n: number) => n.toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
 // ---- Cellar list 전용 토큰 (design-spec cellar-list.md §9 P0 — retroactive hardening) ----
 //
 // DrinkWindowBadge bg (5 status 중 too-young, past-peak)는 raw alpha.
@@ -392,6 +411,12 @@ export const typography = {
   // DrinkWindowBadge label (Inter 10 600 lh 12 nowrap)
   drinkWindowBadge: { family: 'Inter_600SemiBold', size: 10, lineHeight: 12 },
 
+  // ---- cellar-detail retroactive (design-spec cellar-detail.md §9-2 P0 — 2 신규) ----
+  // ProducerLine (Inter 13 lh 15.6 = 1.2 ratio) — 기존 cardBody(13 / 19.5) 와 lineHeight 다름
+  cellarHeroProducer: { family: 'Inter_400Regular', size: 13, lineHeight: 15.6 },
+  // Timeline from/to 양끝 라벨 (Inter 10 lh 12) — 기존 bottomNavActive(10) 와 lineHeight 명시
+  timelineYearLabel: { family: 'Inter_400Regular', size: 10, lineHeight: 12 },
+
   // ---- capture retroactive (design-spec capture.md §9 P0 — 11 신규) ----
   captureHeaderTitle:  { family: 'Inter_600SemiBold',          size: 17, lineHeight: 20.4 },
   optionCardTitle:     { family: 'PlayfairDisplay_400Regular', size: 18, lineHeight: 21.6 },
@@ -478,6 +503,76 @@ export const gradients = {
     L3: { colors: ['#C9A84C', '#C9A84C99'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
     L4: { colors: ['#8B1A2A', '#8B1A2A99'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
     L5: { colors: ['#A02030', '#A0203099'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+  },
+} as const;
+
+// ---- Cellar detail gradient factories (design-spec cellar-detail.md §9-2 P0 — retroactive hardening) ----
+//
+// 키스크린 src/app/cellar/[id]/page.tsx + wine-label-art.tsx 의 5개 gradient verbatim 포팅.
+// 160deg = 좌상→우하 약간 — start={0,0} end={0.342, 0.94} (cos(160°)=-0.94 → x:0.342; sin(160°)=0.342 → y:0.94).
+// 180deg = 위→아래 — start={0.5, 0} end={0.5, 1}.
+// 90deg  = 좌→우  — start={0, 0.5} end={1, 0.5}.
+
+// (1) Hero outer gradient (160deg, bottle_color → dark.bg.bottleShelf 70%)
+// scheme 무관 — keyscreen verbatim line 70: 양쪽 모드 모두 `#1a0a1e` 사용 (와인병의 어두운 분위기).
+export function cellarDetailHeroGradient(bottleColor: string) {
+  return {
+    colors: [bottleColor, dark.bg.bottleShelf] as readonly string[],
+    locations: [0, 0.7] as readonly number[],
+    start: { x: 0, y: 0 },
+    end:   { x: 0.342, y: 0.94 },
+  };
+}
+
+// (2) WineLabelArt inner gradient (160deg, 3-stop: bottle_color → shade(-20) → shade(-40))
+export function wineLabelArtGradient(bottleColor: string) {
+  return {
+    colors: [bottleColor, shade(bottleColor, -20), shade(bottleColor, -40)] as readonly string[],
+    locations: [0, 0.6, 1] as readonly number[],
+    start: { x: 0, y: 0 },
+    end:   { x: 0.342, y: 0.94 },
+  };
+}
+
+// (3) WineLabelArt 상단 highlight overlay (180deg, white alpha 0.10 → 0)
+// 양쪽 모드 동일 (라벨 광택 effect — 흰색 alpha).
+export const wineLabelArtHighlightGradient = {
+  colors: ['rgba(255,255,255,0.10)', 'rgba(255,255,255,0)'] as readonly string[],
+  start: { x: 0.5, y: 0 },
+  end:   { x: 0.5, y: 1 },
+} as const;
+
+// (4) DrinkWindowTimeline track gradient (90deg, 5-stop: gray-gold-wineRed-gold-gray)
+// keyscreen page.tsx line 398~400 verbatim — gray는 #9B8B7A alpha 0.3 (양쪽 모드 동일).
+export const drinkWindowTimelineGradient = {
+  colors: [
+    'rgba(155, 139, 122, 0.3)',
+    brand.gold,
+    brand.wineRed,
+    brand.gold,
+    'rgba(155, 139, 122, 0.3)',
+  ] as readonly string[],
+  locations: [0, 0.45, 0.5, 0.55, 1] as readonly number[],
+  start: { x: 0, y: 0.5 },
+  end:   { x: 1, y: 0.5 },
+} as const;
+
+// (5) DrinkThis Bottom fade overlay (180deg, transparent → 0.95)
+// 사양 §13-2 light 모드 분기 — light는 `light.bg.deepest` alpha 0.95.
+// dark는 keyscreen verbatim `rgba(5,2,10, ...)` (`brand.deepestDark` `#05020A`).
+export const cellarBottomFade = {
+  dark: {
+    colors: ['rgba(5, 2, 10, 0)', 'rgba(5, 2, 10, 0.95)'] as readonly string[],
+    locations: [0, 0.6] as readonly number[],
+    start: { x: 0.5, y: 0 },
+    end:   { x: 0.5, y: 1 },
+  },
+  light: {
+    // light.bg.deepest = #FAF5EC → rgba(250, 245, 236, ...)
+    colors: ['rgba(250, 245, 236, 0)', 'rgba(250, 245, 236, 0.95)'] as readonly string[],
+    locations: [0, 0.6] as readonly number[],
+    start: { x: 0.5, y: 0 },
+    end:   { x: 0.5, y: 1 },
   },
 } as const;
 

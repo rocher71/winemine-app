@@ -15,7 +15,9 @@
     "loading": "불러오는 중",
     "retry": "다시 시도",
     "empty": "아직 없습니다",
-    "refresh": "새로고침"
+    "refresh": "새로고침",
+    "yes": "예",
+    "no": "아니오"
   },
   "nav": {
     "home": "홈",
@@ -394,8 +396,29 @@
       "peak": "절정",
       "pastPeak": "절정 지남",
       "tooYoung": "아직 일러요",
-      "mature": "성숙기"
+      "mature": "성숙기",
+      "tip": "이 와인은 {{year}}년에 절정에 도달합니다",
+      "peakInYears": "절정까지 +{{n}}년",
+      "fromTo": "{{from}}년 ~ {{to}}년",
+      "empty": "음용 적기 정보 없음",
+      "a11y": {
+        "currentYear": "현재 {{year}}년",
+        "peak": "절정 — {{year}}년",
+        "opening": "지금이 마실 적기, {{from}}년부터 {{to}}년까지",
+        "mature": "성숙기, {{to}}년까지",
+        "tooYoung": "아직 일러요, {{from}}년부터 마실 수 있어요",
+        "pastPeak": "절정 지남, {{to}}년 이후"
+      }
     },
+    "notify": {
+      "label": "절정 시점에 알림받기",
+      "toggledOn": "알림이 켜졌어요",
+      "toggledOff": "알림이 꺼졌어요",
+      "a11yHint": "절정 도달 시 푸시 알림을 받을지 결정합니다"
+    },
+    "drinkThis": "이 와인 마시기",
+    "drinkThisConfirm": "셀러에서 이 와인을 마셨다고 기록할까요?",
+    "viewWineDetails": "와인 상세 보기",
     "actions": {
       "addToCellar": "셀러에 추가",
       "markConsumed": "음용 완료",
@@ -442,9 +465,17 @@
       "comingSoon": "마신 와인 탭은 곧 출시 (v0.2.0)"
     },
     "meta": {
-      "acquiredAt": "획득",
-      "consumedAt": "음용",
-      "price": "원"
+      "acquiredAt": "구매일",
+      "consumedAt": "음용일",
+      "price": "구매가",
+      "priceUnit": "원",
+      "memo": "메모",
+      "memoEmpty": "메모 없음",
+      "storage": "보관 위치",
+      "storageCellar": "셀러",
+      "storageFridge": "냉장고",
+      "storageRoom": "실온",
+      "storageOffsite": "외부"
     },
     "swipe": {
       "markConsumed": "음용 완료",
@@ -477,7 +508,11 @@
       "deleteFailed": "삭제하지 못했어요. 다시 시도해주세요.",
       "updateSuccess": "변경 사항을 저장했어요",
       "notesCountZero": "아직 노트가 없어요",
-      "notesCountSome": "노트 {{count}}개"
+      "notesCountSome": "노트 {{count}}개",
+      "a11y": {
+        "drinkThisHint": "셀러에서 제거하고 노트 작성으로 이동합니다",
+        "heroLabel": "{{wineName}}, {{producer}}, {{vintage}}"
+      }
     }
   },
   "wineDetail": {

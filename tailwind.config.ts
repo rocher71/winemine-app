@@ -137,6 +137,10 @@ const config: Config = {
         'chip-label':          ['11px', { lineHeight: '13.2px' }],
         'cellar-card-name':    ['12px', { lineHeight: '15px' }],
         'drink-window-badge':  ['10px', { lineHeight: '12px' }],
+
+        // cellar-detail retroactive (design-spec cellar-detail.md §9-2 P0)
+        'cellar-hero-producer': ['13px', { lineHeight: '15.6px' }],
+        'timeline-year-label':  ['10px', { lineHeight: '12px' }],
       },
     },
   },

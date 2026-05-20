@@ -57,8 +57,15 @@
   - changed files (~16): app/(tabs)/cellar/index.tsx, src/components/cellar/{cellar-card,cellar-tabs,drink-window-badge,cellar-search-input,type-filter-chips,sort-chips,add-cta,no-results,result-count}.tsx, src/components/cellar/search-sort-bar.tsx(deleted), src/components/shared/empty-state.tsx, src/lib/drink-window.ts(new), src/hooks/use-cellar.ts, src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T13:13:13Z
   - deferred (separate cycles): tasted 탭 → P1 분리(placeholder), AddCta BottomSheet form → 별도 cycle, swipe action → 영구 제거(2-col grid 부적합)
-- [~] /cellar/[lwin] — `app/(tabs)/cellar/[lwin].tsx`
+- [x] /cellar/[lwin] — `app/(tabs)/cellar/[lwin].tsx`
   - started: 2026-05-20T13:13:42Z
+  - spec: _workspace/design-specs/cellar-detail.md
+  - review reports: _workspace/design-review_cellar-detail_20260520_223411.md (1차 FAIL 6/6), _workspace/design-review_cellar-detail_20260520_225131_v2.md (PASS)
+  - qa report: _workspace/qa_day6_cellar_detail_retroactive_20260520_225518.md (PASS)
+  - fix loops: 1
+  - changed files (~17): app/(tabs)/cellar/[lwin].tsx (rewrite), src/components/cellar/{cellar-hero,wine-label-art,drink-window-card,drink-window-timeline,notify-toggle-card,meta-card,meta-grid,drink-this-cta}.tsx (new), src/components/shared/confirm-dialog.tsx (new), src/lib/design-tokens.ts (8 tokens + shade helper), tailwind.config.ts, src/lib/i18n/{ko,en}.json (~27 keys), src/components/notes/note-body-expert.tsx (price key rename); deleted: src/components/wine/drinking-window-bar.tsx, src/components/cellar/cellar-fields.tsx
+  - completed: 2026-05-20T14:00:01Z
+  - deferred (separate cycles): Community Reviews section v0.1.0 SCOPE-OUT (my notes count card 대체), tasting_notes.cellar_item_id FK 마이그레이션 → supabase-engineer, cellar_items.memo 컬럼 → supabase-engineer, DrinkWindowBadge a11y refactor → cellar-list cycle
 - [ ] /notes/new (source picker) — `app/notes/new.tsx`
 - [ ] /notes/new/write — `app/notes/new/write.tsx`
 - [ ] /notes/[noteId] — `app/notes/[noteId].tsx`

@@ -15,7 +15,9 @@
     "loading": "Loading",
     "retry": "Retry",
     "empty": "Nothing yet",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "yes": "Yes",
+    "no": "No"
   },
   "nav": {
     "home": "Home",
@@ -394,8 +396,29 @@
       "peak": "Peak",
       "pastPeak": "Past peak",
       "tooYoung": "Too young",
-      "mature": "Mature"
+      "mature": "Mature",
+      "tip": "This wine peaks in {{year}}",
+      "peakInYears": "+{{n}} years to peak",
+      "fromTo": "{{from}} – {{to}}",
+      "empty": "Drink window unavailable",
+      "a11y": {
+        "currentYear": "Current year {{year}}",
+        "peak": "Peak in {{year}}",
+        "opening": "Drinking window open, {{from}} to {{to}}",
+        "mature": "Mature, until {{to}}",
+        "tooYoung": "Too young, drinkable from {{from}}",
+        "pastPeak": "Past peak, after {{to}}"
+      }
     },
+    "notify": {
+      "label": "Notify me at peak",
+      "toggledOn": "Notifications enabled",
+      "toggledOff": "Notifications disabled",
+      "a11yHint": "Toggle to receive push when peak is reached"
+    },
+    "drinkThis": "Drink this wine",
+    "drinkThisConfirm": "Mark this cellar wine as consumed?",
+    "viewWineDetails": "See wine details",
     "actions": {
       "addToCellar": "Add to cellar",
       "markConsumed": "Mark consumed",
@@ -444,7 +467,15 @@
     "meta": {
       "acquiredAt": "Acquired",
       "consumedAt": "Consumed",
-      "price": "KRW"
+      "price": "Price",
+      "priceUnit": "KRW",
+      "memo": "Memo",
+      "memoEmpty": "No memo",
+      "storage": "Storage",
+      "storageCellar": "Cellar",
+      "storageFridge": "Fridge",
+      "storageRoom": "Room",
+      "storageOffsite": "Offsite"
     },
     "swipe": {
       "markConsumed": "Mark consumed",
@@ -477,7 +508,11 @@
       "deleteFailed": "Could not delete. Please try again.",
       "updateSuccess": "Changes saved",
       "notesCountZero": "No notes yet",
-      "notesCountSome": "{{count}} note(s)"
+      "notesCountSome": "{{count}} note(s)",
+      "a11y": {
+        "drinkThisHint": "Removes from cellar and opens tasting note",
+        "heroLabel": "{{wineName}}, {{producer}}, {{vintage}}"
+      }
     }
   },
   "wineDetail": {

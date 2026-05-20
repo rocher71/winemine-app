@@ -88,7 +88,7 @@ export function NoteBodyExpert({ fields }: Props) {
               {t('notes.expert.conclusionsPriceKrw')}
             </Text>
             <Text className="font-inter-semibold text-card-body text-text-primary dark:text-text-primary mt-2">
-              {c.estimated_price_krw.toLocaleString()} {t('cellar.meta.price')}
+              {c.estimated_price_krw.toLocaleString()} {t('cellar.meta.priceUnit')}
             </Text>
           </View>
         ) : null}
