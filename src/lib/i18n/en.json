@@ -167,12 +167,28 @@
     }
   },
   "capture": {
-    "title": "Scan label",
+    "title": "Add a wine",
     "options": {
       "camera": "Camera",
       "gallery": "Gallery",
       "manual": "Manual",
       "cancel": "Close"
+    },
+    "scan": {
+      "title": "Scan a label",
+      "sub": "AI auto-recognition"
+    },
+    "gallery": {
+      "title": "Pick from gallery",
+      "sub": "Recognize from existing photo"
+    },
+    "cellar": {
+      "title": "Store in cellar",
+      "sub": "Save for later"
+    },
+    "note": {
+      "title": "Write a tasting note",
+      "sub": "Record what you're drinking now"
     },
     "permission": {
       "title": "Camera access required",
@@ -181,6 +197,29 @@
       "openSettings": "Open settings"
     },
     "analyzing": "Analyzing label...",
+    "simulating": {
+      "scan": "Analyzing label…",
+      "gallery": "Analyzing photo…"
+    },
+    "recognized": {
+      "title": "Is this the right wine?",
+      "subtitle": "Extracted from label by AI",
+      "producer": "Producer",
+      "vintage": "Vintage",
+      "region": "Region",
+      "appellation": "Appellation",
+      "grape": "Grape",
+      "drinkWindow": "Drinking window",
+      "confirmNote": "Yes — write a note",
+      "confirmCellar": "Store in cellar",
+      "retry": "Retry",
+      "edit": "Edit manually"
+    },
+    "fileNotFound": {
+      "title": "Could not load the photo",
+      "body": "Please retake or pick from gallery",
+      "hint": "(Recognition proceeds even without a photo)"
+    },
     "manualPlaceholder": {
       "title": "Manual entry coming soon",
       "description": "For v0.1.0, please start with camera or gallery."
@@ -190,6 +229,17 @@
       "subtitle": "Review and write a note",
       "writeNote": "Write note",
       "retry": "Retake"
+    },
+    "toast": {
+      "cellarAdded": "Added to cellar"
+    },
+    "a11y": {
+      "exit": "Close capture screen",
+      "backToChoose": "Back to options",
+      "confirmNoteHint": "Open note writing screen",
+      "confirmCellarHint": "Add wine to cellar",
+      "retryHint": "Back to options screen",
+      "editHint": "Edit details manually"
     },
     "errors": {
       "noPhoto": "Could not get a photo. Please try again.",

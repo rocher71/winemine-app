@@ -19,11 +19,20 @@ const ICONS: Record<string, typeof Home> = {
   settings: Settings,
 };
 
+// 라우트 정책: capture 라우트에서는 BottomNav 자체를 숨김 (design-spec capture.md §10-5 / review S5).
+// 키스크린 components.md §8 verbatim — `/capture`는 noBottomNav.
+const HIDE_BOTTOM_NAV_ROUTES = new Set<string>(['capture']);
+
 export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const scheme = useColorScheme();
   const idleColor = scheme === 'light' ? light.text.muted : dark.text.muted;
   const bg = scheme === 'light' ? light.bg.deep : dark.bg.deep;
+
+  const currentRoute = state.routes[state.index];
+  if (currentRoute && HIDE_BOTTOM_NAV_ROUTES.has(currentRoute.name)) {
+    return null;
+  }
 
   return (
     <View

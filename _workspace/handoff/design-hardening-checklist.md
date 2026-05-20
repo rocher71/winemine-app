@@ -37,8 +37,15 @@
   - changed files (19): app/wine/[lwin].tsx, src/components/wine/{wine-hero,serving-temp-pill,favorite-toggle,my-tasting-note-card,write-note-cta,external-ratings-card,average-price-pill,price-chart-stub,community-drink-window-card,wine-story-card,review-list,add-to-cellar-cta}.tsx, src/components/shared/wm-bottle.tsx, src/hooks/use-my-note-for-wine.ts, src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json, _workspace/09_rn_screens_day6_wine_detail_retroactive.md
   - completed: 2026-05-20T11:40:15Z
   - deferred (separate cycles): Tabs row spec gap → design-spec-author, wine_favorites + serving_temp_{min,max} → supabase-engineer, MyTastingNoteCard expert rating 0-5 vs /100 표시 → notes 비즈니스 로직 cleanup
-- [~] /capture — `app/(tabs)/capture.tsx`
+- [x] /capture — `app/(tabs)/capture.tsx`
   - started: 2026-05-20T11:40:49Z
+  - spec: _workspace/design-specs/capture.md
+  - review reports: _workspace/design-review_capture_20260520_205032.md (1차 FAIL 6/6), _workspace/design-review_capture_20260520_211318_v2.md (PASS)
+  - qa report: _workspace/qa_day6_capture_retroactive_20260520_212450.md (PASS)
+  - fix loops: 1
+  - changed files (~18): app/(tabs)/capture.tsx, src/components/capture/{capture-header,choose-option-card,simulating-view,processing-overlay,ai-badge-banner,photo-frame,meta-row,file-not-found-hint,secondary-icon-button,recognized-view,label-scan-result-modal}.tsx, src/components/shared/primary-button.tsx, src/components/nav/bottom-nav.tsx, src/lib/animations/wm-pulse.ts, src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json
+  - completed: 2026-05-20T12:26:42Z
+  - deferred (separate cycles): wines_localized appellation/grapes 컬럼 추가 → supabase-engineer, FallbackLabel word-wrap → v0.2.0
 
 ### P1 (중간)
 - [ ] /cellar (list) — `app/(tabs)/cellar/index.tsx`

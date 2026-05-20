@@ -149,6 +149,44 @@ export const wsetGridBg = {
 // ---- Bottle gradient end (그라데이션 종점 — 다크 기준; light는 dark.bg.bottleShelf 사용) ----
 export const bottleGradientEnd = '#1a0a1e';
 
+// ---- Capture 화면 전용 토큰 (design-spec capture.md §9 P0 + design-review S4) ----
+//
+// PhotoFrame gradient end는 wine-detail의 `#1a0a1e`와 다른 값 (colors.md §6-3 verbatim "#1a0a0e").
+// light 모드는 review S4 채택값: withAlpha(light.text.primary, 0.85) = '#2A1A14' alpha 0.85.
+// FileNotFoundHint bg는 sparse alpha purple (dark) / 추정 sand alpha (light).
+// AI banner bg = withAlpha(brand.gold, 0.08).
+export const capture = {
+  bottlePhotoEnd: {
+    dark:  '#1a0a0e',
+    light: 'rgba(42, 26, 20, 0.85)',  // = withAlpha(light.text.primary, 0.85)
+  },
+  fileNotFoundBg: {
+    dark:  'rgba(74, 61, 86, 0.2)',
+    light: 'rgba(160, 140, 110, 0.12)',
+  },
+  aiBadgeBg: {
+    // gold 0.08 — 양쪽 모드 동일 (gold tint은 dark/light 모두 자연스러움)
+    dark:  'rgba(201, 168, 76, 0.08)',
+    light: 'rgba(184, 148, 56, 0.10)',  // light gold (#B89438) tint
+  },
+} as const;
+
+// ---- Overlay scrim (modal backdrop 표준 토큰) ----
+//
+// capture.tsx의 manual placeholder backdrop / label-scan-result-modal backdrop /
+// 그 외 modal full-screen 배경 통일. design-review f-1 하드코딩 4건 제거 목적.
+export const overlay = {
+  bgScrim: {
+    dark:  'rgba(0, 0, 0, 0.55)',
+    light: 'rgba(42, 26, 20, 0.40)',  // light 모드는 textInk 0.4
+  },
+  // 작은 round button 배경 (header X / OptionButton 등 — 라이트 모드는 cream tint)
+  pillBg: {
+    dark:  'rgba(0, 0, 0, 0.45)',
+    light: 'rgba(42, 26, 20, 0.10)',
+  },
+} as const;
+
 // ---- Expert blind mode background gradient ----
 export const expertBlindBg = {
   start: '#5A1A24',
@@ -179,6 +217,7 @@ export function withAlpha(hex: string, alpha: number): string {
 export const spacing = {
   '0': 0,
   '0.5': 2,
+  '0.75': 3,    // capture MetaRow mb (design-spec capture.md §9-1)
   '1': 4,
   '1.5': 6,
   '2': 8,
@@ -199,6 +238,7 @@ export const spacing = {
   '16': 64,
   '18': 72,
   '20': 80,
+  '26': 104,    // capture OptionCard height (design-spec capture.md §9-1)
 } as const;
 
 // ---- Radius (NW v4 기본 scale 사용 — sm:2 / DEFAULT:4 / md:6 / lg:8 / xl:12 / 2xl:16 / 3xl:24 / full:9999) ----
@@ -212,6 +252,7 @@ export const radius = {
   DEFAULT: 4,
   md: 6,
   lg: 8,
+  '10': 10,     // capture SecondaryButton radius (design-spec capture.md §9-1)
   xl: 12,
   '14': 14,
   '2xl': 16,
@@ -265,6 +306,19 @@ export const typography = {
   wsetMiniDim:         { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 14.3 },
   microLabel:          { family: 'Inter_400Regular',           size: 9,  letterSpacing: 0.36, textTransform: 'uppercase' as const },
   servingTempPill:     { family: 'Inter_500Medium',            size: 11, lineHeight: 13.2 },
+
+  // ---- capture retroactive (design-spec capture.md §9 P0 — 11 신규) ----
+  captureHeaderTitle:  { family: 'Inter_600SemiBold',          size: 17, lineHeight: 20.4 },
+  optionCardTitle:     { family: 'PlayfairDisplay_400Regular', size: 18, lineHeight: 21.6 },
+  optionCardSub:       { family: 'Inter_400Regular',           size: 12, lineHeight: 16.8 },
+  simulatingMessage:   { family: 'Inter_400Regular',           size: 14, lineHeight: 19.6 },
+  aiBadgeTitle:        { family: 'Inter_600SemiBold',          size: 13, lineHeight: 15.6 },
+  aiBadgeSubtitle:     { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
+  recognizedName:      { family: 'PlayfairDisplay_400Regular', size: 17, lineHeight: 21.25 },
+  metaRowLabel:        { family: 'Inter_400Regular',           size: 11, lineHeight: 15.4 },
+  metaRowValue:        { family: 'Inter_400Regular',           size: 11, lineHeight: 15.4 },
+  fileNotFoundTitle:   { family: 'Inter_700Bold',              size: 11, lineHeight: 16.5 },
+  fileNotFoundBody:    { family: 'Inter_400Regular',           size: 11, lineHeight: 16.5 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----
@@ -341,6 +395,21 @@ export const gradients = {
     L5: { colors: ['#A02030', '#A0203099'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
   },
 } as const;
+
+// ---- Capture PhotoFrame gradient factory (design-spec capture.md §9 P0) ----
+//
+// bottleColor (와인 종별 색) → capture.bottlePhotoEnd[scheme] 180deg (위→아래).
+// expo-linear-gradient props 형태로 반환. scheme 인자로 dark/light 분기.
+export function captureBottlePhotoGradient(
+  bottleColor: string,
+  scheme: 'dark' | 'light' = 'dark',
+) {
+  return {
+    colors: [bottleColor, capture.bottlePhotoEnd[scheme]] as readonly string[],
+    start: { x: 0.5, y: 0 },
+    end:   { x: 0.5, y: 1 },
+  };
+}
 
 // ---- Component sizes ----
 export const componentSize = {

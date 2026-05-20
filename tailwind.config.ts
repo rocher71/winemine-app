@@ -64,15 +64,20 @@ const config: Config = {
 
       // Tailwind 기본 spacing scale에 winemine 비표준 값 추가.
       // 기본 scale에 없는 13(52px), 18(72px), 22(88px) 등을 명시. 9/10/11/14는 기본 scale에 이미 있음.
+      // capture retroactive: 0.75(3px MetaRow mb), 26(104px OptionCard height).
       spacing: {
+        '0.75': '3px',
         '13': '52px',
         '18': '72px',
         '22': '88px',
+        '26': '104px',
       },
 
       // home retroactive: 14, 20 신규 (NW v4 기본은 12=xl, 16=2xl, 24=3xl).
       // wine-detail retroactive: 18 (WineHero outer — 사양 §3-3, §9 P0).
+      // capture retroactive: 10 (SecondaryButton — 사양 §9 P0).
       borderRadius: {
+        '10': '10px',
         '14': '14px',
         '18': '18px',
         '20': '20px',

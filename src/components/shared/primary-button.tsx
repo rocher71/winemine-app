@@ -2,7 +2,7 @@ import { Pressable, Text, ActivityIndicator, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 type Size = 'sm' | 'md' | 'lg';
-type Variant = 'primary' | 'secondary' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'cellar';
 
 interface PrimaryButtonProps {
   label: string;
@@ -28,11 +28,15 @@ const VARIANT_BG: Record<Variant, string> = {
   primary: 'bg-wine-red active:bg-wine-red-hover',
   secondary: 'bg-surface border border-gold',
   ghost: 'bg-transparent',
+  // capture ConfirmCellar — transparent bg + gold border (dark) / border-active (light) + gold text
+  // design-spec capture.md §3-7 / §9-3 P0 / design-review S3
+  cellar: 'bg-transparent border border-gold dark:border-gold',
 };
 const VARIANT_TEXT: Record<Variant, string> = {
   primary: 'text-cream',
   secondary: 'text-gold',
   ghost: 'text-text-primary dark:text-text-primary',
+  cellar: 'text-gold',
 };
 
 export function PrimaryButton({

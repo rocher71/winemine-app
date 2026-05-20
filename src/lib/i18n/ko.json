@@ -167,12 +167,28 @@
     }
   },
   "capture": {
-    "title": "라벨 촬영",
+    "title": "와인 추가",
     "options": {
       "camera": "카메라",
       "gallery": "갤러리",
       "manual": "직접 입력",
       "cancel": "닫기"
+    },
+    "scan": {
+      "title": "라벨 스캔",
+      "sub": "AI가 자동 인식해요"
+    },
+    "gallery": {
+      "title": "갤러리에서 선택",
+      "sub": "기존 사진으로 인식해요"
+    },
+    "cellar": {
+      "title": "셀러에 보관",
+      "sub": "오늘 마실 게 아니면 보관"
+    },
+    "note": {
+      "title": "테이스팅 노트 작성",
+      "sub": "지금 마시는 와인 기록"
     },
     "permission": {
       "title": "카메라 접근 권한이 필요해요",
@@ -181,6 +197,29 @@
       "openSettings": "설정 열기"
     },
     "analyzing": "라벨 분석 중...",
+    "simulating": {
+      "scan": "라벨을 분석 중…",
+      "gallery": "사진을 분석 중…"
+    },
+    "recognized": {
+      "title": "이 와인이 맞나요?",
+      "subtitle": "AI가 라벨에서 추출한 정보입니다",
+      "producer": "생산자",
+      "vintage": "빈티지",
+      "region": "지역",
+      "appellation": "아펠라시옹",
+      "grape": "품종",
+      "drinkWindow": "음용 적기",
+      "confirmNote": "맞아요 — 노트 작성",
+      "confirmCellar": "셀러에 보관",
+      "retry": "다시",
+      "edit": "직접 수정"
+    },
+    "fileNotFound": {
+      "title": "사진을 가져오지 못했어요",
+      "body": "다시 촬영하거나 갤러리에서 선택해주세요",
+      "hint": "(시안 모드에서는 인식만 진행됩니다)"
+    },
     "manualPlaceholder": {
       "title": "수동 입력은 곧 추가됩니다",
       "description": "v0.1.0에서는 카메라 또는 갤러리로 시작해주세요."
@@ -190,6 +229,17 @@
       "subtitle": "정보를 확인하고 노트를 작성하세요",
       "writeNote": "노트 작성하기",
       "retry": "다시 촬영"
+    },
+    "toast": {
+      "cellarAdded": "셀러에 추가됨"
+    },
+    "a11y": {
+      "exit": "캡처 화면 닫기",
+      "backToChoose": "옵션 선택으로 돌아가기",
+      "confirmNoteHint": "노트 작성 화면으로 이동",
+      "confirmCellarHint": "와인을 셀러에 추가",
+      "retryHint": "옵션 선택 화면으로 돌아가기",
+      "editHint": "수동으로 정보 수정"
     },
     "errors": {
       "noPhoto": "사진을 가져오지 못했어요. 다시 시도해주세요.",

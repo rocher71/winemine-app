@@ -1,3 +1,8 @@
+/**
+ * @deprecated v0.1.0 Day 6 retroactive: RecognizedView로 대체 (design-spec capture.md §3-4~3-8).
+ * 이 컴포넌트는 더 이상 capture flow에서 사용되지 않음. 파일은 history 보존용으로 남김.
+ * 새 진입점: src/components/capture/recognized-view.tsx
+ */
 import { Modal, View, Text, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react-native';
@@ -5,7 +10,7 @@ import { useColorScheme } from 'react-native';
 import { PrimaryButton } from '@/components/shared/primary-button';
 import { WineNameDisplay } from '@/components/shared/wine-name-display';
 import { getDefaultBottleColor, parseLwinVintage } from '@/lib/lwin';
-import { brand, dark, light, type TypeCanonical } from '@/lib/design-tokens';
+import { dark, light, overlay, type TypeCanonical } from '@/lib/design-tokens';
 
 interface Wine {
   lwin: string;
@@ -42,7 +47,9 @@ function asTypeCanonical(value: string | null | undefined): TypeCanonical | null
 export function LabelScanResultModal({ visible, wine, onWriteNote, onRetry, onClose }: Props) {
   const { t } = useTranslation();
   const scheme = useColorScheme();
-  const iconColor = scheme === 'light' ? light.text.primary : dark.text.primary;
+  const isLight = scheme === 'light';
+  const iconColor = isLight ? light.text.primary : dark.text.primary;
+  const scrimBg = isLight ? overlay.bgScrim.light : overlay.bgScrim.dark;
 
   if (!wine) return null;
 
@@ -53,7 +60,7 @@ export function LabelScanResultModal({ visible, wine, onWriteNote, onRetry, onCl
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View
         className="flex-1 items-center justify-end"
-        style={{ backgroundColor: 'rgba(0,0,0,0.55)' }}
+        style={{ backgroundColor: scrimBg }}
       >
         <View className="w-full rounded-t-md bg-bg-deep dark:bg-bg-deep px-5 pb-8 pt-5">
           <View className="flex-row items-center justify-between">
