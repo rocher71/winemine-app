@@ -253,7 +253,7 @@
   },
   "notes": {
     "new": "New note",
-    "write": "Write note",
+    "write": "Tasting note",
     "rating": "Rating",
     "tastedAt": "Tasted on",
     "source": {
@@ -279,6 +279,10 @@
       "wineLinkCaptureCta": "Start by scanning a label",
       "modeBeginner": "Beginner",
       "modeExpert": "Expert",
+      "modeBeginnerEyebrow": "Beginner mode",
+      "modeExpertEyebrow": "Expert mode",
+      "todaysGlass": "Today's glass",
+      "beginnerGreeting": "A 5-minute record of your wine. Forget the jargon — just write what you feel.",
       "commentLabel": "Comment",
       "commentPlaceholder": "Write down your impressions freely",
       "submit": "Save",
@@ -289,7 +293,27 @@
       "unsavedDesc": "Leaving now will discard your in-progress note.",
       "unsavedDiscard": "Discard and leave",
       "unsavedCancel": "Keep editing",
-      "blindMode": "Blind mode"
+      "blindMode": "Blind mode",
+      "blindHint": "Hide wine info for blind tasting",
+      "discardHint": "Discard draft",
+      "saveHint": "Save note",
+      "beginnerMemoPlaceholder": "e.g. A friend recommended it. First sip felt warm.",
+      "beginnerSummaryEyebrow": "Today's glass",
+      "priceCaptureLabel": "Add price",
+      "pricePlaceholder": "Price (KRW)",
+      "shareLabel": "Share to community",
+      "shareSub": "Others can see this note on the community Notes tab.",
+      "beginnerStep": {
+        "impression": "First sip — how was it?",
+        "impressionStar": "Wow!",
+        "impressionSmile": "Nice",
+        "impressionThinking": "Hmm...",
+        "impressionHint": "Pick first impression",
+        "palate": "Balance",
+        "aroma": "What aromas come to mind?",
+        "finish": "How long does it linger?",
+        "memo": "A line about this wine"
+      }
     },
     "beginner": {
       "wsetSweetness": "Sweetness",
@@ -316,7 +340,37 @@
         "tobacco": "Tobacco",
         "chocolate": "Chocolate",
         "leather": "Leather",
-        "mineral": "Mineral"
+        "mineral": "Mineral",
+        "stoneFruit": "Stone fruit",
+        "sweet": "Honey/Caramel",
+        "yeast": "Bread/Yeast"
+      },
+      "palateDim": {
+        "sweetness": "Sweetness",
+        "acidity": "Acidity",
+        "body": "Body",
+        "tannin": "Tannin",
+        "bubble": "Bubbles"
+      },
+      "palateLevel": {
+        "low": "Low",
+        "mid": "Mid",
+        "high": "High"
+      },
+      "finishLevel": {
+        "short": "Short",
+        "medium": "Medium",
+        "long": "Long"
+      },
+      "aromaCard": {
+        "berry": "Berry",
+        "citrus": "Citrus",
+        "stoneFruit": "Stone fruit",
+        "floral": "Floral",
+        "spice": "Spice",
+        "sweet": "Honey/Caramel",
+        "earth": "Earth/Herb",
+        "yeast": "Bread/Yeast"
       }
     },
     "expert": {

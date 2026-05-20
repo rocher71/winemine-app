@@ -253,7 +253,7 @@
   },
   "notes": {
     "new": "새 노트",
-    "write": "노트 작성",
+    "write": "테이스팅 노트",
     "rating": "별점",
     "tastedAt": "시음 일자",
     "source": {
@@ -279,6 +279,10 @@
       "wineLinkCaptureCta": "라벨 촬영으로 시작하기",
       "modeBeginner": "입문자",
       "modeExpert": "전문가",
+      "modeBeginnerEyebrow": "입문자 모드",
+      "modeExpertEyebrow": "전문가 모드",
+      "todaysGlass": "오늘의 한 잔",
+      "beginnerGreeting": "와인 한 잔, 5분이면 끝나는 짧은 기록. 어려운 용어는 잠시 잊고 느낀대로 적어보세요.",
       "commentLabel": "코멘트",
       "commentPlaceholder": "느낀 점을 자유롭게 적어보세요",
       "submit": "저장",
@@ -289,7 +293,27 @@
       "unsavedDesc": "지금 나가면 작성 중인 내용이 사라집니다.",
       "unsavedDiscard": "폐기하고 나가기",
       "unsavedCancel": "계속 작성",
-      "blindMode": "블라인드 모드"
+      "blindMode": "블라인드 모드",
+      "blindHint": "와인 정보를 가리고 블라인드 시음",
+      "discardHint": "작성 중인 내용 폐기",
+      "saveHint": "노트 저장",
+      "beginnerMemoPlaceholder": "예: 새 친구가 추천해준 와인. 첫 잔이 따뜻하게 느껴졌다.",
+      "beginnerSummaryEyebrow": "오늘의 한 잔",
+      "priceCaptureLabel": "가격 입력",
+      "pricePlaceholder": "가격 (KRW)",
+      "shareLabel": "커뮤니티에 공유",
+      "shareSub": "커뮤니티의 시음 노트 탭에서 이 노트가 보여요.",
+      "beginnerStep": {
+        "impression": "첫 모금, 어땠어요?",
+        "impressionStar": "와! 최고!",
+        "impressionSmile": "괜찮아요",
+        "impressionThinking": "음... 글쎄",
+        "impressionHint": "첫 인상 선택",
+        "palate": "맛의 균형",
+        "aroma": "어떤 향이 떠올라요?",
+        "finish": "여운은 얼마나?",
+        "memo": "한 줄 메모"
+      }
     },
     "beginner": {
       "wsetSweetness": "단맛",
@@ -316,7 +340,37 @@
         "tobacco": "담배",
         "chocolate": "초콜릿",
         "leather": "가죽",
-        "mineral": "미네랄"
+        "mineral": "미네랄",
+        "stoneFruit": "복숭아·살구",
+        "sweet": "꿀·캐러멜",
+        "yeast": "빵·이스트"
+      },
+      "palateDim": {
+        "sweetness": "단맛",
+        "acidity": "신맛",
+        "body": "무게감 (바디)",
+        "tannin": "떫은맛 (타닌)",
+        "bubble": "기포"
+      },
+      "palateLevel": {
+        "low": "낮음",
+        "mid": "중간",
+        "high": "높음"
+      },
+      "finishLevel": {
+        "short": "짧음",
+        "medium": "중간",
+        "long": "긴"
+      },
+      "aromaCard": {
+        "berry": "베리",
+        "citrus": "시트러스",
+        "stoneFruit": "복숭아·살구",
+        "floral": "꽃",
+        "spice": "향신료",
+        "sweet": "꿀·캐러멜",
+        "earth": "흙·허브",
+        "yeast": "빵·이스트"
       }
     },
     "expert": {

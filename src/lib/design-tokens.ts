@@ -447,6 +447,20 @@ export const typography = {
   cellarRowName:        { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 15.6 },
   cellarRowMeta:        { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
   backToTemplateLink:   { family: 'Inter_600SemiBold',          size: 11, lineHeight: 13.2 },
+
+  // ---- notes-write retroactive (design-spec notes-write.md §4-2 P0 — 5 신규) ----
+  //
+  // verbatim 원칙: keyscreen beginner-note.tsx line 98~136 (BeginnerHeader 3-tier) +
+  // beginner-note.tsx StepHeader badge (Inter 700 11) + AutoSummaryCard 2-tier
+  // (eyebrow Inter 400 11 ls 1.1 gold uppercase + body Playfair italic 13 lh 19.5).
+  // stepHeaderTitle은 cardSectionTitle (Inter 600 14 lh 16.8) 재사용. shareToggleSub은 cellarRowMeta 재사용.
+  // beginnerEyebrow letter-spacing 0.16em → 11 × 0.16 = 1.76px.
+  // summaryEyebrow letter-spacing 0.10em → 11 × 0.10 = 1.1px.
+  beginnerEyebrow:    { family: 'Inter_500Medium',            size: 11, lineHeight: 11,   letterSpacing: 1.76, textTransform: 'uppercase' as const },
+  beginnerGreeting:   { family: 'Inter_400Regular',           size: 12, lineHeight: 18 },
+  stepHeaderBadge:    { family: 'Inter_700Bold',              size: 11, lineHeight: 13.2 },
+  summaryEyebrow:     { family: 'Inter_400Regular',           size: 11, lineHeight: 11,   letterSpacing: 1.1,  textTransform: 'uppercase' as const },
+  summaryText:        { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 19.5, fontStyle: 'italic' as const },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----

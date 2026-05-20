@@ -46,7 +46,22 @@ function readDim(
   key: DimKey,
 ): string | null {
   if (!fields || typeof fields !== 'object' || Array.isArray(fields)) return null;
-  const value = (fields as Record<string, unknown>)[key];
+  const obj = fields as Record<string, unknown>;
+  // 신규 BeginnerFields shape (Day 6+): { palate: { sweetness, acidity, body, tannin } } 또는
+  // Expert shape: { palate: { sweetness:n, acidity:n, ... } }.
+  const palate = obj.palate;
+  if (palate && typeof palate === 'object' && !Array.isArray(palate)) {
+    const v = (palate as Record<string, unknown>)[key];
+    if (v !== null && v !== undefined) return String(v);
+  }
+  // legacy beginner shape (wset.{sweetness/acidity/tannin/body}):
+  const wset = obj.wset;
+  if (wset && typeof wset === 'object' && !Array.isArray(wset)) {
+    const v = (wset as Record<string, unknown>)[key];
+    if (v !== null && v !== undefined) return String(v);
+  }
+  // top-level fallback (drop-through):
+  const value = obj[key];
   if (value === null || value === undefined) return null;
   return String(value);
 }
@@ -54,13 +69,17 @@ function readDim(
 function shortWsetValue(t: (k: string) => string, raw: string | null): string {
   if (!raw) return '—';
   const low = raw.toLowerCase();
-  if (low === 'low') return t('notes.beginner.wsetShort.low');
+  // 신규 BeginnerFields palate level (low/mid/high) — palateLevel.* 키 사용
+  if (low === 'low') return t('notes.beginner.palateLevel.low');
+  if (low === 'mid') return t('notes.beginner.palateLevel.mid');
+  if (low === 'high') return t('notes.beginner.palateLevel.high');
+  // legacy WSET 5-step labels
   if (low === 'medium-' || low === 'm-' || low === 'mediumminus')
     return t('notes.beginner.wsetShort.mediumMinus');
   if (low === 'medium' || low === 'm') return t('notes.beginner.wsetShort.medium');
   if (low === 'medium+' || low === 'm+' || low === 'mediumplus')
     return t('notes.beginner.wsetShort.mediumPlus');
-  if (low === 'high') return t('notes.beginner.wsetShort.high');
+  // Expert numeric (1~5) — 그대로 표시
   return raw;
 }
 

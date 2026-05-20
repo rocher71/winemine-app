@@ -75,8 +75,15 @@
   - changed files (~9): app/notes/new.tsx (rewrite), src/components/notes/{template-card,source-picker,cellar-bottom-sheet}.tsx (new), src/lib/notes/builtin-templates.ts (new), src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T15:41:57Z
   - deferred (separate cycles): tasting_notes.source_type schema 변경 + template_id 컬럼 신설 → supabase-engineer, write.tsx 연동(templateId/from query) → 별도 cycle
-- [~] /notes/new/write — `app/notes/new/write.tsx`
+- [x] /notes/new/write — `app/notes/new/write.tsx`
   - started: 2026-05-20T15:42:30Z
+  - spec: _workspace/design-specs/notes-write.md
+  - review reports: _workspace/design-review_notes-write_20260521_005332.md (1차 FAIL 5/6 + c gradient 1건), _workspace/design-review_notes-write_20260521_011154_v2.md (PASS)
+  - qa report: _workspace/qa_day6_notes_write_retroactive_20260521_011913.md (PASS)
+  - fix loops: 1
+  - changed files (~19): app/notes/new/write.tsx (rewrite), src/components/notes/{step-header,beginner-header,impression-triad,palate-triad,aroma-grid,finish-triad,auto-summary-card,price-capture,share-to-community,save-pill}.tsx (new), src/components/notes/{beginner-form,expert-form,note-body-beginner}.tsx (modified), src/components/wine/my-tasting-note-card.tsx, src/lib/notes/summarize.ts (new), src/lib/design-tokens.ts (5 typography), tailwind.config.ts, src/lib/i18n/{ko,en}.json
+  - completed: 2026-05-20T16:20:32Z
+  - deferred (separate cycles): tasting_notes.is_public 컬럼 → supabase-engineer, XP 시스템 / Expert 7-step / VariantTabs / DynamicTemplateForm → v0.2.0, iOS vs Android italic render → Day 7 EAS, light Switch trackColor 대비 / priceCaptureLabel "(+5 XP)" 미세 → 후속
 - [ ] /notes/[noteId] — `app/notes/[noteId].tsx`
 
 ### P2 (시각 차이 작음 예상)

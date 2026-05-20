@@ -1,3 +1,22 @@
+/**
+ * /notes/new/write — 테이스팅 노트 작성 (Beginner 6-step / Expert 5-section).
+ *
+ * 사양: design-spec notes-write.md.
+ * Day 6 retroactive hardening:
+ *   - BeginnerForm 6 Step verbatim (재작성됨)
+ *   - templateId / from / itemId query 처리 (§12-3)
+ *   - submitting 시 disabled (§10 E7)
+ *   - header SaveBtn + footer SavePill 둘 다 (§10 E8)
+ *   - BeginnerFields shape 변경 (impression/palate/aromas/finish/memo/priceCapture?/shareToCommunity?)
+ *
+ * Query (현재 RN keep + 신규 추가):
+ *   wine_lwin?  — LWIN 7|11|13
+ *   source?     — cellar/restaurant/shop/gift/tasting_event/other (DB enum)
+ *   photo_url?  — Storage path
+ *   templateId? — builtin-beginner / builtin-expert (UI mode 초기화)
+ *   from?       — cellar/newEntry/draft (keyscreen 호환, → source mapping)
+ *   itemId?     — cellar_items.id (from=cellar 시)
+ */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
@@ -26,15 +45,21 @@ import {
   defaultExpertFields,
   type ExpertFields,
 } from '@/components/notes/expert-form';
+import { SavePill } from '@/components/notes/save-pill';
 import { useWine } from '@/hooks/use-wine';
 import { useProfile } from '@/hooks/use-profile';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
 import { brand } from '@/lib/design-tokens';
+import {
+  BUILTIN_BEGINNER_ID,
+  BUILTIN_EXPERT_ID,
+} from '@/lib/notes/builtin-templates';
 import type { Database } from '@shared/types/database.types';
 
 type NoteInsert = Database['public']['Tables']['tasting_notes']['Insert'];
 type Source = 'cellar' | 'restaurant' | 'shop' | 'gift' | 'tasting_event' | 'other';
+type FromQuery = 'cellar' | 'newEntry' | 'draft';
 
 const LWIN_REGEX = /^\d{7}$|^\d{11}$|^\d{13}$/;
 const SOURCES: ReadonlySet<Source> = new Set([
@@ -45,18 +70,30 @@ const SOURCES: ReadonlySet<Source> = new Set([
   'tasting_event',
   'other',
 ]);
+const FROM_VALUES: ReadonlySet<FromQuery> = new Set(['cellar', 'newEntry', 'draft']);
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
+// ---- BeginnerFields zod (E10 신규 shape — palate {level} + aromas[] + impression + finish + memo + price + share) ----
+const PalateLevelSchema = z.enum(['low', 'mid', 'high']);
 const BeginnerInputSchema = z.object({
-  wset: z.object({
-    sweetness: z.number().int().min(1).max(5),
-    acidity: z.number().int().min(1).max(5),
-    tannin: z.number().int().min(1).max(5),
-    body: z.number().int().min(1).max(5),
+  impression: z.enum(['star', 'smile', 'thinking']),
+  palate: z.object({
+    sweetness: PalateLevelSchema,
+    acidity: PalateLevelSchema,
+    body: PalateLevelSchema,
+    tannin: PalateLevelSchema.optional(),
+    bubble: PalateLevelSchema.optional(),
   }),
-  aroma_tags: z.array(z.string()),
-  comments: z.string().max(5000),
+  aromas: z.array(
+    z.enum(['berry', 'citrus', 'stoneFruit', 'floral', 'spice', 'sweet', 'earth', 'yeast']),
+  ),
+  finish: z.enum(['short', 'medium', 'long']),
+  memo: z.string().max(5000),
+  priceCapture: z
+    .object({ enabled: z.boolean(), krw: z.number().int().min(0).nullable() })
+    .optional(),
+  shareToCommunity: z.boolean().optional(),
 });
 
 const ExpertInputSchema = z.object({
@@ -109,17 +146,37 @@ export default function NoteWriteScreen() {
     wine_lwin?: string;
     source?: string;
     photo_url?: string;
+    // 신규 (§12-3 — keyscreen 호환 v0.1.0)
+    templateId?: string;
+    from?: string;
+    itemId?: string;
   }>();
-  const wineLwin = typeof params.wine_lwin === 'string' && LWIN_REGEX.test(params.wine_lwin)
-    ? params.wine_lwin
-    : null;
-  const sourceParam =
+  const wineLwin =
+    typeof params.wine_lwin === 'string' && LWIN_REGEX.test(params.wine_lwin)
+      ? params.wine_lwin
+      : null;
+  const sourceParamRaw =
     typeof params.source === 'string' && SOURCES.has(params.source as Source)
       ? (params.source as Source)
       : null;
-  const photoUrl = typeof params.photo_url === 'string' && params.photo_url.length > 0
-    ? params.photo_url
-    : null;
+  const photoUrl =
+    typeof params.photo_url === 'string' && params.photo_url.length > 0
+      ? params.photo_url
+      : null;
+  const templateIdParam =
+    typeof params.templateId === 'string' ? decodeURIComponent(params.templateId) : null;
+  const fromParam =
+    typeof params.from === 'string' && FROM_VALUES.has(params.from as FromQuery)
+      ? (params.from as FromQuery)
+      : null;
+
+  // from → source fallback mapping (§12-3)
+  const effectiveSource = useMemo<Source | null>(() => {
+    if (sourceParamRaw) return sourceParamRaw;
+    if (fromParam === 'cellar') return 'cellar';
+    if (fromParam === 'newEntry') return 'other';
+    return null;
+  }, [sourceParamRaw, fromParam]);
 
   const { wine, loading: wineLoading } = useWine(wineLwin);
   const { profile, loading: profileLoading } = useProfile();
@@ -133,12 +190,21 @@ export default function NoteWriteScreen() {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ tone: 'success' | 'error'; message: string } | null>(null);
 
-  // Sync default mode from profile when it loads.
+  // mode 초기화 — templateId 우선, 다음 profile.experience.
   useEffect(() => {
     if (profileLoading) return;
+    if (templateIdParam === BUILTIN_EXPERT_ID) {
+      setMode('expert');
+      return;
+    }
+    if (templateIdParam === BUILTIN_BEGINNER_ID) {
+      setMode('beginner');
+      return;
+    }
     const exp = profile?.experience;
     if (exp === 'expert' || exp === 'beginner') setMode(exp);
-  }, [profile?.experience, profileLoading]);
+    // mount + templateIdParam/profile.experience 변경 시만 — touched flag와 무관.
+  }, [templateIdParam, profile?.experience, profileLoading]);
 
   const flashToast = useCallback((tone: 'success' | 'error', message: string) => {
     setToast({ tone, message });
@@ -198,7 +264,7 @@ export default function NoteWriteScreen() {
       mode,
       rating: rating > 0 ? rating : undefined,
       tasted_at: tastedAt,
-      source: sourceParam ?? undefined,
+      source: effectiveSource ?? undefined,
       beginner_fields: mode === 'beginner' ? beginnerFields : undefined,
       expert_fields: mode === 'expert' ? expertFields : undefined,
       photo_url: photoUrl ?? undefined,
@@ -228,6 +294,7 @@ export default function NoteWriteScreen() {
             ? (parsed.data.expert_fields as unknown as NoteInsert['expert_fields'])
             : null,
         photo_url: parsed.data.photo_url ?? null,
+        // TODO(v0.2.0 supabase-engineer): is_public 컬럼 도입 시 payload.is_public = beginnerFields.shareToCommunity.
       };
       const { data, error } = await supabase
         .from('tasting_notes')
@@ -249,7 +316,7 @@ export default function NoteWriteScreen() {
     mode,
     rating,
     tastedAt,
-    sourceParam,
+    effectiveSource,
     beginnerFields,
     expertFields,
     photoUrl,
@@ -257,6 +324,7 @@ export default function NoteWriteScreen() {
     t,
   ]);
 
+  // header right Save text — keep (footer SavePill과 동일 onPress).
   const headerRight = useMemo(
     () => (
       <Pressable
@@ -264,6 +332,8 @@ export default function NoteWriteScreen() {
         disabled={saving || !wineLwin}
         accessibilityRole="button"
         accessibilityLabel={t('notes.writeForm.save')}
+        accessibilityHint={t('notes.writeForm.saveHint')}
+        accessibilityState={{ disabled: !wineLwin, busy: saving }}
         hitSlop={10}
         className="px-3 py-2"
       >
@@ -280,6 +350,9 @@ export default function NoteWriteScreen() {
     ),
     [submit, saving, wineLwin, t],
   );
+
+  // submitting 시 입력 차단 (§10 E7). 더블 submit 방지.
+  const inputBlock = saving;
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
@@ -306,13 +379,16 @@ export default function NoteWriteScreen() {
             <ModeToggle value={mode} onChange={onModeChange} />
           </View>
 
-          <View className="mt-4">
+          <View
+            className="mt-4"
+            pointerEvents={inputBlock ? 'none' : 'auto'}
+            style={{ opacity: inputBlock ? 0.7 : 1 }}
+          >
             {mode === 'beginner' ? (
               <BeginnerForm
+                wine={wine}
                 rating={rating}
                 onRatingChange={onRatingChange}
-                tastedAt={tastedAt}
-                onTastedAtChange={onTastedAtChange}
                 fields={beginnerFields}
                 onFieldsChange={onBeginnerChange}
               />
@@ -327,6 +403,11 @@ export default function NoteWriteScreen() {
               />
             )}
           </View>
+
+          {/* Footer Save pill (§10 E8 — header SaveBtn과 동일 onPress) */}
+          <View className="mt-5">
+            <SavePill onPress={submit} disabled={!wineLwin} saving={saving} />
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -338,4 +419,3 @@ export default function NoteWriteScreen() {
     </View>
   );
 }
-

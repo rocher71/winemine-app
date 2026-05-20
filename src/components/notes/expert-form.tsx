@@ -4,7 +4,7 @@ import { useColorScheme } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { WSETSlider } from './wset-slider';
 import { StarRating } from './star-rating';
-import { brand, dark, light, expertBlindBg } from '@/lib/design-tokens';
+import { brand, dark, light, gradients } from '@/lib/design-tokens';
 
 export type Readiness = 'tooYoung' | 'drink' | 'pastPeak';
 
@@ -94,9 +94,9 @@ export function ExpertForm({
         </View>
         {fields.blind ? (
           <LinearGradient
-            colors={[expertBlindBg.start, expertBlindBg.end]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            colors={gradients.expertBlind.colors as unknown as readonly [string, string, ...string[]]}
+            start={gradients.expertBlind.start}
+            end={gradients.expertBlind.end}
             style={{ marginTop: 12, borderRadius: 8, paddingVertical: 16, paddingHorizontal: 12 }}
           >
             <Text className="font-inter text-card-body text-cream text-center">

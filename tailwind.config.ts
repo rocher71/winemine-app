@@ -153,6 +153,14 @@ const config: Config = {
         'cellar-row-name':       ['13px', { lineHeight: '15.6px' }],
         'cellar-row-meta':       ['11px', { lineHeight: '13.2px' }],
         'back-to-template':      ['11px', { lineHeight: '13.2px' }],
+
+        // notes-write retroactive (design-spec notes-write.md §4-2 P0 — 5 신규)
+        // stepHeaderTitle은 card-section-title 재사용. shareToggleSub은 cellar-row-meta 재사용.
+        'beginner-eyebrow':      ['11px', { lineHeight: '11px', letterSpacing: '1.76px' }],
+        'beginner-greeting':     ['12px', { lineHeight: '18px' }],
+        'step-header-badge':     ['11px', { lineHeight: '13.2px' }],
+        'summary-eyebrow':       ['11px', { lineHeight: '11px', letterSpacing: '1.1px' }],
+        'summary-text':          ['13px', { lineHeight: '19.5px' }],
       },
     },
   },
