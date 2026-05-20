@@ -16,7 +16,7 @@ const TONE_BG: Record<Tone, string> = {
 export function Toast({ message, tone = 'info' }: ToastProps) {
   return (
     <View
-      className={`${TONE_BG[tone]} h-12 items-center justify-center rounded-sm px-4`}
+      className={`${TONE_BG[tone]} h-12 items-center justify-center rounded-lg px-4`}
       accessibilityRole="alert"
       accessibilityLiveRegion="polite"
     >

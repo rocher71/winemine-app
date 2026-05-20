@@ -20,7 +20,7 @@ function readinessLabel(t: (k: string) => string, r: Readiness): string {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <View className="rounded-md bg-surface p-4 gap-3">
+    <View className="rounded-xl bg-surface p-4 gap-3">
       <Text className="font-inter text-section-title text-gold uppercase">{title}</Text>
       {children}
     </View>

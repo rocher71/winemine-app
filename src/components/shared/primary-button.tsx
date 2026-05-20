@@ -57,7 +57,7 @@ export function PrimaryButton({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled: disabled || loading, busy: loading }}
-      className={`${HEIGHT[size]} ${VARIANT_BG[variant]} flex-row items-center justify-center rounded-sm px-4 ${disabled ? 'opacity-50' : ''}`}
+      className={`${HEIGHT[size]} ${VARIANT_BG[variant]} flex-row items-center justify-center rounded-lg px-4 ${disabled ? 'opacity-50' : ''}`}
       style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.97 : 1 }] })}
     >
       {loading ? (

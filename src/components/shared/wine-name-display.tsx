@@ -32,7 +32,7 @@ export function WineNameDisplay({
         {primary}
       </Text>
       {needsEnFallbackChip ? (
-        <View className="ml-2 rounded-sm border border-text-muted px-1">
+        <View className="ml-2 rounded-lg border border-text-muted px-1">
           <Text className="text-card-meta font-inter text-text-muted">EN</Text>
         </View>
       ) : null}

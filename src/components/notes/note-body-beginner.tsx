@@ -14,14 +14,14 @@ export function NoteBodyBeginner({ fields }: Props) {
 
   return (
     <View className="gap-4">
-      <View className="rounded-md bg-surface p-4 gap-3">
+      <View className="rounded-xl bg-surface p-4 gap-3">
         <WSETReadOnly label={t('notes.beginner.wsetSweetness')} value={wset.sweetness} />
         <WSETReadOnly label={t('notes.beginner.wsetAcidity')} value={wset.acidity} />
         <WSETReadOnly label={t('notes.beginner.wsetTannin')} value={wset.tannin} />
         <WSETReadOnly label={t('notes.beginner.wsetBody')} value={wset.body} />
       </View>
 
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <Text className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase">
           {t('notes.detail.sectionAroma')}
         </Text>
@@ -46,7 +46,7 @@ export function NoteBodyBeginner({ fields }: Props) {
         )}
       </View>
 
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <Text className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase">
           {t('notes.detail.sectionComment')}
         </Text>

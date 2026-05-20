@@ -19,7 +19,7 @@ export function CellarSummarySection({ cellaredCount }: Props) {
         onPress={() => router.push('/(tabs)/cellar')}
         accessibilityRole="button"
         accessibilityLabel={t('home.heavy.viewAll')}
-        className="mt-3 flex-row items-center justify-between rounded-md bg-surface px-4 py-4"
+        className="mt-3 flex-row items-center justify-between rounded-xl bg-surface px-4 py-4"
         style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.98 : 1 }] })}
       >
         <View className="flex-row items-center">

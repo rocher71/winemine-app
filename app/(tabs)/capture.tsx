@@ -324,7 +324,7 @@ export default function CaptureScreen() {
           className="absolute inset-0 items-center justify-center px-6"
           style={{ backgroundColor: 'rgba(0,0,0,0.55)' }}
         >
-          <View className="w-full max-w-md rounded-md bg-bg-deep dark:bg-bg-deep px-5 py-6">
+          <View className="w-full max-w-md rounded-xl bg-bg-deep dark:bg-bg-deep px-5 py-6">
             <Text className="font-playfair text-empty-title text-text-primary dark:text-text-primary text-center">
               {t('capture.manualPlaceholder.title')}
             </Text>

@@ -6,7 +6,7 @@ import { brand } from '@/lib/design-tokens';
 export function CommunityPeakPlaceholder() {
   const { t } = useTranslation();
   return (
-    <View className="rounded-md bg-surface px-4 py-4 mx-4 opacity-60" accessibilityRole="text">
+    <View className="rounded-xl bg-surface px-4 py-4 mx-4 opacity-60" accessibilityRole="text">
       <Text className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase">
         {t('wineDetail.community.title')}
       </Text>

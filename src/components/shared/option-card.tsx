@@ -33,7 +33,7 @@ export function OptionCard({
       accessibilityRole="radio"
       accessibilityState={{ selected }}
       accessibilityLabel={accessibilityLabel ?? title}
-      className={`flex-row items-center justify-between rounded-md bg-surface px-4 py-4 ${
+      className={`flex-row items-center justify-between rounded-xl bg-surface px-4 py-4 ${
         selected ? 'border-2 border-gold' : 'border border-text-disabled'
       }`}
       style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.98 : 1 }] })}

@@ -44,7 +44,7 @@ export function CellarFields({
       : t('cellar.detail.priceEmpty');
 
   return (
-    <View className="rounded-md bg-surface px-4 py-3 mx-4">
+    <View className="rounded-xl bg-surface px-4 py-3 mx-4">
       <Text className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase">
         {t('cellar.detail.section.info')}
       </Text>

@@ -120,7 +120,7 @@ function SourceRow({ icon: Icon, label, onPress }: RowProps) {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
-      className="flex-row items-center rounded-md bg-surface px-4"
+      className="flex-row items-center rounded-xl bg-surface px-4"
       style={({ pressed }) => ({
         height: 80,
         transform: [{ scale: pressed ? 0.98 : 1 }],

@@ -252,7 +252,7 @@ function Field({
         placeholderTextColor={placeholderColor}
         keyboardType={keyboardType}
         accessibilityLabel={accessibilityLabel}
-        className="mt-1 h-11 rounded-sm bg-surface px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
+        className="mt-1 h-11 rounded-lg bg-surface px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
         style={{ borderWidth: 1, borderColor: brand.gold }}
       />
     </View>

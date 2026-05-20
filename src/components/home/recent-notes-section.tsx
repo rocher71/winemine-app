@@ -33,7 +33,7 @@ function NoteCard({ note }: { note: TastingNoteWithWine }) {
     <Pressable
       onPress={() => router.push(`/notes/${note.id}`)}
       accessibilityRole="button"
-      className="flex-row items-center rounded-md bg-surface p-3"
+      className="flex-row items-center rounded-xl bg-surface p-3"
       style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.98 : 1 }] })}
     >
       <View

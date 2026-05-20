@@ -34,7 +34,7 @@ export function WineLinkCard({ wine }: Props) {
         onPress={() => router.replace('/(tabs)/capture')}
         accessibilityRole="button"
         accessibilityLabel={t('notes.writeForm.wineLinkCaptureCta')}
-        className="flex-row items-center rounded-md bg-surface px-4 py-4"
+        className="flex-row items-center rounded-xl bg-surface px-4 py-4"
         style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.98 : 1 }] })}
       >
         <View
@@ -59,7 +59,7 @@ export function WineLinkCard({ wine }: Props) {
   const vintage = wine.vintage ?? parseLwinVintage(wine.lwin);
 
   return (
-    <View className="flex-row items-center rounded-md bg-surface px-4 py-3">
+    <View className="flex-row items-center rounded-xl bg-surface px-4 py-3">
       <View
         style={{ width: 56, height: 80, backgroundColor: bottleColor, borderRadius: 6 }}
       />

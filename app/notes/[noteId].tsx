@@ -143,7 +143,7 @@ export default function NoteDetailScreen() {
           vintage={wine.vintage}
         />
 
-        <View className="mt-5 mx-4 rounded-md bg-surface p-4">
+        <View className="mt-5 mx-4 rounded-xl bg-surface p-4">
           <View className="flex-row items-center justify-between">
             <Text className="font-inter text-card-meta text-text-muted dark:text-text-muted uppercase">
               {note.tasted_at}
@@ -184,7 +184,7 @@ export default function NoteDetailScreen() {
           onPress={() => router.push(`/wine/${encodeURIComponent(wine.lwin ?? '')}`)}
           accessibilityRole="button"
           accessibilityLabel={t('notes.detail.viewWine')}
-          className="mt-5 mx-4 flex-row items-center justify-between rounded-md bg-surface px-4 py-4"
+          className="mt-5 mx-4 flex-row items-center justify-between rounded-xl bg-surface px-4 py-4"
           style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.98 : 1 }] })}
         >
           <View className="flex-1 pr-3">

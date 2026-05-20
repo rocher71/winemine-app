@@ -168,7 +168,7 @@ export default function CellarDetailScreen() {
           />
         </View>
 
-        <View className="mt-5 rounded-md bg-surface px-4 py-3 mx-4">
+        <View className="mt-5 rounded-xl bg-surface px-4 py-3 mx-4">
           <Text className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase">
             {t('cellar.detail.section.notes')}
           </Text>

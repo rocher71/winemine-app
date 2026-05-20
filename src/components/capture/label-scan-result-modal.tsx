@@ -73,7 +73,7 @@ export function LabelScanResultModal({ visible, wine, onWriteNote, onRetry, onCl
             {t('capture.result.subtitle')}
           </Text>
 
-          <View className="mt-5 flex-row items-start gap-4 rounded-md bg-surface p-4">
+          <View className="mt-5 flex-row items-start gap-4 rounded-xl bg-surface p-4">
             <View
               style={{
                 width: 64,

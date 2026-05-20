@@ -44,7 +44,7 @@ export function BeginnerForm({
 
   return (
     <View className="gap-5">
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
           {t('notes.rating')}
         </Text>
@@ -53,7 +53,7 @@ export function BeginnerForm({
         </View>
       </View>
 
-      <View className="rounded-md bg-surface p-4 gap-4">
+      <View className="rounded-xl bg-surface p-4 gap-4">
         <WSETSlider
           label={t('notes.beginner.wsetSweetness')}
           value={fields.wset.sweetness}
@@ -76,14 +76,14 @@ export function BeginnerForm({
         />
       </View>
 
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <AromaChips
           selected={fields.aroma_tags}
           onChange={(tags) => onFieldsChange({ ...fields, aroma_tags: tags })}
         />
       </View>
 
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
           {t('notes.tastedAt')}
         </Text>
@@ -94,12 +94,12 @@ export function BeginnerForm({
           placeholderTextColor={placeholderColor}
           keyboardType="numbers-and-punctuation"
           accessibilityLabel={t('notes.tastedAt')}
-          className="mt-2 h-11 rounded-sm bg-bg-deep px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
+          className="mt-2 h-11 rounded-lg bg-bg-deep px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
           style={{ borderWidth: 1, borderColor: brand.gold }}
         />
       </View>
 
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
           {t('notes.writeForm.commentLabel')}
         </Text>
@@ -112,7 +112,7 @@ export function BeginnerForm({
           numberOfLines={4}
           maxLength={5000}
           accessibilityLabel={t('notes.writeForm.commentLabel')}
-          className="mt-2 rounded-sm bg-bg-deep px-3 py-3 font-inter text-card-body text-text-primary dark:text-text-primary"
+          className="mt-2 rounded-lg bg-bg-deep px-3 py-3 font-inter text-card-body text-text-primary dark:text-text-primary"
           style={{ borderWidth: 1, borderColor: brand.gold, minHeight: 96, textAlignVertical: 'top' }}
         />
       </View>

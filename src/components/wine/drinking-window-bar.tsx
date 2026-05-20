@@ -23,7 +23,7 @@ export function DrinkingWindowBar({ fromYear, peakYear, toYear }: Props) {
 
   if (!fromYear || !toYear || toYear < fromYear) {
     return (
-      <View className="rounded-md bg-surface px-4 py-4 mx-4">
+      <View className="rounded-xl bg-surface px-4 py-4 mx-4">
         <Text className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase">
           {t('wineDetail.drinkWindow.title')}
         </Text>
@@ -42,7 +42,7 @@ export function DrinkingWindowBar({ fromYear, peakYear, toYear }: Props) {
   else if (currentYear > toYear) phaseKey = 'after';
 
   return (
-    <View className="rounded-md bg-surface px-4 py-4 mx-4">
+    <View className="rounded-xl bg-surface px-4 py-4 mx-4">
       <Text className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase">
         {t('wineDetail.drinkWindow.title')}
       </Text>

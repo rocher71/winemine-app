@@ -13,7 +13,7 @@ interface Props {
 
 function MetaCell({ label, value }: { label: string; value: string }) {
   return (
-    <View className="flex-1 rounded-md bg-surface px-3 py-3">
+    <View className="flex-1 rounded-xl bg-surface px-3 py-3">
       <Text className="font-inter text-card-meta text-text-muted dark:text-text-muted uppercase">
         {label}
       </Text>

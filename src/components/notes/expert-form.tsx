@@ -80,7 +80,7 @@ export function ExpertForm({
 
   return (
     <View className="gap-5">
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <View className="flex-row items-center justify-between">
           <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
             {t('notes.writeForm.blindMode')}
@@ -106,7 +106,7 @@ export function ExpertForm({
         ) : null}
       </View>
 
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
           {t('notes.rating')}
         </Text>
@@ -186,7 +186,7 @@ export function ExpertForm({
         />
       </Section>
 
-      <View className="rounded-md bg-surface p-4">
+      <View className="rounded-xl bg-surface p-4">
         <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
           {t('notes.tastedAt')}
         </Text>
@@ -197,7 +197,7 @@ export function ExpertForm({
           placeholderTextColor={placeholderColor}
           keyboardType="numbers-and-punctuation"
           accessibilityLabel={t('notes.tastedAt')}
-          className="mt-2 h-11 rounded-sm bg-bg-deep px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
+          className="mt-2 h-11 rounded-lg bg-bg-deep px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
           style={{ borderWidth: 1, borderColor: brand.gold }}
         />
       </View>
@@ -207,7 +207,7 @@ export function ExpertForm({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <View className="rounded-md bg-surface p-4 gap-4">
+    <View className="rounded-xl bg-surface p-4 gap-4">
       <Text className="font-inter text-section-title text-gold uppercase">{title}</Text>
       {children}
     </View>
@@ -238,7 +238,7 @@ function Note({
         numberOfLines={3}
         maxLength={2000}
         accessibilityLabel={label}
-        className="mt-2 rounded-sm bg-bg-deep px-3 py-3 font-inter text-card-body text-text-primary dark:text-text-primary"
+        className="mt-2 rounded-lg bg-bg-deep px-3 py-3 font-inter text-card-body text-text-primary dark:text-text-primary"
         style={{ borderWidth: 1, borderColor: brand.gold, minHeight: 72, textAlignVertical: 'top' }}
       />
     </View>
@@ -275,7 +275,7 @@ function ReadinessPicker({
               accessibilityRole="radio"
               accessibilityState={{ selected: active }}
               accessibilityLabel={optionLabels[opt]}
-              className={`flex-1 items-center rounded-sm py-2 ${active ? 'bg-gold' : 'bg-bg-deep'}`}
+              className={`flex-1 items-center rounded-lg py-2 ${active ? 'bg-gold' : 'bg-bg-deep'}`}
               style={{ borderWidth: 1, borderColor: brand.gold }}
             >
               <Text
@@ -326,7 +326,7 @@ function PriceField({
         placeholderTextColor={placeholderColor}
         keyboardType="number-pad"
         accessibilityLabel={label}
-        className="mt-2 h-11 rounded-sm bg-bg-deep px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
+        className="mt-2 h-11 rounded-lg bg-bg-deep px-3 font-inter text-card-body text-text-primary dark:text-text-primary"
         style={{ borderWidth: 1, borderColor: brand.gold }}
       />
     </View>

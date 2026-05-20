@@ -25,7 +25,7 @@ export function SearchSortBar({ query, onQueryChange, sort, onSortChange }: Prop
   return (
     <View className="px-4 pt-3 gap-3">
       <View
-        className="flex-row items-center rounded-md bg-surface px-3"
+        className="flex-row items-center rounded-xl bg-surface px-3"
         style={{ height: 44 }}
       >
         <Search size={16} strokeWidth={2} color={iconColor} />
@@ -81,7 +81,7 @@ export function SearchSortBar({ query, onQueryChange, sort, onSortChange }: Prop
                   }}
                   accessibilityRole="radio"
                   accessibilityState={{ selected: sort === key }}
-                  className="flex-row items-center justify-between rounded-sm bg-surface px-4 py-3"
+                  className="flex-row items-center justify-between rounded-lg bg-surface px-4 py-3"
                 >
                   <Text className="font-inter text-card-body text-text-primary dark:text-text-primary">
                     {t(`cellar.sort.${key}`)}
