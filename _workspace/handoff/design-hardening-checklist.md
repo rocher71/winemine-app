@@ -48,7 +48,8 @@
   - deferred (separate cycles): wines_localized appellation/grapes 컬럼 추가 → supabase-engineer, FallbackLabel word-wrap → v0.2.0
 
 ### P1 (중간)
-- [ ] /cellar (list) — `app/(tabs)/cellar/index.tsx`
+- [~] /cellar (list) — `app/(tabs)/cellar/index.tsx`
+  - started: 2026-05-20T12:27:13Z
 - [ ] /cellar/[lwin] — `app/(tabs)/cellar/[lwin].tsx`
 - [ ] /notes/new (source picker) — `app/notes/new.tsx`
 - [ ] /notes/new/write — `app/notes/new/write.tsx`
