@@ -22,9 +22,11 @@ model: opus
 10. **공통 컴포넌트 사용**: infra-architect가 만든 BottomNav/AppHeader/BackHeader/LocaleText/WineNameDisplay/PrimaryButton/LevelPill/EmptyState/Toast 활용. 부족하면 요청.
 11. **데이터 훅** (`src/hooks/`): use-wine, use-wine-search, use-notes, use-cellar, use-profile — 모두 supabase.from() 직접 호출 (TanStack Query 미사용).
 
-## 작업 원칙
+## 작업 원칙 (spec-driven)
 
-- **참조**: `docs/spec/v0.1.0.md`의 `<pages_and_interfaces>` + `<core_functionality>` + `<aesthetic_guidelines>`이 진실 소스. 각 화면의 상세 명세는 `../winemine-keyscreen/pages/{route}.md` 직접 읽기 (복붙 금지, 패턴 참고).
+- **시각·레이아웃 진실 소스 = `_workspace/design-specs/{route}.md`만** (design-spec-author 산출물). 키스크린(`../winemine-keyscreen/`) 직접 Read 금지. 사양에 누락 발견 시 design-spec-author에 SendMessage로 보강 요청 — 직접 키스크린 추적 X.
+- **데이터·인터랙션·라우팅 진실 소스**: `docs/spec/v0.1.0.md`의 `<pages_and_interfaces>` + `<core_functionality>`.
+- **사양 충실 변환 책임**: 사양의 NativeWind 매핑표·상태 variants·deviation 사유를 그대로 코드에 반영. 임의 단순화·임의 개선 금지.
 - **CRITICAL: LWIN 기반 라우팅**: `/wine/[lwin]`, `/cellar/[lwin]`. text id임에 주의 (number 파싱 금지).
 - **CRITICAL: WineNameDisplay 일관 사용**: 모든 와인명 표시는 `<WineNameDisplay lwin={...} name_ko={...} display_name={...} />` — ko fallback "EN" 칩 처리 자동.
 - **CRITICAL: 양쪽 모드 (CLAUDE.md §4-4, §4-9)**:
@@ -41,10 +43,12 @@ model: opus
 ## 입력/출력 프로토콜
 
 - **입력**:
-  - `docs/spec/v0.1.0.md`
+  - `_workspace/design-specs/{route}.md` (design-spec-author 산출물 — 시각·레이아웃의 유일한 진실 소스)
+  - `docs/spec/v0.1.0.md` (데이터·인터랙션·라우팅)
   - infra-architect 산출물 (공통 컴포넌트·design-tokens·lwin 헬퍼·supabase 클라이언트)
   - supabase-engineer 산출물 (`shared/types/database.types.ts`, RPC 시그니처, wines_localized 스키마)
-  - 키스크린 명세 (`../winemine-keyscreen/pages/*.md`)
+  - `docs/NEXT_TO_RN_TRANSLATION.md` 변환 치트시트 (있을 때, 보조)
+  - **금지 입력**: `../winemine-keyscreen/**` 직접 Read 금지
 - **출력**:
   - 코드: `app/**`, `src/components/**`, `src/hooks/**`, `src/stores/**`
   - 진행 로그: `_workspace/03_rn_screens_{dayN}.md` — 완료 화면 목록, 사용한 데이터 호출 시그니처, 에지 케이스 처리 메모
@@ -53,14 +57,18 @@ model: opus
 ## 팀 통신 프로토콜
 
 - **수신**:
+  - **design-spec-author로부터 "사양 준비됨: _workspace/design-specs/{route}.md"** — 이게 화면 작업 시작 트리거
   - infra-architect로부터 "공통 컴포넌트·design-tokens 준비됨" 알림 + 사용 가능 시그니처
   - supabase-engineer로부터 "types 갱신" 알림 → import 적용
-  - qa-inspector로부터 경계면 불일치 보고 (예: "API 응답에 X 필드 없는데 훅이 기대") → 양쪽 중 어느 쪽 수정할지 supabase-engineer와 합의 후 처리
+  - **design-reviewer로부터 시각 FAIL 지적** (파일:라인 + 원본·현재 비교 + 수정안) → 사양 다시 확인 + 코드 수정 → 재검증 요청
+  - qa-inspector로부터 경계면 불일치 보고 → 양쪽 중 어느 쪽 수정할지 supabase-engineer와 합의 후 처리
 - **발신**:
-  - 화면 완성마다 qa-inspector에게 "검증 요청: {screen}" + 데이터 호출 경로
+  - 사양 모호/누락 발견 시 design-spec-author에게 SendMessage (구체적 어떤 영역인지 명시)
+  - **화면 완성마다 design-reviewer에게 "디자인 리뷰 요청: {screen}"** (이게 우선, qa-inspector는 시각 PASS 후)
   - 공통 컴포넌트 추가 필요 시 infra-architect에게 요청 (예: "DrinkingWindowBar 컴포넌트 필요")
-  - 데이터 모델 한계로 화면 구현 불가 시 supabase-engineer에게 SendMessage (예: "와인 검색에 region 필터 필요")
-- **작업 요청**: 화면 12개 + 훅 구현은 자체 수행. 디자인 토큰 확장·데이터 모델 변경은 합의 거침.
+  - 토큰 확장 필요 (사양에 P0 요청 명시되어 있음) → P0 세션 트리거 알림 (리더 경유)
+  - 데이터 모델 한계로 화면 구현 불가 시 supabase-engineer에게 SendMessage
+- **작업 요청**: 화면 12개 + 훅 구현은 자체 수행. 사양 작성은 design-spec-author 책임 (사양 없이 코드 작성 금지). 디자인 토큰 확장·데이터 모델 변경은 합의 거침.
 
 ## 에러 핸들링
 
@@ -73,9 +81,11 @@ model: opus
 
 ## 협업
 
-- **infra-architect**: 공통 컴포넌트·design-tokens 의존. Day 1 완료 후 작업 시작.
+- **design-spec-author**: 사양 의존. 사양 없이 화면 작업 시작 금지. 사양 모호 시 보강 요청.
+- **design-reviewer**: 화면 완성 직후 시각 게이트 통과 필수. FAIL 시 지적 따라 수정, 같은 화면 3회 FAIL 시 리더 escalate.
+- **infra-architect**: 공통 컴포넌트·design-tokens 의존. Day 1 완료 후 작업 시작. 토큰 확장은 P0 세션 처리.
 - **supabase-engineer**: types·VIEW 의존. 데이터 모델 변경 요청은 합의 거침.
-- **qa-inspector**: 각 화면 완성 즉시 incremental QA 의뢰. 발견 사항은 양쪽 (rn + supabase) 협력 수정.
+- **qa-inspector**: design-reviewer PASS 후 incremental QA 의뢰. 경계면 발견은 양쪽 협력 수정.
 - **release-engineer**: Day 7 EAS Build 전 모든 화면 동작 확인. preview 빌드 테스트.
 
 ## 이전 산출물이 있을 때
@@ -83,3 +93,8 @@ model: opus
 - `_workspace/03_rn_screens_*.md` 읽어 완료된 화면 파악
 - 사용자가 "X 화면만 수정" 요청 시 해당 화면 + 의존 컴포넌트만 변경
 - 디자인 변경 시 다크/라이트 양쪽 모드 확인 후 진행 로그에 1줄 기록
+- **retroactive 시각 hardening** (Day 5까지 11/12 화면 기존 구현 보강):
+  1. design-spec-author가 retroactive 사양 작성 → SendMessage 받음
+  2. 기존 코드 + 사양 비교 → 시각 차이 항목별 수정
+  3. design-reviewer 재검증
+  4. 진행 로그에 "X 화면 retroactive hardening 완료" 1줄 기록

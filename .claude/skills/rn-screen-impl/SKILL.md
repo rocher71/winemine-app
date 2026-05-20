@@ -1,18 +1,31 @@
 ---
 name: rn-screen-impl
-description: "winemine RN+Expo 화면 구현 가이드. expo-router 파일 기반 라우팅, NativeWind v4 className, 디자인 토큰 적용, expo-camera/Storage 통합, supabase 직접 호출, BeginnerForm/ExpertForm, BottomSheet, swipe action, 다크/라이트·ko/en 양쪽 모드 동작. 12 화면(온보딩 4, 홈, 캡처, 와인 상세, 셀러 리스트/상세, 노트 source/write/detail, 설정 4) 구현 요청 시 사용."
+description: "winemine RN+Expo 화면 구현 가이드 (spec-driven). _workspace/design-specs/{route}.md (design-spec-author 산출물)만 시각 사양의 진실 소스로 사용. ../winemine-keyscreen/ 직접 참조 금지. expo-router 파일 기반 라우팅, NativeWind v4 className, 디자인 토큰 적용, expo-camera/Storage 통합, supabase 직접 호출, BeginnerForm/ExpertForm, BottomSheet, swipe action, 다크/라이트·ko/en 양쪽 모드 동작. 화면 완성 시 design-reviewer 검증 게이트 통과 후 qa-inspector로. 12 화면(온보딩 4, 홈, 캡처, 와인 상세, 셀러 리스트/상세, 노트 source/write/detail, 설정 4) 구현 요청 시 사용."
 ---
 
-# RN Screen Implementation — winemine 12 화면 구현 패턴
+# RN Screen Implementation — winemine 12 화면 구현 패턴 (spec-driven)
 
-이 스킬은 rn-screen-builder가 화면을 구현할 때 따르는 절차다.
+이 스킬은 rn-screen-builder가 화면을 구현할 때 따르는 절차다. **사양 우선 원칙**: 시각·레이아웃 정보는 design-spec-author가 만든 `_workspace/design-specs/{route}.md`에서만 가져온다. 키스크린 원본을 직접 읽지 않는다.
 
-## 진실 소스 우선순위
+## 진실 소스 우선순위 (절대 순서)
 
-1. `docs/spec/v0.1.0.md`의 `<pages_and_interfaces>` — 각 화면 레이아웃·데이터·인터랙션
-2. `../winemine-keyscreen/pages/{route}.md` — Phase 2 시안 상세 (복붙 X, 변환 input)
-3. `../winemine-keyscreen/docs/design-system/*` — 디자인 토큰 (RN으로 변환된 design-tokens.ts와 일치)
-4. `../winemine-keyscreen/src/lib/{drink-window,xp,compatibility}.ts` — 비즈니스 로직 변환 base (SQL 함수로 옮기는 것이 원칙이지만 클라이언트 헬퍼가 필요한 경우)
+1. **`_workspace/design-specs/{route}.md`** — design-spec-author 산출물. **시각·레이아웃·매핑표·deviation의 유일한 진실 소스**.
+2. `docs/spec/v0.1.0.md`의 `<pages_and_interfaces>`, `<core_functionality>` — 데이터 호출·인터랙션·라우팅
+3. `shared/types/database.types.ts` — Supabase 응답 타입
+4. `src/lib/design-tokens.ts`, `tailwind.config.ts` — 사용 가능 토큰 목록
+5. `docs/NEXT_TO_RN_TRANSLATION.md` — 변환 치트시트 (보조)
+
+## 키스크린 직접 참조 금지
+
+- `../winemine-keyscreen/src/**/*.tsx` 직접 Read 금지
+- `../winemine-keyscreen/pages/{route}.md` 직접 Read 금지
+- `../winemine-keyscreen/docs/design-system/*` 직접 Read 금지
+- **모든 시각 정보는 사양(`_workspace/design-specs/{route}.md`)을 통해서만**
+- 사양에 누락된 정보가 있으면 design-spec-author에 SendMessage로 사양 보강 요청 — 직접 키스크린 추적 X
+
+이유: 4가지 디자인 손실 원인(JSX 안 읽음 / 매핑 손실 / 토큰 좁음 / 시각 피드백 없음) 중 (1)(2)를 사양 단계로 분리하여 해결. rn-screen-builder는 사양 → 코드 충실 변환에 집중.
+
+비즈니스 로직 변환이 필요할 때 (`drink-window`, `xp`, `compatibility`)는 SQL 함수로 옮기는 것이 원칙. 클라이언트 헬퍼 필요 시 사양에 명시되어 있어야 함.
 
 ## 데이터 호출 표준 패턴
 
@@ -157,13 +170,16 @@ const { data: wine } = await supabase
 
 ## 절대 금지
 
+- `../winemine-keyscreen/` 직접 Read (사양만 통한 변환)
+- `pages/{route}.md`, `docs/design-system/*` 직접 Read
 - 사용자 UUID UI 표시 (`session.user.id` 직접 노출 X) — profiles.anonymous_display만
 - 와인명을 `display_name`만 직접 사용 — 반드시 WineNameDisplay 거치기
-- 하드코딩 hex (bottle_color, brand-fixed Gold 외)
+- 하드코딩 hex (bottle_color, brand-fixed Gold, lwin.ts type-default 외)
 - emoji
 - inline style의 색상값 (bottle_color 예외)
 - `SUPABASE_SERVICE_ROLE_KEY` import (어떤 형태든)
 - mock 데이터 RN 코드에 하드코딩 (와인은 wines_localized에서, 사용자 데이터는 사용자 입력)
+- design-reviewer 거치지 않고 qa-inspector로 바로 이동 — 게이트 순서 위반
 
 ## 다크/라이트·ko/en 검증 (구현 직후 자체 점검)
 
@@ -171,8 +187,25 @@ const { data: wine } = await supabase
 - 영어 모드에서 한글 노출 없는지 화면 살펴보기 (와인명 fallback 제외)
 - 텍스트 잘림·overflow 없는지
 
-이후 qa-inspector에게 SendMessage로 incremental 검증 요청.
+## 게이트 순서 (CRITICAL)
+
+화면 완성 후 **반드시 다음 순서**로 검증:
+
+1. **design-reviewer 시각 게이트** (먼저)
+   - "화면 X 완성, 디자인 리뷰 요청" SendMessage → design-reviewer
+   - 6항목 PASS 받아야 다음으로
+   - FAIL 시 구체적 지적(파일:라인 + 원본·현재 비교 + 수정안) 따라 수정 후 재요청 (loop)
+   - 같은 화면 3회 FAIL 시 리더 escalate
+
+2. **qa-inspector 정합성 검증** (시각 PASS 후)
+   - design-reviewer가 직접 qa-inspector에 PASS 알림 또는 당신이 alert
+   - 데이터 호출 경로 + 사용 hook 파일 명시
+   - PASS 받아야 다음 화면으로
+
+design-reviewer 거치지 않고 바로 qa-inspector로 이동 금지.
 
 ## 자세한 reference
 
-각 화면 명세: `docs/spec/v0.1.0.md`의 `<pages_and_interfaces>` + `../winemine-keyscreen/pages/{route}.md`
+- 디자인 사양: `_workspace/design-specs/{route}.md` (design-spec-author 산출물)
+- 화면 명세 (데이터·인터랙션): `docs/spec/v0.1.0.md`의 `<pages_and_interfaces>`
+- 변환 치트시트: `docs/NEXT_TO_RN_TRANSLATION.md`
