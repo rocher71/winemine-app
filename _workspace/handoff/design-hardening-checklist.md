@@ -57,7 +57,8 @@
   - changed files (~16): app/(tabs)/cellar/index.tsx, src/components/cellar/{cellar-card,cellar-tabs,drink-window-badge,cellar-search-input,type-filter-chips,sort-chips,add-cta,no-results,result-count}.tsx, src/components/cellar/search-sort-bar.tsx(deleted), src/components/shared/empty-state.tsx, src/lib/drink-window.ts(new), src/hooks/use-cellar.ts, src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T13:13:13Z
   - deferred (separate cycles): tasted 탭 → P1 분리(placeholder), AddCta BottomSheet form → 별도 cycle, swipe action → 영구 제거(2-col grid 부적합)
-- [ ] /cellar/[lwin] — `app/(tabs)/cellar/[lwin].tsx`
+- [~] /cellar/[lwin] — `app/(tabs)/cellar/[lwin].tsx`
+  - started: 2026-05-20T13:13:42Z
 - [ ] /notes/new (source picker) — `app/notes/new.tsx`
 - [ ] /notes/new/write — `app/notes/new/write.tsx`
 - [ ] /notes/[noteId] — `app/notes/[noteId].tsx`
