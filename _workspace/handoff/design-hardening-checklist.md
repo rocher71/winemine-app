@@ -20,7 +20,8 @@
 - P2: 작음. 풀스크린 단일 메시지 + CTA.
 
 ### P0 (가장 큰 시각 차이 예상)
-- [ ] /home — `app/(tabs)/index.tsx`
+- [~] /home — `app/(tabs)/index.tsx`
+  - started: 2026-05-20T07:33:18Z
 - [ ] /wine/[lwin] — `app/wine/[lwin].tsx`
 - [ ] /capture — `app/(tabs)/capture.tsx`
 
