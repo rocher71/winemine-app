@@ -76,9 +76,12 @@
     },
     "experience": {
       "title": "Tell us about your wine experience",
-      "subtitle": "We'll tune note-taking accordingly",
-      "beginnerDescription": "I want to enjoy it casually",
-      "expertDescription": "I want to dive deep"
+      "subtitle": "We'll tailor the tasting note experience",
+      "beginnerLabel": "Just getting started with wine?",
+      "beginnerSub": "5-minute notes in everyday words",
+      "expertLabel": "Diving deep into wine?",
+      "expertSub": "WSET SAT, caudalies, fault checks",
+      "footer": "Change anytime in settings"
     },
     "mode": {
       "title": "How will you use winemine?",

@@ -76,9 +76,12 @@
     },
     "experience": {
       "title": "와인 경험을 알려주세요",
-      "subtitle": "노트 작성 방식을 맞춰드립니다",
-      "beginnerDescription": "가볍게 즐기고 싶어요",
-      "expertDescription": "깊이 파고들고 싶어요"
+      "subtitle": "이에 따라 테이스팅 노트가 다르게 표시돼요",
+      "beginnerLabel": "와인을 가볍게 즐기시나요?",
+      "beginnerSub": "단맛·신맛·향을 풀어쓴 5분짜리 기록",
+      "expertLabel": "와인을 깊게 파고드시나요?",
+      "expertSub": "WSET SAT · 카우달리 · 결함 점검",
+      "footer": "설정에서 언제든 변경할 수 있어요"
     },
     "mode": {
       "title": "어떻게 사용하시겠어요?",

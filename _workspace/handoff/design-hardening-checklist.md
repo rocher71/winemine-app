@@ -111,8 +111,15 @@
   - fix loops: 1
   - changed files: app/onboarding/2-language.tsx (rewrite), src/components/onboarding/{onboarding-step-layout,language-choice-card}.tsx (new), src/lib/design-tokens.ts (typography 3), tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T17:25:28Z
-- [~] /onboarding/3-experience — `app/onboarding/3-experience.tsx`
+- [x] /onboarding/3-experience — `app/onboarding/3-experience.tsx`
   - started: 2026-05-20T17:25:42Z
+  - spec: _workspace/design-specs/onboarding-3-experience.md
+  - review reports: _workspace/design-review_onboarding-3-experience_20260521_023233.md (FAIL 4/6), _workspace/design-review_onboarding-3-experience_20260521_024130_v2.md (PASS 6/6)
+  - qa report: _workspace/qa_day6_onboarding_3_experience_retroactive_20260521_024554.md (PASS)
+  - fix loops: 1
+  - changed files: app/onboarding/3-experience.tsx (rewrite), src/components/onboarding/experience-choice-card.tsx (new), src/lib/i18n/{ko,en}.json
+  - completed: 2026-05-20T17:47:03Z
+  - deferred: Q1 5-step vs 4-step 정책 → /onboarding/4-mode cycle에서 결정
 - [ ] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
 
 ## 진행 메모
