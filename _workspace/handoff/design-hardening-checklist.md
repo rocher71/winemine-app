@@ -37,7 +37,8 @@
   - changed files (19): app/wine/[lwin].tsx, src/components/wine/{wine-hero,serving-temp-pill,favorite-toggle,my-tasting-note-card,write-note-cta,external-ratings-card,average-price-pill,price-chart-stub,community-drink-window-card,wine-story-card,review-list,add-to-cellar-cta}.tsx, src/components/shared/wm-bottle.tsx, src/hooks/use-my-note-for-wine.ts, src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json, _workspace/09_rn_screens_day6_wine_detail_retroactive.md
   - completed: 2026-05-20T11:40:15Z
   - deferred (separate cycles): Tabs row spec gap → design-spec-author, wine_favorites + serving_temp_{min,max} → supabase-engineer, MyTastingNoteCard expert rating 0-5 vs /100 표시 → notes 비즈니스 로직 cleanup
-- [ ] /capture — `app/(tabs)/capture.tsx`
+- [~] /capture — `app/(tabs)/capture.tsx`
+  - started: 2026-05-20T11:40:49Z
 
 ### P1 (중간)
 - [ ] /cellar (list) — `app/(tabs)/cellar/index.tsx`
