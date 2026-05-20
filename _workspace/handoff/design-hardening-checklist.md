@@ -120,8 +120,15 @@
   - changed files: app/onboarding/3-experience.tsx (rewrite), src/components/onboarding/experience-choice-card.tsx (new), src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T17:47:03Z
   - deferred: Q1 5-step vs 4-step 정책 → /onboarding/4-mode cycle에서 결정
-- [~] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
+- [x] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
   - started: 2026-05-20T17:47:20Z
+  - spec: _workspace/design-specs/onboarding-4-mode.md
+  - review reports: _workspace/design-review_onboarding-4-mode_20260521_025433.md (FAIL 5/6), _workspace/design-review_onboarding-4-mode_20260521_030031_v2.md (PASS 6/6)
+  - qa report: _workspace/qa_day6_onboarding_4_mode_retroactive_20260521_030347.md (PASS)
+  - fix loops: 1
+  - changed files: app/onboarding/4-mode.tsx (rewrite), src/components/onboarding/mode-choice-card.tsx (new)
+  - completed: 2026-05-20T18:05:04Z
+  - decisions: Q1 5-step 채택 확정 (사양 §10), Q3 light gold icon 대비 → 후속 cycle
 
 ## 진행 메모
 
@@ -143,7 +150,9 @@ escalate 시:
 ## 진행 통계 (완료 시 채움)
 
 - 총 항목: 11개
-- 완료: __개
-- escalate: __개
-- 평균 fix loops: __
-- 전체 push된 commit: __개
+- 완료: 11개
+- escalate: 0개
+- 평균 fix loops: 1.09 (/home 2 + 다른 10개 각 1 = 12 / 11)
+- 전체 push된 commit (start + feat 22 + ALL DONE 1): 23개 (현재 cycle 한정)
+
+ALL DONE: 2026-05-20T18:05:30Z
