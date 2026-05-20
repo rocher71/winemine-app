@@ -14,7 +14,8 @@
     "done": "Done",
     "loading": "Loading",
     "retry": "Retry",
-    "empty": "Nothing yet"
+    "empty": "Nothing yet",
+    "refresh": "Refresh"
   },
   "nav": {
     "home": "Home",
@@ -85,11 +86,74 @@
   },
   "home": {
     "anonymousFallback": "Guest",
+    "greeting": "Welcome back, {{name}}",
+    "greetingNew": "Hello, {{name}}",
+    "bottles": "{{count}} bottles",
+    "countriesRegions": "{{countries}} countries, {{regions}} regions",
+    "notifications": "Notifications",
+    "recentTasted": "Recently tasted",
+    "statCountries": "Countries",
+    "statWines": "Wines",
+    "statNotes": "Notes",
+    "mapCameo": {
+      "title": "Your Wine Map",
+      "viewAll": "All →"
+    },
+    "peakGreeting": {
+      "eyebrow": "Today's cellar",
+      "questions": {
+        "0": "{{name}}, how did <wine>{{wine}}</wine> reach its peak last night?",
+        "1": "{{name}}, does the scent of <wine>{{wine}}</wine> still linger?",
+        "2": "{{name}}, do you remember the first sip of <wine>{{wine}}</wine>?",
+        "3": "{{name}}, what hour did <wine>{{wine}}</wine> belong to?"
+      },
+      "fallback": "{{name}}, which wine will you open today?"
+    },
+    "draftResume": {
+      "title": "Draft in progress",
+      "subtitle": "{{wine}} · {{progress}}% written",
+      "cta": "Resume"
+    },
+    "communityPeek": {
+      "eyebrow": "Community",
+      "title": "New notes from following",
+      "viewAll": "View all →"
+    },
+    "quickActions": {
+      "cellar": "Cellar",
+      "cellarSub": "{{count}} stored",
+      "map": "Map",
+      "mapSub": "{{count}} regions",
+      "favorites": "Favorites",
+      "favoritesSub": "{{count}} wines",
+      "badges": "Badges",
+      "badgesSub": "{{owned}}/{{total}}"
+    },
+    "wineFeed": {
+      "heading": "Discover wines",
+      "subtitle": "Tap a card for details",
+      "tabs": {
+        "featured": "Featured",
+        "trending": "Trending",
+        "explore": "Explore"
+      }
+    },
     "firstTime": {
-      "greeting": "Welcome, {{name}}",
+      "greeting": "Begin your wine journey",
       "title": "Record your first wine",
       "description": "Scan a label and start tasting notes",
-      "cta": "Scan a label"
+      "cta": "Scan a label",
+      "sub": "Add your first bottle to start",
+      "scanCta": "Scan a label",
+      "emptyMap": "No wines tasted yet",
+      "emptyMapHint": "Start building your wine map",
+      "suggestTour": "Take a tour — what is winemine?",
+      "suggestStarter": "See starter recommendations",
+      "suggestExperience": "Change experience level"
+    },
+    "suggestedToast": {
+      "tour": "winemine captures your wine labels into a personal map",
+      "starter": "Starter recommendations modal — coming soon"
     },
     "heavy": {
       "greeting": "Welcome back, {{name}}",

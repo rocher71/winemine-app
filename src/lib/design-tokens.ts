@@ -16,6 +16,10 @@ export const brand = {
   wineRedDeep: '#5b1424',
   cream: '#F5F0E8',
   deepestDark: '#05020A',
+  // SVG primitive 셰이드 (alpha 변형용 raw) — 토큰만 export, raw hex 사용 차단.
+  black: '#000000',
+  white: '#FFFFFF',
+  textInk: '#2a1a14',
 } as const;
 
 // ---- 다크 모드 ----
@@ -117,6 +121,23 @@ export const expertBlindBg = {
   end: '#2D0D12',
 } as const;
 
+// ---- Map dark silhouette (대륙 색 — home/MiniMapPreview 등) ----
+export const mapDark = {
+  continent: '#2D1540',
+} as const;
+
+// ---- Alpha helper: brand 토큰 + alpha 비율 → rgba 문자열 ----
+//
+// brand.wineRed/gold 등은 hex 6자리. 0~1 alpha를 받아 rgba(R,G,B,A) 반환.
+// home DraftNoteResume gradient, FirstTimeGreeting gradient, WineFeed active chip 등에서 사용.
+export function withAlpha(hex: string, alpha: number): string {
+  const m = hex.replace('#', '');
+  const r = parseInt(m.slice(0, 2), 16);
+  const g = parseInt(m.slice(2, 4), 16);
+  const b = parseInt(m.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 // ---- Spacing scale (4-base; tailwind 기본 scale에 추가하는 winemine 전용 값) ----
 //
 // Tailwind 기본 scale(0,1,2,3,4,5,6,7,8,9,10,11,12,14,16,20,24,28,32,...)은 그대로 사용.
@@ -149,6 +170,8 @@ export const spacing = {
 // ---- Radius (NW v4 기본 scale 사용 — sm:2 / DEFAULT:4 / md:6 / lg:8 / xl:12 / 2xl:16 / 3xl:24 / full:9999) ----
 //
 // design-tokens.ts에서는 명시 표기. tailwind.config.ts는 NW v4 기본을 따라 override 안 함.
+// home retroactive: 14 (Card·DraftNoteResume·MapCameo·HomeCommunityPeek·QuickActions card),
+//                   20 (FirstTimeGreeting outer) 신규 추가.
 export const radius = {
   none: 0,
   sm: 2,
@@ -156,7 +179,9 @@ export const radius = {
   md: 6,
   lg: 8,
   xl: 12,
+  '14': 14,
   '2xl': 16,
+  '20': 20,
   '3xl': 24,
   full: 9999,
 } as const;
@@ -185,6 +210,17 @@ export const typography = {
   primaryButtonSm: { family: 'Inter_600SemiBold', size: 13 },
   primaryButtonMd: { family: 'Inter_600SemiBold', size: 14 },
   primaryButtonLg: { family: 'Inter_600SemiBold', size: 15 },
+
+  // ---- home retroactive (design-spec home.md §9) ----
+  peakGreetingQuestion:  { family: 'PlayfairDisplay_400Regular', size: 22, lineHeight: 27.5, letterSpacing: -0.22 },
+  firstTimeHeadline:     { family: 'PlayfairDisplay_400Regular', size: 28, lineHeight: 33.6 },
+  mapCameoTitle:         { family: 'PlayfairDisplay_400Regular', size: 14 },
+  communityPeekTitle:    { family: 'PlayfairDisplay_400Regular', size: 17, lineHeight: 20.4 },
+  homeEyebrow:           { family: 'Inter_500Medium', size: 10, letterSpacing: 1.8, textTransform: 'uppercase' as const },
+  homeStatValue:         { family: 'PlayfairDisplay_400Regular', size: 20, lineHeight: 22, letterSpacing: -0.4 },
+  homeWineFeedTitle:     { family: 'PlayfairDisplay_400Regular', size: 18 },
+  homeWineFeedRowName:   { family: 'PlayfairDisplay_400Regular', size: 15, lineHeight: 18 },
+  homeRecentNoteName:    { family: 'PlayfairDisplay_400Regular', size: 12, lineHeight: 15 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----
@@ -234,6 +270,25 @@ export const gradients = {
     colors: ['#5A1A24', '#2D0D12'] as readonly string[],
     start: { x: 0.5, y: 0 },
     end:   { x: 0.5, y: 1 },
+  },
+
+  // home/DraftNoteResume — 135deg, wineRed 45% → surface
+  draftResume: {
+    dark:  { colors: ['rgba(139, 26, 42, 0.45)', '#3D2A4A'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+    light: { colors: ['rgba(139, 26, 42, 0.45)', '#FFFFFF'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+  },
+  // home/FirstTimeGreeting — 135deg, surface → wineRed 18%
+  firstTimeGreeting: {
+    dark:  { colors: ['#3D2A4A', 'rgba(139, 26, 42, 0.18)'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+    light: { colors: ['#FFFFFF', 'rgba(139, 26, 42, 0.18)'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+  },
+  // home/AppHeader LevelChip avatar — 135deg, level → level+99
+  levelChip: {
+    L1: { colors: ['#9B8B7A', '#9B8B7A99'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+    L2: { colors: ['#C9A84C', '#C9A84C99'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+    L3: { colors: ['#C9A84C', '#C9A84C99'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+    L4: { colors: ['#8B1A2A', '#8B1A2A99'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+    L5: { colors: ['#A02030', '#A0203099'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
   },
 } as const;
 

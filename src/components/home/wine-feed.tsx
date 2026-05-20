@@ -1,0 +1,334 @@
+/**
+ * WineFeed — 와인 둘러보기 (heavy + first-time 공용).
+ *
+ * 사양 home.md §2-1 line 130-150, §3-8:
+ * - section mt 24
+ * - header padding 0_20_8 baseline justify-between
+ *   - h2 "와인 둘러보기" Playfair 18 cream
+ *   - subtitle Inter 11 text-muted "카드 탭하면 상세로"
+ * - tab chips: Sparkles/Flame/Globe2, active gold border + bg goldAlpha 0.12 + gold text
+ * - list column gap 8 padding 0_16
+ *   - WineFeedRow: WMBottle 40×130 + meta + rating/price/chevron
+ *
+ * v0.1.0: featured wines 데이터 소스 미정 (사양 §12 Q3). mock 사용.
+ */
+import { useState } from 'react';
+import { View, Text, Pressable, ScrollView } from 'react-native';
+import { Sparkles, Flame, Globe2, MapPin, ChevronRight } from 'lucide-react-native';
+import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
+import { brand, withAlpha, bottleColorDefault, type TypeCanonical } from '@/lib/design-tokens';
+import { useThemeTokens } from '@/lib/use-theme-tokens';
+import { WMBottle } from '@/components/shared/wm-bottle';
+import { WMGlassRating } from '@/components/shared/wm-glass-rating';
+
+type TabKey = 'featured' | 'trending' | 'explore';
+
+interface MockWine {
+  id: string;
+  lwin: string;
+  name: string;
+  producer: string;
+  vintage: number;
+  region: string;
+  country: string;
+  grapes: string;
+  score: number;
+  priceKrw: number;
+  type: TypeCanonical;
+}
+
+const MOCK_WINES_KO: MockWine[] = [
+  {
+    id: 'w1',
+    lwin: '1012345',
+    name: '도멘 르플레브 퓌셀',
+    producer: '도멘 르플레브',
+    vintage: 2019,
+    region: '뫼르소',
+    country: '프랑스',
+    grapes: '샤르도네',
+    score: 4.4,
+    priceKrw: 380000,
+    type: 'white',
+  },
+  {
+    id: 'w2',
+    lwin: '1012346',
+    name: '샤토 마고',
+    producer: '샤토 마고',
+    vintage: 2015,
+    region: '메독',
+    country: '프랑스',
+    grapes: '카베르네 소비뇽 · 메를로',
+    score: 4.7,
+    priceKrw: 1200000,
+    type: 'red',
+  },
+  {
+    id: 'w3',
+    lwin: '1012347',
+    name: '안티노리 티냐넬로',
+    producer: '안티노리',
+    vintage: 2018,
+    region: '토스카나',
+    country: '이탈리아',
+    grapes: '산지오베제 · 카베르네',
+    score: 4.5,
+    priceKrw: 240000,
+    type: 'red',
+  },
+];
+
+const MOCK_WINES_EN: MockWine[] = [
+  {
+    id: 'w1',
+    lwin: '1012345',
+    name: 'Domaine Leflaive Pucelles',
+    producer: 'Domaine Leflaive',
+    vintage: 2019,
+    region: 'Meursault',
+    country: 'France',
+    grapes: 'Chardonnay',
+    score: 4.4,
+    priceKrw: 380000,
+    type: 'white',
+  },
+  {
+    id: 'w2',
+    lwin: '1012346',
+    name: 'Chateau Margaux',
+    producer: 'Chateau Margaux',
+    vintage: 2015,
+    region: 'Medoc',
+    country: 'France',
+    grapes: 'Cabernet Sauvignon · Merlot',
+    score: 4.7,
+    priceKrw: 1200000,
+    type: 'red',
+  },
+  {
+    id: 'w3',
+    lwin: '1012347',
+    name: 'Antinori Tignanello',
+    producer: 'Antinori',
+    vintage: 2018,
+    region: 'Tuscany',
+    country: 'Italy',
+    grapes: 'Sangiovese · Cabernet',
+    score: 4.5,
+    priceKrw: 240000,
+    type: 'red',
+  },
+];
+
+function formatKrwShort(krw: number, locale: string): string {
+  if (locale === 'en') {
+    if (krw >= 1_000_000) return `${(krw / 1_000_000).toFixed(1)}M`;
+    if (krw >= 1_000) return `${Math.round(krw / 1000)}K`;
+    return `${krw}`;
+  }
+  if (krw >= 10000) return `${Math.round(krw / 10000)}만`;
+  return `${krw}`;
+}
+
+function TabChip({
+  active,
+  Icon,
+  label,
+  onPress,
+}: {
+  active: boolean;
+  Icon: typeof Sparkles;
+  label: string;
+  onPress: () => void;
+}) {
+  const tokens = useThemeTokens();
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: active }}
+      accessibilityLabel={label}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 9,
+        paddingRight: 11,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: active ? brand.gold : tokens.border.default,
+        backgroundColor: active ? withAlpha(brand.gold, 0.12) : 'transparent',
+      }}
+    >
+      <Icon size={13} strokeWidth={1.75} color={active ? brand.gold : tokens.text.muted} />
+      <Text
+        className="font-inter-semibold"
+        style={{ color: active ? brand.gold : tokens.text.muted, fontSize: 11 }}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+function WineFeedRow({ wine }: { wine: MockWine }) {
+  const tokens = useThemeTokens();
+  const bottleColor = bottleColorDefault[wine.type];
+  const { i18n } = useTranslation();
+
+  return (
+    <Pressable
+      onPress={() => {
+        Haptics.selectionAsync().catch(() => undefined);
+        router.push(`/wine/${wine.lwin}` as never);
+      }}
+      accessibilityRole="link"
+      accessibilityLabel={`${wine.name} ${wine.producer} ${wine.vintage}`}
+      className="rounded-xl bg-surface dark:bg-surface border border-border-default dark:border-border-default"
+      style={({ pressed }) => ({
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+        padding: 12,
+        opacity: pressed ? 0.9 : 1,
+      })}
+    >
+      <WMBottle width={40} height={130} bottleColor={bottleColor} type={wine.type} />
+      <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
+        <Text
+          className="font-playfair text-text-primary dark:text-text-primary"
+          style={{ fontSize: 15, lineHeight: 18 }}
+          numberOfLines={1}
+        >
+          {wine.name}
+        </Text>
+        <Text
+          className="font-inter text-text-secondary dark:text-text-secondary"
+          style={{ fontSize: 11 }}
+          numberOfLines={1}
+        >
+          {wine.producer} · {wine.vintage}
+        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <MapPin size={10} strokeWidth={1.75} color={tokens.text.muted} />
+          <Text
+            className="font-inter text-text-muted dark:text-text-muted"
+            style={{ fontSize: 11 }}
+            numberOfLines={1}
+          >
+            {wine.region}, {wine.country}
+          </Text>
+        </View>
+        <Text
+          className="font-inter text-text-muted dark:text-text-muted"
+          style={{ fontSize: 10, marginTop: 1, opacity: 0.85 }}
+          numberOfLines={1}
+        >
+          {wine.grapes}
+        </Text>
+      </View>
+      <View
+        style={{
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          flexShrink: 0,
+          minWidth: 70,
+        }}
+      >
+        <View style={{ alignItems: 'flex-end', gap: 3 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <WMGlassRating value={wine.score} size={8} />
+            <Text
+              className="font-inter-semibold"
+              style={{ color: brand.gold, fontSize: 11 }}
+            >
+              {wine.score.toFixed(1)}
+            </Text>
+          </View>
+          <Text
+            className="font-playfair text-text-primary dark:text-text-primary"
+            style={{ fontSize: 13 }}
+          >
+            ₩{formatKrwShort(wine.priceKrw, i18n.language)}
+          </Text>
+        </View>
+        <ChevronRight size={16} color={tokens.text.muted} />
+      </View>
+    </Pressable>
+  );
+}
+
+export function WineFeed() {
+  const { t, i18n } = useTranslation();
+  const [tab, setTab] = useState<TabKey>('featured');
+  const wines = i18n.language === 'en' ? MOCK_WINES_EN : MOCK_WINES_KO;
+
+  // 탭 별 mock filter (실 데이터는 v0.2.0)
+  const list = wines;
+
+  const onTab = (next: TabKey) => {
+    Haptics.selectionAsync().catch(() => undefined);
+    setTab(next);
+  };
+
+  return (
+    <View style={{ marginTop: 24 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          paddingBottom: 8,
+          paddingHorizontal: 20,
+        }}
+      >
+        <Text
+          className="font-playfair text-text-primary dark:text-text-primary"
+          style={{ fontSize: 18 }}
+        >
+          {t('home.wineFeed.heading')}
+        </Text>
+        <Text
+          className="font-inter text-text-muted dark:text-text-muted"
+          style={{ fontSize: 11 }}
+        >
+          {t('home.wineFeed.subtitle')}
+        </Text>
+      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 10, gap: 6 }}
+      >
+        <TabChip
+          active={tab === 'featured'}
+          Icon={Sparkles}
+          label={t('home.wineFeed.tabs.featured')}
+          onPress={() => onTab('featured')}
+        />
+        <TabChip
+          active={tab === 'trending'}
+          Icon={Flame}
+          label={t('home.wineFeed.tabs.trending')}
+          onPress={() => onTab('trending')}
+        />
+        <TabChip
+          active={tab === 'explore'}
+          Icon={Globe2}
+          label={t('home.wineFeed.tabs.explore')}
+          onPress={() => onTab('explore')}
+        />
+      </ScrollView>
+      <View style={{ paddingHorizontal: 16, gap: 8 }}>
+        {list.map((w) => (
+          <WineFeedRow key={w.id} wine={w} />
+        ))}
+      </View>
+    </View>
+  );
+}

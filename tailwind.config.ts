@@ -63,10 +63,17 @@ const config: Config = {
       },
 
       // Tailwind 기본 spacing scale에 winemine 비표준 값 추가.
-      // 기본 scale에 없는 13(52px), 18(72px) 등을 명시. 9/10/11/14는 기본 scale에 이미 있음.
+      // 기본 scale에 없는 13(52px), 18(72px), 22(88px) 등을 명시. 9/10/11/14는 기본 scale에 이미 있음.
       spacing: {
         '13': '52px',
         '18': '72px',
+        '22': '88px',
+      },
+
+      // home retroactive: 14, 20 신규 (NW v4 기본은 12=xl, 16=2xl, 24=3xl).
+      borderRadius: {
+        '14': '14px',
+        '20': '20px',
       },
 
       fontFamily: {
@@ -95,6 +102,17 @@ const config: Config = {
         'glossary-def':   ['13px', { lineHeight: '19.5px' }],
         'bnav-active':    ['10px', { letterSpacing: '0.2px' }],
         'bnav-idle':      ['10px', { letterSpacing: '0.2px' }],
+
+        // home retroactive (design-spec home.md §9)
+        'peak-greeting':       ['22px', { lineHeight: '27.5px', letterSpacing: '-0.22px' }],
+        'first-time-headline': ['28px', { lineHeight: '33.6px' }],
+        'map-cameo-title':     '14px',
+        'community-peek-title':['17px', { lineHeight: '20.4px' }],
+        'home-eyebrow':        ['10px', { letterSpacing: '1.8px' }],
+        'home-stat-value':     ['20px', { lineHeight: '22px', letterSpacing: '-0.4px' }],
+        'home-feed-title':     '18px',
+        'home-feed-row-name':  ['15px', { lineHeight: '18px' }],
+        'home-recent-name':    ['12px', { lineHeight: '15px' }],
       },
     },
   },

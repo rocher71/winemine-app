@@ -14,7 +14,8 @@
     "done": "완료",
     "loading": "불러오는 중",
     "retry": "다시 시도",
-    "empty": "아직 없습니다"
+    "empty": "아직 없습니다",
+    "refresh": "새로고침"
   },
   "nav": {
     "home": "홈",
@@ -85,11 +86,74 @@
   },
   "home": {
     "anonymousFallback": "익명 사용자",
+    "greeting": "안녕하세요, {{name}}님",
+    "greetingNew": "{{name}}님, 환영합니다",
+    "bottles": "{{count}}병",
+    "countriesRegions": "{{countries}}개국 · {{regions}}개 지역",
+    "notifications": "알림",
+    "recentTasted": "최근 마신 와인",
+    "statCountries": "방문 국가",
+    "statWines": "마신 와인",
+    "statNotes": "작성 노트",
+    "mapCameo": {
+      "title": "당신의 와인 지도",
+      "viewAll": "전체 →"
+    },
+    "peakGreeting": {
+      "eyebrow": "오늘의 셀러",
+      "questions": {
+        "0": "{{name}}님, 어젯밤 <wine>{{wine}}</wine>의 정점은 어땠나요?",
+        "1": "{{name}}님, <wine>{{wine}}</wine>의 향이 아직 남아 있나요?",
+        "2": "{{name}}님, <wine>{{wine}}</wine>의 첫 한 모금을 기억하시나요?",
+        "3": "{{name}}님, <wine>{{wine}}</wine>은 어떤 시간과 함께였나요?"
+      },
+      "fallback": "{{name}}님, 오늘은 어떤 와인을 여실 건가요?"
+    },
+    "draftResume": {
+      "title": "작성 중인 노트",
+      "subtitle": "{{wine}} · {{progress}}% 작성",
+      "cta": "이어 쓰기"
+    },
+    "communityPeek": {
+      "eyebrow": "커뮤니티",
+      "title": "팔로잉의 새 노트",
+      "viewAll": "모두 보기 →"
+    },
+    "quickActions": {
+      "cellar": "셀러",
+      "cellarSub": "{{count}}병 보관 중",
+      "map": "지도",
+      "mapSub": "{{count}}개 지역",
+      "favorites": "즐겨찾기",
+      "favoritesSub": "{{count}}개",
+      "badges": "뱃지",
+      "badgesSub": "{{owned}}/{{total}}"
+    },
+    "wineFeed": {
+      "heading": "와인 둘러보기",
+      "subtitle": "카드 탭하면 상세로",
+      "tabs": {
+        "featured": "추천",
+        "trending": "트렌딩",
+        "explore": "탐험"
+      }
+    },
     "firstTime": {
-      "greeting": "환영합니다, {{name}}",
+      "greeting": "와인 여정을 시작하세요",
       "title": "첫 와인을 기록해보세요",
       "description": "라벨을 촬영하면 시음 노트가 시작됩니다",
-      "cta": "라벨 촬영하기"
+      "cta": "라벨 촬영하기",
+      "sub": "첫 와인을 등록해보세요",
+      "scanCta": "라벨 스캔하기",
+      "emptyMap": "아직 마신 와인이 없어요",
+      "emptyMapHint": "당신의 와인 지도를 만들어보세요",
+      "suggestTour": "둘러보기 — winemine은 어떤 앱인가요?",
+      "suggestStarter": "추천 입문 와인 보기",
+      "suggestExperience": "와인 경험 모드 바꾸기"
+    },
+    "suggestedToast": {
+      "tour": "winemine은 와인 라벨을 찍어 지도로 모으는 앱이에요",
+      "starter": "추천 입문 와인 모달은 추후 연결"
     },
     "heavy": {
       "greeting": "다시 오셨네요, {{name}}",

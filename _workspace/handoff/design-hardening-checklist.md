@@ -20,8 +20,14 @@
 - P2: 작음. 풀스크린 단일 메시지 + CTA.
 
 ### P0 (가장 큰 시각 차이 예상)
-- [~] /home — `app/(tabs)/index.tsx`
+- [x] /home — `app/(tabs)/index.tsx`
   - started: 2026-05-20T07:33:18Z
+  - spec: _workspace/design-specs/home.md
+  - review reports: _workspace/design-review_home_20260520_164609.md (1차 FAIL 31), _workspace/design-review_home_20260520_193216_v2.md (CONDITIONAL PASS, 신규 1 FAIL), _workspace/design-review_home_20260520_194044_v3.md (PASS)
+  - qa report: _workspace/qa_day6_home_retroactive_20260520_194819.md (PASS)
+  - fix loops: 2
+  - changed files (24): app/(tabs)/index.tsx, app/_layout.tsx, src/components/home/{heavy-home,first-time-home,peak-greeting,draft-note-resume,stat-hero,map-cameo,mini-map-preview,home-community-peek,recent-notes-strip,wine-feed,quick-actions,first-time-greeting,empty-stat-hero,suggested-actions,home-header}.tsx, src/components/shared/{wm-bottle,wm-glass-rating,level-chip}.tsx, src/components/community/{comm-user-avatar,post-type-badge}.tsx, src/lib/{design-tokens.ts,use-theme-tokens.ts}, tailwind.config.ts, src/lib/i18n/{ko,en}.json
+  - completed: 2026-05-20T10:50:46Z
 - [ ] /wine/[lwin] — `app/wine/[lwin].tsx`
 - [ ] /capture — `app/(tabs)/capture.tsx`
 
