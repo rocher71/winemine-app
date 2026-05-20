@@ -357,6 +357,33 @@
       "account": "계정",
       "linkAccount": "계정 연결",
       "linkAccountHint": "v0.2.0에서 활성됩니다"
+    },
+    "values": {
+      "ko": "한국어",
+      "en": "English",
+      "beginner": "입문자",
+      "expert": "전문가"
+    },
+    "languagePage": {
+      "title": "언어",
+      "appliedToast": "언어가 변경되었어요",
+      "a11yHint": "선택하면 즉시 적용됩니다"
+    },
+    "experiencePage": {
+      "title": "와인 경험",
+      "beginnerDesc": "단맛·신맛·향을 풀어쓴 5분짜리 기록. 어휘는 친근하게.",
+      "expertDesc": "WSET SAT · 카우달리 · 결함 점검 등 정밀 도구가 모두 노출됩니다.",
+      "appliedToast": "다음 노트부터 새 UI가 적용돼요",
+      "a11yHint": "선택하면 즉시 적용됩니다"
+    },
+    "appearancePage": {
+      "title": "외관",
+      "darkLabel": "다크",
+      "lightLabel": "라이트",
+      "darkDesc": "와인 바 분위기의 짙은 보라 배경.",
+      "lightDesc": "크림 종이 배경에 와인 강조색.",
+      "appliedToast": "테마가 적용됐어요",
+      "a11yHint": "선택하면 즉시 적용됩니다"
     }
   },
   "errors": {

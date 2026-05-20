@@ -14,6 +14,9 @@ export default function TabsLayout() {
       <Tabs.Screen name="cellar/index" options={{ href: null }} />
       <Tabs.Screen name="cellar/[lwin]" options={{ href: null }} />
       <Tabs.Screen name="settings/index" options={{ href: null }} />
+      <Tabs.Screen name="settings/language" options={{ href: null }} />
+      <Tabs.Screen name="settings/experience" options={{ href: null }} />
+      <Tabs.Screen name="settings/appearance" options={{ href: null }} />
     </Tabs>
   );
 }

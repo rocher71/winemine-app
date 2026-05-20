@@ -357,6 +357,33 @@
       "account": "Account",
       "linkAccount": "Link account",
       "linkAccountHint": "Available in v0.2.0"
+    },
+    "values": {
+      "ko": "한국어",
+      "en": "English",
+      "beginner": "Beginner",
+      "expert": "Expert"
+    },
+    "languagePage": {
+      "title": "Language",
+      "appliedToast": "Language updated",
+      "a11yHint": "Selecting applies immediately"
+    },
+    "experiencePage": {
+      "title": "Wine experience",
+      "beginnerDesc": "Sweetness, acidity, aroma in everyday words. 5-minute notes.",
+      "expertDesc": "WSET SAT, caudalies, fault checks. Full precision toolset.",
+      "appliedToast": "New notes will use the new UI",
+      "a11yHint": "Selecting applies immediately"
+    },
+    "appearancePage": {
+      "title": "Appearance",
+      "darkLabel": "Dark",
+      "lightLabel": "Light",
+      "darkDesc": "Original wine bar mood — deep purple background.",
+      "lightDesc": "Cream paper background with deep wine accents.",
+      "appliedToast": "Theme applied",
+      "a11yHint": "Selecting applies immediately"
     }
   },
   "errors": {
