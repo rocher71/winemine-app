@@ -211,3 +211,4 @@ v2.0 Spring 전환 비용 폭증 방지:
 | 날짜 | 변경 내용 | 대상 | 사유 |
 |---|---|---|---|
 | 2026-05-19 | 초기 구성 (5 agents + 7 skills) | 전체 | v0.1.0 빌드 시작 |
+| 2026-05-20 | Day 1~4 완료 (9/12 화면) — 인프라 + 9 마이그레이션 원격 적용 (wines 손상 0) + label-scan Edge Function 배포 + 온보딩/홈/캡처/와인 상세/셀러 리스트·상세 | app/, src/, supabase/, shared/ | T2 push + Vault salt 활성 + Anonymous Auth 활성 + QA Day1~4 모두 PASS |
