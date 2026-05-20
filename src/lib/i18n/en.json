@@ -62,6 +62,7 @@
     "enFallbackChip": "EN"
   },
   "onboarding": {
+    "tagline": "A glass of wine, a pin on the map",
     "welcome": {
       "title": "Capture every moment of wine",
       "subtitle": "Photograph, note, and revisit.",
