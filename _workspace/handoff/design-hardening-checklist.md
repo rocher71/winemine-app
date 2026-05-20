@@ -75,7 +75,8 @@
   - changed files (~9): app/notes/new.tsx (rewrite), src/components/notes/{template-card,source-picker,cellar-bottom-sheet}.tsx (new), src/lib/notes/builtin-templates.ts (new), src/lib/design-tokens.ts, tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T15:41:57Z
   - deferred (separate cycles): tasting_notes.source_type schema 변경 + template_id 컬럼 신설 → supabase-engineer, write.tsx 연동(templateId/from query) → 별도 cycle
-- [ ] /notes/new/write — `app/notes/new/write.tsx`
+- [~] /notes/new/write — `app/notes/new/write.tsx`
+  - started: 2026-05-20T15:42:30Z
 - [ ] /notes/[noteId] — `app/notes/[noteId].tsx`
 
 ### P2 (시각 차이 작음 예상)
