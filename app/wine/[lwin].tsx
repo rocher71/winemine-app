@@ -1,3 +1,18 @@
+/**
+ * /wine/[lwin] — 와인 상세 화면.
+ *
+ * 사양: _workspace/design-specs/wine-detail.md (Day 6 retroactive hardening).
+ * 1차 design-review FAIL 6/6 해결 — keyscreen verbatim 트리 (BackHeader+FavToggle / WineHero /
+ * MyTastingNoteCard|WriteNoteCta / ExternalRatings / AvgPrice / PriceChart / CommunityDrinkWindow /
+ * WineStory / ReviewList / AddToCellarCta).
+ *
+ * 결정 (사양 §12):
+ *   - Q1: WineMeta 4셀 grid 제거 — verbatim 위반 (WineHero 안에 통합)
+ *   - Q2: DrinkingWindowBar 제거 — keyscreen 등가물 없음 (CommunityDrinkWindowCard에 통합 예정 v0.2.0)
+ *   - Q3~Q7: 데이터 부재 카드는 stub UI + empty fallback (verbatim 시각 유지)
+ *   - Q8: AddToCellarCta press → sheet open (RN deviation)
+ *   - ScrollView gap 16 (keyscreen verbatim, 사양 §3-2)
+ */
 import { useState } from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -8,11 +23,19 @@ import { PrimaryButton } from '@/components/shared/primary-button';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Toast } from '@/components/shared/toast';
 import { WineHero } from '@/components/wine/wine-hero';
-import { WineMeta } from '@/components/wine/wine-meta';
-import { DrinkingWindowBar } from '@/components/wine/drinking-window-bar';
-import { CommunityPeakPlaceholder } from '@/components/wine/community-peak-placeholder';
+import { FavoriteToggle } from '@/components/wine/favorite-toggle';
+import { MyTastingNoteCard } from '@/components/wine/my-tasting-note-card';
+import { WriteNoteCta } from '@/components/wine/write-note-cta';
+import { ExternalRatingsCard } from '@/components/wine/external-ratings-card';
+import { AveragePricePill } from '@/components/wine/average-price-pill';
+import { PriceChartStub } from '@/components/wine/price-chart-stub';
+import { CommunityDrinkWindowCard } from '@/components/wine/community-drink-window-card';
+import { WineStoryCard } from '@/components/wine/wine-story-card';
+import { ReviewList } from '@/components/wine/review-list';
+import { AddToCellarCta } from '@/components/wine/add-to-cellar-cta';
 import { AddToCellarSheet } from '@/components/wine/add-to-cellar-sheet';
 import { useWine } from '@/hooks/use-wine';
+import { useMyNoteForWine } from '@/hooks/use-my-note-for-wine';
 import { getLocalizedWineName } from '@/lib/lwin';
 import { currentLocale } from '@/lib/i18n';
 import { brand } from '@/lib/design-tokens';
@@ -22,6 +45,7 @@ export default function WineDetailScreen() {
   const lwin = typeof lwinParam === 'string' ? lwinParam : null;
   const { t } = useTranslation();
   const { wine, loading } = useWine(lwin);
+  const { note: myNote } = useMyNoteForWine(lwin);
   const [showCellarSheet, setShowCellarSheet] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -68,12 +92,17 @@ export default function WineDetailScreen() {
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-      <BackHeader title={headerTitle} />
+      <BackHeader
+        title={headerTitle}
+        right={<FavoriteToggle wineLwin={wine.lwin} />}
+      />
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ paddingBottom: 32 }}
+        contentContainerStyle={{ paddingBottom: 32, gap: 16 }}
         showsVerticalScrollIndicator={false}
+        accessibilityLabel={t('wineDetail.a11y.scroll')}
       >
+        {/* 1. Hero */}
         <WineHero
           lwin={wine.lwin}
           display_name={wine.display_name}
@@ -81,40 +110,38 @@ export default function WineDetailScreen() {
           bottle_color={wine.bottle_color}
           type_canonical={wine.type_canonical}
           vintage={wine.vintage}
+          producer_name={wine.producer_name}
+          region={wine.region}
+          country={wine.country}
         />
-        <View className="mt-5">
-          <WineMeta
-            lwin={wine.lwin}
-            producer_name={wine.producer_name}
-            region={wine.region}
-            country={wine.country}
-            classification={wine.classification}
-            vintage={wine.vintage}
-          />
-        </View>
-        <View className="mt-5">
-          <DrinkingWindowBar
-            fromYear={wine.drink_window_from_year}
-            peakYear={wine.drink_window_peak_year}
-            toYear={wine.drink_window_to_year}
-          />
-        </View>
-        <View className="mt-5">
-          <CommunityPeakPlaceholder />
-        </View>
-        <View className="mt-6 px-4 gap-3">
-          <PrimaryButton
-            label={t('wineDetail.actions.writeNote')}
-            size="lg"
-            onPress={() => router.push(`/notes/new/write?wine_lwin=${encodeURIComponent(wine.lwin ?? '')}`)}
-          />
-          <PrimaryButton
-            label={t('wineDetail.actions.addToCellar')}
-            size="md"
-            variant="secondary"
-            onPress={() => setShowCellarSheet(true)}
-          />
-        </View>
+
+        {/* 2. MyTastingNoteCard (있을 때) / WriteNoteCta (없을 때) */}
+        {myNote ? (
+          <MyTastingNoteCard note={myNote} wineLwin={wine.lwin} />
+        ) : (
+          <WriteNoteCta wineLwin={wine.lwin} />
+        )}
+
+        {/* 3. ExternalRatingsCard (stub) */}
+        <ExternalRatingsCard />
+
+        {/* 4. AveragePricePill (stub — purchases 부재) */}
+        <AveragePricePill />
+
+        {/* 5. PriceChart (stub — purchases 부재) */}
+        <PriceChartStub />
+
+        {/* 6. CommunityDrinkWindowCard (stub — community_peak_estimates 부재) */}
+        <CommunityDrinkWindowCard expertCount={0} />
+
+        {/* 7. WineStoryCard (stub — wine_stories 부재) */}
+        <WineStoryCard />
+
+        {/* 8. ReviewList (stub — reviews 부재) */}
+        <ReviewList />
+
+        {/* 9. AddToCellarCta inline (verbatim wine-red 풀 너비) */}
+        <AddToCellarCta onPress={() => setShowCellarSheet(true)} />
       </ScrollView>
 
       {toastMsg ? (

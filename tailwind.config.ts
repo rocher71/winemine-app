@@ -71,8 +71,10 @@ const config: Config = {
       },
 
       // home retroactive: 14, 20 신규 (NW v4 기본은 12=xl, 16=2xl, 24=3xl).
+      // wine-detail retroactive: 18 (WineHero outer — 사양 §3-3, §9 P0).
       borderRadius: {
         '14': '14px',
+        '18': '18px',
         '20': '20px',
       },
 
@@ -113,6 +115,15 @@ const config: Config = {
         'home-feed-title':     '18px',
         'home-feed-row-name':  ['15px', { lineHeight: '18px' }],
         'home-recent-name':    ['12px', { lineHeight: '15px' }],
+
+        // wine-detail retroactive (design-spec wine-detail.md §9)
+        'card-section-title':  ['14px', { lineHeight: '16.8px' }],
+        'card-big':            ['20px', { lineHeight: '22px' }],
+        'rating-pill-score':   ['18px', { lineHeight: '19.8px' }],
+        'wine-story-headline': ['22px', { lineHeight: '26.4px' }],
+        'wset-mini-dim':       ['13px', { lineHeight: '14.3px' }],
+        'micro-label':         ['9px',  { letterSpacing: '0.36px' }],
+        'serving-temp-pill':   ['11px', { lineHeight: '13.2px' }],
       },
     },
   },

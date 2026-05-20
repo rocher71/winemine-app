@@ -237,6 +237,13 @@
       "wsetAcidity": "Acidity",
       "wsetTannin": "Tannin",
       "wsetBody": "Body",
+      "wsetShort": {
+        "low": "Low",
+        "mediumMinus": "M−",
+        "medium": "Med",
+        "mediumPlus": "M+",
+        "high": "High"
+      },
       "aromaTitle": "Aromas you noticed",
       "aromaTags": {
         "fruit": "Fruit",
@@ -412,6 +419,85 @@
     "actions": {
       "writeNote": "Write note",
       "addToCellar": "Add to cellar"
+    },
+    "servingTemp": {
+      "label": "{{min}}-{{max}}°C recommended",
+      "a11y": "Recommended serving temperature {{min}} to {{max}} Celsius"
+    },
+    "fav": {
+      "add": "Add favorite",
+      "remove": "Remove favorite",
+      "addedToast": "Added to favorites",
+      "removedToast": "Removed from favorites"
+    },
+    "myNote": {
+      "label": "My note",
+      "edit": "Edit",
+      "openHint": "Tap to view note",
+      "mode": {
+        "expert": "Expert",
+        "beginner": "Beginner"
+      }
+    },
+    "writeNote": {
+      "title": "No notes yet",
+      "sub": "Record your tasting experience",
+      "subA11y": "You can record your tasting experience for this wine",
+      "cta": "Write Note"
+    },
+    "externalRatings": {
+      "title": "External ratings",
+      "globalAvg": "Global avg",
+      "empty": "No external ratings",
+      "comingSoon": "External ratings coming soon",
+      "mockNotice": "Mock data only — actual API not connected.",
+      "reviews": "{{count}} reviews"
+    },
+    "avgPrice": {
+      "label": "Average price",
+      "empty": "No purchase price entries",
+      "count": "{{count}} entries"
+    },
+    "priceChart": {
+      "title": "Price history",
+      "empty": "No purchases yet",
+      "details": "View details",
+      "avgLabel": "Avg",
+      "deferredToast": "Price details ship in v0.2.0",
+      "rangeLabel": {
+        "3M": "3M",
+        "1Y": "1Y",
+        "ALL": "ALL"
+      }
+    },
+    "communityPeak": {
+      "title": "Community drinking window",
+      "sub": "Estimated by {{count}} experts (L3+)",
+      "empty": "Not enough data. Add an estimate in your expert note.",
+      "stat": "Mean {{mean}} · Median {{median}}",
+      "distCopy": "{{pct}}% of {{count}} reviewers suggest {{min}}-{{max}}",
+      "details": "Details",
+      "deferredToast": "Community peak details ship in v0.2.0"
+    },
+    "story": {
+      "label": "Winery story",
+      "empty": "Story coming soon",
+      "funFact": "Fun fact",
+      "more": "Read more",
+      "deferredToast": "Winery story details ship in v0.2.0"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "empty": "No reviews yet",
+      "openProfile": "View profile",
+      "anonymous": "Anonymous",
+      "sort": {
+        "recent": "Recent",
+        "topRated": "Top rated"
+      }
+    },
+    "a11y": {
+      "scroll": "Wine detail scroll view"
     }
   },
   "settings": {

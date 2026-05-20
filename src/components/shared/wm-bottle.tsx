@@ -1,13 +1,14 @@
 /**
  * WMBottle — react-native-svg port of keyscreen wm-bottle.
  *
- * v0.1.0 simplified: 단순 병 실루엣 + bottleColor fill + 라벨 영역.
- * keyscreen 원본은 producer/label/vintage 텍스트가 라벨 안에 들어가지만,
- * RN <Text in SVG>는 제한이 있어 일단 SVG는 병 모양만 그리고 텍스트는 부모가 처리.
+ * 사용처:
+ *   - home RecentNotesStrip: 26×86 (라벨 텍스트 없음)
+ *   - home WineFeedRow:      40×130 (라벨 텍스트 없음)
+ *   - wine-detail WineHero:  88×290 (라벨 텍스트 producer/label/vintage 포함 — wine-detail 사양 §3-3)
  *
- * 사양 home.md §3-7 (RecentNotesStrip) width 26 height 86, §3-8 (WineFeedRow) width 40 height 130.
+ * 텍스트는 SvgText로 라벨 영역 안에 직접 렌더 (RN <Text> in SVG는 react-native-svg 지원).
  */
-import Svg, { Path, Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
+import Svg, { Path, Rect, Defs, LinearGradient, Stop, Text as SvgText } from 'react-native-svg';
 import { brand, bottleColorDefault, type TypeCanonical } from '@/lib/design-tokens';
 
 interface WMBottleProps {
@@ -15,9 +16,23 @@ interface WMBottleProps {
   height: number;
   bottleColor?: string | null;
   type?: TypeCanonical | null;
+  /** label 영역에 표시할 producer (첫 단어) — wine-detail hero에서만 사용 */
+  producer?: string | null;
+  /** label 영역에 표시할 wine name (첫 단어) — wine-detail hero에서만 사용 */
+  label?: string | null;
+  /** label 영역에 표시할 vintage — wine-detail hero에서만 사용 */
+  vintage?: number | string | null;
 }
 
-export function WMBottle({ width, height, bottleColor, type }: WMBottleProps) {
+export function WMBottle({
+  width,
+  height,
+  bottleColor,
+  type,
+  producer,
+  label,
+  vintage,
+}: WMBottleProps) {
   // bottle color resolution: explicit color > type default > red default
   const fill =
     bottleColor ??
@@ -30,6 +45,9 @@ export function WMBottle({ width, height, bottleColor, type }: WMBottleProps) {
   const hashChar = String.fromCharCode(35);
   const gradientId = `bottle-grad-${fill.split(hashChar).join('')}`;
   const highlightId = `bottle-hl-${fill.split(hashChar).join('')}`;
+
+  // 텍스트는 hero 사이즈(>= 80) 이상에서만 표시. 비율(viewBox 좌표)로 적용.
+  const showText = width >= 60 && (producer || label || vintage);
 
   return (
     <Svg
@@ -75,6 +93,46 @@ export function WMBottle({ width, height, bottleColor, type }: WMBottleProps) {
         opacity={0.92}
         rx={1}
       />
+
+      {showText ? (
+        <>
+          {producer ? (
+            <SvgText
+              x={20}
+              y={80}
+              fontSize={3.5}
+              fontWeight="600"
+              fill={brand.textInk}
+              textAnchor="middle"
+            >
+              {String(producer).slice(0, 10)}
+            </SvgText>
+          ) : null}
+          {label ? (
+            <SvgText
+              x={20}
+              y={88}
+              fontSize={3.2}
+              fill={brand.textInk}
+              textAnchor="middle"
+            >
+              {String(label).slice(0, 12)}
+            </SvgText>
+          ) : null}
+          {vintage ? (
+            <SvgText
+              x={20}
+              y={100}
+              fontSize={4}
+              fontWeight="700"
+              fill={brand.textInk}
+              textAnchor="middle"
+            >
+              {String(vintage)}
+            </SvgText>
+          ) : null}
+        </>
+      ) : null}
     </Svg>
   );
 }

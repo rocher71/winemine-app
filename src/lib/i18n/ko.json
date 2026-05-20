@@ -237,6 +237,13 @@
       "wsetAcidity": "산도",
       "wsetTannin": "탄닌",
       "wsetBody": "바디",
+      "wsetShort": {
+        "low": "낮음",
+        "mediumMinus": "중−",
+        "medium": "중",
+        "mediumPlus": "중+",
+        "high": "높음"
+      },
       "aromaTitle": "느낀 향",
       "aromaTags": {
         "fruit": "과일",
@@ -412,6 +419,85 @@
     "actions": {
       "writeNote": "노트 작성",
       "addToCellar": "셀러에 추가"
+    },
+    "servingTemp": {
+      "label": "{{min}}-{{max}}°C 권장",
+      "a11y": "권장 시음 온도 {{min}}부터 {{max}}도"
+    },
+    "fav": {
+      "add": "즐겨찾기에 추가",
+      "remove": "즐겨찾기에서 제거",
+      "addedToast": "즐겨찾기에 추가했어요",
+      "removedToast": "즐겨찾기에서 제거했어요"
+    },
+    "myNote": {
+      "label": "내 노트",
+      "edit": "수정",
+      "openHint": "탭하여 상세 보기",
+      "mode": {
+        "expert": "전문가",
+        "beginner": "입문"
+      }
+    },
+    "writeNote": {
+      "title": "아직 노트가 없어요",
+      "sub": "이 와인의 시음 경험을 기록해보세요",
+      "subA11y": "이 와인의 시음 경험을 기록할 수 있어요",
+      "cta": "노트 작성"
+    },
+    "externalRatings": {
+      "title": "외부 평점",
+      "globalAvg": "글로벌 평균가",
+      "empty": "외부 평점 없음",
+      "comingSoon": "외부 평점은 곧 연결됩니다",
+      "mockNotice": "시안 mock 데이터입니다. 실제 API 미연동.",
+      "reviews": "{{count}}건 리뷰"
+    },
+    "avgPrice": {
+      "label": "평균 구매가",
+      "empty": "구매 가격 기록 없음",
+      "count": "{{count}}건 등록"
+    },
+    "priceChart": {
+      "title": "가격 추이",
+      "empty": "아직 등록된 가격이 없어요",
+      "details": "상세보기",
+      "avgLabel": "평균",
+      "deferredToast": "가격 상세 화면은 v0.2.0에 출시 예정",
+      "rangeLabel": {
+        "3M": "3M",
+        "1Y": "1Y",
+        "ALL": "ALL"
+      }
+    },
+    "communityPeak": {
+      "title": "커뮤니티 음용 적기",
+      "sub": "전문가 {{count}}명이 추정한 절정 시점",
+      "empty": "아직 추정 데이터가 부족해요. 전문가 노트에서 입력해주세요",
+      "stat": "평균 {{mean}} · 중앙값 {{median}}",
+      "distCopy": "{{count}}명 중 {{pct}}%가 {{min}}~{{max}} 사이 추천",
+      "details": "상세 보기",
+      "deferredToast": "커뮤니티 음용 적기 상세는 v0.2.0에 출시 예정"
+    },
+    "story": {
+      "label": "와이너리 이야기",
+      "empty": "이 와인의 스토리는 준비 중",
+      "funFact": "재미있는 이야기",
+      "more": "더 읽기",
+      "deferredToast": "와이너리 스토리 상세는 v0.2.0에 출시 예정"
+    },
+    "reviews": {
+      "title": "리뷰",
+      "empty": "아직 리뷰가 없어요",
+      "openProfile": "프로필 보기",
+      "anonymous": "익명 사용자",
+      "sort": {
+        "recent": "최근",
+        "topRated": "평점 높은 순"
+      }
+    },
+    "a11y": {
+      "scroll": "와인 상세 정보 스크롤"
     }
   },
   "settings": {

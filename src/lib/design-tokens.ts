@@ -112,6 +112,40 @@ export const bottleColorDefault = {
   dessert: '#e1c876',
 } as const;
 
+// ---- Wine type dot (WineHero 타입 dot — keyscreen wine-header.tsx line 12-19 verbatim) ----
+//
+// wine-detail 사양 §3-3 + §9 P0 신규 토큰 그룹.
+// bottleColorDefault와 약간 다른 더 채도 높은 dot 색 (red는 brand.wineRed 동일).
+export const wineTypeDot = {
+  red: '#8B1A2A',          // brand.wineRed 동일
+  white: '#d6c46b',
+  sparkling: '#e8d690',
+  rose: '#e89b9b',
+  fortified: '#5a2218',
+  dessert: '#a07030',
+} as const;
+
+// ---- Serving temperature 기본값 (wines.serving_temp_{min,max} 컬럼 부재 시 fallback) ----
+//
+// wine-detail 사양 §12 Q11 — wine type별 권장 시음 온도 (Celsius).
+// supabase wines.serving_temp_{min,max} 마이그레이션 부재로 v0.1.0은 type별 default만 사용.
+export const servingTempDefault = {
+  red:       { min: 16, max: 18 },
+  white:     { min: 8,  max: 12 },
+  rose:      { min: 8,  max: 12 },
+  sparkling: { min: 6,  max: 10 },
+  fortified: { min: 12, max: 16 },
+  dessert:   { min: 6,  max: 10 },
+} as const;
+
+// ---- WSET 4-grid bg (MyTastingNoteCard expert) ----
+//
+// wine-detail 사양 §9 P0 — dark는 keyscreen verbatim, light는 부조화 회피 alt.
+export const wsetGridBg = {
+  dark:  'rgba(15,7,24,0.6)',
+  light: 'rgba(42,26,20,0.06)',   // = withAlpha(brand.textInk, 0.06)
+} as const;
+
 // ---- Bottle gradient end (그라데이션 종점 — 다크 기준; light는 dark.bg.bottleShelf 사용) ----
 export const bottleGradientEnd = '#1a0a1e';
 
@@ -181,6 +215,7 @@ export const radius = {
   xl: 12,
   '14': 14,
   '2xl': 16,
+  '18': 18,
   '20': 20,
   '3xl': 24,
   full: 9999,
@@ -221,6 +256,15 @@ export const typography = {
   homeWineFeedTitle:     { family: 'PlayfairDisplay_400Regular', size: 18 },
   homeWineFeedRowName:   { family: 'PlayfairDisplay_400Regular', size: 15, lineHeight: 18 },
   homeRecentNoteName:    { family: 'PlayfairDisplay_400Regular', size: 12, lineHeight: 15 },
+
+  // ---- wine-detail retroactive (design-spec wine-detail.md §9) ----
+  cardSectionTitle:    { family: 'Inter_600SemiBold',          size: 14, lineHeight: 16.8 },
+  cardBig:             { family: 'PlayfairDisplay_700Bold',    size: 20, lineHeight: 22 },
+  ratingPillScore:     { family: 'PlayfairDisplay_700Bold',    size: 18, lineHeight: 19.8 },
+  wineStoryHeadline:   { family: 'PlayfairDisplay_700Bold',    size: 22, lineHeight: 26.4 },
+  wsetMiniDim:         { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 14.3 },
+  microLabel:          { family: 'Inter_400Regular',           size: 9,  letterSpacing: 0.36, textTransform: 'uppercase' as const },
+  servingTempPill:     { family: 'Inter_500Medium',            size: 11, lineHeight: 13.2 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----
@@ -243,6 +287,12 @@ export const shadows = {
   fabLight: { shadowColor: '#B89438', shadowOpacity: 0.32, shadowOffset: { width: 0, height: 6 }, shadowRadius: 20, elevation: 12 },
 
   goldGlow: { shadowColor: '#C9A84C', shadowOpacity: 0.50, shadowOffset: { width: 0, height: 0 }, shadowRadius: 12, elevation: 6 },
+
+  // wine-detail 사양 §9 P0 — wine-red card shadows
+  // sm: WriteNoteCta CTA pill (사양 §3-5)
+  // lg: AddToCellarCta inline button (사양 §3-12)
+  wineRedCardSm: { shadowColor: '#8B1A2A', shadowOpacity: 0.35, shadowOffset: { width: 0, height: 4 }, shadowRadius: 12, elevation: 4 },
+  wineRedCardLg: { shadowColor: '#8B1A2A', shadowOpacity: 0.45, shadowOffset: { width: 0, height: 6 }, shadowRadius: 18, elevation: 6 },
 } as const;
 
 // ---- Gradients (expo-linear-gradient props 형태) ----
