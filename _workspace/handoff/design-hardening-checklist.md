@@ -28,7 +28,8 @@
   - fix loops: 2
   - changed files (24): app/(tabs)/index.tsx, app/_layout.tsx, src/components/home/{heavy-home,first-time-home,peak-greeting,draft-note-resume,stat-hero,map-cameo,mini-map-preview,home-community-peek,recent-notes-strip,wine-feed,quick-actions,first-time-greeting,empty-stat-hero,suggested-actions,home-header}.tsx, src/components/shared/{wm-bottle,wm-glass-rating,level-chip}.tsx, src/components/community/{comm-user-avatar,post-type-badge}.tsx, src/lib/{design-tokens.ts,use-theme-tokens.ts}, tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T10:50:46Z
-- [ ] /wine/[lwin] — `app/wine/[lwin].tsx`
+- [~] /wine/[lwin] — `app/wine/[lwin].tsx`
+  - started: 2026-05-20T10:51:53Z
 - [ ] /capture — `app/(tabs)/capture.tsx`
 
 ### P1 (중간)
