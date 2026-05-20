@@ -103,8 +103,14 @@
   - fix loops: 1
   - changed files: app/onboarding/1-welcome.tsx (rewrite), src/components/onboarding/welcome-glass-glow.tsx (new), src/lib/i18n/{ko,en}.json (tagline)
   - completed: 2026-05-20T17:07:45Z
-- [~] /onboarding/2-language — `app/onboarding/2-language.tsx`
+- [x] /onboarding/2-language — `app/onboarding/2-language.tsx`
   - started: 2026-05-20T17:07:55Z
+  - spec: _workspace/design-specs/onboarding-2-language.md
+  - review reports: _workspace/design-review_onboarding-2-language_20260521_021458.md (FAIL 5/6), _workspace/design-review_onboarding-2-language_20260521_022133_v2.md (PASS 6/6)
+  - qa report: _workspace/qa_day6_onboarding_2_language_retroactive_20260521_022437.md (PASS)
+  - fix loops: 1
+  - changed files: app/onboarding/2-language.tsx (rewrite), src/components/onboarding/{onboarding-step-layout,language-choice-card}.tsx (new), src/lib/design-tokens.ts (typography 3), tailwind.config.ts, src/lib/i18n/{ko,en}.json
+  - completed: 2026-05-20T17:25:28Z
 - [ ] /onboarding/3-experience — `app/onboarding/3-experience.tsx`
 - [ ] /onboarding/4-mode — `app/onboarding/4-mode.tsx`
 

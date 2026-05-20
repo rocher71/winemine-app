@@ -480,6 +480,15 @@ export const typography = {
   noteAromaCatLabel:      { family: 'Inter_400Regular',           size: 10, lineHeight: 12,   letterSpacing: 0.6,  textTransform: 'uppercase' as const },
   notePeakNote:           { family: 'Inter_400Regular',           size: 12, lineHeight: 18,   fontStyle: 'italic' as const },
   chipLabelRegular:       { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
+
+  // ---- onboarding step retroactive (design-spec onboarding-2-language.md §3-2 P0 — 3 신규) ----
+  //
+  // step 2/3/4 (language/experience/mode) 공유 위계. step 1 (welcome) 워드마크(56)는 별도.
+  // keyscreen StepLanguage line 184~196 verbatim + line 378~383 (ChoiceCard title).
+  // 1.2 ratio (size × 1.2 = lineHeight).
+  onboardingStepTitle:    { family: 'PlayfairDisplay_400Regular', size: 28, lineHeight: 33.6 },
+  onboardingStepSubtitle: { family: 'Inter_400Regular',           size: 14, lineHeight: 20 },
+  onboardingChoiceLabel:  { family: 'Inter_600SemiBold',          size: 18, lineHeight: 21.6 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----

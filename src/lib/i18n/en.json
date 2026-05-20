@@ -70,7 +70,9 @@
     },
     "language": {
       "title": "Choose your language",
-      "subtitle": "You can change this any time in Settings"
+      "subtitle": "You can change this any time in Settings",
+      "ko": "한국어",
+      "en": "English"
     },
     "experience": {
       "title": "Tell us about your wine experience",

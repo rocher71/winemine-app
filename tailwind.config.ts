@@ -175,6 +175,12 @@ const config: Config = {
         'note-aroma-cat-label':      ['10px', { lineHeight: '12px', letterSpacing: '0.6px' }],
         'note-peak-note':            ['12px', { lineHeight: '18px' }],
         'chip-label-regular':        ['11px', { lineHeight: '13.2px' }],
+
+        // onboarding step retroactive (design-spec onboarding-2-language.md §3-2 P0 — 3 신규)
+        // step 2/3/4 공유. step 1 워드마크(56)는 별도.
+        'onboarding-step-title':    ['28px', { lineHeight: '33.6px' }],
+        'onboarding-step-subtitle': ['14px', { lineHeight: '20px' }],
+        'onboarding-choice-label':  ['18px', { lineHeight: '21.6px' }],
       },
     },
   },
