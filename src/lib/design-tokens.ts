@@ -87,6 +87,12 @@ export const bottleColorDefault = {
 // ---- Bottle gradient end (그라데이션 종점) ----
 export const bottleGradientEnd = '#1a0a1e';
 
+// ---- Expert blind mode background gradient ----
+export const expertBlindBg = {
+  start: '#5A1A24',
+  end: '#2D0D12',
+} as const;
+
 // ---- Spacing scale (4-base) ----
 export const spacing = {
   '0': 0,
