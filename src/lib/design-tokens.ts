@@ -461,6 +461,25 @@ export const typography = {
   stepHeaderBadge:    { family: 'Inter_700Bold',              size: 11, lineHeight: 13.2 },
   summaryEyebrow:     { family: 'Inter_400Regular',           size: 11, lineHeight: 11,   letterSpacing: 1.1,  textTransform: 'uppercase' as const },
   summaryText:        { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 19.5, fontStyle: 'italic' as const },
+
+  // ---- notes-detail retroactive (design-spec notes-detail.md §6-1 P0 — 10 신규) ----
+  //
+  // verbatim 원칙: keyscreen src/app/notes/[noteId]/page.tsx line 116~377 (ViewNotePage 본문 트리)
+  // + line 394~714 (DimensionsExpert) + line 800~871 (DimensionsBeginner).
+  // 카드 Eyebrow 공통 위계는 beginnerEyebrow(11 ls 1.76)와 거의 동일(10 ls 1.8) — 본 cycle은 컴팩트
+  // notesDetailCardEyebrow를 별도로 두어 (size 10) keyscreen verbatim 적용.
+  // Aroma chip / Fault chip은 chipLabelRegular (Inter 400 11).
+  notesDetailCardEyebrow: { family: 'Inter_600SemiBold',          size: 10, lineHeight: 12,   letterSpacing: 1.8,  textTransform: 'uppercase' as const },
+  noteAuthorName:         { family: 'PlayfairDisplay_400Regular', size: 14, lineHeight: 16.8 },
+  noteAvatarLetter:       { family: 'PlayfairDisplay_700Bold',    size: 13, lineHeight: 15.6 },
+  noteTemplatePill:       { family: 'Inter_400Regular',           size: 10, lineHeight: 12 },
+  noteRatingChip:         { family: 'Inter_600SemiBold',          size: 12, lineHeight: 14.4 },
+  noteMemoBody:           { family: 'PlayfairDisplay_400Regular', size: 14, lineHeight: 23.1, fontStyle: 'italic' as const },
+  noteBeginnerDimValue:   { family: 'PlayfairDisplay_400Regular', size: 14, lineHeight: 15.4 },
+  noteRowValue:           { family: 'PlayfairDisplay_400Regular', size: 12, lineHeight: 14.4 },
+  noteAromaCatLabel:      { family: 'Inter_400Regular',           size: 10, lineHeight: 12,   letterSpacing: 0.6,  textTransform: 'uppercase' as const },
+  notePeakNote:           { family: 'Inter_400Regular',           size: 12, lineHeight: 18,   fontStyle: 'italic' as const },
+  chipLabelRegular:       { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----
@@ -607,6 +626,37 @@ export const cellarBottomFade = {
     end:   { x: 0.5, y: 1 },
   },
 } as const;
+
+// ---- Notes-detail gradient tokens (design-spec notes-detail.md §6-2 P0 — retroactive hardening) ----
+//
+// keyscreen src/app/notes/[noteId]/page.tsx line 171~199 (BottleThumb) + line 244~260 (AuthorAvatar)
+// + line 381~389 (levelGradient() function) verbatim 포팅.
+
+// (1) BottleThumb 44×64 gradient — 160deg, [bottleColor, dark.bg.bottleShelf #1a0a1e] 70%.
+// end 색은 양쪽 모드 모두 #1a0a1e 고정 (§10 E6 (a) — light에서도 어두운 와인병 분위기 보존).
+export function notesDetailBottleThumbGradient(bottleColor: string) {
+  return {
+    colors: [bottleColor, dark.bg.bottleShelf] as readonly string[],
+    locations: [0, 0.7] as readonly number[],
+    start: { x: 0, y: 0 },
+    end:   { x: 0.342, y: 0.94 },
+  };
+}
+
+// (2) AuthorAvatar 32×32 gradient — 135deg, level L1~L5별 고정 5-종.
+// 양쪽 모드 동일 (라이트에서도 어두운 음영 — keyscreen verbatim).
+// home AppHeader LevelChip(gradients.levelChip)과 다른 토큰 그룹 — 의도적으로 분리.
+//   - levelChip은 같은 색 + alpha 변형 (밝은 톤)
+//   - noteAuthorAvatarGradient는 색 자체가 darken (L4 gold→#0F0718 deep navy)
+export const noteAuthorAvatarGradient = {
+  L1: { colors: ['#555560', '#2a2a35'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+  L2: { colors: ['#4a6fa5', '#1a2a45'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+  L3: { colors: ['#b8b8c0', '#3a3a48'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+  L4: { colors: [brand.gold,  '#0F0718'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+  L5: { colors: [brand.wineRed, '#3a0810'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
+} as const;
+
+export type NoteAuthorLevel = keyof typeof noteAuthorAvatarGradient;
 
 // ---- Capture PhotoFrame gradient factory (design-spec capture.md §9 P0) ----
 //

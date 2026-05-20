@@ -84,8 +84,15 @@
   - changed files (~19): app/notes/new/write.tsx (rewrite), src/components/notes/{step-header,beginner-header,impression-triad,palate-triad,aroma-grid,finish-triad,auto-summary-card,price-capture,share-to-community,save-pill}.tsx (new), src/components/notes/{beginner-form,expert-form,note-body-beginner}.tsx (modified), src/components/wine/my-tasting-note-card.tsx, src/lib/notes/summarize.ts (new), src/lib/design-tokens.ts (5 typography), tailwind.config.ts, src/lib/i18n/{ko,en}.json
   - completed: 2026-05-20T16:20:32Z
   - deferred (separate cycles): tasting_notes.is_public 컬럼 → supabase-engineer, XP 시스템 / Expert 7-step / VariantTabs / DynamicTemplateForm → v0.2.0, iOS vs Android italic render → Day 7 EAS, light Switch trackColor 대비 / priceCaptureLabel "(+5 XP)" 미세 → 후속
-- [~] /notes/[noteId] — `app/notes/[noteId].tsx`
+- [x] /notes/[noteId] — `app/notes/[noteId].tsx`
   - started: 2026-05-20T16:20:54Z
+  - spec: _workspace/design-specs/notes-detail.md
+  - review reports: _workspace/design-review_notes-detail_20260521_013021.md (1차 FAIL 6/6), _workspace/design-review_notes-detail_20260521_014504_v2.md (PASS)
+  - qa report: _workspace/qa_day6_notes_detail_retroactive_20260521_014807.md (PASS 14/14)
+  - fix loops: 1
+  - changed files (~10): app/notes/[noteId].tsx (rewrite), src/components/notes/{note-wine-header-link,note-author-avatar,note-author-card,note-memo-card}.tsx (new), src/components/notes/{note-body-beginner,note-body-expert}.tsx (modified), src/lib/design-tokens.ts (13 tokens), tailwind.config.ts, src/lib/i18n/{ko,en}.json (17 keys)
+  - completed: 2026-05-20T16:52:28Z
+  - deferred (separate cycles): tasting_notes.is_public → supabase-engineer, Expert memo 필드 / shared notes / profiles.level_id → v0.2.0, E5 WSET 5-col 단어 vs dot bar → 사용자 결정
 
 ### P2 (시각 차이 작음 예상)
 - [ ] /onboarding/1-welcome — `app/onboarding/1-welcome.tsx`

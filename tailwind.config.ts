@@ -161,6 +161,20 @@ const config: Config = {
         'step-header-badge':     ['11px', { lineHeight: '13.2px' }],
         'summary-eyebrow':       ['11px', { lineHeight: '11px', letterSpacing: '1.1px' }],
         'summary-text':          ['13px', { lineHeight: '19.5px' }],
+
+        // notes-detail retroactive (design-spec notes-detail.md §6-1 P0 — 10 신규)
+        // 카드 Eyebrow 공통(10 + ls 1.8 + uppercase) + author/avatar/chip/memo/dim/row/aroma 위계.
+        'notes-detail-card-eyebrow': ['10px', { lineHeight: '12px', letterSpacing: '1.8px' }],
+        'note-author-name':          ['14px', { lineHeight: '16.8px' }],
+        'note-avatar-letter':        ['13px', { lineHeight: '15.6px' }],
+        'note-template-pill':        ['10px', { lineHeight: '12px' }],
+        'note-rating-chip':          ['12px', { lineHeight: '14.4px' }],
+        'note-memo-body':            ['14px', { lineHeight: '23.1px' }],
+        'note-beginner-dim-value':   ['14px', { lineHeight: '15.4px' }],
+        'note-row-value':            ['12px', { lineHeight: '14.4px' }],
+        'note-aroma-cat-label':      ['10px', { lineHeight: '12px', letterSpacing: '0.6px' }],
+        'note-peak-note':            ['12px', { lineHeight: '18px' }],
+        'chip-label-regular':        ['11px', { lineHeight: '13.2px' }],
       },
     },
   },

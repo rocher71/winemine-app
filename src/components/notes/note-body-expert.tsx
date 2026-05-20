@@ -1,5 +1,13 @@
+/**
+ * NoteBodyExpert — note detail 화면에서 ExpertFields 표시 (read-only, WSET 4-section).
+ *
+ * 사양: design-spec notes-detail.md §2-5B + §10 E8 (a) — 4-section 유지 (RN ExpertFields shape 정합).
+ * §13 retroactive: 카드 Eyebrow 위계 keyscreen verbatim (Inter 600 10 gold uppercase ls 1.8 mb 10),
+ *                  Section radius 14 통일.
+ */
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { brand } from '@/lib/design-tokens';
 import { WSETReadOnly } from './wset-readonly';
 import type { ExpertFields, Readiness } from './expert-form';
 
@@ -20,8 +28,30 @@ function readinessLabel(t: (k: string) => string, r: Readiness): string {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <View className="rounded-xl bg-surface p-4 gap-3">
-      <Text className="font-inter text-section-title text-gold uppercase">{title}</Text>
+    <View
+      className="bg-surface border-border-default"
+      style={{
+        borderRadius: 14,
+        borderWidth: 1,
+        padding: 14,
+        rowGap: 12,
+      }}
+    >
+      <Text
+        allowFontScaling={false}
+        className="font-inter-semibold"
+        style={{
+          fontSize: 10,
+          lineHeight: 12,
+          letterSpacing: 1.8,
+          textTransform: 'uppercase',
+          color: brand.gold,
+          marginBottom: -2, // rowGap 12 보정 (eyebrow→첫 항목은 keyscreen mb 10 → rowGap 12 - 2)
+        }}
+        accessibilityRole="header"
+      >
+        {title}
+      </Text>
       {children}
     </View>
   );
@@ -31,10 +61,18 @@ function NoteText({ label, value }: { label: string; value: string }) {
   const { t } = useTranslation();
   return (
     <View>
-      <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
+      <Text
+        allowFontScaling={false}
+        className="font-inter text-text-secondary dark:text-text-secondary"
+        style={{ fontSize: 12, lineHeight: 14.4, textTransform: 'uppercase' }}
+      >
         {label}
       </Text>
-      <Text className="font-inter text-card-body text-text-primary dark:text-text-primary mt-2">
+      <Text
+        allowFontScaling={false}
+        className="font-inter text-text-primary dark:text-text-primary"
+        style={{ fontSize: 13, lineHeight: 19.5, marginTop: 6 }}
+      >
         {value?.trim() ? value : t('notes.detail.noComment')}
       </Text>
     </View>
@@ -75,19 +113,35 @@ export function NoteBodyExpert({ fields }: Props) {
       <Section title={t('notes.expert.sectionConclusions')}>
         <WSETReadOnly label={t('notes.expert.conclusionsQuality')} value={c.quality} />
         <View>
-          <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
+          <Text
+            allowFontScaling={false}
+            className="font-inter text-text-secondary dark:text-text-secondary"
+            style={{ fontSize: 12, lineHeight: 14.4, textTransform: 'uppercase' }}
+          >
             {t('notes.expert.conclusionsReadiness')}
           </Text>
-          <Text className="font-inter-semibold text-card-body text-text-primary dark:text-text-primary mt-2">
+          <Text
+            allowFontScaling={false}
+            className="font-inter-semibold text-text-primary dark:text-text-primary"
+            style={{ fontSize: 13, lineHeight: 19.5, marginTop: 6 }}
+          >
             {readinessLabel(t, c.readiness)}
           </Text>
         </View>
         {typeof c.estimated_price_krw === 'number' ? (
           <View>
-            <Text className="font-inter text-card-meta text-text-secondary dark:text-text-secondary uppercase">
+            <Text
+              allowFontScaling={false}
+              className="font-inter text-text-secondary dark:text-text-secondary"
+              style={{ fontSize: 12, lineHeight: 14.4, textTransform: 'uppercase' }}
+            >
               {t('notes.expert.conclusionsPriceKrw')}
             </Text>
-            <Text className="font-inter-semibold text-card-body text-text-primary dark:text-text-primary mt-2">
+            <Text
+              allowFontScaling={false}
+              className="font-inter-semibold text-text-primary dark:text-text-primary"
+              style={{ fontSize: 13, lineHeight: 19.5, marginTop: 6 }}
+            >
               {c.estimated_price_krw.toLocaleString()} {t('cellar.meta.priceUnit')}
             </Text>
           </View>
