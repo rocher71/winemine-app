@@ -746,6 +746,73 @@
       "scroll": "Wine detail scroll view"
     }
   },
+  "winePrices": {
+    "header": { "title": "Price details" },
+    "notFound": "Wine not found",
+    "priceChart": {
+      "title": "Price history",
+      "empty": "No purchases yet",
+      "avgLabel": "Avg",
+      "range": {
+        "3M": { "label": "Last 3 months" },
+        "1Y": { "label": "Last year" },
+        "ALL": { "label": "All time" }
+      },
+      "myEntry": "My entry",
+      "dot": {
+        "a11yLabel": "{{price}}, {{store}}, {{date}}"
+      }
+    },
+    "table": {
+      "title": "By store",
+      "empty": "No prices registered yet",
+      "myEntry": "My entry",
+      "sort": {
+        "priceAsc": "Lowest",
+        "recent": "Recent"
+      },
+      "row": {
+        "a11yLabel": "{{price}}, {{date}}, level {{level}} {{levelName}}"
+      }
+    },
+    "cta": {
+      "addLabel": "Add my purchase info",
+      "addHint": "Opens purchase info sheet"
+    },
+    "sheet": {
+      "title": "Register purchase",
+      "field": {
+        "price": {
+          "label": "Price",
+          "placeholder": "Price (KRW)"
+        },
+        "store": {
+          "label": "Store",
+          "placeholder": "Select store"
+        },
+        "date": {
+          "label": "Purchased at",
+          "placeholder": "Pick date"
+        }
+      },
+      "submit": {
+        "label": "Save (+5 XP)",
+        "a11yLabel": "Save purchase info"
+      },
+      "success": "Price added +{{xp}} XP",
+      "error": {
+        "priceRequired": "Please enter a price",
+        "priceFormat": "Price must be a number",
+        "priceRange": "Price must be between 100 and 100,000,000 KRW",
+        "storeRequired": "Please select a store",
+        "dateFormat": "Please pick a valid date"
+      }
+    },
+    "error": {
+      "body": "Could not load prices",
+      "retry": "Retry"
+    }
+  },
   "wineStory": {
     "header": { "title": "Winery story" },
     "hero": { "foundedAt": "Founded {{year}} · " },
