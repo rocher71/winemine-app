@@ -94,49 +94,10 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
         };
 
         if (isCapture) {
-          // 단일 Pressable + inline shadow + 명시값 radius 28(=size/2). LinearGradient/wrapper 제거.
-          // 이전 fix(`6b39fb3`)에서 radius.full(9999) / fabShadow spread / wrapper marginTop 모두
-          // 시뮬에서 적용 안 되어 square로 표시됨. inline 명시값으로 강제.
-          return (
-            <View
-              key={route.key}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                paddingTop: 0,
-              }}
-            >
-              <Pressable
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
-                  navigateTo();
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={t('nav.captureA11y')}
-                style={({ pressed }) => ({
-                  width: 56,
-                  height: 56,
-                  borderRadius: 28,
-                  marginTop: -24,
-                  backgroundColor: brand.wineRed,
-                  borderWidth: 1.5,
-                  borderColor: brand.gold,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  opacity: pressed ? 0.85 : 1,
-                  // inline shadow (iOS) + elevation (Android) — 토큰 cast 우회
-                  shadowColor: '#8B1A2A',
-                  shadowOpacity: 0.45,
-                  shadowOffset: { width: 0, height: 6 },
-                  shadowRadius: 20,
-                  elevation: 12,
-                })}
-              >
-                <Camera size={26} color={brand.cream} strokeWidth={1.6} />
-              </Pressable>
-            </View>
-          );
+          // Round 7: capture 슬롯은 flex spacer만 (FAB은 컨테이너의 직접 absolute child로 별도 렌더).
+          // Round 5(translateY) / Round 6(nested absolute) 모두 시각 결과 동일 → flex 안에 어떤 형태로
+          // 넣어도 안 됨. FAB을 컨테이너 absolute child로 끌어올려 flex layout과 완전 분리.
+          return <View key={route.key} style={{ flex: 1 }} />;
         }
 
         return (
@@ -153,6 +114,60 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
           />
         );
       })}
+
+      {/* FAB — Round 8: Pressable에서 visual style 분리. NativeWind cssInterop + Fabric에서
+       *   복잡한 style 함수가 무시되는 케이스 회피. position absolute는 outer wrapper에 (positioning),
+       *   visual style은 inner View에 inline (cssInterop wrapping 우회). Pressable은 hit target만.
+       */}
+      <View
+        pointerEvents="box-none"
+        style={{
+          position: 'absolute',
+          bottom: 28 + insets.bottom + 10,
+          left: '50%',
+          marginLeft: -28,
+          width: 56,
+          height: 56,
+          zIndex: 10,
+        }}
+      >
+        <Pressable
+          onPress={() => {
+            const captureRoute = state.routes.find((r) => r.name === 'capture');
+            if (!captureRoute) return;
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: captureRoute.key,
+              canPreventDefault: true,
+            });
+            if (!event.defaultPrevented) navigation.navigate('capture');
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={t('nav.captureA11y')}
+          style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+        >
+          <View
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              backgroundColor: brand.wineRed,
+              borderWidth: 1.5,
+              borderColor: brand.gold,
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#8B1A2A',
+              shadowOpacity: 0.45,
+              shadowOffset: { width: 0, height: 6 },
+              shadowRadius: 20,
+              elevation: 12,
+            }}
+          >
+            <Camera size={26} color={brand.cream} strokeWidth={1.6} />
+          </View>
+        </Pressable>
+      </View>
     </View>
   );
 }
