@@ -205,7 +205,8 @@ ALL DONE: 2026-05-20T18:05:30Z
   - 목표: 작은 round avatar + badge inline + 본문 + 메타 (키스크린 image #4 verbatim)
 
 ### F3 (작은 시각 갭이나 4 화면 공통 영향)
-- [ ] /onboarding/* 다음 버튼 일관성
+- [~] /onboarding/* 다음 버튼 일관성
+  - started: 2026-05-21T03:42:20Z
   - 증상: wineRed full-width disabled가 placeholder처럼 보임
   - 목표: primary-button verbatim 폭/색/대비/safe-area (키스크린 image #5 verbatim)
 
