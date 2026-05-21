@@ -21,10 +21,16 @@
   },
   "nav": {
     "home": "Home",
+    "map": "Map",
     "capture": "Capture",
     "cellar": "Cellar",
+    "community": "Community",
     "notes": "Notes",
-    "settings": "Settings"
+    "settings": "Settings",
+    "captureA11y": "Capture wine label",
+    "a11y": {
+      "primary": "Primary"
+    }
   },
   "level": {
     "L1": "Novice",

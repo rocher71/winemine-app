@@ -168,8 +168,15 @@ ALL DONE: 2026-05-20T18:05:30Z
 우선순위 (시각 갭 + 버그 임팩트 큰 순):
 
 ### F1 (가장 broken — UX 완전 망가짐)
-- [~] BottomNav 5 tabs verbatim — `app/(tabs)/_layout.tsx` + settings stack 분리
+- [x] BottomNav 5 tabs verbatim — `app/(tabs)/_layout.tsx` + settings stack 분리
   - started: 2026-05-21T02:29:14Z
+  - spec: _workspace/design-specs/bottom-nav.md
+  - review reports: builder summary _workspace/design-review_bottom-nav_v1_builder_summary.md (1차 inline FAIL 11), _workspace/design-review_bottom-nav_20260521_114749_v2.md (PASS)
+  - qa report: _workspace/qa_followup_bottom-nav_20260521_115559.md (PASS)
+  - fix loops: 1
+  - changed files: app/(tabs)/_layout.tsx (rewrite), app/(tabs)/{map,community}.tsx (new), app/notes/index.tsx (mv), app/cellar/[lwin].tsx (mv), app/settings/{index,language,experience,appearance}.tsx (mv 4), app/_layout.tsx (root Stack 확장), src/components/nav/bottom-nav.tsx (rewrite), src/lib/i18n/{ko,en}.json (4 keys), src/components/{cellar/cellar-card,home/home-header,home/suggested-actions,shared/level-chip}.tsx (router paths)
+  - completed: 2026-05-21T02:57:57Z
+  - deferred: §14 Q1 stack route BottomNav 표시 정합성 (b 임시), §14 Q2 indicator bar 제거 변별성, light gold contrast 2.15 → 별도 cycle
   - 증상: 홈/라벨 촬영/노트/cellar/index/cellar/[lwin]/settings/index/settings/language/settings/experience/settings/appearance — 8 tabs로 overflow
   - 목표: 홈/지도/카메라(floating large red circle)/셀러/커뮤니티 5 tabs (키스크린 image #4 verbatim). settings hub + sub 3개는 stack 분리.
 

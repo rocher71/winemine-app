@@ -113,6 +113,11 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="(tabs)" />
+          {/* Stack routes (BottomNav 비표시) — bottom-nav.md §1-3, Q1 결정 (b) */}
+          <Stack.Screen name="notes" />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="cellar/[lwin]" />
+          <Stack.Screen name="wine/[lwin]" />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

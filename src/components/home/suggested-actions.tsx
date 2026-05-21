@@ -8,7 +8,7 @@
  *   - 우측 ChevronRight 18, strokeWidth 1.75, text-muted
  * - row 1: toast (tour 메시지)
  * - row 2: toast (starter 메시지)
- * - row 3: router.push('/settings/experience')
+ * - row 3: router.push('/settings/experience') (stack route)
  *
  * v0.1.0: Toast 컴포넌트는 화면 내 banner state 아닌 단순 컴포넌트 — RN Alert.alert로 대체.
  */
@@ -64,7 +64,7 @@ export function SuggestedActions() {
   };
   const onExperience = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push('/(tabs)/settings/experience');
+    router.push('/settings/experience' as never);
   };
 
   return (

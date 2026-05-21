@@ -28,7 +28,7 @@ export function LevelChip({ levelId, initial, onPress }: LevelChipProps) {
   const handlePress = () => {
     Haptics.selectionAsync().catch(() => undefined);
     if (onPress) onPress();
-    else router.push('/(tabs)/settings');
+    else router.push('/settings' as never);
   };
 
   return (

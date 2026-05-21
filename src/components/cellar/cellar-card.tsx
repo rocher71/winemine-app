@@ -12,7 +12,7 @@
  *                    TypeDot row + wine name + producer + vintage + DrinkWindowBadge
  *
  * - swipe action 제거 (사양 §5, §12-3 — 2-col grid에 부자연)
- * - navigation: /(tabs)/cellar/${lwin}?id=${item.id} (현재 RN 표준 유지, 사양 §12-6)
+ * - navigation: /cellar/${lwin}?id=${item.id} — stack route (bottom-nav.md §1-3)
  */
 import { Pressable, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -68,7 +68,7 @@ export function CellarCard({ item }: Props) {
   const openDetail = () => {
     Haptics.selectionAsync().catch(() => undefined);
     router.push(
-      `/(tabs)/cellar/${encodeURIComponent(wine.lwin ?? '')}?id=${encodeURIComponent(item.id)}`,
+      `/cellar/${encodeURIComponent(wine.lwin ?? '')}?id=${encodeURIComponent(item.id)}` as never,
     );
   };
 

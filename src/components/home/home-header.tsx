@@ -99,7 +99,7 @@ function FirstTimeAvatar({ initial }: { initial: string }) {
     <Pressable
       onPress={() => {
         Haptics.selectionAsync().catch(() => undefined);
-        router.push('/(tabs)/settings');
+        router.push('/settings' as never);
       }}
       accessibilityRole="link"
       accessibilityLabel="profile"

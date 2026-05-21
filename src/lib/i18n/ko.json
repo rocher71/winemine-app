@@ -21,10 +21,16 @@
   },
   "nav": {
     "home": "홈",
+    "map": "지도",
     "capture": "라벨 촬영",
     "cellar": "셀러",
+    "community": "커뮤니티",
     "notes": "노트",
-    "settings": "설정"
+    "settings": "설정",
+    "captureA11y": "와인 라벨 촬영",
+    "a11y": {
+      "primary": "주요 내비게이션"
+    }
   },
   "level": {
     "L1": "입문자",
