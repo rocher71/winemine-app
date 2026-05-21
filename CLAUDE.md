@@ -120,18 +120,92 @@ v2.0 Spring 전환 비용 폭증 방지:
 
 핵심: 하드코딩 hex 금지 / 토큰 dual definition / Expo dev에서 양쪽 토글 검증.
 
+### 4-11. **CRITICAL — NativeWind v4 + Fabric 환경의 Pressable layout 패턴 (24시간 학습)**
+
+**2026-05-21 24시간 fix 학습**: 이 stack(`React 19 + RN 0.81 + Reanimated 4 + worklets 0.5 + NativeWind 4.1 + jsxImportSource: 'nativewind' + newArchEnabled: true (Fabric)`)에서, **`Pressable`에 `className` + 함수형 `style` + 복잡한 nested 자식(여러 View / SVG / Text)이 동시에 있으면 layout 스타일이 무시되는 경우 발생**. cssInterop wrapper + Fabric layout 충돌로 추정.
+
+**증거 사례**:
+- ✅ `SuggestedActions ActionRow` — className + style 함수 + flexDirection row, 자식은 Text + ChevronRight 단순 → **작동**
+- ❌ `WineFeedRow` — 동일 패턴이지만 자식이 3개 nested View + SVG (WMBottle) → **flexDirection row 무시되어 vertical로 렌더**
+- ❌ `BottomNav FAB` — Pressable style 함수에 position/size/border/shadow 통째로 → **backgroundColor만 적용, border/radius/위치 무시**
+
+**규칙 (반드시 준수)**:
+
+1. **Pressable은 hit target + opacity press feedback만**:
+   ```tsx
+   <Pressable onPress={...} style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}>
+     <View style={{ /* 모든 layout/visual 여기 */ }}>
+       {children}
+     </View>
+   </Pressable>
+   ```
+
+2. **layout/visual은 inner `<View>`로 분리**. inner View는 가능하면 `className` 없이 inline `style`만 (cssInterop wrapping 우회). 색은 `useThemeTokens()` 의 `tokens.bg.surface` / `tokens.border.default` 등으로 직접 inline.
+
+3. **Pressable의 style 함수에 다음 prop을 넣지 말 것** (cssInterop가 무시하는 케이스 빈번):
+   - `flexDirection`, `flexWrap`, `alignItems`, `justifyContent`, `gap`
+   - `padding*`, `margin*`, `width`, `height`
+   - `position`, `top`/`bottom`/`left`/`right`
+   - `borderRadius`, `borderWidth`, `borderColor`
+   - `backgroundColor`
+   - `shadow*`, `elevation`
+   - `transform` (scale press feedback도 inner View로 옮길 것)
+
+4. **단순 hit target (icon만, Text만 등)은 예외**. 그러나 미래에 자식 늘어날 가능성 있으면 처음부터 inner View 패턴 권장.
+
+5. **Text font/color는 inline style로** (className font-inter / text-* 도 가능하지만 layout-heavy 부모 안에서는 inline 권장):
+   ```tsx
+   <Text style={{ fontFamily: 'Inter_400Regular', color: tokens.text.primary, fontSize: 14 }}>...</Text>
+   ```
+
+**점검 명령** (코드 작성 후 / PR 전):
+```bash
+# className + style 함수 동시 사용 Pressable 찾기
+grep -rn -B1 "style={({\s*pressed" app/ src/ --include="*.tsx" | grep -B1 "className"
+```
+발견된 사이트는 자식 복잡도 확인 후 inner View 패턴으로 변환.
+
+**참조**: `docs/NEXT_TO_RN_TRANSLATION.md` §8c — 상세 패턴 + 변환 before/after 예시.
+
+---
+
+### 4-10. 키스크린 verbatim 변환 시 Yoga vs CSS box model 사전 거치기 (NEW)
+
+키스크린 JSX(`../winemine-keyscreen/src/**`)를 RN으로 옮길 때, **CSS와 Yoga의 의미가 다른 layout primitive를 verbatim 옮기면 시각 결과가 깨진다**. 학습 배경: 2026-05-21 BottomNav FAB 4 라운드 fix — `marginTop: -24`를 verbatim 옮긴 게 RN에서 poke-out 작동 안 한 사례.
+
+**규칙**:
+1. 화면·컴포넌트 작성 전 `docs/NEXT_TO_RN_TRANSLATION.md` §8a "Yoga vs CSS box model" 표를 grep 확인
+2. 다음 패턴 키스크린 발견 시 RN equivalent로 변환 (직역 금지):
+   - `marginTop/Bottom/Left/Right: -N` (음수 margin) — 유형 A(부모 위로 튀어나오기)면 `transform: [{ translateY: -N }]` 또는 `position: 'absolute'`. 유형 B/C(centering/sibling overlap/spacing 미세 조정)는 그대로 OK
+   - `position: 'sticky'`, `display: 'grid'`, `backdrop-filter`, `vh`/`vw` (RN 미지원)
+   - 원형(FAB/아바타) `borderRadius: 9999` 또는 `radius.full` (일부 환경 무시) → `size/2` 명시값
+   - shadow 토큰 spread (`...fabShadow`) → floating 요소는 4속성 inline + `elevation` 명시
+   - expo-router custom tabBar의 outer wrapper — `tabBarStyle: { borderTopWidth: 0, backgroundColor: 'transparent', overflow: 'visible' }` 명시
+3. 사전에 없는 새 web-only primitive를 fix할 때마다 `docs/NEXT_TO_RN_TRANSLATION.md` §8a에 항목 추가 (누적 의무)
+4. design-reviewer 8항목 체크리스트 (7) Layout primitive 검증 + (8) 멀티모달 스크린샷 비교 (의무) 통과 필수
+
+점검 명령:
+```bash
+# 변환 전·중·후 모두 실행
+grep -rn "marginTop: -\|marginLeft: -\|marginRight: -\|marginBottom: -" app/ src/ --include="*.tsx" --include="*.ts"
+grep -rn "position: 'sticky'\|display: 'grid'\|backdropFilter" app/ src/ --include="*.tsx"
+grep -rn "borderRadius: 9999\|radius.full" src/components/nav src/components/shared --include="*.tsx"
+```
+
 ---
 
 ## 5. AI(Claude Code) 협업 지침
 
 ### 할 일
-- 키스크린 화면을 RN+Expo 컴포넌트로 변환
+- 키스크린 화면을 RN+Expo 컴포넌트로 변환 (단, [docs/NEXT_TO_RN_TRANSLATION.md](./docs/NEXT_TO_RN_TRANSLATION.md) §8a Yoga vs CSS 사전 거치기 의무 §4-10)
 - Supabase migration SQL 작성 (테이블 + RLS 정책)
 - `supabase gen types` 후 TS 타입 import
 - Edge Functions 작성 (필요 최소한)
 - 익명화 유틸 (`specs/domain/policies/anonymization.md` 참조)
 - 정책 위반 점검 (emoji, locale 누락, RLS 우회, 익명화 누락)
 - **테마 변경 시 양쪽 모드 검증** (§4-9)
+- **변환 사전 누적 의무** — 새 web-only primitive fix 시 `docs/NEXT_TO_RN_TRANSLATION.md` §8a 항목 추가 (§4-10)
+- **시각 게이트 의무** — 화면 완성 시 keyscreen-shot + RN dark/light 스크린샷 모두 `_workspace/{keyscreen-shots,rn-shots}/`에 두고 design-reviewer 멀티모달 비교 통과
 
 ### 하면 안 되는 것
 - `specs/` 또는 `../winemine-keyscreen/` 수정
@@ -141,6 +215,8 @@ v2.0 Spring 전환 비용 폭증 방지:
 - 시크릿·hex 색 하드코딩
 - Edge Functions에 비즈니스 로직 over-engineering (§4-8)
 - 테마 한쪽만 보고 스타일 commit (§4-9)
+- **CSS layout primitive (`marginTop: -N` poke-out / `position: sticky` / `grid` / `backdrop-filter` / `radius.full` 원형) verbatim 직역 — RN equivalent로 변환 (§4-10)**
+- **스크린샷 없이 디자인 PASS 결정** (§4-10)
 
 ### 컨텍스트 흐름
 1. 화면 변환 → 키스크린 명세(`../winemine-keyscreen/pages/{route}.md`) + React 구현 동시 참조

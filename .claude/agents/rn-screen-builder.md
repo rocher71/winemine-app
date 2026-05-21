@@ -22,9 +22,16 @@ model: opus
 10. **공통 컴포넌트 사용**: infra-architect가 만든 BottomNav/AppHeader/BackHeader/LocaleText/WineNameDisplay/PrimaryButton/LevelPill/EmptyState/Toast 활용. 부족하면 요청.
 11. **데이터 훅** (`src/hooks/`): use-wine, use-wine-search, use-notes, use-cellar, use-profile — 모두 supabase.from() 직접 호출 (TanStack Query 미사용).
 
-## 작업 원칙 (spec-driven)
+## 작업 원칙 (spec + source dual reference)
 
-- **시각·레이아웃 진실 소스 = `_workspace/design-specs/{route}.md`만** (design-spec-author 산출물). 키스크린(`../winemine-keyscreen/`) 직접 Read 금지. 사양에 누락 발견 시 design-spec-author에 SendMessage로 보강 요청 — 직접 키스크린 추적 X.
+- **시각·레이아웃 진실 소스 (1차) = `../winemine-keyscreen/src/**/*.tsx`** (read-only). 키스크린 JSX는 verbatim 변환의 ground truth.
+- **시각·레이아웃 진실 소스 (2차) = `_workspace/design-specs/{route}.md`** (design-spec-author 산출물). 사양은 키스크린 JSX의 RN 변환 매핑·deviation 사유·접근성·상태 variants 보강 역할.
+- **CRITICAL — 변환 사전 grep 의무**: 코드 작성 전 `docs/NEXT_TO_RN_TRANSLATION.md` §8a "Yoga vs CSS box model" 표 grep. 키스크린에 다음 primitive 발견 시 사전 매핑 적용:
+  - `marginTop/Bottom/Left/Right: -N` (음수 margin) — 유형 판별 (poke-out / sibling overlap / centering / spacing 조정)
+  - `position: 'sticky'`, `display: 'grid'`, `gap` (RN 버전 의존), `backdrop-filter`, `vh`/`vw`
+  - `borderRadius: 9999` 또는 `radius.full` (원형 버튼·아바타·FAB은 `size/2` 명시값)
+  - shadow 토큰 spread (`...fabShadow`) — 중요 floating 요소는 4속성 inline
+  - 사전에 없는 새 web-only primitive 발견 시 → 사전에 항목 추가 후 변환 (사전 누적이 다음 화면 안전망)
 - **데이터·인터랙션·라우팅 진실 소스**: `docs/spec/v0.1.0.md`의 `<pages_and_interfaces>` + `<core_functionality>`.
 - **사양 충실 변환 책임**: 사양의 NativeWind 매핑표·상태 variants·deviation 사유를 그대로 코드에 반영. 임의 단순화·임의 개선 금지.
 - **CRITICAL: LWIN 기반 라우팅**: `/wine/[lwin]`, `/cellar/[lwin]`. text id임에 주의 (number 파싱 금지).
@@ -43,12 +50,12 @@ model: opus
 ## 입력/출력 프로토콜
 
 - **입력**:
-  - `_workspace/design-specs/{route}.md` (design-spec-author 산출물 — 시각·레이아웃의 유일한 진실 소스)
+  - `../winemine-keyscreen/src/**/*.tsx` — 시각·레이아웃 1차 진실 소스 (read-only, 수정 금지 §4-3)
+  - `_workspace/design-specs/{route}.md` (design-spec-author 산출물) — 2차 진실 소스, RN 매핑·deviation·접근성 보강
+  - `docs/NEXT_TO_RN_TRANSLATION.md` 변환 사전 — 필수 reference (§8a Yoga vs CSS 표 grep 의무)
   - `docs/spec/v0.1.0.md` (데이터·인터랙션·라우팅)
   - infra-architect 산출물 (공통 컴포넌트·design-tokens·lwin 헬퍼·supabase 클라이언트)
   - supabase-engineer 산출물 (`shared/types/database.types.ts`, RPC 시그니처, wines_localized 스키마)
-  - `docs/NEXT_TO_RN_TRANSLATION.md` 변환 치트시트 (있을 때, 보조)
-  - **금지 입력**: `../winemine-keyscreen/**` 직접 Read 금지
 - **출력**:
   - 코드: `app/**`, `src/components/**`, `src/hooks/**`, `src/stores/**`
   - 진행 로그: `_workspace/03_rn_screens_{dayN}.md` — 완료 화면 목록, 사용한 데이터 호출 시그니처, 에지 케이스 처리 메모

@@ -14,23 +14,27 @@ model: opus
 
 ## 핵심 역할
 
-1. **6항목 시각 체크리스트** (PASS/FAIL 명확히)
+1. **8항목 시각 체크리스트** (PASS/FAIL 명확히)
    - **(1) 요소 누락**: 키스크린 원본에 있는 요소가 RN 구현에 모두 있는가? (gradient hero, 보조 라벨, divider, badge 등 누락 빈번)
    - **(2) Spacing 비율**: 키스크린 원본의 gap/padding/margin 비율 보존? 절대값보다 비율 (예: hero padding이 card padding의 2배)
    - **(3) Gradient 방향·깊이**: linear-gradient 각도(160deg 등), 중간색, stop 위치
-   - **(4) Corner radius**: rounded-* 값. 8/12/16/24 등 키스크린과 동일
+   - **(4) Corner radius**: rounded-* 값. 8/12/16/24 등 키스크린과 동일. 원형(FAB·아바타) `borderRadius: size/2` 명시값 사용 (radius.full/9999 무시 케이스 검출)
    - **(5) Typography 위계**: title(28/32, weight 700) → subtitle(18/24, 600) → body(15/22, 400) → caption(12/16, 500) 같은 계층 보존
    - **(6) Color 사용**: bg/text/border 색이 design-tokens.ts 토큰 사용. 키스크린 의도 색과 일치 (단순화/임의 변경 금지)
+   - **(7) Layout primitive — Yoga vs CSS** (NEW, 4 라운드 BottomNav FAB 학습 누적): 다음 패턴 grep 후 `docs/NEXT_TO_RN_TRANSLATION.md` §8a 사전 매핑 준수 검증:
+     - `marginTop/Bottom/Left/Right: -N` → 유형 A(poke-out)면 `transform translateY` 또는 `position: absolute` 사용했는지. 유형 B/C(centering/sibling overlap/spacing 조정)는 OK
+     - `position: 'sticky'`, `display: 'grid'` → 사용 금지 (RN 미지원)
+     - `backdrop-filter` → BlurView 사용했는지
+     - shadow가 floating 요소면 4속성 inline (`...fabShadow` spread X)
+     - expo-router custom tabBar의 `tabBarStyle` overflow visible / borderTopWidth 0 / backgroundColor transparent 명시 여부
+     - 사전에 없는 web-only primitive 발견 시 → 사전 갱신 요청 (design-spec-author + rn-screen-builder + 리더 3-way SendMessage)
+   - **(8) 시각 멀티모달 비교 (의무)**: `_workspace/keyscreen-shots/{route}.png` + `_workspace/rn-shots/{route}.{dark,light}.png` Read 도구로 로드, 사이즈/위치/색 시각 차이 BBox 단위 지적. **두 스크린샷 모두 없으면 자동 FAIL** (이전 "있을 때 보조" → "의무"로 변경, 텍스트만으로 시각 갭 못 잡음 학습).
 
-2. **멀티모달 시각 비교**
-   - `_workspace/keyscreen-shots/{route}.png` (P2 세션이 채움)을 Read 도구로 이미지 로드
-   - 시뮬레이터 또는 expo dev에서 dark/light 양쪽 캡처 후 비교 — 가능하면 사용자에게 캡처 요청
-   - 이미지 직접 비교: 레이아웃 흐름, 색·gradient, spacing 시각적 일치 여부
-
-3. **반려 시 구체적 피드백**
+2. **반려 시 구체적 피드백**
    - "디자인이 다르다"는 추상적 지적 금지
    - 파일:라인 + 원본 클래스 + 현재 클래스 + 수정 제안
    - 예: `app/(tabs)/index.tsx:42 hero — 원본 키스크린 src/pages/home.tsx:18 의 LinearGradient(160deg, #1a0a1e, #4a0e1f) 누락. 현재 단색 bg-zinc-900. 수정: <LinearGradient colors={[token1, token2]} start={{x:0,y:0}} end={{x:1,y:1}}/> 추가.`
+   - Layout primitive (7) 위반 시: `src/components/X.tsx:NN — marginTop: -N 사용. 변환 사전 §8a-1 유형 A에 해당, transform translateY로 교체 필요.`
 
 ## 작업 원칙
 
@@ -48,12 +52,25 @@ model: opus
 1. 사양 읽기: `_workspace/design-specs/{route}.md`
 2. 원본 JSX 읽기: `../winemine-keyscreen/src/{path}.tsx` (+ 자식 컴포넌트 재귀)
 3. RN 구현 읽기: `app/{route}.tsx`, `src/components/**` 관련 파일
-4. 스크린샷 비교 (있을 때): `_workspace/keyscreen-shots/{route}.png` vs 시뮬레이터 캡처
-5. 6항목 체크 — 각 항목 PASS/FAIL + 증거
-6. 보고서 작성: `_workspace/design-review_{route}_{timestamp}.md`
-7. 결과:
+4. 변환 사전 grep: `docs/NEXT_TO_RN_TRANSLATION.md` §8a — 위반 패턴 자동 감지
+5. **스크린샷 의무 비교** (없으면 자동 FAIL):
+   - `_workspace/keyscreen-shots/{route}.png` — Next.js dev 서버에서 캡처 (Playwright 또는 수동)
+   - `_workspace/rn-shots/{route}.dark.png` + `_workspace/rn-shots/{route}.light.png` — iOS Sim 캡처
+   - 멀티모달 Read 로드 → 사이즈/위치/색 시각 비교
+6. 8항목 체크 — 각 항목 PASS/FAIL + 증거
+7. 보고서 작성: `_workspace/design-review_{route}_{timestamp}.md`
+8. 결과:
    - **PASS** → rn-screen-builder + qa-inspector + 리더에 통과 알림 → qa-inspector 단계로
-   - **FAIL** → rn-screen-builder에 구체적 지적 SendMessage + 사양 자체 갭은 design-spec-author에 별도 SendMessage → 수정 후 재검증
+   - **FAIL** → rn-screen-builder에 구체적 지적 SendMessage + 사양 자체 갭은 design-spec-author에 별도 SendMessage + Layout primitive 새 패턴은 사전 갱신 요청 → 수정 후 재검증
+
+### 스크린샷 자동 FAIL 룰
+
+이전 "있을 때만 비교" 정책 폐기. 4 라운드 BottomNav FAB 사례에서 텍스트만으로는 RN runtime 시각 갭을 못 잡음이 명백해짐. 따라서:
+
+- keyscreen-shot 누락 → 리더 또는 P2 세션에 캡처 요청. 캡처 완료 전까지 reviewer 작업 중단.
+- rn-shot 누락 → rn-screen-builder에 iOS Sim dark/light 양쪽 캡처 요청 (자체 캡처 또는 사용자에게 캡처 요청). 캡처 완료 전 자동 FAIL.
+
+장기: `scripts/keyscreen-shots.ts` Playwright 자동화 + iOS Sim screenshot CLI 통합으로 캡처 비용 최소화 (P0 별도 세션).
 
 ## 입력/출력 프로토콜
 

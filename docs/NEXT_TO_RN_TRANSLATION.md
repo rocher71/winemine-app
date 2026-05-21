@@ -323,6 +323,295 @@ const animatedStyle = useAnimatedStyle(() => ({
 
 ---
 
+## 8a. Yoga vs CSS box model — verbatim이 깨지는 primitive
+
+> **CRITICAL**: 이 섹션은 4 라운드 BottomNav FAB 버그 fix 학습 누적. 키스크린 JSX를 그대로 옮겨도 **시각 의미가 다르게 작동하는** primitive들. **변환 전 이 표를 grep 의무**.
+>
+> rn-screen-builder는 코드 작성 전 `grep -rn "marginTop: -\|marginLeft: -\|marginRight: -\|marginBottom: -"` 후 사용처가 아래 사전의 "깨짐" 카테고리에 속하는지 판단.
+
+### 8a-1. 음수 margin (negative margin)
+
+**유형 A — Flex 자식의 음수 margin으로 부모 위로 튀어나오기 (BREAK)**
+
+키스크린 패턴 (web CSS — 작동):
+```jsx
+// BottomNav: position:absolute 컨테이너 + FAB의 marginTop: -24로 위로 튀어나옴
+<nav style={{ position: 'absolute', bottom: 0, ... }}>
+  <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+    <Link style={{ width: 52, height: 52, marginTop: -24, ... }} />  {/* poke up */}
+  </div>
+</nav>
+```
+
+**RN에서 깨지는 이유**: Yoga 레이아웃 엔진은 `flexDirection: 'row'` + `alignItems: 'flex-end'` 부모의 자식에 `marginTop: -N`을 줘도 자식의 visual position만 옮길 뿐 부모의 시각 영역 위로 안 튀어나옴. 부모 sibling(react-navigation의 screens container)이 `overflow: 'hidden'`이면 더더욱 깨짐.
+
+**RN equivalent** — `transform: [{ translateY: -N }]` 또는 `position: 'absolute'`:
+```tsx
+// 옵션 A — transform translateY (layout 영향 X, 시각만 이동)
+<Pressable style={{
+  width: 56, height: 56, borderRadius: 28,
+  transform: [{ translateY: -24 }],
+  ...
+}} />
+
+// 옵션 B — 부모를 position:relative 역할 + 자식 absolute
+<View style={{ flex: 1, height: 40 }}>
+  <Pressable style={{
+    position: 'absolute',
+    bottom: 16,           // 부모 paddingBottom 정합
+    left: '50%',
+    marginLeft: -28,      // width/2 = 가운데 정렬 (이건 작동, 8a-2 참조)
+    width: 56, height: 56, borderRadius: 28,
+  }} />
+</View>
+```
+
+**검증**: iOS Sim + 핸드폰 Expo Go 양쪽에서 FAB가 BottomNav 위로 24px 튀어나오는지.
+
+---
+
+**유형 B — `position: absolute` 자식의 음수 margin centering trick (OK)**
+
+```tsx
+// position:absolute + left:N% + marginLeft:-width/2 → 가운데 정렬
+<View style={{
+  position: 'absolute',
+  left: `${peakPct}%`,
+  width: 2, height: 16,
+  marginLeft: -1,        // = -width/2, 작동함
+}} />
+```
+
+이 패턴은 RN에서도 작동. CSS centering trick과 동일.
+
+---
+
+**유형 C — 형제 요소 겹치기 / 간격 미세 조정 (OK)**
+
+```tsx
+// 두 Pressable 형제, 두 번째가 -16px 겹침
+<View style={{ flexDirection: 'row' }}>
+  <Pressable>{/* StarHalf 28 */}</Pressable>
+  <Pressable style={{ marginLeft: -16 }}>{/* Star 28 */}</Pressable>  // 작동
+</View>
+```
+
+```tsx
+// 행 간격 미세 조정 (-2 정도)
+<Text style={{ marginBottom: -2 /* rowGap 12 보정 */ }}>...</Text>  // 작동
+```
+
+형제 간 음수 margin은 부모 box를 넘지 않으므로 RN에서 안전.
+
+---
+
+**판단 룰**:
+- 음수 margin이 **부모 box 밖으로 튀어나오는 의도**라면 → `transform` 또는 `position: absolute`로 변환
+- 음수 margin이 **형제 겹치기 / 간격 조정 / centering trick** 의도라면 → 그대로 두기 (작동)
+
+### 8a-2. position: absolute + percent-based centering
+
+CSS centering trick (`left: 50% + marginLeft: -width/2`)은 RN에서 작동. `left: '50%'`도 expo-router 환경에서 정상.
+
+### 8a-3. borderRadius full 토큰 (`9999` 또는 `radius.full`)
+
+일부 RN/expo-router 버전에서 9999 같은 매우 큰 값이 무시되어 사각형으로 렌더되는 케이스 발견됨. 안전한 우회:
+
+```tsx
+// 위험 (일부 환경에서 무시)
+<View style={{ width: 56, height: 56, borderRadius: 9999 }} />
+
+// 안전 (size/2 명시값)
+<View style={{ width: 56, height: 56, borderRadius: 28 }} />
+```
+
+원형 버튼·아바타·FAB은 **항상 size/2 명시값** 사용. `radius.full` 토큰은 일반 카드용으로만.
+
+### 8a-4. shadow 토큰 spread 무효화
+
+`...fabShadow` 같은 토큰 spread가 일부 환경에서 무시. 안전 우회:
+
+```tsx
+// 위험 (spread 무시 케이스 존재)
+<View style={{ ...shadows.fabDark }} />
+
+// 안전 (4속성 inline + Android elevation)
+<View style={{
+  shadowColor: '#8B1A2A',
+  shadowOpacity: 0.45,
+  shadowOffset: { width: 0, height: 6 },
+  shadowRadius: 20,
+  elevation: 12,
+}} />
+```
+
+FAB·중요 floating 요소는 inline 명시. 일반 카드는 토큰 spread 허용 (시각 차이 적음).
+
+### 8a-5. expo-router custom tabBar의 outer container
+
+`tabBar={(p) => <CustomNav {...p}/>}` 사용 시 outer wrapper가 default `borderTopWidth` / `backgroundColor` / `overflow: 'hidden'` 적용. `tabBarStyle` 명시 필요:
+
+```tsx
+<Tabs
+  screenOptions={{
+    tabBarStyle: {
+      borderTopWidth: 0,
+      backgroundColor: 'transparent',
+      elevation: 0,
+      overflow: 'visible',     // FAB 튀어나오기 허용
+      // height: 'auto'는 RN에서 무효 — 명시값 또는 미설정
+    },
+  }}
+  tabBar={(p) => <CustomNav {...p} />}
+/>
+```
+
+### 8a-6. iOS shadow + overflow:'hidden' + LinearGradient 단일 View 충돌
+
+iOS native rendering은 세 가지가 한 Pressable/View에 동시 적용되면 깨짐. 셋 중 하나 분리:
+- 외부 wrapper가 shadow 담당, 내부 child가 overflow + content 담당
+- 또는 LinearGradient 제거 후 solid `backgroundColor`로 단순화 (FAB은 단색 wineRed로 충분)
+
+### 8a-7. height: 'auto' (RN 무효)
+
+RN에서 `height: 'auto'`는 정식 값이 아니고 무시될 수 있음. 가변 높이는 explicit 설정 없이 두거나 (`height` prop 자체를 안 쓰거나), `minHeight`로 대체.
+
+---
+
+## 8c. **CRITICAL — Pressable + className + 함수형 style + 복잡한 자식 (NativeWind 4 cssInterop + Fabric 충돌)**
+
+> **2026-05-21 24시간 학습 누적**. 같은 실수 반복 금지 — CLAUDE.md §4-11 강제 규칙.
+
+### 깨지는 패턴
+
+```tsx
+// ❌ 깨짐 (NativeWind cssInterop + Fabric에서 layout 무시)
+<Pressable
+  className="bg-surface dark:bg-surface border border-border-default"
+  style={({ pressed }) => ({
+    flexDirection: 'row',
+    padding: 16,
+    borderRadius: 14,
+    opacity: pressed ? 0.9 : 1,
+    transform: [{ scale: pressed ? 0.99 : 1 }],
+  })}
+>
+  <View>{/* nested View 1 */}</View>
+  <View>{/* nested View 2 */}</View>
+  <View>{/* nested View 3 */}</View>
+</Pressable>
+```
+
+**증상**:
+- `flexDirection: 'row'` 무시 → vertical layout으로 렌더
+- `backgroundColor` 등 일부 prop만 부분 적용
+- BottomNav FAB 케이스: `position: 'absolute', top: -24, borderRadius: 28` 무시되어 square + baseline
+
+**원인 가설**: NativeWind 4.1의 `jsxImportSource: 'nativewind'`가 모든 JSX를 cssInterop wrapper로 감싸는데, Fabric (New Arch) 에서 Pressable의 함수형 style + className 동시 사용 시 style 일부 prop drop 발생. 자식이 단순(Text + Icon)할 땐 안 깨지지만 nested View / SVG 자식 늘면 깨짐.
+
+### 작동하는 패턴 — Pressable은 hit target, inner View가 visual/layout
+
+```tsx
+// ✅ 작동
+<Pressable
+  onPress={...}
+  accessibilityRole="link"
+  accessibilityLabel={a11yLabel}
+  style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
+>
+  <View
+    style={{
+      flexDirection: 'row',
+      gap: 16,
+      padding: 16,
+      borderRadius: 14,
+      backgroundColor: tokens.bg.surface,
+      borderWidth: 1,
+      borderColor: tokens.border.default,
+    }}
+  >
+    <View>{/* nested View 1 */}</View>
+    <View>{/* nested View 2 */}</View>
+    <View>{/* nested View 3 */}</View>
+  </View>
+</Pressable>
+```
+
+**변환 규칙**:
+1. Pressable에서 **모든 layout prop 제거** (flexDirection/padding/margin/width/height/position/border*/backgroundColor/shadow*/transform)
+2. Pressable의 style 함수는 **opacity press feedback만** (또는 완전 제거)
+3. inner `<View>`에 모든 layout/visual style을 **inline 객체로** 옮김
+4. inner View의 색은 `useThemeTokens()` 토큰으로 inline (className 색은 가능하면 X)
+5. Text 폰트도 inline `style={{ fontFamily: 'Inter_400Regular', color: tokens.text.primary }}` 권장
+
+### NavBar FAB 같은 absolute positioned 케이스
+
+```tsx
+// ❌ 깨짐
+<Pressable style={({ pressed }) => ({
+  position: 'absolute',
+  bottom: 72,
+  width: 56,
+  height: 56,
+  borderRadius: 28,
+  backgroundColor: brand.wineRed,
+  ...
+})}>
+  <Icon />
+</Pressable>
+
+// ✅ 작동 — outer View가 positioning, Pressable은 opacity, inner View가 visual
+<View style={{ position: 'absolute', bottom: 72, left: '50%', marginLeft: -28, width: 56, height: 56 }}>
+  <Pressable
+    onPress={...}
+    style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+  >
+    <View style={{
+      width: 56, height: 56, borderRadius: 28,
+      backgroundColor: brand.wineRed,
+      borderWidth: 1.5, borderColor: brand.gold,
+      alignItems: 'center', justifyContent: 'center',
+      shadowColor: '#8B1A2A', shadowOpacity: 0.45, shadowOffset: { width: 0, height: 6 }, shadowRadius: 20,
+      elevation: 12,
+    }}>
+      <Icon />
+    </View>
+  </Pressable>
+</View>
+```
+
+### 단순 케이스 예외
+
+자식이 단순한 (Text 1개 + Icon 1개 등) Pressable은 className + style 함수 그대로 둬도 작동. 그러나 **미래에 자식 늘어날 가능성 있으면 처음부터 inner View 패턴** 권장 (regression 차단).
+
+### Grep으로 발견 / 일괄 변환
+
+```bash
+# 위험 패턴 사이트 발견
+grep -rn -B1 "style={({\s*pressed" app/ src/ --include="*.tsx" | grep -B1 "className"
+
+# 각 사이트 자식 구조 확인 → 복잡(nested View / SVG) 이면 변환 의무
+```
+
+### 새 코드 작성 시
+
+- 새로운 Pressable 추가 시 **처음부터 inner View 패턴** 사용. 단순 케이스(icon만, Text만)에서도 일관성 위해 권장.
+- design-spec-author가 NativeWind 매핑표 작성 시 layout/visual은 inner View로 매핑하도록 명시.
+- design-reviewer 8-checklist 의 (7) Layout primitive 항목에 이 패턴 점검 포함.
+
+---
+
+## 8b. 사전에 추가하는 절차
+
+새로운 web-only primitive를 fix할 때마다:
+
+1. 사용처 grep으로 blast radius 확인
+2. 이 §8a에 새 subsection 추가 — 패턴 / 깨지는 이유 / RN equivalent / 검증
+3. 같은 카테고리 사용처 일괄 fix
+4. design-reviewer는 새 항목을 (7) Layout primitive 체크에 추가
+
+---
+
 ## 9. Form elements
 
 | HTML | RN |
