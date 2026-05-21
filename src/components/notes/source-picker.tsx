@@ -98,29 +98,33 @@ function CellarCard({
       accessibilityHint={disabled ? undefined : a11yHint}
       accessibilityState={{ disabled }}
       style={({ pressed }) => ({
-        backgroundColor: surfaceBg,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor,
-        padding: 18,
-        gap: 6,
-        opacity: disabled ? 0.5 : 1,
-        transform: [{ scale: !disabled && pressed ? 0.98 : 1 }],
+        opacity: disabled ? 0.5 : pressed ? 0.9 : 1,
       })}
     >
-      <Wine size={28} strokeWidth={1.5} color={brand.gold} />
-      <Text
-        className="font-inter-semibold text-text-primary dark:text-text-primary"
-        style={{ fontSize: 16, lineHeight: 19.2 }}
+      <View
+        style={{
+          backgroundColor: surfaceBg,
+          borderRadius: 14,
+          borderWidth: 1,
+          borderColor,
+          padding: 18,
+          gap: 6,
+        }}
       >
-        {title}
-      </Text>
-      <Text
-        className="font-inter text-text-secondary dark:text-text-secondary"
-        style={{ fontSize: 12, lineHeight: 16.8 }}
-      >
-        {sub}
-      </Text>
+        <Wine size={28} strokeWidth={1.5} color={brand.gold} />
+        <Text
+          className="font-inter-semibold text-text-primary dark:text-text-primary"
+          style={{ fontSize: 16, lineHeight: 19.2 }}
+        >
+          {title}
+        </Text>
+        <Text
+          className="font-inter text-text-secondary dark:text-text-secondary"
+          style={{ fontSize: 12, lineHeight: 16.8 }}
+        >
+          {sub}
+        </Text>
+      </View>
     </Pressable>
   );
 }
@@ -142,29 +146,32 @@ function NewWineCard({ onPress, title, sub, a11yHint }: NewWineCardProps) {
       accessibilityRole="button"
       accessibilityLabel={title}
       accessibilityHint={a11yHint}
-      style={({ pressed }) => ({
-        backgroundColor: surfaceBg,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: brand.wineRed,
-        padding: 18,
-        gap: 6,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
     >
-      <Camera size={28} strokeWidth={1.5} color={brand.wineRed} />
-      <Text
-        className="font-inter-semibold text-text-primary dark:text-text-primary"
-        style={{ fontSize: 16, lineHeight: 19.2 }}
+      <View
+        style={{
+          backgroundColor: surfaceBg,
+          borderRadius: 14,
+          borderWidth: 1,
+          borderColor: brand.wineRed,
+          padding: 18,
+          gap: 6,
+        }}
       >
-        {title}
-      </Text>
-      <Text
-        className="font-inter text-text-secondary dark:text-text-secondary"
-        style={{ fontSize: 12, lineHeight: 16.8 }}
-      >
-        {sub}
-      </Text>
+        <Camera size={28} strokeWidth={1.5} color={brand.wineRed} />
+        <Text
+          className="font-inter-semibold text-text-primary dark:text-text-primary"
+          style={{ fontSize: 16, lineHeight: 19.2 }}
+        >
+          {title}
+        </Text>
+        <Text
+          className="font-inter text-text-secondary dark:text-text-secondary"
+          style={{ fontSize: 12, lineHeight: 16.8 }}
+        >
+          {sub}
+        </Text>
+      </View>
     </Pressable>
   );
 }

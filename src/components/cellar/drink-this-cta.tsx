@@ -83,26 +83,30 @@ export function DrinkThisCta({ onConfirm, disabled = false }: Props) {
             accessibilityLabel={t('cellar.drinkThis')}
             accessibilityHint={t('cellar.detail.a11y.drinkThisHint')}
             style={({ pressed }) => ({
-              width: '100%',
-              height: 52,
-              borderRadius: 14,
-              backgroundColor: brand.wineRed,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
               opacity: disabled ? 0.6 : pressed ? 0.92 : 1,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-              ...shadows.wineRedCardLg,
             })}
           >
-            <GlassWater size={18} strokeWidth={1.75} color={brand.cream} />
-            <Text
-              className="font-inter-semibold"
-              style={{ fontSize: 15, lineHeight: 18, color: brand.cream }}
+            <View
+              style={{
+                width: '100%',
+                height: 52,
+                borderRadius: 14,
+                backgroundColor: brand.wineRed,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                ...shadows.wineRedCardLg,
+              }}
             >
-              {t('cellar.drinkThis')}
-            </Text>
+              <GlassWater size={18} strokeWidth={1.75} color={brand.cream} />
+              <Text
+                className="font-inter-semibold"
+                style={{ fontSize: 15, lineHeight: 18, color: brand.cream }}
+              >
+                {t('cellar.drinkThis')}
+              </Text>
+            </View>
           </Pressable>
         </LinearGradient>
       </View>

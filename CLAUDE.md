@@ -184,6 +184,34 @@ grep -rn -B1 "style={({\s*pressed" app/ src/ --include="*.tsx" | grep -B1 "class
 
 ---
 
+### 4-12. 스택 버전 정책 + Pressable 감사 명령
+
+#### 스택 버전 정책 (Rule 1 — pre-1.0 패키지 직접 사용 금지)
+
+| 패키지 | 현재 버전 | 정책 |
+|---|---|---|
+| `react-native-worklets` | 0.5.1 | pre-1.0 — 앱 코드에서 직접 worklets API 사용 금지. Reanimated 내부 의존성으로만 존재. 1.0 GA 전까지 신규 `useWorklet` / `runOnUI` 추가 금지 |
+| `react-native-reanimated` | 4.1.1 | 직접 사용 시 §4-11 3-layer 패턴과 충돌 없는지 확인 필수 |
+| `nativewind` | 4.1.0 | Pressable에 `className` 추가 시 §4-11 위반 여부 즉시 점검 |
+
+#### 신규 UI primitive 추가 전 spike test (Rule 2)
+
+신규 패키지 조합 또는 처음 사용하는 RN primitive 추가 시:
+1. `src/components/__spike__/SpikeTest.tsx` 에 최소 재현 컴포넌트 작성
+2. iOS Sim dark + light 양쪽 스크린샷 확인
+3. 정상 작동 확인 후 실제 위치로 이동, `__spike__` 파일 삭제
+4. 이상 발견 시 `docs/NEXT_TO_RN_TRANSLATION.md` §8a에 항목 추가 후 진행
+
+#### Pressable 감사 명령 (코드 작성 후 / PR 전)
+
+```bash
+bash scripts/audit-pressable.sh
+```
+
+DANGEROUS 항목 0건이어야 PR 가능.
+
+---
+
 ### 4-10. 키스크린 verbatim 변환 시 Yoga vs CSS box model 사전 거치기 (NEW)
 
 키스크린 JSX(`../winemine-keyscreen/src/**`)를 RN으로 옮길 때, **CSS와 Yoga의 의미가 다른 layout primitive를 verbatim 옮기면 시각 결과가 깨진다**. 학습 배경: 2026-05-21 BottomNav FAB 4 라운드 fix — `marginTop: -24`를 verbatim 옮긴 게 RN에서 poke-out 작동 안 한 사례.

@@ -16,6 +16,7 @@ import { Plus } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
 import { brand } from '@/lib/design-tokens';
+import { useThemeTokens } from '@/lib/use-theme-tokens';
 
 interface Props {
   onPress: () => void;
@@ -23,6 +24,7 @@ interface Props {
 
 export function AddCta({ onPress }: Props) {
   const { t } = useTranslation();
+  const { border } = useThemeTokens();
   const handle = () => {
     Haptics.selectionAsync().catch(() => undefined);
     onPress();
@@ -32,29 +34,34 @@ export function AddCta({ onPress }: Props) {
       onPress={handle}
       accessibilityRole="button"
       accessibilityLabel={t('cellar.addCta')}
-      className="border border-border-default rounded-[10px]"
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 4,
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
     >
-      <Plus size={14} strokeWidth={2} color={brand.gold} />
-      <View style={{ flexShrink: 1 }}>
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: 'Inter_600SemiBold',
-            fontSize: 12,
-            lineHeight: 14.4,
-            color: brand.gold,
-          }}
-        >
-          {t('cellar.addCta')}
-        </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 4,
+          paddingHorizontal: 10,
+          paddingVertical: 6,
+          borderWidth: 1,
+          borderColor: border.default,
+          borderRadius: 10,
+        }}
+      >
+        <Plus size={14} strokeWidth={2} color={brand.gold} />
+        <View style={{ flexShrink: 1 }}>
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Inter_600SemiBold',
+              fontSize: 12,
+              lineHeight: 14.4,
+              color: brand.gold,
+            }}
+          >
+            {t('cellar.addCta')}
+          </Text>
+        </View>
       </View>
     </Pressable>
   );

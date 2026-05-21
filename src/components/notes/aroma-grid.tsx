@@ -83,36 +83,39 @@ export function AromaGrid({ selected, onChange }: Props) {
         const active = selected.includes(id);
         const label = t(`notes.beginner.aromaCard.${id}`);
         return (
-          <Pressable
-            key={id}
-            onPress={() => toggle(id)}
-            accessibilityRole="checkbox"
-            accessibilityState={{ checked: active }}
-            accessibilityLabel={label}
-            style={({ pressed }) => ({
-              // 4-cols: (100 - 3*6/X) / 4 ≈ 23.5% per card (gap 6 columnGap).
-              width: '23.5%',
-              alignItems: 'center',
-              paddingVertical: 10,
-              paddingHorizontal: 4,
-              borderRadius: 10,
-              backgroundColor: active ? withAlpha(brand.gold, 0.18) : surfaceBg,
-              borderWidth: 1,
-              borderColor: active ? brand.gold : borderDefault,
-              rowGap: 2,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            })}
-          >
-            <Icon size={20} strokeWidth={1.5} color={active ? brand.gold : idleText} />
-            <Text
-              allowFontScaling={false}
-              className="font-inter"
-              numberOfLines={1}
-              style={{ fontSize: 10, color: active ? brand.gold : idleText }}
+          // 4-cols: (100 - 3*6/X) / 4 ≈ 23.5% per card (gap 6 columnGap).
+          <View key={id} style={{ width: '23.5%' }}>
+            <Pressable
+              onPress={() => toggle(id)}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: active }}
+              accessibilityLabel={label}
+              style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
             >
-              {label}
-            </Text>
-          </Pressable>
+              <View
+                style={{
+                  alignItems: 'center',
+                  paddingVertical: 10,
+                  paddingHorizontal: 4,
+                  borderRadius: 10,
+                  backgroundColor: active ? withAlpha(brand.gold, 0.18) : surfaceBg,
+                  borderWidth: 1,
+                  borderColor: active ? brand.gold : borderDefault,
+                  rowGap: 2,
+                }}
+              >
+                <Icon size={20} strokeWidth={1.5} color={active ? brand.gold : idleText} />
+                <Text
+                  allowFontScaling={false}
+                  className="font-inter"
+                  numberOfLines={1}
+                  style={{ fontSize: 10, color: active ? brand.gold : idleText }}
+                >
+                  {label}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
         );
       })}
     </View>

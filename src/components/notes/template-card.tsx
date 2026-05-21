@@ -51,6 +51,7 @@ export function TemplateCard({
     ? light.border.default
     : dark.border.default;
   const chevronColor = scheme === 'light' ? light.text.muted : dark.text.muted;
+  const surfaceBg = scheme === 'light' ? light.bg.surface : dark.bg.surface;
 
   // Author label: builtin → "winemine 제공" / custom + authorName → "by {name}" / else null
   const authorLabel =
@@ -71,87 +72,92 @@ export function TemplateCard({
       accessibilityRole="button"
       accessibilityLabel={`${title}${isCustom ? ` ${t('notesNew.templatePicker.customBadge')}` : ` ${t('notesNew.templatePicker.byWinemine')}`}`}
       accessibilityHint={t('notesNew.templatePicker.cardHint')}
-      className="flex-row items-center bg-surface dark:bg-surface"
-      style={({ pressed }) => ({
-        gap: 12,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
     >
-      <View style={{ flex: 1, minWidth: 0 }}>
-        {/* TitleRow */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 6,
-            marginBottom: 4,
-          }}
-        >
-          <Text
-            className="font-inter-semibold text-text-primary dark:text-text-primary"
-            style={{ fontSize: 14, lineHeight: 16.8 }}
-            numberOfLines={1}
-            ellipsizeMode="tail"
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: surfaceBg,
+          gap: 12,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+          borderRadius: 14,
+          borderWidth: 1,
+          borderColor,
+        }}
+      >
+        <View style={{ flex: 1, minWidth: 0 }}>
+          {/* TitleRow */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 6,
+              marginBottom: 4,
+            }}
           >
-            {title}
-          </Text>
-          {isCustom ? (
-            <View
-              style={{
-                paddingHorizontal: 7,
-                paddingVertical: 2,
-                borderRadius: 9999,
-                backgroundColor: withAlpha(brand.gold, 0.15),
-                borderWidth: 1,
-                borderColor: withAlpha(brand.gold, 0.4),
-              }}
+            <Text
+              className="font-inter-semibold text-text-primary dark:text-text-primary"
+              style={{ fontSize: 14, lineHeight: 16.8 }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
             >
-              <Text
-                className="font-inter-semibold"
+              {title}
+            </Text>
+            {isCustom ? (
+              <View
                 style={{
-                  fontSize: 9,
-                  lineHeight: 11,
-                  color: brand.gold,
-                  letterSpacing: 0.45,
-                  textTransform: 'uppercase',
+                  paddingHorizontal: 7,
+                  paddingVertical: 2,
+                  borderRadius: 9999,
+                  backgroundColor: withAlpha(brand.gold, 0.15),
+                  borderWidth: 1,
+                  borderColor: withAlpha(brand.gold, 0.4),
                 }}
               >
-                {t('notesNew.templatePicker.customBadge')}
-              </Text>
-            </View>
+                <Text
+                  className="font-inter-semibold"
+                  style={{
+                    fontSize: 9,
+                    lineHeight: 11,
+                    color: brand.gold,
+                    letterSpacing: 0.45,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {t('notesNew.templatePicker.customBadge')}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+
+          {/* Author */}
+          {authorLabel ? (
+            <Text
+              className="font-inter text-text-muted dark:text-text-muted"
+              style={{ fontSize: 11, lineHeight: 13.2 }}
+              numberOfLines={1}
+            >
+              {authorLabel}
+            </Text>
+          ) : null}
+
+          {/* Description (numberOfLines=2) */}
+          {description ? (
+            <Text
+              className="font-inter text-text-secondary dark:text-text-secondary"
+              style={{ fontSize: 12, lineHeight: 17.4, marginTop: 6 }}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
+              {description}
+            </Text>
           ) : null}
         </View>
 
-        {/* Author */}
-        {authorLabel ? (
-          <Text
-            className="font-inter text-text-muted dark:text-text-muted"
-            style={{ fontSize: 11, lineHeight: 13.2 }}
-            numberOfLines={1}
-          >
-            {authorLabel}
-          </Text>
-        ) : null}
-
-        {/* Description (numberOfLines=2) */}
-        {description ? (
-          <Text
-            className="font-inter text-text-secondary dark:text-text-secondary"
-            style={{ fontSize: 12, lineHeight: 17.4, marginTop: 6 }}
-            numberOfLines={2}
-            ellipsizeMode="tail"
-          >
-            {description}
-          </Text>
-        ) : null}
+        <ChevronRight size={16} color={chevronColor} />
       </View>
-
-      <ChevronRight size={16} color={chevronColor} />
     </Pressable>
   );
 }

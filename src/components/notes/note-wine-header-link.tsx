@@ -71,61 +71,64 @@ export function NoteWineHeaderLink({
       onPress={() => router.push(`/wine/${encodeURIComponent(lwin)}`)}
       accessibilityRole="button"
       accessibilityLabel={`${name_ko ?? display_name} — ${t('notes.detail.viewWine')}`}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingVertical: 14,
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
     >
       <View
         style={{
-          width: 44,
-          height: 64,
-          borderRadius: 6,
-          overflow: 'hidden',
-          borderWidth: 1,
-          borderColor: withAlpha(brand.gold, 0.18),
-          flexShrink: 0,
-          marginRight: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 20,
+          paddingVertical: 14,
         }}
       >
-        {photoUrl ? (
-          <Image
-            source={{ uri: photoUrl }}
-            accessibilityIgnoresInvertColors
-            resizeMode="cover"
-            style={{ width: '100%', height: '100%' }}
-          />
-        ) : (
-          <LinearGradient
-            colors={gradient.colors as unknown as readonly [string, string, ...string[]]}
-            start={gradient.start}
-            end={gradient.end}
-            locations={gradient.locations as unknown as readonly [number, number, ...number[]]}
-            style={{ width: '100%', height: '100%' }}
-          />
-        )}
-      </View>
+        <View
+          style={{
+            width: 44,
+            height: 64,
+            borderRadius: 6,
+            overflow: 'hidden',
+            borderWidth: 1,
+            borderColor: withAlpha(brand.gold, 0.18),
+            flexShrink: 0,
+            marginRight: 12,
+          }}
+        >
+          {photoUrl ? (
+            <Image
+              source={{ uri: photoUrl }}
+              accessibilityIgnoresInvertColors
+              resizeMode="cover"
+              style={{ width: '100%', height: '100%' }}
+            />
+          ) : (
+            <LinearGradient
+              colors={gradient.colors as unknown as readonly [string, string, ...string[]]}
+              start={gradient.start}
+              end={gradient.end}
+              locations={gradient.locations as unknown as readonly [number, number, ...number[]]}
+              style={{ width: '100%', height: '100%' }}
+            />
+          )}
+        </View>
 
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <WineNameDisplay
-          lwin={lwin}
-          name_ko={name_ko}
-          display_name={display_name}
-          size="card"
-        />
-        {subLine ? (
-          <Text
-            allowFontScaling={false}
-            className="font-inter text-text-muted dark:text-text-muted"
-            style={{ fontSize: 12, lineHeight: 14.4, marginTop: 2 }}
-            numberOfLines={1}
-          >
-            {subLine}
-          </Text>
-        ) : null}
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <WineNameDisplay
+            lwin={lwin}
+            name_ko={name_ko}
+            display_name={display_name}
+            size="card"
+          />
+          {subLine ? (
+            <Text
+              allowFontScaling={false}
+              className="font-inter text-text-muted dark:text-text-muted"
+              style={{ fontSize: 12, lineHeight: 14.4, marginTop: 2 }}
+              numberOfLines={1}
+            >
+              {subLine}
+            </Text>
+          ) : null}
+        </View>
       </View>
     </Pressable>
   );

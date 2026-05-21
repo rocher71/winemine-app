@@ -51,26 +51,29 @@ export function NoResults({ onClear }: Props) {
         onPress={onClear}
         accessibilityRole="button"
         accessibilityLabel={t('cellar.clearFilters')}
-        style={({ pressed }) => ({
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: brand.gold,
-          opacity: pressed ? 0.7 : 1,
-        })}
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
       >
-        <Text
-          allowFontScaling={false}
+        <View
           style={{
-            fontFamily: 'Inter_600SemiBold',
-            fontSize: 12,
-            lineHeight: 14.4,
-            color: brand.gold,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: brand.gold,
           }}
         >
-          {t('cellar.clearFilters')}
-        </Text>
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Inter_600SemiBold',
+              fontSize: 12,
+              lineHeight: 14.4,
+              color: brand.gold,
+            }}
+          >
+            {t('cellar.clearFilters')}
+          </Text>
+        </View>
       </Pressable>
     </View>
   );

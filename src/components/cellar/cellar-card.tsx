@@ -45,7 +45,7 @@ interface Props {
 }
 
 export function CellarCard({ item }: Props) {
-  const { scheme } = useThemeTokens();
+  const { scheme, bg, border } = useThemeTokens();
   const wine = item.wine;
   if (!wine?.lwin || !wine?.display_name) return null;
 
@@ -80,90 +80,97 @@ export function CellarCard({ item }: Props) {
   const dotColor = typeCanon ? wineTypeDot[typeCanon] : null;
 
   return (
-    <Pressable
-      onPress={openDetail}
-      accessibilityRole="link"
-      accessibilityLabel={`${wine.name_ko ?? wine.display_name} ${wine.producer_name ?? ''} ${vintage ?? ''}`.trim()}
-      className="overflow-hidden rounded-[14px] bg-surface dark:bg-surface border border-border-default"
-      style={({ pressed }) => ({
-        flex: 1,
-        opacity: pressed ? 0.85 : 1,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
-    >
-      {/* BottleZone */}
-      <LinearGradient
-        colors={bottleZoneGradient.colors as unknown as readonly [string, string]}
-        locations={bottleZoneGradient.locations as unknown as readonly [number, number]}
-        start={bottleZoneGradient.start}
-        end={bottleZoneGradient.end}
-        style={{
-          paddingTop: 14,
-          paddingBottom: 8,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+    <View style={{ flex: 1 }}>
+      <Pressable
+        onPress={openDetail}
+        accessibilityRole="link"
+        accessibilityLabel={`${wine.name_ko ?? wine.display_name} ${wine.producer_name ?? ''} ${vintage ?? ''}`.trim()}
+        style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
       >
-        <WMBottle
-          width={40}
-          height={130}
-          bottleColor={bottleColor}
-          producer={producerShort}
-          label={nameShort}
-          vintage={vintage ?? undefined}
-        />
-      </LinearGradient>
-
-      {/* Meta */}
-      <View style={{ paddingHorizontal: 12, paddingTop: 10, paddingBottom: 12, gap: 4 }}>
-        {/* TypeDot row */}
-        {dotColor ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View
-              style={{ width: 6, height: 6, borderRadius: 9999, backgroundColor: dotColor }}
-            />
-          </View>
-        ) : null}
-
-        {/* Wine name (Playfair 12 lh 15, 2-line clamp, minHeight 30) */}
-        <Text
-          className="font-playfair text-text-primary dark:text-text-primary"
-          numberOfLines={2}
-          style={{ fontSize: 12, lineHeight: 15, minHeight: 30 }}
+        <View
+          style={{
+            overflow: 'hidden',
+            borderRadius: 14,
+            backgroundColor: bg.surface,
+            borderWidth: 1,
+            borderColor: border.default,
+          }}
         >
-          {wine.name_ko ?? wine.display_name}
-        </Text>
-
-        {/* Producer (Inter 10 text-muted) */}
-        {wine.producer_name ? (
-          <Text
-            allowFontScaling={false}
-            className="font-inter text-text-muted dark:text-text-muted"
-            numberOfLines={1}
-            style={{ fontSize: 10, lineHeight: 12.5 }}
+          {/* BottleZone */}
+          <LinearGradient
+            colors={bottleZoneGradient.colors as unknown as readonly [string, string]}
+            locations={bottleZoneGradient.locations as unknown as readonly [number, number]}
+            start={bottleZoneGradient.start}
+            end={bottleZoneGradient.end}
+            style={{
+              paddingTop: 14,
+              paddingBottom: 8,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            {wine.producer_name}
-          </Text>
-        ) : null}
+            <WMBottle
+              width={40}
+              height={130}
+              bottleColor={bottleColor}
+              producer={producerShort}
+              label={nameShort}
+              vintage={vintage ?? undefined}
+            />
+          </LinearGradient>
 
-        {/* Vintage (Inter 10 text-secondary) — producer와 다른 색 */}
-        {vintage ? (
-          <Text
-            allowFontScaling={false}
-            className="font-inter text-text-secondary dark:text-text-secondary"
-            style={{ fontSize: 10, lineHeight: 12.5 }}
-          >
-            {vintage}
-          </Text>
-        ) : null}
+          {/* Meta */}
+          <View style={{ paddingHorizontal: 12, paddingTop: 10, paddingBottom: 12, gap: 4 }}>
+            {/* TypeDot row */}
+            {dotColor ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                  style={{ width: 6, height: 6, borderRadius: 9999, backgroundColor: dotColor }}
+                />
+              </View>
+            ) : null}
 
-        {/* DrinkWindowBadge — status 추정 가능할 때만 */}
-        {status ? (
-          <View style={{ marginTop: 4 }}>
-            <DrinkWindowBadge status={status} dw={dw} />
+            {/* Wine name (Playfair 12 lh 15, 2-line clamp, minHeight 30) */}
+            <Text
+              className="font-playfair text-text-primary dark:text-text-primary"
+              numberOfLines={2}
+              style={{ fontSize: 12, lineHeight: 15, minHeight: 30 }}
+            >
+              {wine.name_ko ?? wine.display_name}
+            </Text>
+
+            {/* Producer (Inter 10 text-muted) */}
+            {wine.producer_name ? (
+              <Text
+                allowFontScaling={false}
+                className="font-inter text-text-muted dark:text-text-muted"
+                numberOfLines={1}
+                style={{ fontSize: 10, lineHeight: 12.5 }}
+              >
+                {wine.producer_name}
+              </Text>
+            ) : null}
+
+            {/* Vintage (Inter 10 text-secondary) — producer와 다른 색 */}
+            {vintage ? (
+              <Text
+                allowFontScaling={false}
+                className="font-inter text-text-secondary dark:text-text-secondary"
+                style={{ fontSize: 10, lineHeight: 12.5 }}
+              >
+                {vintage}
+              </Text>
+            ) : null}
+
+            {/* DrinkWindowBadge — status 추정 가능할 때만 */}
+            {status ? (
+              <View style={{ marginTop: 4 }}>
+                <DrinkWindowBadge status={status} dw={dw} />
+              </View>
+            ) : null}
           </View>
-        ) : null}
-      </View>
-    </Pressable>
+        </View>
+      </Pressable>
+    </View>
   );
 }

@@ -88,35 +88,42 @@ export function ModeChoiceCard({
       accessibilityLabel={title}
       accessibilityHint={sub}
       hitSlop={6}
-      className="flex-row items-start rounded-2xl bg-surface dark:bg-surface"
       style={({ pressed }) => ({
-        padding: 18,
-        gap: 14,
-        borderWidth: selected ? 2 : 1,
-        borderColor: selected ? brand.gold : borderUnselected,
         opacity: pressed ? (selected ? 0.95 : 0.8) : selected ? 1 : 0.85,
-        transform: [{ scale: pressed ? 0.99 : 1 }],
       })}
     >
-      {/* IconWrap — paddingTop 2 (baseline 정렬), Lucide icon 24 strokeWidth 1.5 brand.gold */}
       <View
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={{ paddingTop: 2 }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          borderRadius: 16,
+          backgroundColor: scheme === 'light' ? light.bg.surface : dark.bg.surface,
+          padding: 18,
+          gap: 14,
+          borderWidth: selected ? 2 : 1,
+          borderColor: selected ? brand.gold : borderUnselected,
+        }}
       >
-        <Icon size={24} strokeWidth={1.5} color={brand.gold} />
-      </View>
+        {/* IconWrap — paddingTop 2 (baseline 정렬), Lucide icon 24 strokeWidth 1.5 brand.gold */}
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{ paddingTop: 2 }}
+        >
+          <Icon size={24} strokeWidth={1.5} color={brand.gold} />
+        </View>
 
-      {/* TextStack — flex-column gap 4 (title + sub) */}
-      <View className="flex-1" style={{ gap: 4 }}>
-        {/* title — Inter 600 16 / text-primary dual (text-source-card-title) */}
-        <Text className="font-inter-semibold text-source-card-title text-text-primary dark:text-text-primary">
-          {title}
-        </Text>
-        {/* sub — Inter 13 / muted dual (text-card-body, lineHeight 19.5 vs keyscreen 18.2 §6 deviation 9) */}
-        <Text className="font-inter text-card-body text-text-muted dark:text-text-muted">
-          {sub}
-        </Text>
+        {/* TextStack — flex-column gap 4 (title + sub) */}
+        <View style={{ flex: 1, gap: 4 }}>
+          {/* title — Inter 600 16 / text-primary dual (text-source-card-title) */}
+          <Text className="font-inter-semibold text-source-card-title text-text-primary dark:text-text-primary">
+            {title}
+          </Text>
+          {/* sub — Inter 13 / muted dual (text-card-body, lineHeight 19.5 vs keyscreen 18.2 §6 deviation 9) */}
+          <Text className="font-inter text-card-body text-text-muted dark:text-text-muted">
+            {sub}
+          </Text>
+        </View>
       </View>
     </Pressable>
   );

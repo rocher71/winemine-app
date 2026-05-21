@@ -180,47 +180,50 @@ function CellarRow({ item, onPress }: CellarRowProps) {
       accessibilityRole="button"
       accessibilityLabel={`${wineName} ${vintage ?? ''}`.trim()}
       accessibilityHint={t('notesNew.sourcePicker.cellarRowHint')}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-        padding: 10,
-        width: '100%',
-        backgroundColor: surfaceBg,
-        borderWidth: 1,
-        borderColor,
-        borderRadius: 10,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
     >
-      {/* BottleThumb — WMBottle 32×44 (cellar-list와 동일 패턴) */}
       <View
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={{ flexShrink: 0 }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 10,
+          padding: 10,
+          width: '100%',
+          backgroundColor: surfaceBg,
+          borderWidth: 1,
+          borderColor,
+          borderRadius: 10,
+        }}
       >
-        <WMBottle width={32} height={44} bottleColor={bottleColor} type={typeCanon} />
-      </View>
-
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <Text
-          className="font-playfair text-text-primary dark:text-text-primary"
-          style={{ fontSize: 13, lineHeight: 15.6 }}
-          numberOfLines={1}
-          ellipsizeMode="tail"
+        {/* BottleThumb — WMBottle 32×44 (cellar-list와 동일 패턴) */}
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{ flexShrink: 0 }}
         >
-          {wineName}
-        </Text>
-        {meta ? (
+          <WMBottle width={32} height={44} bottleColor={bottleColor} type={typeCanon} />
+        </View>
+
+        <View style={{ flex: 1, minWidth: 0 }}>
           <Text
-            className="font-inter text-text-muted dark:text-text-muted"
-            style={{ fontSize: 11, lineHeight: 13.2 }}
+            className="font-playfair text-text-primary dark:text-text-primary"
+            style={{ fontSize: 13, lineHeight: 15.6 }}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {meta}
+            {wineName}
           </Text>
-        ) : null}
+          {meta ? (
+            <Text
+              className="font-inter text-text-muted dark:text-text-muted"
+              style={{ fontSize: 11, lineHeight: 13.2 }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {meta}
+            </Text>
+          ) : null}
+        </View>
       </View>
     </Pressable>
   );

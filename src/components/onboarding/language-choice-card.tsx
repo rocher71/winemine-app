@@ -68,39 +68,46 @@ export function LanguageChoiceCard({
       accessibilityState={{ selected }}
       accessibilityLabel={title}
       hitSlop={6}
-      className="flex-row items-center rounded-2xl bg-surface dark:bg-surface"
       style={({ pressed }) => ({
-        height: 96,
-        paddingHorizontal: 18,
-        gap: 14,
-        borderWidth: selected ? 2 : 1,
-        borderColor: selected ? brand.gold : borderUnselected,
         opacity: pressed ? (selected ? 0.95 : 0.8) : selected ? 1 : 0.85,
-        transform: [{ scale: pressed ? 0.99 : 1 }],
       })}
     >
-      {/* IconBadge — 44×44 round, gold tint bg, "KR"/"EN" Playfair 16 gold */}
       <View
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
         style={{
-          width: 44,
-          height: 44,
-          borderRadius: 22,
-          backgroundColor: withAlpha(brand.gold, 0.08),
+          flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center',
+          borderRadius: 16,
+          backgroundColor: scheme === 'light' ? light.bg.surface : dark.bg.surface,
+          height: 96,
+          paddingHorizontal: 18,
+          gap: 14,
+          borderWidth: selected ? 2 : 1,
+          borderColor: selected ? brand.gold : borderUnselected,
         }}
       >
-        <Text className="font-playfair text-gold" style={{ fontSize: 16 }}>
-          {ICON_TEXT[locale]}
+        {/* IconBadge — 44×44 round, gold tint bg, "KR"/"EN" Playfair 16 gold */}
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 22,
+            backgroundColor: withAlpha(brand.gold, 0.08),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text className="font-playfair text-gold" style={{ fontSize: 16 }}>
+            {ICON_TEXT[locale]}
+          </Text>
+        </View>
+
+        {/* title — Inter 18 / 600 / text-primary (dual) */}
+        <Text className="font-inter-semibold text-onboarding-choice-label text-text-primary dark:text-text-primary">
+          {title}
         </Text>
       </View>
-
-      {/* title — Inter 18 / 600 / text-primary (dual) */}
-      <Text className="font-inter-semibold text-onboarding-choice-label text-text-primary dark:text-text-primary">
-        {title}
-      </Text>
     </Pressable>
   );
 }

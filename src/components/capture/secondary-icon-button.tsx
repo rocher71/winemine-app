@@ -27,6 +27,7 @@ export function SecondaryIconButton({
   const scheme = useColorScheme();
   const isLight = scheme === 'light';
   const textColor = isLight ? light.text.secondary : dark.text.secondary;
+  const borderColor = isLight ? light.border.default : dark.border.default;
 
   const handlePress = () => {
     Haptics.selectionAsync().catch(() => undefined);
@@ -34,33 +35,40 @@ export function SecondaryIconButton({
   };
 
   return (
-    <Pressable
-      onPress={handlePress}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityHint={accessibilityHint}
-      className="flex-1 flex-row items-center justify-center border border-border-default rounded-10"
-      style={({ pressed }) => ({
-        paddingHorizontal: 14,
-        paddingVertical: 10,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-        // RN NW v4 'rounded-10' arbitrary — fallback inline radius 10
-        borderRadius: 10,
-      })}
-    >
-      <View className="flex-row items-center" style={{ gap: 6 }}>
-        <Icon size={14} strokeWidth={1.75} color={textColor} />
-        <Text
+    <View style={{ flex: 1 }}>
+      <Pressable
+        onPress={handlePress}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint={accessibilityHint}
+        style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
+      >
+        <View
           style={{
-            fontFamily: typography.cardMeta.family,
-            fontSize: typography.cardMeta.size,
-            lineHeight: typography.cardMeta.lineHeight,
-            color: textColor,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            paddingHorizontal: 14,
+            paddingVertical: 10,
+            borderWidth: 1,
+            borderColor,
+            borderRadius: 10,
           }}
         >
-          {label}
-        </Text>
-      </View>
-    </Pressable>
+          <Icon size={14} strokeWidth={1.75} color={textColor} />
+          <Text
+            style={{
+              fontFamily: typography.cardMeta.family,
+              fontSize: typography.cardMeta.size,
+              lineHeight: typography.cardMeta.lineHeight,
+              color: textColor,
+            }}
+          >
+            {label}
+          </Text>
+        </View>
+      </Pressable>
+    </View>
   );
 }
