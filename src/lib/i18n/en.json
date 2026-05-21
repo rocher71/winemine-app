@@ -746,6 +746,36 @@
       "scroll": "Wine detail scroll view"
     }
   },
+  "wineStory": {
+    "header": { "title": "Winery story" },
+    "hero": { "foundedAt": "Founded {{year}} · " },
+    "history": { "title": "History" },
+    "funFact": { "label": "Fun fact" },
+    "philosophy": { "title": "Winemaking philosophy" },
+    "meta": {
+      "founded": "Founded",
+      "vineyardArea": "Vineyard area",
+      "mainGrapes": "Main grapes",
+      "avgPrice": "Avg price",
+      "noValue": "—"
+    },
+    "cta": { "backToWine": "Back to wine" },
+    "empty": { "body": "Story coming soon" },
+    "notFound": "Wine not found",
+    "glossary": {
+      "openLabel": "Open definition of {{termId}}",
+      "openHint": "Opens definition sheet.",
+      "learnMore": "Learn more",
+      "close": "Close"
+    },
+    "error": {
+      "body": "Could not load story",
+      "retry": "Retry"
+    },
+    "a11y": {
+      "scroll": "Winery story scroll view"
+    }
+  },
   "settings": {
     "title": "Settings",
     "sections": {
