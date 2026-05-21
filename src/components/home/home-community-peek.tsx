@@ -1,22 +1,24 @@
 /**
  * HomeCommunityPeek — 팔로잉의 새 노트 카드 (heavy 모드).
  *
- * 사양 home.md §2-1 line 99-116, §3-6:
+ * 사양 home.md §2-1 line 99-116, §3-6, §3-6-PATCH (2026-05-21):
  * - section mt 22
  * - SectionTitle padding 0_20_8 items-end justify-between
  *   - eyebrow "커뮤니티" Inter 10 500 gold UPPER tracking 1.8
  *   - title "팔로잉의 새 노트" Playfair 17 cream lh 20.4
- *   - action "모두 보기 →" Inter 11 600 gold
+ *   - action "모두 보기 →" Inter 11 600 gold (toast "곧 출시" — v0.1.0 alpha)
  * - card m 0_16 p 4_14 radius 14 bg-surface border-default
  *   - post row × 2 (gap 10, borderBottom hairline 마지막 제외)
- *     - CommUserAvatar 28
- *     - meta: PostTypeBadge + author/ago + title 2-line + reactions
+ *     - CommUserAvatar 28 (noteAuthorAvatarGradient + cream text)
+ *     - meta: PostTypeBadge (pill + icon + locale 분기) + author/ago + title 2-line + reactions
  *
- * v0.1.0: mock 2 posts (사양 §12 Q4 — alpha decision). community 라우트 미구현.
+ * v0.1.0: mock 2 posts. community 라우트 미구현 — dead-press 방지 toast.
+ *   - row 1: type='note' (gold pill, PenLine icon) — L4 벨벳폭스
+ *   - row 2: type='album' (pink pill, Image icon) — L3 실키나이트 (셀러 사진 추가 = 사진 앨범)
  */
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Alert } from 'react-native';
 import { Wine, MessageSquare } from 'lucide-react-native';
-import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { brand } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
@@ -26,7 +28,6 @@ import { PostTypeBadge, type PostType } from '@/components/community/post-type-b
 interface MockPost {
   id: string;
   type: PostType;
-  typeLabel: string;
   author: string;
   ago: string;
   title: string;
@@ -37,13 +38,12 @@ interface MockPost {
   appellation?: string;
 }
 
-// v0.1.0 mock — design-spec §12 Q4: community posts mock 노출 결정.
-// 영문/한글 모두 양 locale에서 자연스러운 짧은 텍스트. 실 데이터는 v0.2.0.
+// v0.1.0 mock — design-spec §12 Q4 + §3-6-PATCH (line 1416 권장 PATCH).
+// row 2 type='album' 채택 — 셀러 사진 추가 = 사진 앨범 — mock 메시지 의미 보존.
 const MOCK_POSTS_KO: MockPost[] = [
   {
     id: 'mock-1',
     type: 'note',
-    typeLabel: '노트',
     author: '벨벳폭스',
     ago: '3h',
     title: '여운이 길고 우아한 부르고뉴 한 잔, 오늘 저녁이 특별해졌어요.',
@@ -55,8 +55,7 @@ const MOCK_POSTS_KO: MockPost[] = [
   },
   {
     id: 'mock-2',
-    type: 'cellar',
-    typeLabel: '셀러',
+    type: 'album',
     author: '실키나이트',
     ago: '5h',
     title: '셀러에 보르도 빈티지 새로 추가했어요.',
@@ -72,7 +71,6 @@ const MOCK_POSTS_EN: MockPost[] = [
   {
     id: 'mock-1',
     type: 'note',
-    typeLabel: 'NOTE',
     author: 'velvetfox',
     ago: '3h',
     title: 'A long, elegant Burgundy finish made tonight special.',
@@ -84,8 +82,7 @@ const MOCK_POSTS_EN: MockPost[] = [
   },
   {
     id: 'mock-2',
-    type: 'cellar',
-    typeLabel: 'CELLAR',
+    type: 'album',
     author: 'silkynight',
     ago: '5h',
     title: 'Added a fresh Bordeaux vintage to my cellar.',
@@ -98,11 +95,14 @@ const MOCK_POSTS_EN: MockPost[] = [
 ];
 
 function PostRow({ post, last }: { post: MockPost; last: boolean }) {
+  const { t } = useTranslation();
   const tokens = useThemeTokens();
+  const badgeLabel = t(`community.postType.${post.type}`);
   return (
     <Pressable
       accessibilityRole="link"
-      accessibilityLabel={`${post.author} ${post.title}`}
+      accessibilityLabel={`${post.author} · ${badgeLabel} · ${post.title}`}
+      accessibilityHint={t('home.communityPeek.openHint')}
       style={({ pressed }) => [
         {
           flexDirection: 'row',
@@ -116,7 +116,8 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
         },
       ]}
       onPress={() => {
-        // v0.1.0: community 라우트 없음 — noop
+        Haptics.selectionAsync().catch(() => undefined);
+        Alert.alert(t('app.name'), t('home.communityPeek.comingSoon'));
       }}
     >
       <CommUserAvatar levelId={post.levelId} initial={post.initial} size={28} />
@@ -129,7 +130,7 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
             marginBottom: 3,
           }}
         >
-          <PostTypeBadge type={post.type} label={post.typeLabel} />
+          <PostTypeBadge type={post.type} />
           <Text
             className="text-text-muted dark:text-text-muted"
             style={{ fontSize: 10 }}
@@ -191,6 +192,11 @@ export function HomeCommunityPeek() {
   const { t, i18n } = useTranslation();
   const posts = i18n.language === 'en' ? MOCK_POSTS_EN : MOCK_POSTS_KO;
 
+  const onViewAll = () => {
+    Haptics.selectionAsync().catch(() => undefined);
+    Alert.alert(t('app.name'), t('home.communityPeek.comingSoon'));
+  };
+
   return (
     <View style={{ marginTop: 22 }}>
       <View
@@ -224,10 +230,10 @@ export function HomeCommunityPeek() {
           </Text>
         </View>
         <Pressable
-          onPress={() => {
-            // v0.1.0: community 라우트 없음 — noop
-          }}
+          onPress={onViewAll}
           accessibilityRole="link"
+          accessibilityLabel={t('home.communityPeek.viewAll')}
+          accessibilityHint={t('home.communityPeek.openHint')}
         >
           <Text
             className="font-inter-semibold"

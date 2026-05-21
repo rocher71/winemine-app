@@ -192,8 +192,15 @@ ALL DONE: 2026-05-20T18:05:30Z
   - deferred: light 모드 gold score 대비 2.9 (사양 escalation) → 별도 cycle, wm-bottle.tsx docstring drift (chore)
   - 증상: bottle SVG가 카드 왼쪽 위에 isolated, 정보(이름/가격/평점)는 카드 아래쪽 vertical
   - 목표: bottle 좌 + 이름/와이너리/지역/품종/평점/가격 inline horizontal (키스크린 image #7 verbatim)
-- [~] /home followers note row — `src/components/home/home-community-peek.tsx` 또는 `recent-notes-strip.tsx`
+- [x] /home followers note row — `src/components/home/home-community-peek.tsx` 또는 `recent-notes-strip.tsx`
   - started: 2026-05-21T03:17:55Z
+  - spec: _workspace/design-specs/home.md §3-6-PATCH (line 1112~1433)
+  - review reports: _workspace/design-review_followers-note-row_20260521_122538.md (FAIL 6/6), _workspace/design-review_followers-note-row_20260521_123510_v2.md (PASS 6/6)
+  - qa report: _workspace/qa_followup_followers-note-row_20260521_124007.md (PASS)
+  - fix loops: 1
+  - changed files: src/lib/design-tokens.ts (postTypeBadgeColor 3종), src/components/community/{post-type-badge,comm-user-avatar}.tsx (rewrite — pill + 5종 icon + verbatim union + cream text + noteAuthorAvatarGradient), src/components/home/home-community-peek.tsx (rewrite), src/lib/i18n/{ko,en}.json (7 keys)
+  - completed: 2026-05-21T03:41:53Z
+  - deviations: lucide HelpCircle → CircleQuestionMark (의미 동등), toast 패턴 Alert.alert (코드베이스 일관성)
   - 증상: 큰 avatar (벨/실 글자 chip) + badge (노트/셀러) 위에 stacked + 본문 아래
   - 목표: 작은 round avatar + badge inline + 본문 + 메타 (키스크린 image #4 verbatim)
 

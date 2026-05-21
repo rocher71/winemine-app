@@ -131,7 +131,9 @@
     "communityPeek": {
       "eyebrow": "Community",
       "title": "New notes from following",
-      "viewAll": "View all →"
+      "viewAll": "View all →",
+      "comingSoon": "Community coming soon",
+      "openHint": "Open post (coming soon)"
     },
     "quickActions": {
       "cellar": "Cellar",
@@ -773,6 +775,15 @@
       "lightDesc": "Cream paper background with deep wine accents.",
       "appliedToast": "Theme applied",
       "a11yHint": "Selecting applies immediately"
+    }
+  },
+  "community": {
+    "postType": {
+      "note": "Tasting Note",
+      "question": "Question",
+      "column": "Column",
+      "news": "News",
+      "album": "Album"
     }
   },
   "errors": {

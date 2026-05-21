@@ -667,6 +667,25 @@ export const noteAuthorAvatarGradient = {
 
 export type NoteAuthorLevel = keyof typeof noteAuthorAvatarGradient;
 
+// ---- PostTypeBadge color tokens (design-spec home.md §3-6-PATCH — 2026-05-21) ----
+//
+// keyscreen src/components/community/post-type-badge.tsx TYPE_MAP verbatim 포팅.
+// 양쪽 모드 동일 (badge 색은 type identity — 테마 무관).
+// 5색 중 note=brand.gold, column=brand.cream 재사용. question/news/album은 신규 색.
+//   - question = #A08EE0 (purple, thoughtful tone)
+//   - news     = #5B9CE6 (sky blue, bright/fresh tone)
+//   - album    = #E8B4D2 (soft pink, visual/soft tone)
+// keyscreen TYPE_MAP의 column 색(#F5F0E8)은 brand.cream(#F5F0E8)과 동일 — 토큰 재사용.
+export const postTypeBadgeColor = {
+  note:     brand.gold,
+  question: '#A08EE0',
+  column:   brand.cream,
+  news:     '#5B9CE6',
+  album:    '#E8B4D2',
+} as const;
+
+export type PostTypeKey = keyof typeof postTypeBadgeColor;
+
 // ---- Capture PhotoFrame gradient factory (design-spec capture.md §9 P0) ----
 //
 // bottleColor (와인 종별 색) → capture.bottlePhotoEnd[scheme] 180deg (위→아래).

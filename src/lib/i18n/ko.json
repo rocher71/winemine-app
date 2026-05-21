@@ -131,7 +131,9 @@
     "communityPeek": {
       "eyebrow": "커뮤니티",
       "title": "팔로잉의 새 노트",
-      "viewAll": "모두 보기 →"
+      "viewAll": "모두 보기 →",
+      "comingSoon": "커뮤니티는 곧 출시됩니다",
+      "openHint": "포스트 상세 화면으로 (곧 출시)"
     },
     "quickActions": {
       "cellar": "셀러",
@@ -773,6 +775,15 @@
       "lightDesc": "크림 종이 배경에 와인 강조색.",
       "appliedToast": "테마가 적용됐어요",
       "a11yHint": "선택하면 즉시 적용됩니다"
+    }
+  },
+  "community": {
+    "postType": {
+      "note": "시음 노트",
+      "question": "질문",
+      "column": "칼럼",
+      "news": "소식",
+      "album": "사진 앨범"
     }
   },
   "errors": {

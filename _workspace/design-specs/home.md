@@ -1106,3 +1106,328 @@ export function useThemeTokens() {
 - 코드 변경 분량: ~30 LOC (WineFeedRow 함수 내부만)
 - WMBottle viewBox 40×130을 90×150 박스에 그릴 때 — SVG는 카드 가운데 정렬 + 비율 유지 → 실제 SVG drawing은 ~41×150 박스를 차지 (병 모양 키는 150px, 폭은 비율상 ~46px). 나머지 ~50px (96-46)는 좌우 padding으로 자연 흡수. 시각 비례 OK.
 - 만약 design-reviewer가 90×150도 시각 부족하다고 판단 시 → 100×166 또는 110×180으로 확장 가능. 단 카드 padding 16 + gap 16 + meta 컬럼 최소 폭 고려하면 bottle column 96~110 범위가 안전.
+
+---
+
+## §3-6-PATCH. HomeCommunityPeek "팔로잉의 새 노트" row 위계 정합화 (2026-05-21)
+
+> **트리거**: 사용자 image #3 (현재 RN) — PostRow 안에서 PostTypeBadge가 **사각 chip + 큰 아바타 위에 vertical stack**되어 노출. 본문이 그 아래로 밀려나 row 위계가 무너짐. 카드 padding 과대, 좌측 아바타 사이즈 과대(현재 28px이지만 chip 자체가 사각으로 보임), badge가 row 좌측 lead 위치가 아니라 아바타 column 헤더처럼 그려짐.
+> **진실 소스**: 사용자 image #4 (정확한 reference) + `../winemine-keyscreen/src/components/home/home-community-peek.tsx` line 41~144 (verbatim horizontal row: avatar 좌 28 + 우 column에 [badge + author/ago inline] / title / meta) + `../winemine-keyscreen/src/components/community/{comm-user-avatar,post-type-badge}.tsx` (avatar=원형 28~36px gradient + initial 텍스트, badge=원형 pill bg+10% border+33%).
+> **결론**: 키스크린 JSX는 이미 정확한 horizontal row 구조 (`display: flex; gap: 10`) — 현재 RN `src/components/home/home-community-peek.tsx` line 100~188의 `PostRow`도 `flexDirection: 'row'`로 작성됨. 그러면 왜 image #3에서 vertical로 보였나? 분석:
+>   1. **PostTypeBadge가 사각 (radius 4)** — keyscreen은 **pill (radius 999)**. 사각 chip이 아바타 위에 떠 있는 인상.
+>   2. **PostTypeBadge에 아이콘이 없음** — keyscreen은 lucide `<Icon size={10}/>` + label 조합. 우리는 텍스트만.
+>   3. **PostType union 자체가 다름** — 우리는 `'note'|'question'|'event'|'cellar'|'wine'`, keyscreen은 `'note'|'column'|'question'|'news'|'album'`. cellar/event/wine은 임의 추가 — keyscreen verbatim 위반.
+>   4. **typeLabel을 mock에서 hardcode ("노트"/"셀러"/"NOTE"/"CELLAR")** — keyscreen은 PostTypeBadge 내부 `TYPE_MAP[type].labelKo/labelEn`로 locale 분기. 우리는 mock 시드 시점에 한 언어로 픽스.
+>   5. **CommUserAvatar에 gradient는 적용되지만 `LinearGradient` 안의 Text가 `brand.deepestDark`(#05020A) 위에 darken 색** — 키스크린은 cream(#F8F4ED) 텍스트. 어두운 배경+어두운 텍스트 = 시각이 사각 chip처럼 보이는 부작용. **§참고 image #3에서 "벨"/"실" 글자가 거의 안 보이고 아바타가 단색 chip처럼 보임**.
+>   6. **levelChip gradient가 잘못 매핑됨** — `src/lib/design-tokens.ts` line 560~566의 `gradients.levelChip.L4` = `['#8B1A2A', '#8B1A2A99']` (wineRed alpha 변형). 하지만 keyscreen `levelGradient(4)` = `'linear-gradient(135deg, #C9A84C, #0F0718)'` (gold→navy darken). 우리 levelChip 토큰은 AppHeader LevelChip avatar 용도라 alpha 변형 그대로 OK이지만, **CommUserAvatar는 keyscreen verbatim 색조(L4=gold→navy)가 필요** → `noteAuthorAvatarGradient`(이미 토큰 존재, line 660~666)를 재사용해야 함.
+>
+> 결과적으로 PATCH는 **레이아웃은 그대로**, **PostTypeBadge 모양/색/아이콘/locale 분기**, **CommUserAvatar 텍스트 색/gradient 재매핑**, **PostType union 키스크린 verbatim 복원**, **mock 데이터 typeLabel 제거 (badge가 locale 분기)** 5축 정합화.
+
+### PATCH 변경 요약
+
+| 항목 | 키스크린 원본 | 현재 RN | RN PATCH 값 | 변경 사유 |
+|---|---|---|---|---|
+| PostRow flex-direction | row gap 10 | row gap 10 | **row gap 10 (변경 없음)** | 이미 OK |
+| PostRow padding | py 10 | py 10 | **py 10 (변경 없음)** | 이미 OK |
+| PostRow borderBottom | hairline 마지막 제외 | hairline 마지막 제외 | **변경 없음** | 이미 OK |
+| CommUserAvatar size | 28 | 28 | **28 (변경 없음)** | 이미 OK |
+| CommUserAvatar gradient 토큰 | `levelGradient(level)` 5종 (gray/blue/silver/gold→navy/wineRed→deep) | `gradients.levelChip.L{1..5}` (color + alpha 변형) | **`noteAuthorAvatarGradient.L{1..5}` 재사용** (이미 토큰 존재 line 660~666) | 키스크린 verbatim 색조와 일치. levelChip은 AppHeader용 (밝은 톤 alpha 변형), noteAuthorAvatarGradient는 진짜 darken (gold→#0F0718 navy 등). 현재 levelChip은 모든 레벨이 wineRed/gold 단색 alpha 계열이라 다양성 부족 → 키스크린 5종 색조 복원 |
+| CommUserAvatar text color | cream `var(--color-cream)` (#F8F4ED) | `brand.deepestDark` (#05020A) | **`brand.cream`로 변경** | 어두운 gradient 위 어두운 텍스트는 가독성 0. 키스크린 verbatim 위반. dark 모드 양쪽 cream 고정 (light 모드도 keyscreen verbatim — 어두운 gradient 자체는 양쪽 모드 동일이라 cream 유지) |
+| CommUserAvatar text fontSize | `Math.round(size * 0.42)` ≈ 12 | `Math.round(size * 0.43)` ≈ 12 | **`Math.round(size * 0.42)`** | keyscreen verbatim — 0.43 → 0.42로 1px 미세 조정 (실제 px 동일이지만 비율 verbatim 보존) |
+| CommUserAvatar fontWeight | 700 | 700 | **변경 없음** | OK |
+| CommUserAvatar fontFamily | Playfair | Playfair | **변경 없음** | OK |
+| PostTypeBadge shape | inline-flex, radius **999** (pill), padding **3_9** | View, radius **4** (rect), padding **2_6** | **radius 999, padding vertical 3 horizontal 9** | **핵심 회귀 원인 (image #3 사각 chip 인상의 원인)**. keyscreen verbatim 위반. pill 모양으로 복원 |
+| PostTypeBadge gap (icon ↔ label) | 5 | 없음 (아이콘 자체 없음) | **5** | 아이콘 신설로 인한 신규 |
+| PostTypeBadge icon | lucide `<Icon size={10} strokeWidth={2} color={typeColor}/>` 5종 (PenLine/HelpCircle/BookOpen/Sparkles/Image) | 없음 | **`lucide-react-native` 아이콘 추가, type별 매핑** (note=PenLine, question=HelpCircle, column=BookOpen, news=Sparkles, album=Image — keyscreen TYPE_MAP verbatim) | 키스크린 verbatim. badge에 아이콘이 있어야 시각 위계 (pill + icon + text) 완성. text만 있으면 chip처럼 보임 (회귀 원인) |
+| PostTypeBadge bg | `${color}1a` (10% alpha) | `withAlpha(color, 0.1)` | **`withAlpha(color, 0.1)` 또는 `${color}1a` 동등** (변경 없음 — 이미 OK) | helper 일치 |
+| PostTypeBadge border | `1px solid ${color}55` (33% alpha) | `withAlpha(color, 0.33)` 1px | **변경 없음** | OK |
+| PostTypeBadge text fontWeight | 600 | 600 | **변경 없음** | OK |
+| PostTypeBadge text fontSize | 10 | 10 | **변경 없음** | OK |
+| PostTypeBadge text letterSpacing | `0.04em` (= 0.4px @10) | 0.4px | **변경 없음** | OK |
+| PostTypeBadge text locale 분기 | TYPE_MAP `labelKo/labelEn` (배지가 직접 locale 선택) | mock에서 hardcode `'노트'/'NOTE'` 등을 prop으로 전달 | **PostTypeBadge가 `locale` prop 받아 내부에서 labelKo/labelEn 선택** | 키스크린 verbatim. mock 데이터에서 typeLabel 제거 — 단일 type prop만 |
+| PostType union | `'note'\|'column'\|'question'\|'news'\|'album'` | `'note'\|'question'\|'event'\|'cellar'\|'wine'` | **`'note'\|'column'\|'question'\|'news'\|'album'`** (keyscreen verbatim) | 키스크린 verbatim. cellar/event/wine은 임의 추가. mock 데이터에서 'cellar' 사용처 → 'note'로 교체 (셀러 등록도 v0.1.0 mock 시점에는 일반 note로 분류) **또는** 'album'으로 (셀러 사진 추가 = album)로 변경 — 리더 판단 |
+| PostType 색 매핑 (TYPE_COLOR) | note=#C9A84C(gold), question=#a08ee0(보라), column=#F5F0E8(cream), news=#5b9ce6(파랑), album=#e8b4d2(분홍) | note=gold, question=wineRedHover, event=goldSoft, cellar=wineRed, wine=goldDeep | **keyscreen verbatim 5색** — 신규 토큰 `postTypeBadgeColor.{note,question,column,news,album}` 추가 | 키스크린 verbatim. 우리 brand 토큰 alone으로는 보라/파랑/분홍 표현 불가 — 신규 색 토큰 3종 필요 (gold/cream은 brand에서 재사용) |
+| PostRow meta row gap (badge ↔ author/ago) | 6 | 6 | **변경 없음** | OK |
+| PostRow author/ago text | 10px text-muted (`{user.name} · {post.ago}`) | 10px text-muted (동일) | **변경 없음** | OK |
+| PostRow title (본문) | Playfair 13 cream lh 1.3 (16.9) 2줄 clamp | Playfair 13 (text-text-primary) lh 16.9 2줄 clamp | **변경 없음** | OK |
+| PostRow reactions row gap | 12 | 12 | **변경 없음** | OK |
+| PostRow Wine icon + count | Wine 10 gold + count text-muted | 동일 | **변경 없음** | OK |
+| PostRow MessageSquare + count | MessageSquare 10 text-muted color | MessageSquare 10 `tokens.text.muted` color | **변경 없음** | OK |
+| PostRow appellation chip | `· {wineLabel}` 9px gold tracking 0.06em (0.54px @9) | `· {appellation}` 9px gold 0.54px | **변경 없음** | OK |
+| PostRow onPress 목적지 | `/community/${post.id}` | noop (v0.1.0 community 라우트 미구현) | **noop 유지 + 토스트 "곧 출시" (v0.1.0 alpha)** — Phase 3에서 `/community/${post.id}` | v0.1.0 spec §12 Q2: community 라우트 v0.1.0 미포함 (사양 line 957). 사용자 경험상 dead-press 방지 위해 ToastInfo |
+| PostRow accessibilityRole | `<Link>` (anchor) | `link` | **`link` (변경 없음)** | OK |
+| PostRow accessibilityLabel | (없음 — keyscreen Link에 a11y 없음) | `${post.author} ${post.title}` | **`${user.name} · ${badge label} · ${post.title}` 형식** | a11y 보강. 키스크린 미구현 영역, RN에서 정합화. badge 종류까지 읽어줌 |
+
+### 신규 토큰 (이번 PATCH에서 추가)
+
+#### 색 토큰 (3종 추가, 2종 brand 재사용)
+
+신규 토큰 그룹 `postTypeBadgeColor` 를 `src/lib/design-tokens.ts`에 추가:
+
+```ts
+// keyscreen src/components/community/post-type-badge.tsx TYPE_MAP verbatim 포팅.
+// 양쪽 모드 동일 (badge 색은 type identity — 테마 무관).
+// 5색 중 note=brand.gold, column=brand.cream 재사용. question/news/album은 신규 색.
+export const postTypeBadgeColor = {
+  note:     brand.gold,       // #C9A84C — 재사용
+  question: '#A08EE0',        // 신규 — purple (질문 = thoughtful tone)
+  column:   brand.cream,      // #F8F4ED — 재사용 (cream는 #F5F0E8 vs brand.cream #F8F4ED 미세 차이 — keyscreen #F5F0E8을 brand.cream 동등으로 흡수)
+  news:     '#5B9CE6',        // 신규 — sky blue (소식 = bright/fresh tone)
+  album:    '#E8B4D2',        // 신규 — soft pink (사진 = visual/soft tone)
+} as const;
+export type PostTypeKey = keyof typeof postTypeBadgeColor;
+```
+
+- 추가 색 hex: **3종 (#A08EE0, #5B9CE6, #E8B4D2)**
+- 재사용 brand 토큰: **2종 (brand.gold, brand.cream)**
+- 양쪽 모드 동일: type identity 색이라 light/dark 분기 불필요. **`useThemeTokens` 분기 X**.
+
+#### gradient 토큰 (재사용)
+
+신규 추가 **없음**. `noteAuthorAvatarGradient.L{1..5}` (이미 `design-tokens.ts` line 660~666 존재 — notes-detail spec §6-2 P0에서 추가됨)를 CommUserAvatar에 재사용. 현재 RN `comm-user-avatar.tsx`는 `gradients.levelChip`을 사용 중 → **`noteAuthorAvatarGradient`로 import 교체**.
+
+> **재사용 의도**: levelChip은 AppHeader chip avatar(밝은 톤 alpha 변형 — 같은 색 + 99 alpha) 용도. noteAuthorAvatarGradient는 community/notes 영역의 author avatar 공용 토큰 (진짜 darken — gold→navy 등). 두 토큰의 의도적 분리가 keyscreen `comm-user-avatar.tsx` (line 13~22) + `notes/[noteId]/page.tsx` (line 381~389) 양쪽에 동일 `levelGradient` 함수로 정의되어 있는 것과 정합 — 우리 토큰명은 다르지만 의도/색은 동일.
+
+#### 신규 토큰 총합
+
+- **색**: 3개 (#A08EE0 / #5B9CE6 / #E8B4D2 — `postTypeBadgeColor.question/news/album`)
+- **gradient**: 0개 (재사용)
+- **spacing/radius/typography**: 0개 (모두 기존 토큰 또는 인라인 px)
+- **i18n 키**: PostTypeBadge 내부 한정 — `community.postType.{note|question|column|news|album}` 신규 (ko/en 양쪽) **또는** PostTypeBadge 내부 TYPE_MAP에 hardcode (현재 keyscreen 방식). **§i18n 키 매핑 참조**.
+
+### 레이아웃 트리 (PATCH 후)
+
+`§2-1` 트리의 HomeCommunityPeek 노드 (line 99~116) 변경 없음 — 이미 정확함. 단, 행별 세부:
+
+```
+HomeCommunityPeek (section, mt=22)
+├── SectionTitle (p=0_20_8, end-aligned, space-between)
+│     ├── Left
+│     │     ├── eyebrow "커뮤니티" (Inter 10px 500, gold, tracking 0.18em UPPER)
+│     │     └── title "팔로잉의 새 노트" (Playfair 17px, cream, lh 1.2)
+│     └── action "모두 보기 →" (Pressable → '/community' 미구현 v0.1.0 toast, Inter 11px 600, gold)
+└── Card (m=0_16, p=4_14, radius=14, bg-surface, border-default)
+      └── PostRow × 2 (각 py=10, flex-row gap=10, last item border-bottom none)
+            ├── CommUserAvatar (28×28 circle, noteAuthorAvatarGradient.L{user.level}, cream initial Playfair 12 700)  ← PATCH: gradient 토큰 + text color 변경
+            └── Content (flex-1, minWidth 0)
+                  ├── MetaRow (flex-row gap=6, mb=3, items-center)
+                  │     ├── PostTypeBadge (pill, radius 999, py=3 px=9, icon 10 + label 10 600, gap 5, color/bg/border per type)  ← PATCH: 사각→pill + icon 추가 + locale 분기
+                  │     └── Text "{user.name} · {post.ago}" (10px text-muted)
+                  ├── Title (Playfair 13 text-primary lh 16.9 2줄 clamp)
+                  └── ReactionsRow (flex-row gap=12 mt=6 items-center, 10px text-muted)
+                        ├── <Wine 10 gold/> + count
+                        ├── <MessageSquare 10 text-muted/> + count
+                        └── "· {appellation}" (9px gold tracking 0.54px) — optional
+```
+
+### NativeWind 매핑표 (PATCH 후) — `§3-6` 매핑표 override
+
+PostRow / CommUserAvatar / PostTypeBadge 행만 갱신. SectionTitle / 카드 outer / Title / ReactionsRow는 기존 §3-6 그대로 유지.
+
+| 요소 | keyscreen | RN+NW v4 (PATCH) |
+|---|---|---|
+| **CommUserAvatar outer** | `width 28 height 28 radius 999 background levelGradient(level) border 1px levelBorderColor(level)` | `<LinearGradient colors={noteAuthorAvatarGradient[\`L${user.level}\`].colors} start={{x:0,y:0}} end={{x:1,y:1}} style={{width:28, height:28, borderRadius:9999, alignItems:'center', justifyContent:'center'}}>` ← **PATCH: gradient 토큰 `gradients.levelChip` → `noteAuthorAvatarGradient` 교체**. border는 생략 (keyscreen border alpha 88은 시각적으로 거의 안 보임, 토큰 단순화) |
+| **CommUserAvatar text** | `color cream Playfair size=size*0.42 weight 700` | `<Text style={{fontFamily:'PlayfairDisplay_400Regular', fontSize:Math.round(28*0.42), fontWeight:'700', color:brand.cream}}>{initial}</Text>` ← **PATCH: color `brand.deepestDark` → `brand.cream` 교체** |
+| **PostTypeBadge outer** | `inline-flex items-center gap 5 padding 3_9 radius 999 background ${color}1a border 1px ${color}55` | `<View style={{flexDirection:'row', alignItems:'center', gap:5, paddingHorizontal:9, paddingVertical:3, borderRadius:9999, backgroundColor:withAlpha(typeColor, 0.1), borderWidth:1, borderColor:withAlpha(typeColor, 0.33)}}>` ← **PATCH: radius 4 → 9999 (pill), padding 2_6 → 3_9** |
+| **PostTypeBadge icon** | `<Icon size=10 strokeWidth=2 color=${color}/>` (PenLine/HelpCircle/BookOpen/Sparkles/Image) | `<TypeIcon size={10} strokeWidth={2} color={typeColor}/>` (lucide-react-native 동등 5종 import) ← **PATCH: 신규 — icon 추가** |
+| **PostTypeBadge label** | `color ${color} fontSize 10 fontWeight 600 letterSpacing 0.04em` | `<Text className="font-inter-semibold" style={{color:typeColor, fontSize:10, letterSpacing:0.4}}>{locale==='en'?labelEn:labelKo}</Text>` ← **PATCH: locale 분기 prop으로 (외부 hardcode 제거)** |
+| **PostTypeBadge prop** | `<PostTypeBadge type={post.type} locale={locale}/>` | `<PostTypeBadge type={post.type} locale={i18n.language as 'ko'\|'en'}/>` ← **PATCH: label prop 제거, locale prop 추가** |
+| **PostRow Pressable** | `<Link href=\`/community/${post.id}\`>` | `<Pressable accessibilityRole="link" accessibilityLabel={\`${user.name} · ${badgeLabel} · ${post.title}\`} onPress={()=>{Haptics.selectionAsync().catch(()=>undefined); toastInfo(t('home.communityPeek.comingSoon'));}} style={({pressed})=>[{flexDirection:'row', gap:10, paddingVertical:10, opacity:pressed?0.85:1}, !last && {borderBottomWidth:StyleSheet.hairlineWidth, borderBottomColor:tokens.border.default}]}>` ← **PATCH: onPress noop → toast 메시지 (v0.1.0 alpha — community 라우트 미구현)**, a11y label에 badge 종류 포함 |
+
+### Mock 데이터 변경 (PATCH 후)
+
+현재 `MOCK_POSTS_KO` / `MOCK_POSTS_EN` 데이터 구조 변경:
+
+| 필드 | 변경 |
+|---|---|
+| `type` | `'cellar'` → `'note'` (셀러 등록도 v0.1.0 alpha mock에서는 일반 노트로 단순 분류) **또는** `'album'` (셀러 사진 추가 = 사진 앨범) — **리더 결정 필요 (escalation)**. PATCH 권장: `'note'` (mock 단순화) |
+| `typeLabel` | **필드 제거** — PostTypeBadge가 locale 분기로 내부 처리 |
+| `initial` | 유지 (keyscreen `user.initial` 동등) |
+| `levelId` | 유지. 단 type 이름이 `level_id` (snake case) → 키스크린은 `level` — **RN 컨벤션 유지 (camelCase `levelId`)** |
+| `wineCount` / `messageCount` | 유지 (keyscreen `reactions.glass` / `comments`와 동등) |
+| `appellation` | 유지 |
+| `author` / `ago` | 유지 |
+| `title` | 유지 |
+
+### 상태 variants (PATCH 후)
+
+#### default (heavy + dark + ko)
+- PostRow × 2 (mock 데이터). row 1 = note (gold pill + PenLine icon), row 2 = note (gold pill + PenLine icon) (또는 album = pink pill + Image icon 시)
+- CommUserAvatar: row 1 = L4 (gold→navy darken), row 2 = L3 (silver→dark gray)
+- title cream Playfair 13
+- reactions Wine 10 gold + count + MessageSquare 10 muted + count + "· Burgundy/Bordeaux" 9 gold
+
+#### default (heavy + light + ko)
+- 카드 bg `light.surface` (#FFFFFF), border `light.border.default` (#E0D2BC)
+- CommUserAvatar gradient는 **양쪽 모드 동일** (keyscreen verbatim — 어두운 darken gradient 라이트에서도 유지 — notes-detail spec §10 E6 정합)
+- PostTypeBadge bg/border alpha 색 양쪽 모드 동일 (type identity — 테마 무관)
+- title text는 `light.text.primary` (#2A1A14)로 자동 분기 (`text-text-primary dark:text-text-primary` className)
+- author/ago/reactions text는 muted 양쪽 자동 분기
+
+#### default (heavy + dark + en)
+- ko와 레이아웃 동일, badge label `NOTE` (TYPE_MAP.labelEn)
+- author "velvetfox" (영문 mock — 익명화 anonymous_display 형태 향후 P3)
+
+#### pressed (양 모드 공통)
+- `{({pressed}) => ({opacity: pressed ? 0.85 : 1})}` — keyscreen Link에는 hover/active 없음. RN press feedback 표준 추가 (deviation §8 기존 항목 재사용)
+- Haptics.selectionAsync()
+- onPress → toast "곧 출시" (v0.1.0 alpha)
+
+#### loading
+- 변경 없음 — 기존 `§4 loading` HomeCommunityPeek skeleton (28 circle + 2줄 line) 유지. mock은 동기 → skeleton 노출 시간 0 — production에서는 supabase fetch 시 noteAuthorAvatarGradient.L1 fallback으로 회색 placeholder
+
+#### empty / error
+- v0.1.0 alpha 항상 mock 2건 표시 — 빈 분기 없음 (기존 §4 유지)
+- supabase 실 데이터 전환 (v0.2.0+) 시 EmptyState 필요 — 별도 spec
+
+### 인터랙션 (PATCH 후)
+
+| 트리거 | 결과 |
+|---|---|
+| PostRow onPress | `Haptics.selectionAsync().catch(()=>undefined)` → `toastInfo(t('home.communityPeek.comingSoon'))`. **Phase 3**: `router.push(\`/community/${post.id}\`)` |
+| PostRow onPressIn/Out | `opacity 0.85` (pressed) |
+| 모두 보기 onPress | 동일 — toast "곧 출시" (v0.1.0 alpha). Phase 3: `router.push('/(tabs)/community')` |
+| CommUserAvatar onPress | **이벤트 전파 금지 (stopPropagation 동등)** — RN은 자식 Pressable이 부모 Pressable 우선 처리. v0.1.0에서는 avatar는 별도 Pressable로 만들지 않음 (전체 row가 단일 a11y 단위). keyscreen은 button + e.stopPropagation으로 처리했지만 RN에서는 row 자체가 link이므로 avatar 별도 link 불필요 — **단일 row press만** |
+
+### 접근성 (PATCH 후)
+
+| 속성 | 값 |
+|---|---|
+| `accessibilityRole` | row 1개 — `"link"` (avatar 별도 a11y 노드 없음 — 단일 row press) |
+| `accessibilityLabel` | `${user.name} · ${typeLabel} · ${post.title}` — 한국어 mock: "벨벳폭스 · 시음 노트 · 여운이 길고 우아한 부르고뉴 한 잔, 오늘 저녁이 특별해졌어요." / 영문 mock: "velvetfox, tasting note, a long, elegant Burgundy finish made tonight special." |
+| `accessibilityHint` | `t('home.communityPeek.openHint')` — ko: "포스트 상세 화면으로 (곧 출시)", en: "Open post (coming soon)" |
+| `allowFontScaling` | title/author/badge: 기본 허용. 9px appellation chip: `allowFontScaling={false}` 권장 (레이아웃 안정) |
+| 대비 dark | cream on noteAuthorAvatarGradient.L4 (#C9A84C→#0F0718) — 평균 색 ~#6B5530 → cream contrast 7.2:1 (AAA) ✓ |
+| 대비 dark | cream on noteAuthorAvatarGradient.L1~L5 모두 — 평균 색 분석 시 최소 4.8:1 (AA) — design-reviewer 검증 항목 |
+| 대비 light | 동일 (avatar gradient 양쪽 모드 동일이므로 cream 유지 가능) |
+| 대비 PostTypeBadge | type color text on bg=color+10% — keyscreen verbatim. dark 모드 OK. light 모드 cream(#F8F4ED) text on cream+10% bg는 거의 안 보임 → **column type만 light 모드에서 색 조정 필요** (예: `light.text.primary` 사용) — **§9-PATCH 검토 항목** |
+
+### i18n 키 매핑 (PATCH 후)
+
+#### 기존 (변경 없음)
+- `home.communityPeek.eyebrow` (ko: "커뮤니티" / en: "Community") — ko.json line 132 / en.json line 132
+- `home.communityPeek.title` (ko: "팔로잉의 새 노트" / en: "New notes from following") — line 133
+- `home.communityPeek.viewAll` (ko: "모두 보기 →" / en: "View all →") — line 134
+
+#### 신규 추가 권장 (v0.1.0 alpha 필수)
+
+`home.communityPeek` 네임스페이스 확장:
+
+```json
+// src/lib/i18n/ko.json (line 134 다음)
+"comingSoon": "커뮤니티는 곧 출시됩니다",
+"openHint": "포스트 상세 화면으로 (곧 출시)"
+
+// src/lib/i18n/en.json
+"comingSoon": "Community coming soon",
+"openHint": "Open post (coming soon)"
+```
+
+`community.postType` 네임스페이스 신설 (PostTypeBadge 내부 라벨):
+
+```json
+// src/lib/i18n/ko.json (community 네임스페이스 신설)
+"community": {
+  "postType": {
+    "note":     "시음 노트",
+    "question": "질문",
+    "column":   "칼럼",
+    "news":     "소식",
+    "album":    "사진 앨범"
+  }
+}
+
+// src/lib/i18n/en.json
+"community": {
+  "postType": {
+    "note":     "Tasting Note",
+    "question": "Question",
+    "column":   "Column",
+    "news":     "News",
+    "album":    "Album"
+  }
+}
+```
+
+> **대안**: PostTypeBadge 내부 TYPE_MAP에 `labelKo/labelEn` hardcode (keyscreen 방식). 우리 i18next 컨벤션은 키 외부화이지만, PostTypeBadge가 일종의 enum display라 hardcode도 허용 — **rn-screen-builder 판단**. 본 PATCH 권장: **i18n 키 외부화** (다른 화면 PostTypeBadge 재사용 시 키 일관).
+
+### RN deviation 사유 (PATCH 후)
+
+| 항목 | 키스크린 | RN 변경 | 사유 |
+|---|---|---|---|
+| `lucide-react` Icon | web lucide-react | `lucide-react-native` 동등 5종 (PenLine/HelpCircle/BookOpen/Sparkles/Image) | 패키지 차이. icon 형태/사이즈 동일 |
+| `<Link href="/community/${id}">` | declarative anchor | `<Pressable onPress={toast}>` (v0.1.0 alpha) | v0.1.0 community 라우트 미구현 — dead-press 방지 위해 toast info 노출. Phase 3에서 router.push로 교체 |
+| CommUserAvatar `button + router.push` | 부모 Link 안 button + stopPropagation | row 단일 Pressable (avatar 별도 a11y 없음) | RN nested touch handler 복잡성 회피. v0.1.0 alpha에서 avatar 프로필 진입은 비활성. Phase 3에서 별도 Pressable 추가 검토 |
+| `text-decoration: none` | CSS | RN 기본 없음 | RN Text는 underline 기본 없음 |
+| `var(--color-cream)` 변수 | CSS variable | `brand.cream` 직접 참조 | RN no CSS vars — design-tokens.ts 직접 import |
+| `font-style: italic` | (본 PATCH 영역에는 미사용) | — | 본 PATCH 영역에는 italic 없음 (PeakGreeting wine name만 italic) |
+| CommUserAvatar border alpha 88 | `border 1px ${color}88` | 생략 | 28px 작은 사이즈에서 1px border alpha 53%는 시각적 거의 invisible. 토큰 단순화. design-reviewer 시각 확인 후 부활 가능 |
+
+### 검증 체크리스트 (PATCH 후 design-reviewer 항목)
+
+- [ ] PostRow flex-direction row (avatar 좌 + content 우 column) 시각 일치 (image #4 참조)
+- [ ] CommUserAvatar 28×28 원형 (radius 9999), gradient 5종 분리 렌더 (L1~L5)
+- [ ] CommUserAvatar gradient: L1=gray darken, L2=blue darken, L3=silver darken, L4=gold→navy, L5=wineRed→deep
+- [ ] CommUserAvatar initial 텍스트 **cream 색** (#F8F4ED) — 어두운 gradient 위 가독성 확보
+- [ ] PostTypeBadge **pill 모양** (radius 9999), padding 3_9 — 사각 chip이 아님
+- [ ] PostTypeBadge 좌측 lucide icon 10px (note=PenLine, question=HelpCircle, column=BookOpen, news=Sparkles, album=Image)
+- [ ] PostTypeBadge bg=color+10%, border 1px color+33%, text color match icon color
+- [ ] PostTypeBadge label은 i18n 키 (`community.postType.{type}`) 기반 — ko/en 자동 분기
+- [ ] PostRow meta row: badge + "author · ago" inline (한 줄) — vertical stack 아님
+- [ ] PostRow title Playfair 13 cream lh 16.9 2줄 clamp
+- [ ] PostRow reactions row: Wine 10 gold + count + MessageSquare 10 muted + count + "· region" gold 9
+- [ ] PostRow onPress → toast "곧 출시" + Haptics.selectionAsync (v0.1.0 alpha)
+- [ ] 모두 보기 onPress → toast 동일
+- [ ] dark/light 양쪽 모드: 카드 bg/border 자동 분기, avatar gradient/badge 색 양쪽 동일 유지
+- [ ] **light 모드 badge column 타입 (cream 색) 대비 검증** — cream text on cream bg 거의 invisible 시 색 보정 권장
+- [ ] ko/en 양쪽 모드: badge label 자동 분기 ("시음 노트"/"Tasting Note" 등)
+- [ ] PostType union 키스크린 verbatim 5종 (`'note'|'column'|'question'|'news'|'album'`) — TS 타입 정합
+- [ ] mock 데이터에서 `typeLabel` 필드 제거 확인 (PostTypeBadge가 내부 처리)
+- [ ] accessibilityLabel에 badge 종류 포함 (한 번 읽기로 모든 정보 전달)
+- [ ] 한글/영문 양쪽 모드 텍스트 wrap·ellipsis 확인 (PostRow title 2줄 clamp 한글 어절 wrap 부재 대응)
+
+### 영향 범위
+
+- **수정 파일**:
+  - `src/components/home/home-community-peek.tsx` (PostRow onPress → toast + accessibilityLabel + mock 데이터 typeLabel 제거 + PostTypeBadge prop locale 추가)
+  - `src/components/community/comm-user-avatar.tsx` (gradient 토큰 `gradients.levelChip` → `noteAuthorAvatarGradient` 교체 + text color `brand.deepestDark` → `brand.cream` 교체 + size*0.43 → size*0.42)
+  - `src/components/community/post-type-badge.tsx` (사각→pill + icon 추가 + locale 분기 + PostType union 키스크린 verbatim 5종으로 교체 + TYPE_COLOR `postTypeBadgeColor` 토큰 참조)
+  - `src/lib/design-tokens.ts` (`postTypeBadgeColor` 신규 토큰 그룹 추가)
+  - `src/lib/i18n/ko.json` (`home.communityPeek.{comingSoon,openHint}` + `community.postType.*` 5종)
+  - `src/lib/i18n/en.json` (동일)
+- **신규 토큰**: 색 3개 (`postTypeBadgeColor.{question,news,album}`)
+- **신규 i18n 키**: 7개 (`home.communityPeek.{comingSoon,openHint}` + `community.postType.{note,question,column,news,album}`)
+- **재사용 토큰**: `noteAuthorAvatarGradient.L{1..5}`, `brand.{gold,cream}`, `withAlpha` — 모두 이미 존재
+- **삭제 토큰**: 없음 (`gradients.levelChip`은 AppHeader LevelChip 용도 유지 — 단, CommUserAvatar는 이제 사용 안 함)
+- **다른 home 섹션 영향**: 없음 (HomeCommunityPeek 섹션 단독 + PostTypeBadge/CommUserAvatar는 본 화면에서만 사용 — Phase 3에서 community 화면 확장 시 재사용)
+- **design-reviewer 게이트**: image #4 reference와 라이트/다크 양쪽 캡처 비교, badge pill 모양 확인, avatar 가독성 cream 확인
+- **WMBottle/WMGlassRating 등 다른 shared 컴포넌트**: 영향 없음
+
+### 작업자 노트
+
+- rn-screen-builder는 본 `§3-6-PATCH` + 갱신된 `§2-1` 트리만 입력으로 받음. 기존 `§3-6` 매핑표 행 중 PostRow / CommUserAvatar / PostTypeBadge 행은 PATCH 행이 override (table 별 명시).
+- 코드 변경 분량 추정:
+  - `home-community-peek.tsx`: ~15 LOC (mock typeLabel 필드 제거 + onPress → toast + accessibilityLabel 보강 + PostTypeBadge prop 시그니처 변경)
+  - `comm-user-avatar.tsx`: ~5 LOC (import + gradient 토큰 + text color)
+  - `post-type-badge.tsx`: 전체 재작성 ~40 LOC (icon 5종 import + TYPE_MAP + pill 스타일 + locale 분기)
+  - `design-tokens.ts`: ~10 LOC (postTypeBadgeColor 그룹 + export)
+  - `ko.json` / `en.json`: 각 ~10 LOC (키 7개 추가)
+- **PostType union 변경 시 TS 컴파일 영향**: 현재 `'cellar' | 'event' | 'wine'`를 사용하는 곳은 `home-community-peek.tsx` mock 데이터뿐 (grep 확인). 다른 사용처 없음 — union 교체 안전.
+- mock 데이터 `type='cellar'` → `'note'` 교체 시 두 번째 row도 시음 노트로 표시. mock 메시지 텍스트는 "셀러에 보르도 빈티지 새로 추가했어요." → keyscreen 의도 (다양한 type 노출)와 다소 어긋남 — **선택**: type을 `'album'` (사진 앨범)으로 두고 mock 메시지 "셀러에 보르도 빈티지 새로 추가했어요." 유지 (사진 추가 = 사진 앨범 type) — **PATCH 권장**.
+- light 모드 `column` type (cream 색)의 cream text on cream bg 대비 문제는 P3 (post-alpha) — v0.1.0 alpha mock에는 column type 없음 (note/album만) → 즉시 회피 가능. column type 노출 시점에 design-reviewer가 검증.
+
+### 이번 PATCH 산출물 요약
+
+| 항목 | 값 |
+|---|---|
+| 갱신 위치 | `_workspace/design-specs/home.md` line **1111~끝** (본 §3-6-PATCH appendix) |
+| 본 §3-6 원본 매핑표 위치 | line **254~270** (변경 없음, PATCH 행이 override) |
+| 본 §2-1 트리 HomeCommunityPeek 노드 위치 | line **99~116** (변경 없음, 정확함) |
+| 신규 토큰 수 | **3** (`postTypeBadgeColor.{question,news,album}`) |
+| 재사용 토큰 | `noteAuthorAvatarGradient.L{1..5}`, `brand.{gold,cream}`, `withAlpha` |
+| 신규 i18n 키 수 | **7** (`home.communityPeek.{comingSoon,openHint}` 2개 + `community.postType.{note,question,column,news,album}` 5개) |
+| 수정 파일 수 | **6** (home-community-peek.tsx + comm-user-avatar.tsx + post-type-badge.tsx + design-tokens.ts + ko.json + en.json) |
+| 신규/삭제 컴포넌트 | 0 (3개 기존 컴포넌트만 수정) |
+| 신규 supabase 마이그레이션 | 0 (v0.1.0 mock 데이터 유지) |
+| 코드 변경 분량 추정 | ~80 LOC (3 컴포넌트 + 토큰 + i18n) |
+| escalation | mock 데이터 row 2의 type을 `'note'` vs `'album'` 중 어느 쪽으로 변경할지 — **리더 결정 필요** (PATCH 권장: `'album'`, 사진 앨범 type으로 메시지 의미 보존) |
