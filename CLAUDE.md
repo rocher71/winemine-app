@@ -125,9 +125,9 @@ v2.0 Spring 전환 비용 폭증 방지:
 **2026-05-21 24시간 fix 학습**: 이 stack(`React 19 + RN 0.81 + Reanimated 4 + worklets 0.5 + NativeWind 4.1 + jsxImportSource: 'nativewind' + newArchEnabled: true (Fabric)`)에서, **`Pressable`에 `className` + 함수형 `style` + 복잡한 nested 자식(여러 View / SVG / Text)이 동시에 있으면 layout 스타일이 무시되는 경우 발생**. cssInterop wrapper + Fabric layout 충돌로 추정.
 
 **증거 사례**:
-- ✅ `SuggestedActions ActionRow` — className + style 함수 + flexDirection row, 자식은 Text + ChevronRight 단순 → **작동**
-- ❌ `WineFeedRow` — 동일 패턴이지만 자식이 3개 nested View + SVG (WMBottle) → **flexDirection row 무시되어 vertical로 렌더**
-- ❌ `BottomNav FAB` — Pressable style 함수에 position/size/border/shadow 통째로 → **backgroundColor만 적용, border/radius/위치 무시**
+- [OK] `SuggestedActions ActionRow` — className + style 함수 + flexDirection row, 자식은 Text + ChevronRight 단순 → **작동**
+- [NO] `WineFeedRow` — 동일 패턴이지만 자식이 3개 nested View + SVG (WMBottle) → **flexDirection row 무시되어 vertical로 렌더**
+- [NO] `BottomNav FAB` — Pressable style 함수에 position/size/border/shadow 통째로 → **backgroundColor만 적용, border/radius/위치 무시**
 
 **규칙 (반드시 준수)**:
 

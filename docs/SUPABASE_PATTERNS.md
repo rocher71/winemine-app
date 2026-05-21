@@ -80,11 +80,11 @@ const { data, error } = await supabase.functions.invoke('label-scan', {
 
 | 변수 | 위치 | public? |
 |---|---|---|
-| `EXPO_PUBLIC_SUPABASE_URL` | `.env` (RN 빌드 시 번들 포함) | ✓ public OK |
-| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | `.env` | ✓ public OK (RLS로 보호) |
-| `SUPABASE_SERVICE_ROLE_KEY` | **Supabase Dashboard → Edge Functions → Secrets만** | ✗ RN 절대 X |
-| `SUPABASE_JWT_SECRET` | 동일 (Edge Functions만) | ✗ RN 절대 X |
-| `WINEMINE_ANONYMIZATION_SALT` | 동일 (Edge Functions만) | ✗ RN 절대 X |
+| `EXPO_PUBLIC_SUPABASE_URL` | `.env` (RN 빌드 시 번들 포함) | [OK] public OK |
+| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | `.env` | [OK] public OK (RLS로 보호) |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Supabase Dashboard → Edge Functions → Secrets만** | [NO] RN 절대 X |
+| `SUPABASE_JWT_SECRET` | 동일 (Edge Functions만) | [NO] RN 절대 X |
+| `WINEMINE_ANONYMIZATION_SALT` | 동일 (Edge Functions만) | [NO] RN 절대 X |
 
 Edge Functions에서 시크릿 접근:
 ```typescript

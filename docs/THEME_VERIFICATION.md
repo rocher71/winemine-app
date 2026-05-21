@@ -69,8 +69,8 @@ Phase 2 키스크린에서 **다크 기준으로만 작업하다 라이트모드
 // 하드코딩 hex — 다크 기준만 짜고 라이트는 깨짐
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#3D2A4A',  // ✗ 다크 전용 색
-    borderColor: '#5A3D6A',      // ✗ 다크 전용
+    backgroundColor: '#3D2A4A',  // [NO] 다크 전용 색
+    borderColor: '#5A3D6A',      // [NO] 다크 전용
   },
 });
 ```
@@ -84,8 +84,8 @@ function Card() {
   const { colors } = useTheme();
   return (
     <View style={{
-      backgroundColor: colors.surface,    // ✓ 토큰 — dark/light 자동 분기
-      borderColor: colors.borderDefault,  // ✓ 토큰
+      backgroundColor: colors.surface,    // [OK] 토큰 — dark/light 자동 분기
+      borderColor: colors.borderDefault,  // [OK] 토큰
     }} />
   );
 }
@@ -95,8 +95,8 @@ function Card() {
 ```typescript
 // src/theme/tokens.ts
 export const tokens = {
-  surface: { dark: '#3D2A4A', light: '#FFFFFF' },           // ✓ dual
-  borderDefault: { dark: '#5A3D6A', light: '#E0D2BC' },     // ✓ dual
+  surface: { dark: '#3D2A4A', light: '#FFFFFF' },           // [OK] dual
+  borderDefault: { dark: '#5A3D6A', light: '#E0D2BC' },     // [OK] dual
 };
 ```
 

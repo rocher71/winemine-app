@@ -9,8 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "lint:emoji": "node -e \"const fs=require('fs');const p=require('path');const re=/[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}\\u{1F900}-\\u{1F9FF}\\u{FE0F}]/u;const exts=['.ts','.tsx','.js','.jsx','.md','.sql','.json'];let bad=[];function walk(d){for(const f of fs.readdirSync(d)){if(['node_modules','.expo','dist','.git','specs','supabase'].includes(f))continue;const fp=p.join(d,f);const s=fs.statSync(fp);if(s.isDirectory())walk(fp);else if(exts.includes(p.extname(fp))){const c=fs.readFileSync(fp,'utf8');if(re.test(c))bad.push(fp);}}}walk('.');if(bad.length){console.error('emoji found in:',bad);process.exit(1);}else{console.log('emoji-free');}\"",
-    "lint:hex": "node -e \"const fs=require('fs');const p=require('path');const re=/#[0-9a-fA-F]{3,8}\\b/;const allow=['design-tokens.ts','tailwind.config.ts','lwin.ts'];let bad=[];function walk(d){for(const f of fs.readdirSync(d)){if(['node_modules','.expo','dist','.git','specs','supabase','docs'].includes(f))continue;const fp=p.join(d,f);const s=fs.statSync(fp);if(s.isDirectory())walk(fp);else if(['.ts','.tsx'].includes(p.extname(fp))){if(allow.some(a=>fp.endsWith(a)))continue;const c=fs.readFileSync(fp,'utf8');if(re.test(c))bad.push(fp);}}}walk('.');if(bad.length){console.error('hardcoded hex in:',bad);process.exit(1);}else{console.log('no hardcoded hex outside design-tokens');}\""
+    "lint:emoji": "node scripts/lint-emoji.js",
+    "lint:hex": "node scripts/lint-hex.js"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.0",
