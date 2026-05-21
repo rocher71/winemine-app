@@ -168,7 +168,8 @@ ALL DONE: 2026-05-20T18:05:30Z
 우선순위 (시각 갭 + 버그 임팩트 큰 순):
 
 ### F1 (가장 broken — UX 완전 망가짐)
-- [ ] BottomNav 5 tabs verbatim — `app/(tabs)/_layout.tsx` + settings stack 분리
+- [~] BottomNav 5 tabs verbatim — `app/(tabs)/_layout.tsx` + settings stack 분리
+  - started: 2026-05-21T02:29:14Z
   - 증상: 홈/라벨 촬영/노트/cellar/index/cellar/[lwin]/settings/index/settings/language/settings/experience/settings/appearance — 8 tabs로 overflow
   - 목표: 홈/지도/카메라(floating large red circle)/셀러/커뮤니티 5 tabs (키스크린 image #4 verbatim). settings hub + sub 3개는 stack 분리.
 
