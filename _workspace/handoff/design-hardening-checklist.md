@@ -192,7 +192,8 @@ ALL DONE: 2026-05-20T18:05:30Z
   - deferred: light 모드 gold score 대비 2.9 (사양 escalation) → 별도 cycle, wm-bottle.tsx docstring drift (chore)
   - 증상: bottle SVG가 카드 왼쪽 위에 isolated, 정보(이름/가격/평점)는 카드 아래쪽 vertical
   - 목표: bottle 좌 + 이름/와이너리/지역/품종/평점/가격 inline horizontal (키스크린 image #7 verbatim)
-- [ ] /home followers note row — `src/components/home/home-community-peek.tsx` 또는 `recent-notes-strip.tsx`
+- [~] /home followers note row — `src/components/home/home-community-peek.tsx` 또는 `recent-notes-strip.tsx`
+  - started: 2026-05-21T03:17:55Z
   - 증상: 큰 avatar (벨/실 글자 chip) + badge (노트/셀러) 위에 stacked + 본문 아래
   - 목표: 작은 round avatar + badge inline + 본문 + 메타 (키스크린 image #4 verbatim)
 
