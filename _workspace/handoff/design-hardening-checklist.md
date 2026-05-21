@@ -205,8 +205,26 @@ ALL DONE: 2026-05-20T18:05:30Z
   - 목표: 작은 round avatar + badge inline + 본문 + 메타 (키스크린 image #4 verbatim)
 
 ### F3 (작은 시각 갭이나 4 화면 공통 영향)
-- [~] /onboarding/* 다음 버튼 일관성
+- [x] /onboarding/* 다음 버튼 일관성
   - started: 2026-05-21T03:42:20Z
+  - spec: _workspace/design-specs/onboarding-cta.md
+  - review reports: _workspace/design-review_onboarding-cta_20260521_125044.md (FAIL 7), _workspace/design-review_onboarding-cta_20260521_125752_v2.md (PASS)
+  - qa report: _workspace/qa_followup_onboarding-cta_20260521_130312.md (PASS)
+  - fix loops: 1
+  - changed files: src/components/shared/primary-button.tsx (rewrite — color-swap disabled / height 48 / px 20 / radius 12 / letterSpacing / numberOfLines / border), src/lib/design-tokens.ts (componentSize.primaryButton.lg 52→48)
+  - 4 step 화면 자동 정합: 0 변경 (welcome 항상 enabled / 2-3-4 picked 토글)
+  - completed: 2026-05-21T04:04:12Z
+  - deferred: light 모드 wine-red/cream dual 치환 → 별도 cycle
+
+## Follow-up Cycle 1 통계
+
+- 총: 4건 (F1 BottomNav, F2-a wine-feed, F2-b followers note row, F3 onboarding CTA)
+- 완료: 4건
+- escalate: 0건
+- 평균 fix loops: 1.0
+- push commit (start + feat × 4 + checklist 1): 9개
+
+FOLLOW-UP CYCLE 1 ALL DONE: 2026-05-21T04:04:12Z
   - 증상: wineRed full-width disabled가 placeholder처럼 보임
   - 목표: primary-button verbatim 폭/색/대비/safe-area (키스크린 image #5 verbatim)
 

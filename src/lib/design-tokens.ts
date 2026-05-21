@@ -702,8 +702,10 @@ export function captureBottlePhotoGradient(
 }
 
 // ---- Component sizes ----
+// primaryButton.lg: 48 (was 52) — keyscreen verbatim (primary-button.tsx line 59 + components.md §2-1).
+// design-spec onboarding-cta.md §3-1 P0. 4 step CTA verbatim 정합.
 export const componentSize = {
-  primaryButton: { sm: 36, md: 44, lg: 52 },
+  primaryButton: { sm: 36, md: 44, lg: 48 },
   bottomNavTab: 56,
   toast: 48,
   input: 44,
