@@ -54,35 +54,38 @@ export function ImpressionTriad({ value, onChange }: Props) {
         const active = value === id;
         const label = t(labelKey);
         return (
-          <Pressable
-            key={id}
-            onPress={() => handlePress(id)}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: active }}
-            accessibilityLabel={label}
-            accessibilityHint={t('notes.writeForm.beginnerStep.impressionHint')}
-            style={({ pressed }) => ({
-              flex: 1,
-              alignItems: 'center',
-              paddingVertical: 14,
-              paddingHorizontal: 8,
-              borderRadius: 12,
-              backgroundColor: active ? withAlpha(brand.gold, 0.18) : surfaceBg,
-              borderWidth: 1,
-              borderColor: active ? brand.gold : borderDefault,
-              rowGap: 4,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            })}
-          >
-            <Icon size={26} strokeWidth={1.5} color={active ? brand.gold : idleText} />
-            <Text
-              allowFontScaling={false}
-              className="font-inter-semibold"
-              style={{ fontSize: 12, lineHeight: 14.4, color: active ? brand.gold : idleText }}
+          // Round 10: flex:1을 outer View로. Pressable은 hit target + opacity만, visual은 inner View.
+          <View key={id} style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => handlePress(id)}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={label}
+              accessibilityHint={t('notes.writeForm.beginnerStep.impressionHint')}
+              style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
             >
-              {label}
-            </Text>
-          </Pressable>
+              <View
+                style={{
+                  alignItems: 'center',
+                  paddingVertical: 14,
+                  paddingHorizontal: 8,
+                  borderRadius: 12,
+                  backgroundColor: active ? withAlpha(brand.gold, 0.18) : surfaceBg,
+                  borderWidth: 1,
+                  borderColor: active ? brand.gold : borderDefault,
+                  rowGap: 4,
+                }}
+              >
+                <Icon size={26} strokeWidth={1.5} color={active ? brand.gold : idleText} />
+                <Text
+                  allowFontScaling={false}
+                  style={{ fontFamily: 'Inter_600SemiBold', fontSize: 12, lineHeight: 14.4, color: active ? brand.gold : idleText }}
+                >
+                  {label}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
         );
       })}
     </View>

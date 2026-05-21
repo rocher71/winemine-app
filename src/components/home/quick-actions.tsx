@@ -34,18 +34,16 @@ interface ActionCardProps {
 }
 
 function ActionCard({ Icon, title, sub, onPress }: ActionCardProps) {
-  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
+  // Round 10: flexBasis/flexGrow도 Pressable style 함수에서 무시되는 케이스 (cssInterop bug).
+  // outer View로 분리해서 flex 분포 강제.
   const tokens = useThemeTokens();
   return (
+    <View style={{ flexBasis: '48%', flexGrow: 1 }}>
     <Pressable
       onPress={onPress}
       accessibilityRole="link"
       accessibilityLabel={`${title} ${sub}`}
-      style={({ pressed }) => ({
-        flexBasis: '48%',
-        flexGrow: 1,
-        opacity: pressed ? 0.9 : 1,
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
     >
       <View
         style={{
@@ -72,6 +70,7 @@ function ActionCard({ Icon, title, sub, onPress }: ActionCardProps) {
         </Text>
       </View>
     </Pressable>
+    </View>
   );
 }
 

@@ -151,6 +151,21 @@ v2.0 Spring 전환 비용 폭증 방지:
    - `shadow*`, `elevation`
    - `transform` (scale press feedback도 inner View로 옮길 것)
 
+3.5. **Pressable이 부모 flex container의 자식일 때 `flex`/`flexBasis`/`flexGrow`도 outer View로 분리** (2026-05-21 BottomNav NavTab 24시간 디버깅 학습):
+   - Pressable에 `flex: 1` 두면 cssInterop가 무시 → Pressable이 content 폭으로 collapse
+   - 결과: BottomNav NavTab들이 가운데 빈 공간 없이 양옆으로 cluster
+   - **반드시 `<View style={{ flex: 1 }}><Pressable>...</Pressable></View>` 외곽 wrapper로**
+   - inner View(visual) 패턴과 결합 시 3-layer 구조:
+     ```tsx
+     <View style={{ flex: 1 }}>                          {/* flex 분포 */}
+       <Pressable onPress style={({pressed}) => ({ opacity })}>  {/* hit target */}
+         <View style={{ flexDirection, padding, bg ... }}>  {/* visual */}
+           {icon}{text}
+         </View>
+       </Pressable>
+     </View>
+     ```
+
 4. **단순 hit target (icon만, Text만 등)은 예외**. 그러나 미래에 자식 늘어날 가능성 있으면 처음부터 inner View 패턴 권장.
 
 5. **Text font/color는 inline style로** (className font-inter / text-* 도 가능하지만 layout-heavy 부모 안에서는 inline 권장):

@@ -184,39 +184,43 @@ interface NavTabProps {
 
 function NavTab({ icon: Icon, label, focused, idleColor, onPress }: NavTabProps) {
   const color = focused ? brand.gold : idleColor;
-  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout(flexDirection: 'column' + gap)은 inner View.
-  // 이게 안 되면 icon + label이 horizontal로 나란히 렌더되어 양옆으로 깨져 보임.
+  // Round 10 — 진짜 fix: flex:1을 outer View에. Pressable의 style 함수에 flex:1이 있으면
+  // NativeWind cssInterop + Fabric에서 무시되어 NavTab이 content 폭으로 collapse →
+  // 5개 슬롯 균등 분포 안 되고 좌우 끝으로 cluster ("양옆 깨짐"의 진짜 원인).
+  // outer View에 flex:1 + 내부 Pressable은 hit target + opacity만 → flex 정상 분포.
   return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: focused }}
-      accessibilityLabel={label}
-      style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.7 : 1 })}
-    >
-      <View
-        style={{
-          paddingVertical: 6,
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 3,
-        }}
+    <View style={{ flex: 1 }}>
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: focused }}
+        accessibilityLabel={label}
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
       >
-        <Icon size={22} strokeWidth={1.6} color={color} />
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
+        <View
           style={{
-            fontFamily: focused ? 'Inter_600SemiBold' : 'Inter_400Regular',
-            fontSize: 10,
-            lineHeight: 12,
-            letterSpacing: 0.2,
-            color,
+            paddingVertical: 6,
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 3,
           }}
         >
-          {label}
-        </Text>
-      </View>
-    </Pressable>
+          <Icon size={22} strokeWidth={1.6} color={color} />
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{
+              fontFamily: focused ? 'Inter_600SemiBold' : 'Inter_400Regular',
+              fontSize: 10,
+              lineHeight: 12,
+              letterSpacing: 0.2,
+              color,
+            }}
+          >
+            {label}
+          </Text>
+        </View>
+      </Pressable>
+    </View>
   );
 }

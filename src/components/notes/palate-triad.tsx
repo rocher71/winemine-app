@@ -73,28 +73,30 @@ export function PalateTriad({ value, onChange, dims = DEFAULT_DIMS }: Props) {
                 const active = current === level;
                 const levelLabel = t(`notes.beginner.palateLevel.${level}`);
                 return (
+                  // Round 10: flex:1 outer View + Pressable opacity + inner View visual.
+                  <View key={level} style={{ flex: 1 }}>
                   <Pressable
-                    key={level}
                     onPress={() => setLevel(dim, level)}
                     accessibilityRole="radio"
                     accessibilityState={{ selected: active }}
                     accessibilityLabel={`${dimLabel} ${levelLabel}`}
                     hitSlop={6}
-                    style={({ pressed }) => ({
-                      flex: 1,
-                      alignItems: 'center',
-                      paddingVertical: 8,
-                      borderRadius: 8,
-                      backgroundColor: active ? brand.wineRed : surfaceBg,
-                      borderWidth: 1,
-                      borderColor: active ? brand.wineRed : borderDefault,
-                      transform: [{ scale: pressed ? 0.98 : 1 }],
-                    })}
+                    style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
                   >
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        paddingVertical: 8,
+                        borderRadius: 8,
+                        backgroundColor: active ? brand.wineRed : surfaceBg,
+                        borderWidth: 1,
+                        borderColor: active ? brand.wineRed : borderDefault,
+                      }}
+                    >
                     <Text
                       allowFontScaling={false}
-                      className="font-inter"
                       style={{
+                        fontFamily: 'Inter_400Regular',
                         fontSize: 12,
                         lineHeight: 14.4,
                         color: active ? brand.cream : idleText,
@@ -102,7 +104,9 @@ export function PalateTriad({ value, onChange, dims = DEFAULT_DIMS }: Props) {
                     >
                       {levelLabel}
                     </Text>
+                    </View>
                   </Pressable>
+                  </View>
                 );
               })}
             </View>

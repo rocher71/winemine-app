@@ -43,36 +43,40 @@ export function FinishTriad({ value, onChange }: Props) {
         const active = value === level;
         const label = t(`notes.beginner.finishLevel.${level}`);
         return (
-          <Pressable
-            key={level}
-            onPress={() => setLevel(level)}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: active }}
-            accessibilityLabel={label}
-            hitSlop={6}
-            style={({ pressed }) => ({
-              flex: 1,
-              alignItems: 'center',
-              paddingVertical: 10,
-              borderRadius: 8,
-              backgroundColor: active ? brand.wineRed : surfaceBg,
-              borderWidth: 1,
-              borderColor: active ? brand.wineRed : borderDefault,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            })}
-          >
-            <Text
-              allowFontScaling={false}
-              className="font-inter"
-              style={{
-                fontSize: 13,
-                lineHeight: 15.6,
-                color: active ? brand.cream : idleText,
-              }}
+          // Round 10: flex:1 outer View + Pressable opacity only + inner View visual.
+          <View key={level} style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => setLevel(level)}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={label}
+              hitSlop={6}
+              style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
             >
-              {label}
-            </Text>
-          </Pressable>
+              <View
+                style={{
+                  alignItems: 'center',
+                  paddingVertical: 10,
+                  borderRadius: 8,
+                  backgroundColor: active ? brand.wineRed : surfaceBg,
+                  borderWidth: 1,
+                  borderColor: active ? brand.wineRed : borderDefault,
+                }}
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontFamily: 'Inter_400Regular',
+                    fontSize: 13,
+                    lineHeight: 15.6,
+                    color: active ? brand.cream : idleText,
+                  }}
+                >
+                  {label}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
         );
       })}
     </View>
