@@ -98,90 +98,90 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
   const { t } = useTranslation();
   const tokens = useThemeTokens();
   const badgeLabel = t(`community.postType.${post.type}`);
+  // Round 10 패턴 (§4-11): Pressable은 hit target + opacity만, layout/visual은 inner View.
   return (
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={`${post.author} · ${badgeLabel} · ${post.title}`}
       accessibilityHint={t('home.communityPeek.openHint')}
-      style={({ pressed }) => [
-        {
-          flexDirection: 'row',
-          gap: 10,
-          paddingVertical: 10,
-          opacity: pressed ? 0.85 : 1,
-        },
-        !last && {
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          borderBottomColor: tokens.border.default,
-        },
-      ]}
+      style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
       onPress={() => {
         Haptics.selectionAsync().catch(() => undefined);
         Alert.alert(t('app.name'), t('home.communityPeek.comingSoon'));
       }}
     >
-      <CommUserAvatar levelId={post.levelId} initial={post.initial} size={28} />
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            gap: 6,
-            alignItems: 'center',
-            marginBottom: 3,
-          }}
-        >
-          <PostTypeBadge type={post.type} />
-          <Text
-            className="text-text-muted dark:text-text-muted"
-            style={{ fontSize: 10 }}
-            allowFontScaling={false}
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 12,
+          paddingVertical: 14,
+          ...(last
+            ? null
+            : {
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderBottomColor: tokens.border.default,
+              }),
+        }}
+      >
+        <CommUserAvatar levelId={post.levelId} initial={post.initial} size={32} />
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 6,
+              alignItems: 'center',
+              marginBottom: 6,
+            }}
           >
-            {post.author} · {post.ago}
+            <PostTypeBadge type={post.type} />
+            <Text
+              style={{ fontSize: 11, color: tokens.text.muted, fontFamily: 'Inter_400Regular' }}
+              allowFontScaling={false}
+            >
+              {post.author} · {post.ago}
+            </Text>
+          </View>
+          <Text
+            style={{ fontSize: 14, lineHeight: 19.6, fontFamily: 'PlayfairDisplay_400Regular', color: tokens.text.primary }}
+            numberOfLines={2}
+          >
+            {post.title}
           </Text>
-        </View>
-        <Text
-          className="font-playfair text-text-primary dark:text-text-primary"
-          style={{ fontSize: 13, lineHeight: 16.9 }}
-          numberOfLines={2}
-        >
-          {post.title}
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            gap: 12,
-            marginTop: 6,
-            alignItems: 'center',
-          }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-            <Wine size={10} strokeWidth={1.7} color={brand.gold} />
-            <Text
-              className="text-text-muted dark:text-text-muted"
-              style={{ fontSize: 10 }}
-              allowFontScaling={false}
-            >
-              {post.wineCount}
-            </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 14,
+              marginTop: 8,
+              alignItems: 'center',
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Wine size={11} strokeWidth={1.7} color={brand.gold} />
+              <Text
+                style={{ fontSize: 11, color: tokens.text.muted, fontFamily: 'Inter_400Regular' }}
+                allowFontScaling={false}
+              >
+                {post.wineCount}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <MessageSquare size={11} strokeWidth={1.7} color={tokens.text.muted} />
+              <Text
+                style={{ fontSize: 11, color: tokens.text.muted, fontFamily: 'Inter_400Regular' }}
+                allowFontScaling={false}
+              >
+                {post.messageCount}
+              </Text>
+            </View>
+            {post.appellation && (
+              <Text
+                style={{ color: brand.gold, fontSize: 10, letterSpacing: 0.5, fontFamily: 'Inter_500Medium' }}
+                allowFontScaling={false}
+              >
+                · {post.appellation}
+              </Text>
+            )}
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-            <MessageSquare size={10} strokeWidth={1.7} color={tokens.text.muted} />
-            <Text
-              className="text-text-muted dark:text-text-muted"
-              style={{ fontSize: 10 }}
-              allowFontScaling={false}
-            >
-              {post.messageCount}
-            </Text>
-          </View>
-          {post.appellation && (
-            <Text
-              style={{ color: brand.gold, fontSize: 9, letterSpacing: 0.54 }}
-              allowFontScaling={false}
-            >
-              · {post.appellation}
-            </Text>
-          )}
         </View>
       </View>
     </Pressable>
@@ -190,6 +190,7 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
 
 export function HomeCommunityPeek() {
   const { t, i18n } = useTranslation();
+  const tokens = useThemeTokens();
   const posts = i18n.language === 'en' ? MOCK_POSTS_EN : MOCK_POSTS_KO;
 
   const onViewAll = () => {
@@ -244,12 +245,14 @@ export function HomeCommunityPeek() {
         </Pressable>
       </View>
       <View
-        className="bg-surface dark:bg-surface border border-border-default dark:border-border-default"
         style={{
           marginHorizontal: 16,
-          borderRadius: 14,
+          borderRadius: 16,
           paddingVertical: 4,
-          paddingHorizontal: 14,
+          paddingHorizontal: 16,
+          backgroundColor: tokens.bg.surface,
+          borderWidth: 1,
+          borderColor: tokens.border.default,
         }}
       >
         {posts.map((p, i) => (
