@@ -848,13 +848,20 @@
     "title": "용어 사전",
     "searchPlaceholder": "용어 검색",
     "noResults": "결과가 없어요",
+    "notFound": "용어를 찾을 수 없어요",
+    "definition": "정의",
+    "source": "출처",
+    "examples": "예시",
+    "related": "관련 용어",
+    "more": "용어 사전 더 보기",
     "categories": {
       "all": "전체",
       "sensory": "감각",
       "fault": "결함",
       "classification": "분류",
       "technique": "양조",
-      "unit": "단위"
+      "unit": "단위",
+      "other": "기타"
     },
     "chip": {
       "a11y": "{{cat}} 카테고리 필터"
@@ -862,6 +869,16 @@
     "row": {
       "openA11y": "{{term}} 용어 설명",
       "openHint": "용어 상세 페이지로 이동합니다"
+    },
+    "detail": {
+      "more": {
+        "a11y": "용어 사전으로 돌아가기",
+        "hint": "전체 용어 목록을 봅니다"
+      },
+      "chip": {
+        "a11y": "{{term}} 용어로 이동",
+        "hint": "해당 용어의 상세 페이지로 이동합니다"
+      }
     },
     "error": {
       "title": "용어를 불러오지 못했어요",

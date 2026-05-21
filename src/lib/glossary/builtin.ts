@@ -15,6 +15,14 @@
  *   - keyscreen verbatim (12): caudalie / residual-sugar / appellation / wset / brett /
  *     bouchonne / tdn / rotundone / decanting / terroir / tannin-texture / dosage
  *   - builtin 보존 (2): grand-cru / 1855-classification
+ *
+ * §10 (glossary-detail.md) 결정 A: keyscreen mock 9 entries 의 `relatedTermIds` 필드
+ *   verbatim 보강 — Section D (Related Terms) 활성화.
+ * §10 A-1: caudalie 의 `'finish-length'` 는 14 entries 에 없음 → chip 렌더 시
+ *   `if (!r) return null` safe skip (keyscreen verbatim line 196 패턴).
+ * builtin 보존 2 entries (grand-cru / 1855-classification) 는 keyscreen 부재 →
+ *   `relatedTermIds: []` 비움 (Section D 표시는 되지만 chip 0개 → keyscreen line 172
+ *   `relatedTermIds.length > 0` 조건에 의해 section 자체 미렌더).
  */
 import type { LocalizedString } from '@/components/shared/locale-text';
 
@@ -33,6 +41,13 @@ export type GlossaryEntry = {
   examples?: LocalizedString;
   source?: LocalizedString;
   category: GlossaryCategory;
+  /**
+   * §10 A (glossary-detail.md): keyscreen mock verbatim. 14 entries 중 일부 id 가
+   * 부재할 수 있음 (예: caudalie → 'finish-length' missing) — chip 렌더 시
+   * `if (!r) return null` safe skip 으로 처리 (§10 A-1).
+   * 보강 시 항상 string[] (length 0 허용).
+   */
+  relatedTermIds: string[];
 };
 
 export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
@@ -50,6 +65,8 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'Peynaud, Le Goût du Vin (1980)', en: 'Peynaud, Le Goût du Vin (1980)' },
     category: 'sensory',
+    // keyscreen verbatim — 'finish-length' 부재 → chip 렌더 시 safe skip (§10 A-1).
+    relatedTermIds: ['finish-length'],
   },
   {
     id: 'residual-sugar',
@@ -64,6 +81,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'WSET Level 3', en: 'WSET Level 3' },
     category: 'unit',
+    relatedTermIds: ['dosage'],
   },
   {
     id: 'appellation',
@@ -78,6 +96,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'EU Regulation 607/2009', en: 'EU Regulation 607/2009' },
     category: 'classification',
+    relatedTermIds: ['terroir'],
   },
   {
     id: 'wset',
@@ -98,6 +117,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
       en: 'WSET Systematic Approach to Tasting',
     },
     category: 'technique',
+    relatedTermIds: ['caudalie'],
   },
   {
     id: 'brett',
@@ -112,6 +132,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'AWRI Technical Review', en: 'AWRI Technical Review' },
     category: 'fault',
+    relatedTermIds: ['bouchonne'],
   },
   {
     id: 'bouchonne',
@@ -126,6 +147,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'AWRI Technical Review', en: 'AWRI Technical Review' },
     category: 'fault',
+    relatedTermIds: ['brett'],
   },
   {
     id: 'tdn',
@@ -143,6 +165,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'Eggers et al., 2006', en: 'Eggers et al., 2006' },
     category: 'sensory',
+    relatedTermIds: [],
   },
   {
     id: 'rotundone',
@@ -157,6 +180,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'Wood et al., 2008 (AWRI)', en: 'Wood et al., 2008 (AWRI)' },
     category: 'sensory',
+    relatedTermIds: [],
   },
   {
     id: 'decanting',
@@ -171,6 +195,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'WSET Diploma', en: 'WSET Diploma' },
     category: 'technique',
+    relatedTermIds: ['tannin-texture'],
   },
   {
     id: 'terroir',
@@ -185,6 +210,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'Wilson, Terroir (1998)', en: 'Wilson, Terroir (1998)' },
     category: 'classification',
+    relatedTermIds: ['appellation'],
   },
   {
     id: 'tannin-texture',
@@ -199,6 +225,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'Gawel et al., 2000', en: 'Gawel et al., 2000' },
     category: 'sensory',
+    relatedTermIds: ['decanting'],
   },
   {
     id: 'dosage',
@@ -213,6 +240,7 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'CIVC (Comité Champagne) Regulation', en: 'CIVC (Comité Champagne) Regulation' },
     category: 'unit',
+    relatedTermIds: ['residual-sugar'],
   },
   // ---- builtin 보존 (2) — keyscreen mock 에는 없으나 wine-story TERM_DEFS 가 참조 ----
   {
@@ -224,6 +252,8 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'EU Regulation 607/2009', en: 'EU Regulation 607/2009' },
     category: 'classification',
+    // builtin 보존 — keyscreen 부재 → 비움 (§10 A 결정).
+    relatedTermIds: [],
   },
   {
     id: '1855-classification',
@@ -237,10 +267,16 @@ export const GLOSSARY_BUILTIN: GlossaryEntry[] = [
     },
     source: { ko: 'Chambre de Commerce de Bordeaux, 1855', en: 'Chambre de Commerce de Bordeaux, 1855' },
     category: 'classification',
+    // builtin 보존 — keyscreen 부재 → 비움 (§10 A 결정).
+    relatedTermIds: [],
   },
 ];
 
-const GLOSSARY_BY_ID: Record<string, GlossaryEntry> = GLOSSARY_BUILTIN.reduce<
+/**
+ * id → entry 매핑. glossary-detail Section D (Related Terms) chip 렌더 시
+ * `if (!r) return null` safe skip 패턴에 사용 (keyscreen verbatim line 196).
+ */
+export const GLOSSARY_BY_ID: Record<string, GlossaryEntry> = GLOSSARY_BUILTIN.reduce<
   Record<string, GlossaryEntry>
 >((acc, e) => {
   acc[e.id] = e;

@@ -848,13 +848,20 @@
     "title": "Glossary",
     "searchPlaceholder": "Search terms",
     "noResults": "No results",
+    "notFound": "Term not found",
+    "definition": "Definition",
+    "source": "Source",
+    "examples": "Examples",
+    "related": "Related terms",
+    "more": "More terms",
     "categories": {
       "all": "All",
       "sensory": "Sensory",
       "fault": "Fault",
       "classification": "Classification",
       "technique": "Technique",
-      "unit": "Unit"
+      "unit": "Unit",
+      "other": "Other"
     },
     "chip": {
       "a11y": "Filter by {{cat}} category"
@@ -862,6 +869,16 @@
     "row": {
       "openA11y": "Definition of {{term}}",
       "openHint": "Goes to term details"
+    },
+    "detail": {
+      "more": {
+        "a11y": "Back to glossary",
+        "hint": "View all glossary terms"
+      },
+      "chip": {
+        "a11y": "Go to {{term}}",
+        "hint": "Goes to the term detail page"
+      }
     },
     "error": {
       "title": "Could not load glossary",
