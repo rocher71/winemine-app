@@ -225,6 +225,29 @@ ALL DONE: 2026-05-20T18:05:30Z
 - push commit (start + feat × 4 + checklist 1): 9개
 
 FOLLOW-UP CYCLE 1 ALL DONE: 2026-05-21T04:04:12Z
+
+---
+
+# Follow-up Cycle 2 — 사용자 실측 재검증 (캐시 + cellar/index 라우트 누출)
+
+사용자가 simulator + 핸드폰 실측 후 보고:
+- BottomNav 5번째 tab 이름이 "cellar/index" 그대로 노출 — 라우트 평탄화 누락 버그
+- /home wine-feed 카드 여전히 vertical (image #10) — 코드는 horizontal인데 시각은 vertical → 캐시 stale 가능성 + 검증
+- /home followers note row 여전히 vertical (image #8/9) — 코드는 horizontal인데 시각은 vertical → 같은 가능성
+
+### F4 (라우트 누출 버그)
+- [x] (tabs)/cellar/index.tsx → (tabs)/cellar.tsx 평탄화
+  - started: 2026-05-21T05:29:33Z
+  - 원인: expo-router가 `cellar/index.tsx`를 별도 라우트로 자동 마운트 → tabs `_layout.tsx`의 `name="cellar"` 등록과 동시에 'cellar/index' 라우트도 노출 → BottomNav 5번째 tab "cellar/index" 그대로 표시
+  - fix: git mv (1 file rename) + 빈 디렉토리 rmdir
+  - changed files: app/(tabs)/cellar/index.tsx → app/(tabs)/cellar.tsx
+  - completed: 2026-05-21T05:30:00Z
+
+### F5 (캐시 stale 가능성 — 코드 변경 X)
+- [x] /home wine-feed + followers note row vertical 시각 → 캐시 stale 결론
+  - 코드 검증: src/components/home/wine-feed.tsx (flexDirection 'row' + bottle column 96 + meta column flex + right column 76), src/components/home/home-community-peek.tsx (PostRow flexDirection 'row' + avatar 28 + meta flex)
+  - 결론: 코드는 horizontal layout 명백히 적용. image #8/9/10에서 vertical로 보이는 건 디바이스/Expo Go bundle 캐시 stale.
+  - 사용자 안내: Metro cache + iOS Simulator content erase + Expo Go 재설치 권장
   - 증상: wineRed full-width disabled가 placeholder처럼 보임
   - 목표: primary-button verbatim 폭/색/대비/safe-area (키스크린 image #5 verbatim)
 
