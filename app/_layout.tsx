@@ -58,6 +58,9 @@ export default function RootLayout() {
 
   useEffect(() => {
     let cancelled = false;
+    // Default app theme = light. profile.theme이 명시되어 있으면 override.
+    // (이전: OS scheme follow → dark 환경에서 첫 진입이 dark였음. 사용자 요청으로 light 기본.)
+    colorScheme.set('light');
     (async () => {
       initI18n('ko');
       try {

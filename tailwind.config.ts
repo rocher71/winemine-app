@@ -26,32 +26,38 @@ const config: Config = {
         cream: '#F5F0E8',
         'deepest-dark': '#05020A',
 
-        // Dual-mode 토큰: DEFAULT=dark, light=light variant (className: bg-X / dark:bg-X 패턴)
-        // NW v4 darkMode:'class'에서 dark: 접두사로 다크 모드 토글.
-        'bg-deepest':   { DEFAULT: '#251837', light: '#FAF5EC' },
-        'bg-deep':      { DEFAULT: '#2E1F3F', light: '#F2EAD9' },
-        'bg-map':       { DEFAULT: '#3A2440', light: '#EDE2CC' },
-        'bg-sunken':    { DEFAULT: 'rgba(0,0,0,0.28)', light: 'rgba(42,26,20,0.06)' },
-        'bottle-shelf': { DEFAULT: '#1a0a1e', light: '#FFFFFF' },
-        surface:        { DEFAULT: '#3D2A4A', light: '#FFFFFF' },
+        // Dual-mode 토큰 (NativeWind v4 표준 — 2026-05-21 fix):
+        // DEFAULT = light mode color (기본 = light)
+        // dark    = dark mode override (NW v4가 .dark selector에서 CSS 변수 swap)
+        // 코드의 `bg-bg-deepest` 단독 사용 시 mode에 따라 자동 분기. `dark:bg-bg-deepest`도 함께
+        // 작동 (NW v4 dark: prefix가 .dark selector에 해당하는 variant 값 적용).
+        //
+        // 이전 (DEFAULT=dark, light=light) 패턴은 NW v4의 CSS 변수 자동 swap이 작동 안 함.
+        // light가 단순 sub-shade로 처리되어 bg-bg-deepest-light 같은 suffix 클래스만 생성됨.
+        'bg-deepest':   { DEFAULT: '#FAF5EC', dark: '#251837' },
+        'bg-deep':      { DEFAULT: '#F2EAD9', dark: '#2E1F3F' },
+        'bg-map':       { DEFAULT: '#EDE2CC', dark: '#3A2440' },
+        'bg-sunken':    { DEFAULT: 'rgba(42,26,20,0.06)', dark: 'rgba(0,0,0,0.28)' },
+        'bottle-shelf': { DEFAULT: '#FFFFFF', dark: '#1a0a1e' },
+        surface:        { DEFAULT: '#FFFFFF', dark: '#3D2A4A' },
 
-        'text-primary':   { DEFAULT: '#F8F4ED', light: '#2A1A14' },
-        'text-secondary': { DEFAULT: '#EBE0CB', light: '#5A463C' },
-        'text-muted':     { DEFAULT: '#CABDA8', light: '#8B7766' },
-        'text-disabled':  { DEFAULT: '#7E6E8E', light: '#C0B0A0' },
+        'text-primary':   { DEFAULT: '#2A1A14', dark: '#F8F4ED' },
+        'text-secondary': { DEFAULT: '#5A463C', dark: '#EBE0CB' },
+        'text-muted':     { DEFAULT: '#8B7766', dark: '#CABDA8' },
+        'text-disabled':  { DEFAULT: '#C0B0A0', dark: '#7E6E8E' },
 
-        'border-default': { DEFAULT: '#5A3D6A', light: '#E0D2BC' },
-        'border-active':  { DEFAULT: '#A02030', light: '#B89438' },
+        'border-default': { DEFAULT: '#E0D2BC', dark: '#5A3D6A' },
+        'border-active':  { DEFAULT: '#B89438', dark: '#A02030' },
 
-        'glass-bg':        { DEFAULT: 'rgba(10,5,15,0.72)',  light: 'rgba(255,255,255,0.85)' },
-        'glass-bg-strong': { DEFAULT: 'rgba(15,7,24,0.92)',  light: 'rgba(255,255,255,0.95)' },
-        'glass-border':    { DEFAULT: 'rgba(255,255,255,0.15)', light: 'rgba(42,26,20,0.12)' },
+        'glass-bg':        { DEFAULT: 'rgba(255,255,255,0.85)',  dark: 'rgba(10,5,15,0.72)' },
+        'glass-bg-strong': { DEFAULT: 'rgba(255,255,255,0.95)',  dark: 'rgba(15,7,24,0.92)' },
+        'glass-border':    { DEFAULT: 'rgba(42,26,20,0.12)', dark: 'rgba(255,255,255,0.15)' },
 
-        'map-country': { DEFAULT: '#3A2440', light: '#DDD0BB' },
-        'map-ocean':   { DEFAULT: '#100720', light: '#C8D6E4' },
+        'map-country': { DEFAULT: '#DDD0BB', dark: '#3A2440' },
+        'map-ocean':   { DEFAULT: '#C8D6E4', dark: '#100720' },
 
         // Status
-        'status-error':   { DEFAULT: '#EF4444', light: '#C92020' },
+        'status-error':   { DEFAULT: '#C92020', dark: '#EF4444' },
         'status-success': '#22C55E',
 
         // Level pills (테마 무관)
