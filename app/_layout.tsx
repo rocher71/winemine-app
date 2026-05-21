@@ -116,9 +116,17 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="(tabs)" />
-          {/* Stack routes (BottomNav 비표시) — bottom-nav.md §1-3, Q1 결정 (b) */}
-          <Stack.Screen name="notes" />
-          <Stack.Screen name="settings" />
+          {/* Stack routes (BottomNav 비표시) — bottom-nav.md §1-3, Q1 결정 (b)
+           * notes/ 와 settings/ 는 디렉토리. 각 sub-route를 명시 등록. expo-router는
+           * Stack.Screen name="notes" 같은 디렉토리 단일 등록은 매칭 못 함 (warning 발생). */}
+          <Stack.Screen name="notes/index" />
+          <Stack.Screen name="notes/new" />
+          <Stack.Screen name="notes/new/write" />
+          <Stack.Screen name="notes/[noteId]" />
+          <Stack.Screen name="settings/index" />
+          <Stack.Screen name="settings/language" />
+          <Stack.Screen name="settings/experience" />
+          <Stack.Screen name="settings/appearance" />
           <Stack.Screen name="cellar/[lwin]" />
           <Stack.Screen name="wine/[lwin]" />
         </Stack>

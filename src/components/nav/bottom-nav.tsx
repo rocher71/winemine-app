@@ -152,19 +152,21 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
               width: 56,
               height: 56,
               borderRadius: 28,
-              backgroundColor: brand.wineRed,
+              // light mode: gold FAB (gradients.fab.light 시작색), dark mode: wineRed
+              // 키스크린 verbatim — light 모드 FAB은 따뜻한 골드/사플 색.
+              backgroundColor: tokens.scheme === 'light' ? '#C9A84C' : brand.wineRed,
               borderWidth: 1.5,
-              borderColor: brand.gold,
+              borderColor: tokens.scheme === 'light' ? '#A07F2E' : brand.gold,
               alignItems: 'center',
               justifyContent: 'center',
-              shadowColor: '#8B1A2A',
-              shadowOpacity: 0.45,
+              shadowColor: tokens.scheme === 'light' ? '#A07F2E' : '#8B1A2A',
+              shadowOpacity: tokens.scheme === 'light' ? 0.32 : 0.45,
               shadowOffset: { width: 0, height: 6 },
               shadowRadius: 20,
               elevation: 12,
             }}
           >
-            <Camera size={26} color={brand.cream} strokeWidth={1.6} />
+            <Camera size={26} color={tokens.scheme === 'light' ? brand.cream : brand.cream} strokeWidth={1.6} />
           </View>
         </Pressable>
       </View>
@@ -182,35 +184,39 @@ interface NavTabProps {
 
 function NavTab({ icon: Icon, label, focused, idleColor, onPress }: NavTabProps) {
   const color = focused ? brand.gold : idleColor;
+  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout(flexDirection: 'column' + gap)은 inner View.
+  // 이게 안 되면 icon + label이 horizontal로 나란히 렌더되어 양옆으로 깨져 보임.
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityState={{ selected: focused }}
       accessibilityLabel={label}
-      style={({ pressed }) => ({
-        flex: 1,
-        paddingVertical: spacing['1.5'],   // 6
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: spacing['0.75'],              // 3
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.7 : 1 })}
     >
-      <Icon size={22} strokeWidth={1.6} color={color} />
-      <Text
-        numberOfLines={1}
-        ellipsizeMode="tail"
-        className={focused ? 'font-inter-semibold' : 'font-inter'}
+      <View
         style={{
-          fontSize: 10,
-          lineHeight: 10,
-          letterSpacing: 0.2,
-          color,
+          paddingVertical: 6,
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 3,
         }}
       >
-        {label}
-      </Text>
+        <Icon size={22} strokeWidth={1.6} color={color} />
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{
+            fontFamily: focused ? 'Inter_600SemiBold' : 'Inter_400Regular',
+            fontSize: 10,
+            lineHeight: 12,
+            letterSpacing: 0.2,
+            color,
+          }}
+        >
+          {label}
+        </Text>
+      </View>
     </Pressable>
   );
 }
