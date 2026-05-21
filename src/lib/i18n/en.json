@@ -843,6 +843,68 @@
       "scroll": "Winery story scroll view"
     }
   },
+  "wineCommunityPeak": {
+    "header": { "title": "Community drinking window" },
+    "notFound": "Wine not found",
+    "intro": {
+      "body": "Estimates from other users (L3+ only). Compare with system suggestion.",
+      "weightHint": "L4/L5 estimates are weighted 1.5-2x"
+    },
+    "histogram": {
+      "stats": "Mean {{mean}} · Median {{median}}",
+      "count": "{{count}} reviewers",
+      "empty": "Not enough data. Add an estimate in your expert note.",
+      "refLine": {
+        "system": "System",
+        "mean": "Mean",
+        "median": "Median"
+      },
+      "legend": {
+        "system": "System estimate",
+        "mean": "Community mean",
+        "median": "Median"
+      },
+      "tooltip": {
+        "count": "Weighted votes: {{count}}"
+      },
+      "bar": {
+        "a11yLabel": "Year {{year}}, weighted votes {{count}}"
+      }
+    },
+    "contributors": {
+      "title": "Contributors",
+      "sort": {
+        "recent": "Recent",
+        "levelDesc": "Top level",
+        "recentA11y": "Sort by most recent",
+        "levelDescA11y": "Sort by top level"
+      },
+      "confidence": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "row": {
+        "a11yLabel": "Level {{level}} {{levelName}}, year {{year}}, confidence {{confidence}}"
+      }
+    },
+    "cta": {
+      "add": {
+        "label": "Add my estimate",
+        "hint": "Shows estimate guidance toast",
+        "toast": "Add your estimate in an expert note — it appears here instantly"
+      },
+      "locked": {
+        "label": "Available from L3 Connoisseur",
+        "hint": "Level too low",
+        "toast": "Available from L3 Connoisseur"
+      }
+    },
+    "error": {
+      "body": "Could not load estimates",
+      "retry": "Retry"
+    }
+  },
   "settings": {
     "title": "Settings",
     "sections": {

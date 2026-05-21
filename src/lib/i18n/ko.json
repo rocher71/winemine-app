@@ -843,6 +843,68 @@
       "scroll": "와이너리 스토리 스크롤"
     }
   },
+  "wineCommunityPeak": {
+    "header": { "title": "커뮤니티 음용 적기" },
+    "notFound": "와인 정보를 찾을 수 없어요",
+    "intro": {
+      "body": "다른 사용자들이 추정한 절정 시점입니다. 시스템 추정과 비교해 보세요.",
+      "weightHint": "L4/L5 사용자의 추정은 가중치 1.5~2배 적용됩니다"
+    },
+    "histogram": {
+      "stats": "평균 {{mean}} · 중앙값 {{median}}",
+      "count": "{{count}} 명",
+      "empty": "아직 추정 데이터가 부족해요. 전문가 노트에서 입력해주세요",
+      "refLine": {
+        "system": "시스템",
+        "mean": "평균",
+        "median": "중앙값"
+      },
+      "legend": {
+        "system": "시스템 추정",
+        "mean": "커뮤니티 평균",
+        "median": "중앙값"
+      },
+      "tooltip": {
+        "count": "가중 응답 수: {{count}}"
+      },
+      "bar": {
+        "a11yLabel": "{{year}}년, 가중 응답 수 {{count}}"
+      }
+    },
+    "contributors": {
+      "title": "추정자 목록",
+      "sort": {
+        "recent": "최근",
+        "levelDesc": "레벨 높은 순",
+        "recentA11y": "최근 순으로 정렬",
+        "levelDescA11y": "레벨 높은 순으로 정렬"
+      },
+      "confidence": {
+        "low": "낮음",
+        "medium": "보통",
+        "high": "높음"
+      },
+      "row": {
+        "a11yLabel": "레벨 {{level}} {{levelName}} {{year}}년 신뢰도 {{confidence}}"
+      }
+    },
+    "cta": {
+      "add": {
+        "label": "내 추정 추가",
+        "hint": "추정 안내 토스트를 표시합니다",
+        "toast": "전문가 노트에서 추정을 입력하면 분포에 즉시 반영돼요"
+      },
+      "locked": {
+        "label": "L3 Connoisseur부터 추정 입력 가능",
+        "hint": "레벨이 부족합니다",
+        "toast": "L3 Connoisseur부터 추정 입력 가능"
+      }
+    },
+    "error": {
+      "body": "추정 정보를 불러오지 못했어요",
+      "retry": "다시 시도"
+    }
+  },
   "settings": {
     "title": "설정",
     "sections": {
