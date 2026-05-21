@@ -94,51 +94,47 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
         };
 
         if (isCapture) {
-          // iOS shadow + overflow:'hidden' 충돌 회피: shadow는 외부 wrapper에,
-          // clip은 내부 Pressable에. 추가로 Pressable backgroundColor에 wineRed
-          // solid를 두어 LinearGradient 렌더 실패 시에도 빨간 원이 보이도록 보장.
+          // 단일 Pressable + inline shadow + 명시값 radius 28(=size/2). LinearGradient/wrapper 제거.
+          // 이전 fix(`6b39fb3`)에서 radius.full(9999) / fabShadow spread / wrapper marginTop 모두
+          // 시뮬에서 적용 안 되어 square로 표시됨. inline 명시값으로 강제.
           return (
             <View
               key={route.key}
-              style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                paddingTop: 0,
+              }}
             >
-              <View
-                style={{
-                  marginTop: -24,
-                  borderRadius: radius.full,
-                  ...fabShadow,
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+                  navigateTo();
                 }}
+                accessibilityRole="button"
+                accessibilityLabel={t('nav.captureA11y')}
+                style={({ pressed }) => ({
+                  width: 56,
+                  height: 56,
+                  borderRadius: 28,
+                  marginTop: -24,
+                  backgroundColor: brand.wineRed,
+                  borderWidth: 1.5,
+                  borderColor: brand.gold,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: pressed ? 0.85 : 1,
+                  // inline shadow (iOS) + elevation (Android) — 토큰 cast 우회
+                  shadowColor: '#8B1A2A',
+                  shadowOpacity: 0.45,
+                  shadowOffset: { width: 0, height: 6 },
+                  shadowRadius: 20,
+                  elevation: 12,
+                })}
               >
-                <Pressable
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
-                    navigateTo();
-                  }}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('nav.captureA11y')}
-                  style={({ pressed }) => ({
-                    width: spacing['13'],     // 52
-                    height: spacing['13'],    // 52
-                    borderRadius: radius.full,
-                    borderWidth: 1,
-                    borderColor: brand.gold,
-                    backgroundColor: brand.wineRed, // solid fallback (gradient 렌더 보장)
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    opacity: pressed ? 0.85 : 1,
-                  })}
-                >
-                  <LinearGradient
-                    colors={fabGradient.colors as unknown as readonly [string, string]}
-                    start={fabGradient.start}
-                    end={fabGradient.end}
-                    style={StyleSheet.absoluteFillObject}
-                    pointerEvents="none"
-                  />
-                  <Camera size={24} color={brand.cream} strokeWidth={1.6} />
-                </Pressable>
-              </View>
+                <Camera size={26} color={brand.cream} strokeWidth={1.6} />
+              </Pressable>
             </View>
           );
         }
