@@ -955,5 +955,25 @@
     "network": "Check your network connection",
     "notImplemented": "Not yet available",
     "onboardingSaveFailed": "Failed to save your settings. Please try again."
+  },
+  "favorites": {
+    "title": "Favorites",
+    "notifyLabel": "Notify",
+    "notifyOnA11y": "Purchase notification on",
+    "notifyOffA11y": "Purchase notification off",
+    "notifyOn": "Notification turned on",
+    "notifyOff": "Notification turned off",
+    "row": {
+      "openA11y": "Open {{name}} details",
+      "openHint": "Goes to wine details"
+    },
+    "empty": {
+      "title": "No favorites yet",
+      "description": "Tap the star on a wine to add"
+    },
+    "error": {
+      "title": "Couldn't load favorites",
+      "body": "Try again in a moment"
+    }
   }
 }

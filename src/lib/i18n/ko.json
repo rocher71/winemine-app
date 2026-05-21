@@ -955,5 +955,25 @@
     "network": "네트워크 연결을 확인해주세요",
     "notImplemented": "아직 준비되지 않은 기능입니다",
     "onboardingSaveFailed": "설정을 저장하지 못했어요. 다시 시도해주세요."
+  },
+  "favorites": {
+    "title": "즐겨찾기",
+    "notifyLabel": "알림",
+    "notifyOnA11y": "구매 시 알림 켜짐",
+    "notifyOffA11y": "구매 시 알림 꺼짐",
+    "notifyOn": "구매 시 알림이 켜졌어요",
+    "notifyOff": "구매 시 알림이 꺼졌어요",
+    "row": {
+      "openA11y": "{{name}} 와인 상세 보기",
+      "openHint": "와인 상세 페이지로 이동합니다"
+    },
+    "empty": {
+      "title": "즐겨찾기 와인이 없어요",
+      "description": "와인 상세에서 별 아이콘을 눌러 추가하세요"
+    },
+    "error": {
+      "title": "즐겨찾기를 불러오지 못했어요",
+      "body": "잠시 후 다시 시도해주세요"
+    }
   }
 }
