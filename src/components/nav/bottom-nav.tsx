@@ -94,41 +94,51 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
         };
 
         if (isCapture) {
+          // iOS shadow + overflow:'hidden' 충돌 회피: shadow는 외부 wrapper에,
+          // clip은 내부 Pressable에. 추가로 Pressable backgroundColor에 wineRed
+          // solid를 두어 LinearGradient 렌더 실패 시에도 빨간 원이 보이도록 보장.
           return (
             <View
               key={route.key}
               style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
             >
-              <Pressable
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
-                  navigateTo();
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={t('nav.captureA11y')}
-                style={({ pressed }) => ({
-                  width: spacing['13'],     // 52
-                  height: spacing['13'],    // 52
-                  borderRadius: radius.full,
+              <View
+                style={{
                   marginTop: -24,
-                  borderWidth: 1,
-                  borderColor: brand.gold,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                  opacity: pressed ? 0.85 : 1,
+                  borderRadius: radius.full,
                   ...fabShadow,
-                })}
+                }}
               >
-                <LinearGradient
-                  colors={fabGradient.colors as unknown as readonly [string, string]}
-                  start={fabGradient.start}
-                  end={fabGradient.end}
-                  style={[StyleSheet.absoluteFillObject, { borderRadius: radius.full }]}
-                  pointerEvents="none"
-                />
-                <Camera size={24} color={brand.cream} strokeWidth={1.6} />
-              </Pressable>
+                <Pressable
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+                    navigateTo();
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('nav.captureA11y')}
+                  style={({ pressed }) => ({
+                    width: spacing['13'],     // 52
+                    height: spacing['13'],    // 52
+                    borderRadius: radius.full,
+                    borderWidth: 1,
+                    borderColor: brand.gold,
+                    backgroundColor: brand.wineRed, // solid fallback (gradient 렌더 보장)
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                    opacity: pressed ? 0.85 : 1,
+                  })}
+                >
+                  <LinearGradient
+                    colors={fabGradient.colors as unknown as readonly [string, string]}
+                    start={fabGradient.start}
+                    end={fabGradient.end}
+                    style={StyleSheet.absoluteFillObject}
+                    pointerEvents="none"
+                  />
+                  <Camera size={24} color={brand.cream} strokeWidth={1.6} />
+                </Pressable>
+              </View>
             </View>
           );
         }

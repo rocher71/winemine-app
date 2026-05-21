@@ -248,6 +248,14 @@ FOLLOW-UP CYCLE 1 ALL DONE: 2026-05-21T04:04:12Z
   - 코드 검증: src/components/home/wine-feed.tsx (flexDirection 'row' + bottle column 96 + meta column flex + right column 76), src/components/home/home-community-peek.tsx (PostRow flexDirection 'row' + avatar 28 + meta flex)
   - 결론: 코드는 horizontal layout 명백히 적용. image #8/9/10에서 vertical로 보이는 건 디바이스/Expo Go bundle 캐시 stale.
   - 사용자 안내: Metro cache + iOS Simulator content erase + Expo Go 재설치 권장
+
+### F6 (사용자 image #13 재실측 — FAB 빨간 원 부재 진짜 코드 버그)
+- [x] BottomNav FAB iOS shadow + overflow:'hidden' 충돌 fix
+  - 증상: image #13에서 5 tabs 정상 표시 (cellar 평탄화 fix됨) but 가운데 카메라 FAB이 빨간 floating 원 안 나오고 그냥 카메라 라인 icon만. wineRed gradient + glow shadow 모두 invisible.
+  - 원인: iOS는 `overflow:'hidden'` + view shadow 조합에서 shadow clip + LinearGradient 자식 렌더 실패 패턴. 단일 Pressable에 shadow + overflow + LinearGradient 셋이 한꺼번에 있으면 깨짐.
+  - fix: 외부 wrapper View(shadow + marginTop -24) + 내부 Pressable(overflow:hidden + backgroundColor wineRed solid fallback + LinearGradient absoluteFillObject) 분리. solid backgroundColor는 gradient 렌더 실패 시에도 wineRed 원 보장.
+  - changed files: src/components/nav/bottom-nav.tsx (line 96~143 FAB 분기 재구성)
+  - completed: 2026-05-21T05:39:00Z
   - 증상: wineRed full-width disabled가 placeholder처럼 보임
   - 목표: primary-button verbatim 폭/색/대비/safe-area (키스크린 image #5 verbatim)
 
