@@ -19,6 +19,11 @@
     "yes": "Yes",
     "no": "No"
   },
+  "placeholders": {
+    "comingSoon": "Coming in v0.2.0",
+    "mapDesc": "A world map plotting your tasted regions is on the way.",
+    "communityDesc": "A feed of notes and cellar activity from people you follow is on the way."
+  },
   "nav": {
     "home": "Home",
     "map": "Map",
