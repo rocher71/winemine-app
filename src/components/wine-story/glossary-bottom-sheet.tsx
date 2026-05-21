@@ -24,6 +24,7 @@ import BottomSheet, {
   BottomSheetScrollView,
   type BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { brand, light } from '@/lib/design-tokens';
 import { currentLocale } from '@/lib/i18n';
@@ -176,34 +177,78 @@ export function GlossaryBottomSheet({
           ) : null}
         </BottomSheetScrollView>
 
-        <Pressable
-          onPress={onClose}
-          accessibilityRole="button"
-          accessibilityLabel={t('wineStory.glossary.close')}
-          style={({ pressed }) => ({
-            opacity: pressed ? 0.7 : 1,
-            alignSelf: 'flex-end',
-          })}
-          hitSlop={8}
+        {/* Footer: Learn more → + Close
+         *
+         * glossary-list 사양 §10 D — "Learn more →" 활성화. 본 cycle 출시와 동시.
+         * 닫고서 push 하지 않고 onClose 부른 다음 router.push 한 번에 처리.
+         * (BottomSheet animation 과 navigation 동시 진행 — 시각 자연스러움)
+         */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            gap: 4,
+          }}
         >
-          <View
-            style={{
-              paddingHorizontal: 12,
-              paddingVertical: 6,
-            }}
+          {termId ? (
+            <Pressable
+              onPress={() => {
+                const id = termId;
+                onClose();
+                router.push(`/glossary/${id}`);
+              }}
+              accessibilityRole="link"
+              accessibilityLabel={t('wineStory.glossary.learnMore')}
+              accessibilityHint={t('wineStory.glossary.learnMoreHint')}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              hitSlop={8}
+            >
+              <View
+                style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'Inter_600SemiBold',
+                    fontSize: 13,
+                    fontWeight: '600',
+                    color: light.border.active,
+                  }}
+                >
+                  {t('wineStory.glossary.learnMore')}
+                </Text>
+              </View>
+            </Pressable>
+          ) : null}
+          <Pressable
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel={t('wineStory.glossary.close')}
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+            hitSlop={8}
           >
-            <Text
+            <View
               style={{
-                fontFamily: 'Inter_600SemiBold',
-                fontSize: 13,
-                fontWeight: '600',
-                color: light.border.active,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
               }}
             >
-              {t('wineStory.glossary.close')}
-            </Text>
-          </View>
-        </Pressable>
+              <Text
+                style={{
+                  fontFamily: 'Inter_600SemiBold',
+                  fontSize: 13,
+                  fontWeight: '600',
+                  color: light.text.muted,
+                }}
+              >
+                {t('wineStory.glossary.close')}
+              </Text>
+            </View>
+          </Pressable>
+        </View>
       </BottomSheetView>
     </BottomSheet>
   );

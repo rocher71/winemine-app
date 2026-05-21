@@ -129,6 +129,9 @@ export default function RootLayout() {
           <Stack.Screen name="settings/appearance" />
           <Stack.Screen name="cellar/[lwin]" />
           <Stack.Screen name="wine/[lwin]" />
+          {/* glossary 그룹 — 자체 _layout.tsx 가 있는 디렉토리 라우트.
+           * 단일 등록 가능 (notes/settings 처럼 sub-route 명시 불필요 — _layout 있는 경우). */}
+          <Stack.Screen name="glossary" />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

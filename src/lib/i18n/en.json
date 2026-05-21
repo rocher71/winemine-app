@@ -833,7 +833,8 @@
       "openLabel": "Open definition of {{termId}}",
       "openHint": "Opens definition sheet.",
       "learnMore": "Learn more",
-      "close": "Close"
+      "close": "Close",
+      "learnMoreHint": "Goes to the glossary detail page"
     },
     "error": {
       "body": "Could not load story",
@@ -841,6 +842,31 @@
     },
     "a11y": {
       "scroll": "Winery story scroll view"
+    }
+  },
+  "glossary": {
+    "title": "Glossary",
+    "searchPlaceholder": "Search terms",
+    "noResults": "No results",
+    "categories": {
+      "all": "All",
+      "sensory": "Sensory",
+      "fault": "Fault",
+      "classification": "Classification",
+      "technique": "Technique",
+      "unit": "Unit"
+    },
+    "chip": {
+      "a11y": "Filter by {{cat}} category"
+    },
+    "row": {
+      "openA11y": "Definition of {{term}}",
+      "openHint": "Goes to term details"
+    },
+    "error": {
+      "title": "Could not load glossary",
+      "body": "Please try again later",
+      "retry": "Retry"
     }
   },
   "wineCommunityPeak": {

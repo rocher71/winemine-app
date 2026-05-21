@@ -833,7 +833,8 @@
       "openLabel": "{{termId}} 용어 설명 열기",
       "openHint": "용어 정의 시트를 엽니다.",
       "learnMore": "자세히 보기",
-      "close": "닫기"
+      "close": "닫기",
+      "learnMoreHint": "용어 사전 상세 페이지로 이동합니다"
     },
     "error": {
       "body": "스토리를 불러오지 못했어요",
@@ -841,6 +842,31 @@
     },
     "a11y": {
       "scroll": "와이너리 스토리 스크롤"
+    }
+  },
+  "glossary": {
+    "title": "용어 사전",
+    "searchPlaceholder": "용어 검색",
+    "noResults": "결과가 없어요",
+    "categories": {
+      "all": "전체",
+      "sensory": "감각",
+      "fault": "결함",
+      "classification": "분류",
+      "technique": "양조",
+      "unit": "단위"
+    },
+    "chip": {
+      "a11y": "{{cat}} 카테고리 필터"
+    },
+    "row": {
+      "openA11y": "{{term}} 용어 설명",
+      "openHint": "용어 상세 페이지로 이동합니다"
+    },
+    "error": {
+      "title": "용어를 불러오지 못했어요",
+      "body": "잠시 후 다시 시도해 주세요",
+      "retry": "다시 시도"
     }
   },
   "wineCommunityPeak": {
