@@ -156,3 +156,35 @@ escalate 시:
 - 전체 push된 commit (start + feat 22 + ALL DONE 1): 23개 (현재 cycle 한정)
 
 ALL DONE: 2026-05-20T18:05:30Z
+
+---
+
+# Follow-up Cycle 1 — 시뮬레이터 실측 P0 4건
+
+사용자가 iPhone Sim 실측 후 4 가지 시각 갭 보고 (이전 [세션 범위 외] BottomNav + settings _layout 분리 포함 — 명시적 해제).
+
+진실 소스 강조: ../winemine-keyscreen/ 코드 정밀 Read.
+
+우선순위 (시각 갭 + 버그 임팩트 큰 순):
+
+### F1 (가장 broken — UX 완전 망가짐)
+- [ ] BottomNav 5 tabs verbatim — `app/(tabs)/_layout.tsx` + settings stack 분리
+  - 증상: 홈/라벨 촬영/노트/cellar/index/cellar/[lwin]/settings/index/settings/language/settings/experience/settings/appearance — 8 tabs로 overflow
+  - 목표: 홈/지도/카메라(floating large red circle)/셀러/커뮤니티 5 tabs (키스크린 image #4 verbatim). settings hub + sub 3개는 stack 분리.
+
+### F2 (큰 시각 갭)
+- [ ] /home wine-feed 카드 horizontal layout — `src/components/home/wine-feed.tsx`
+  - 증상: bottle SVG가 카드 왼쪽 위에 isolated, 정보(이름/가격/평점)는 카드 아래쪽 vertical
+  - 목표: bottle 좌 + 이름/와이너리/지역/품종/평점/가격 inline horizontal (키스크린 image #7 verbatim)
+- [ ] /home followers note row — `src/components/home/home-community-peek.tsx` 또는 `recent-notes-strip.tsx`
+  - 증상: 큰 avatar (벨/실 글자 chip) + badge (노트/셀러) 위에 stacked + 본문 아래
+  - 목표: 작은 round avatar + badge inline + 본문 + 메타 (키스크린 image #4 verbatim)
+
+### F3 (작은 시각 갭이나 4 화면 공통 영향)
+- [ ] /onboarding/* 다음 버튼 일관성
+  - 증상: wineRed full-width disabled가 placeholder처럼 보임
+  - 목표: primary-button verbatim 폭/색/대비/safe-area (키스크린 image #5 verbatim)
+
+## Follow-up 진행 메모
+
+각 항목 처리 시 본 cycle 같은 형식 (started/spec/review/qa/loops/changed files/completed/deferred).
