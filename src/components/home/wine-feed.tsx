@@ -193,6 +193,9 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
       ? `${wine.name}, ${wine.producer}, ${wine.vintage}, rated ${scoreSpoken} out of 5, price ${priceSpoken}`
       : `${wine.name} ${wine.producer} ${wine.vintage} 평점 ${scoreSpoken} 가격 ${priceSpoken}`;
 
+  // Round 8 fix: NativeWind cssInterop + Fabric 환경에서 Pressable에 className + 복잡한 style 함수
+  // 동시 적용 시 layout 무시되는 케이스 회피. Pressable은 hit target + opacity만, 모든 layout/visual은
+  // inner View로 분리. inner View는 className 없이 inline style만 (cssInterop wrapping 우회).
   return (
     <Pressable
       onPress={() => {
@@ -202,81 +205,75 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
       accessibilityRole="link"
       accessibilityLabel={a11yLabel}
       accessibilityHint={t('home.wineFeed.openDetail')}
-      className="bg-surface dark:bg-surface border border-border-default dark:border-border-default"
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        gap: 16,
-        padding: 16,
-        borderRadius: radius['14'],
-        opacity: pressed ? 0.9 : 1,
-        transform: [{ scale: pressed ? 0.99 : 1 }],
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
     >
-      {/* Bottle column — width 96 / center align (PATCH line 994) */}
-      <View style={{ width: 96, alignItems: 'center', justifyContent: 'center' }}>
-        <WMBottle width={90} height={150} bottleColor={bottleColor} type={wine.type} />
-      </View>
-      {/* Meta column — flex */}
-      <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
-        <Text
-          className="font-playfair text-text-primary dark:text-text-primary"
-          style={{ fontSize: 16, lineHeight: 19.2 }}
-          numberOfLines={2}
-        >
-          {wine.name}
-        </Text>
-        <Text
-          className="font-inter text-text-secondary dark:text-text-secondary"
-          style={{ fontSize: 12, lineHeight: 14.4 }}
-          numberOfLines={1}
-        >
-          {wine.producer} · {wine.vintage}
-        </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <MapPin size={11} strokeWidth={1.75} color={tokens.text.muted} />
-          <Text
-            className="font-inter text-text-muted dark:text-text-muted"
-            style={{ fontSize: 11 }}
-            numberOfLines={1}
-            allowFontScaling={false}
-          >
-            {wine.region}, {wine.country}
-          </Text>
-        </View>
-        <Text
-          className="font-inter text-text-muted dark:text-text-muted"
-          style={{ fontSize: 11, marginTop: 1, opacity: 0.85 }}
-          numberOfLines={1}
-        >
-          {wine.grapes}
-        </Text>
-      </View>
-      {/* Right column — rating + price (no chevron). center align (PATCH line 1002) */}
       <View
         style={{
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-          flexShrink: 0,
-          minWidth: 76,
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          gap: 16,
+          padding: 16,
+          borderRadius: radius['14'],
+          backgroundColor: tokens.bg.surface,
+          borderWidth: 1,
+          borderColor: tokens.border.default,
         }}
       >
-        <View style={{ alignItems: 'flex-end', gap: 6 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-            <WMGlassRating value={wine.score} size={10} />
+        {/* Bottle column — width 96 / center align */}
+        <View style={{ width: 96, alignItems: 'center', justifyContent: 'center' }}>
+          <WMBottle width={90} height={150} bottleColor={bottleColor} type={wine.type} />
+        </View>
+        {/* Meta column — flex */}
+        <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
+          <Text
+            style={{ fontSize: 16, lineHeight: 19.2, fontFamily: 'PlayfairDisplay_400Regular', color: tokens.text.primary }}
+            numberOfLines={2}
+          >
+            {wine.name}
+          </Text>
+          <Text
+            style={{ fontSize: 12, lineHeight: 14.4, fontFamily: 'Inter_400Regular', color: tokens.text.secondary }}
+            numberOfLines={1}
+          >
+            {wine.producer} · {wine.vintage}
+          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <MapPin size={11} strokeWidth={1.75} color={tokens.text.muted} />
             <Text
-              className="font-inter-semibold"
-              style={{ color: brand.gold, fontSize: 12 }}
+              style={{ fontSize: 11, fontFamily: 'Inter_400Regular', color: tokens.text.muted }}
+              numberOfLines={1}
+              allowFontScaling={false}
             >
-              {wine.score.toFixed(1)}
+              {wine.region}, {wine.country}
             </Text>
           </View>
           <Text
-            className="font-playfair text-text-primary dark:text-text-primary"
-            style={{ fontSize: 14, lineHeight: 16.8 }}
+            style={{ fontSize: 11, marginTop: 1, opacity: 0.85, fontFamily: 'Inter_400Regular', color: tokens.text.muted }}
+            numberOfLines={1}
           >
-            ₩{formatKrwShort(wine.priceKrw, i18n.language)}
+            {wine.grapes}
           </Text>
+        </View>
+        {/* Right column — rating + price (no chevron). center align */}
+        <View
+          style={{
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            flexShrink: 0,
+            minWidth: 76,
+          }}
+        >
+          <View style={{ alignItems: 'flex-end', gap: 6 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+              <WMGlassRating value={wine.score} size={10} />
+              <Text style={{ color: brand.gold, fontSize: 12, fontFamily: 'Inter_600SemiBold' }}>
+                {wine.score.toFixed(1)}
+              </Text>
+            </View>
+            <Text style={{ fontSize: 14, lineHeight: 16.8, fontFamily: 'PlayfairDisplay_400Regular', color: tokens.text.primary }}>
+              ₩{formatKrwShort(wine.priceKrw, i18n.language)}
+            </Text>
+          </View>
         </View>
       </View>
     </Pressable>
