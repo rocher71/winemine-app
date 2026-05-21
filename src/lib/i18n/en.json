@@ -146,6 +146,7 @@
     "wineFeed": {
       "heading": "Discover wines",
       "subtitle": "Tap a card for details",
+      "openDetail": "Open wine detail",
       "tabs": {
         "featured": "Featured",
         "trending": "Trending",

@@ -127,7 +127,7 @@ SafeAreaView (edges=['top'], flex-1, bg-bg-deepest dark:bg-bg-deepest)
 │     │                 │           ├── "{vintage} · {dateStr}" (9px text-muted, mt=4)
 │     │                 │           └── WMGlassRating (5 glasses, size 8, mt=6)
 │     │                 └── Aroma hint (10px text-secondary, lh 1.45, 1줄 truncate) — optional
-│     ├── WineFeed (section, mt=24)
+│     ├── WineFeed (section, mt=24) — PATCH 2026-05-21: bottle 차원/카드 padding 수정 (§3-8-PATCH 참조)
 │     │     ├── SectionHeader (p=0_20_8, baseline-aligned, space-between)
 │     │     │     ├── h2 "와인 둘러보기" (Playfair 18px, cream)
 │     │     │     └── subtitle "카드 탭하면 상세로" (Inter 11px, text-muted)
@@ -135,19 +135,20 @@ SafeAreaView (edges=['top'], flex-1, bg-bg-deepest dark:bg-bg-deepest)
 │     │     │     ├── Chip[featured] (Sparkles 13px) — active: border gold + bg rgba(201,168,76,0.12) + text gold | idle: border default + transparent + text-muted
 │     │     │     ├── Chip[trending] (Flame 13px)
 │     │     │     └── Chip[explore]  (Globe2 13px)
-│     │     └── List (column, gap=8, p=0_16)
-│     │           └── WineFeedRow × N (Pressable → `/wine/{id}`, row, gap=12, p=12, bg-surface, border-default, radius=12, items-center)
-│     │                 ├── WMBottle (width 40, height 130)
-│     │                 ├── Meta (flex-1, minWidth 0, column gap=3)
-│     │                 │     ├── Wine name (Playfair 15px, cream, lh 1.2, 1줄 clamp)
-│     │                 │     ├── "{producer} · {vintage}" (Inter 11px, text-secondary, 1줄 clamp)
-│     │                 │     ├── Location row (Inter 11px text-muted, gap=4) — MapPin 10px + "{region}, {country}"
-│     │                 │     └── Grapes (Inter 10px text-muted, opacity 0.85, 1줄 truncate, mt=1) — optional
-│     │                 └── Right (column, end-aligned, space-between, flex-shrink 0, minWidth=70)
-│     │                       ├── Rating block (column, end-aligned, gap=3)
-│     │                       │     ├── Vivino row (gap=4) — WMGlassRating size=8 + "{score.toFixed(1)}" (Inter 11px 600 gold)
-│     │                       │     └── Price "₩{formatKrwShort}" (Playfair 13px, cream, nowrap)
-│     │                       └── ChevronRight (16px, text-muted)
+│     │     └── List (column, gap=10, p=0_16)
+│     │           └── WineFeedRow × N — Pressable → `/wine/{lwin}`, **HORIZONTAL flex-row**, gap=16, p=16, bg-surface, border-default, radius=14, items=stretch (병/정보/우측 column 모두 카드 높이 따라 정렬)
+│     │                 ├── Bottle column (flex-shrink 0, width=96, items-center, justify-center)
+│     │                 │     └── WMBottle (width 90, height 150) ← PATCH: 키스크린 40×130 → 90×150. 컴팩트하지만 카드 안에서 시각적으로 명확히 보이는 사이즈. 비율 (W:H ≈ 1:1.67)은 키스크린 viewBox 40:130 (1:3.25)와 다름 — 카드 내 가시성 우선 (사용자 reference image #7).
+│     │                 ├── Meta column (flex-1, minWidth 0, column gap=4, justify-center)
+│     │                 │     ├── Wine name (Playfair 16px, cream, lh 1.2, 2줄 clamp) ← 키스크린 15 → 16 (가독성 ↑)
+│     │                 │     ├── "{producer} · {vintage}" (Inter 12px, text-secondary, 1줄 clamp) ← 키스크린 11 → 12
+│     │                 │     ├── Location row (Inter 11px text-muted, gap=4) — MapPin 11px + "{region}, {country}"
+│     │                 │     └── Grapes (Inter 11px text-muted, opacity 0.85, 1줄 truncate) — optional, 키스크린 10 → 11
+│     │                 └── Right column (flex-shrink 0, minWidth 76, items-end, justify-between) ← 키스크린 verbatim, 단 chevron 제거 (카드 padding 16 + bottle 96 + meta로 폭 압박 시 시각 노이즈)
+│     │                       ├── Top group (column items-end gap=4)
+│     │                       │     ├── Rating row (flex-row items-center gap=5) — WMGlassRating size=10 + "{score.toFixed(1)}" (Inter 12px 600 gold) ← 키스크린 size 8 → 10, font 11 → 12
+│     │                       │     └── Price (Playfair 14px cream, nowrap) — "₩{formatKrwShort}" ← 키스크린 13 → 14
+│     │                       └── (deviation) ChevronRight 제거 — 사용자 reference image #7에서 chevron 없음. 우측 컬럼은 rating/price만 노출. RN deviation §8-PATCH 참조.
 │     ├── Spacer (height 12, in-flow)
 │     └── QuickActions (2-col grid, gap=12, p=0_16, mt=18)
 │           └── Card × 4 (Pressable → href, column gap=6, p=14_16, radius=14, bg-surface, border-default, minHeight=86)
@@ -286,26 +287,30 @@ SafeAreaView (edges=['top'], flex-1, bg-bg-deepest dark:bg-bg-deepest)
 
 ### 3-8. WineFeed (heavy + first-time 공용)
 
-| 요소 | keyscreen | RN+NW v4 |
+> **PATCH 2026-05-21** — 사용자 reference image #6 (현재 RN), image #7 (정확한 reference) 비교 후 카드 padding/gap/bottle 사이즈/typography 위계 갱신.
+> 변경 요지: WineFeedRow의 horizontal layout 자체는 keyscreen verbatim 유지. **bottle 차원(40×130 → 90×150)**, **카드 padding (12 → 16)**, **gap (12 → 16)**, **radius (12 → 14)**, **typography 1pt씩 ↑** (가독성), **right column chevron 제거**. 토큰은 design-tokens.ts.radius['14'](기존), typography.homeWineFeedRowName(기존, 15→16으로 size만 인라인 override) 재사용.
+
+| 요소 | keyscreen | RN+NW v4 (PATCH) |
 |---|---|---|
-| section | mt 24 | `<View className="mt-6">` |
-| header | padding 0 20 8 flex baseline space-between | (위 패턴 동일) |
-| h2 | Playfair 18px cream | `<Text className="font-playfair text-[18px] text-text-primary dark:text-text-primary">{t('home.wineFeed.heading')}</Text>` |
-| subtitle | Inter 11px text-muted | `<Text className="font-inter text-[11px] text-text-muted dark:text-text-muted">{t('home.wineFeed.subtitle')}</Text>` |
-| tab row | `display flex; gap 6; padding 0 20 10; overflowX auto` | `<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingHorizontal:20, paddingBottom:10, gap:6}}>` |
-| chip | `padding 5 11 5 9; radius 14; border 1px (active gold else border-default); bg (active rgba(201,168,76,0.12) else transparent); Inter 11px 600 (active gold else text-muted); inline-flex gap 5` | `<Pressable onPress={()=>setTab(opt.key)} className="flex-row items-center gap-1.5 rounded-[14px] border" style={{paddingTop:5, paddingBottom:5, paddingLeft:9, paddingRight:11, borderColor: active?brand.gold:currentBorderDefault, backgroundColor: active?'rgba(201,168,76,0.12)':'transparent'}} accessibilityRole="tab" accessibilityState={{selected:active}}>` + icon + `<Text className="font-inter-semibold text-[11px]" style={{color: active?brand.gold:currentTextMuted}}>{t(`home.wineFeed.tabs.${opt.key}`)}</Text>` |
-| list | column gap 8 p 0 16 | `<View className="px-4" style={{gap:8}}>` |
-| row | flex gap 12 p 12 bg-surface border-default radius 12 items-center | `<Pressable className="flex-row items-center gap-3 rounded-xl bg-surface dark:bg-surface border border-border-default p-3" style={({pressed})=>({opacity:pressed?0.85:1})} onPress={()=>router.push(`/wine/${wine.lwin}`)}>` |
-| WMBottle | width 40 height 130 | `<WMBottle width={40} height={130} ...>` |
-| meta col | flex-1 minWidth 0 column gap 3 | `<View className="flex-1" style={{minWidth:0, gap:3}}>` |
-| wine name | Playfair 15px cream lh 1.2 1줄 clamp | `<Text className="font-playfair text-[15px] text-text-primary dark:text-text-primary" style={{lineHeight:18}} numberOfLines={1}>{wine.name}</Text>` |
-| producer line | Inter 11px text-secondary 1줄 clamp | `<Text className="font-inter text-[11px] text-text-secondary dark:text-text-secondary" numberOfLines={1}>{producer} · {vintage}</Text>` |
-| location row | Inter 11px text-muted gap 4 MapPin 10px | `<View className="flex-row items-center gap-1"><MapPin size={10} strokeWidth={1.75} color={currentTextMuted}/><Text className="font-inter text-[11px] text-text-muted dark:text-text-muted">{region}, {country}</Text></View>` |
-| grapes | Inter 10px text-muted opacity 0.85 mt 1 1줄 truncate | `<Text className="font-inter text-[10px] text-text-muted dark:text-text-muted mt-px" style={{opacity:0.85}} numberOfLines={1}>{grapes}</Text>` |
-| right col | column items-end justify-between flex-shrink 0 minWidth 70 | `<View className="items-end justify-between" style={{flexShrink:0, minWidth:70}}>` |
-| vivino row | inline-flex items-center gap 4 | `<View className="flex-row items-center gap-1"><WMGlassRating value={score} size={8}/><Text className="font-inter-semibold text-[11px]" style={{color:brand.gold}}>{score.toFixed(1)}</Text></View>` |
-| price | Playfair 13px cream nowrap | `<Text className="font-playfair text-[13px] text-text-primary dark:text-text-primary">₩{formatKrwShort(krw, locale)}</Text>` |
-| chevron | 16px text-muted | `<ChevronRight size={16} color={currentTextMuted}/>` |
+| section | mt 24 | `<View className="mt-6">` (변경 없음) |
+| header | padding 0 20 8 flex baseline space-between | (위 패턴 동일, 변경 없음) |
+| h2 | Playfair 18px cream | `<Text className="font-playfair text-[18px] text-text-primary dark:text-text-primary">{t('home.wineFeed.heading')}</Text>` (변경 없음) |
+| subtitle | Inter 11px text-muted | `<Text className="font-inter text-[11px] text-text-muted dark:text-text-muted">{t('home.wineFeed.subtitle')}</Text>` (변경 없음) |
+| tab row | `display flex; gap 6; padding 0 20 10; overflowX auto` | `<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingHorizontal:20, paddingBottom:10, gap:6}}>` (변경 없음) |
+| chip | `padding 5 11 5 9; radius 14; border 1px (active gold else border-default); bg (active rgba(201,168,76,0.12) else transparent); Inter 11px 600 (active gold else text-muted); inline-flex gap 5` | (변경 없음 — 위 §3-8 원본 매핑 유지) |
+| **list** | column gap 8 p 0 16 | `<View className="px-4" style={{gap:10}}>` ← **PATCH: gap 8 → 10** (카드 간 호흡) |
+| **row outer** | flex gap 12 p 12 bg-surface border-default radius 12 items-center | `<Pressable className="flex-row rounded-[14px] bg-surface dark:bg-surface border border-border-default" style={({pressed})=>({padding:16, gap:16, alignItems:'stretch', opacity:pressed?0.9:1, transform:[{scale: pressed?0.99:1}]})} onPress={()=>{Haptics.selectionAsync().catch(()=>undefined); router.push(`/wine/${wine.lwin}`)}} accessibilityRole="link" accessibilityLabel={...}>` ← **PATCH: items-center → items-stretch (병/우측 column 카드 높이 따라 늘어남), gap 12 → 16, padding 12 → 16, radius 12 → 14** |
+| **bottle column** | 없음 (병이 row의 직접 flex item) | `<View style={{width:96, flexShrink:0, alignItems:'center', justifyContent:'center'}}>` ← **PATCH: bottle 전용 컬럼 신설 — width 96, 병이 컬럼 안에서 center 정렬** |
+| **WMBottle** | width 40 height 130 | `<WMBottle width={90} height={150} bottleColor={bottleColor} type={wine.type} />` ← **PATCH: 40×130 → 90×150**. WMBottle viewBox는 40×130 고정(`/Users/yejinkim/dev/winemine-app/src/components/shared/wm-bottle.tsx` line 43-44) → preserveAspectRatio="xMidYMid meet"가 90×150 박스 안에서 41×130 비율 유지하며 자동 fit. **WMBottle 코드 수정 불필요**. |
+| **meta col** | flex-1 minWidth 0 column gap 3 | `<View style={{flex:1, minWidth:0, gap:4, justifyContent:'center'}}>` ← **PATCH: gap 3 → 4, justify-center (병/우측 column 높이 늘어남에 따라 텍스트 vertical center)** |
+| **wine name** | Playfair 15px cream lh 1.2 1줄 clamp | `<Text className="font-playfair text-text-primary dark:text-text-primary" style={{fontSize:16, lineHeight:19.2}} numberOfLines={2}>{wine.name}</Text>` ← **PATCH: 15 → 16 (lh 18 → 19.2 = 1.2 비율 유지), 1줄 clamp → 2줄 clamp (긴 와인명 보호)** |
+| **producer line** | Inter 11px text-secondary 1줄 clamp | `<Text className="font-inter text-text-secondary dark:text-text-secondary" style={{fontSize:12, lineHeight:14.4}} numberOfLines={1}>{wine.producer} · {wine.vintage}</Text>` ← **PATCH: 11 → 12 (lh 1.2)** |
+| **location row** | Inter 11px text-muted gap 4 MapPin 10px | `<View className="flex-row items-center gap-1"><MapPin size={11} strokeWidth={1.75} color={tokens.text.muted}/><Text className="font-inter text-text-muted dark:text-text-muted" style={{fontSize:11, lineHeight:13.2}} numberOfLines={1}>{wine.region}, {wine.country}</Text></View>` ← **PATCH: MapPin 10 → 11 (와인명/producer와 시각 균형)** |
+| **grapes** | Inter 10px text-muted opacity 0.85 mt 1 1줄 truncate | `<Text className="font-inter text-text-muted dark:text-text-muted" style={{fontSize:11, lineHeight:13.2, opacity:0.85}} numberOfLines={1}>{wine.grapes}</Text>` ← **PATCH: 10 → 11 (a11y 마이크로 텍스트 회피 + 시각 위계 살림)** |
+| **right col** | column items-end justify-between flex-shrink 0 minWidth 70 | `<View style={{flexShrink:0, minWidth:76, alignItems:'flex-end', justifyContent:'center', gap:6}}>` ← **PATCH: minWidth 70 → 76, justify-between (chevron 있을 때) → justify-center (chevron 제거됨), gap=6 (rating ↔ price)** |
+| **rating row** | inline-flex items-center gap 4 — WMGlassRating size=8 + Inter 11 600 gold score | `<View className="flex-row items-center" style={{gap:5}}><WMGlassRating value={wine.score} size={10}/><Text className="font-inter-semibold" style={{color:brand.gold, fontSize:12, lineHeight:14.4}}>{wine.score.toFixed(1)}</Text></View>` ← **PATCH: WMGlassRating size 8 → 10, score font 11 → 12, gap 4 → 5** |
+| **price** | Playfair 13px cream nowrap | `<Text className="font-playfair text-text-primary dark:text-text-primary" style={{fontSize:14, lineHeight:16.8}} numberOfLines={1}>₩{formatKrwShort(krw, locale)}</Text>` ← **PATCH: 13 → 14 (lh 1.2)** |
+| **chevron** | 16px text-muted | **PATCH: 제거** — 사용자 reference image #7 명시. RN deviation 사유 §8-PATCH 참조. |
 
 ### 3-9. QuickActions (heavy 전용)
 
@@ -969,3 +974,135 @@ export function useThemeTokens() {
 - supabase 확장 요청: profile stats view/RPC + featured wines (선택)
 - retroactive 폭: heavy 8섹션 + first-time 4섹션 = 11개 신규 컴포넌트 + 2개 재작성 + 4개 shared 포팅 + tabs 재구성
 - **rn-screen-builder 작업 추정**: 2~3일 (Day 6/7 압박 — alpha P0 범위로 축소 권장)
+
+---
+
+## §3-8-PATCH. WineFeed 카드 horizontal layout 정합화 (2026-05-21)
+
+> **트리거**: 사용자 image #6 (현재 RN) — bottle SVG가 카드 위쪽에 고립된 큰 사이즈로 표시되고 이름/가격/평점이 카드 하단에 vertical stack됨. 카드 1개가 화면 절반 차지. 정보 위계 깨짐.
+> **진실 소스**: 사용자 image #7 (정확한 reference) + `../winemine-keyscreen/src/components/home/wine-feed.tsx` (verbatim horizontal flex-row 구조).
+> **결론**: 키스크린 JSX가 이미 horizontal 구조이므로 현재 RN 코드(`src/components/home/wine-feed.tsx`)의 flex-row 자체는 맞음. 문제는 (a) bottle 차원이 40×130으로 카드 안에서 시각 비율이 깨짐 (병이 너무 얇고 김), (b) 카드 padding 12 + gap 12 + radius 12로 시각이 컴팩트하지 않음, (c) chevron 잔존이 카드 폭 압박. PATCH로 §3-8 매핑표·§2-1 트리 양쪽 수정 완료.
+
+### PATCH 변경 요약
+
+| 항목 | 키스크린 원본 | RN PATCH 값 | 변경 사유 |
+|---|---|---|---|
+| WineFeedRow padding | 12 | **16** | 카드 호흡 + image #7 reference |
+| WineFeedRow gap | 12 | **16** | bottle/meta/우측 column 간격 확보 |
+| WineFeedRow radius | 12 | **14** | 다른 home 섹션 카드(MapCameo/DraftNoteResume) radius=14와 일관성. design-tokens.ts.radius['14'] 기존 토큰 재사용 |
+| items 정렬 | center | **stretch** | 병 컬럼 + 우측 컬럼이 카드 높이 따라 정렬, vertical centering 자연스럽게 |
+| Bottle 전용 column | 없음 (row 직접 child) | **width 96, items-center, justify-center** | bottle을 명시적 컬럼에 가두면 가로 정렬 통제 가능 |
+| WMBottle 차원 | 40×130 | **90×150** | image #7 reference. WMBottle viewBox 40×130 → preserveAspectRatio meet으로 자동 fit. 컴포넌트 코드 수정 불필요 |
+| Wine name | Playfair 15 lh 18 (1줄) | **Playfair 16 lh 19.2 (2줄)** | 가독성 + 긴 와인명 보호 |
+| Producer line | Inter 11 (1줄) | **Inter 12 lh 14.4** | 위계 보강 |
+| Location MapPin | 10 | **11** | 시각 균형 |
+| Location text | Inter 11 | **Inter 11** (변경 없음) | 키스크린 verbatim |
+| Grapes | Inter 10 op 0.85 | **Inter 11 op 0.85** | 마이크로 텍스트(<11px) a11y 회피 (사양 §6 dynamic type) |
+| Right column minWidth | 70 | **76** | 가격 ₩1.2M 등 긴 값 nowrap 안정 |
+| Right column justify | space-between (chevron 있음) | **center (chevron 없음)** | rating/price만 vertical center로 응집 |
+| WMGlassRating size | 8 | **10** | 시각 위계 보강 (price 14 ↑) |
+| Score font | Inter 11 600 gold | **Inter 12 600 gold** | rating row 크기 균형 |
+| Rating row gap | 4 | **5** | glasses ↔ score 간격 |
+| Price | Playfair 13 | **Playfair 14 lh 16.8** | 1pt ↑ (가독성) |
+| ChevronRight | 16 text-muted | **제거** | image #7 reference에 없음. RN deviation. |
+
+### 신규 토큰
+
+**없음.** 모든 변경은 기존 design-tokens.ts에 있는 토큰(`radius['14']`, `brand.gold`, `brand.cream`, `brand.wineRed`, `withAlpha`, `wineTypeDot`, `bottleColorDefault`) 또는 인라인 px 값으로 처리. typography는 기존 `homeWineFeedTitle`(Playfair 18 — 섹션 h2용, 변경 없음)과 `homeWineFeedRowName`(Playfair 15 lh 18 — 사용 안 함, 인라인 16 lh 19.2로 override) 재사용. P0 토큰 확장 세션 트리거 **불필요**.
+
+### 상태 variants (PATCH 후)
+
+#### default (dark)
+- 카드 bg `dark.surface` (#3D2A4A), border 1px `dark.border.default` (#5A3D6A)
+- WMBottle bottleColor: `bottleColorDefault[wine.type]` (red=#3a1018, white=#c9b275, rose=#e5a8aa, sparkling=#d8c997)
+- Wine name: cream (#F8F4ED)
+- Producer/grapes/location text: text-secondary/muted 분기
+- Rating gold (#C9A84C) 고정
+- Price cream
+
+#### default (light)
+- 카드 bg `light.surface` (#FFFFFF), border 1px `light.border.default` (#E0D2BC)
+- Wine name: text-primary (#2A1A14)
+- 나머지 색은 light 토큰 분기 (`useThemeTokens()`)
+- WMBottle 색은 양 모드 동일 (병 색은 와인 타입 표현 — 테마 무관)
+
+#### pressed (양 모드 공통)
+- `Pressable style={({pressed})=>({opacity: pressed?0.9:1, transform:[{scale: pressed?0.99:1}]})}`
+- Haptics.selectionAsync() 발화
+- 키스크린에는 hover/active 없음 — RN press feedback 표준 추가 (deviation §8 기존 항목 재사용)
+
+#### loading
+- WineFeedRow 자리에 SkeletonBlock — **height 182** (PATCH 후 카드 높이 = padding 16×2 + max(bottle 150, meta 6줄 ≈ 130) = 182), radius 14, bg `withAlpha(tokens.text.muted, 0.18)`
+- 카드 5개 표시 (기존 사양 §4 loading 동일, height만 142 → 182)
+
+#### empty / error
+- featured는 큐레이션이라 항상 데이터 있음. 빈 분기 불필요 (기존 사양 §4 유지).
+- error는 supabase fetch 실패 시 Toast + 마지막 캐시 표시 (기존 §4 유지).
+
+### 인터랙션
+
+| 트리거 | 결과 |
+|---|---|
+| 카드 onPress | `Haptics.selectionAsync().catch(()=>undefined)` → `router.push(`/wine/${wine.lwin}`)` |
+| 카드 onPressIn/Out | opacity 0.9 + scale 0.99 (Pressable style 함수형) |
+| 카드 long-press | (미구현 — Phase 3 즐겨찾기 토글 예약) |
+
+### 접근성
+
+| 속성 | 값 |
+|---|---|
+| `accessibilityRole` | `"link"` |
+| `accessibilityLabel` | `${wine.name} ${wine.producer} ${wine.vintage} 평점 ${wine.score.toFixed(1)} 가격 ${formatKrwSpoken(wine.priceKrw, locale)}` — 4개 정보 합쳐서 한 번에 읽음 (en 모드: `${wine.name}, ${wine.producer}, ${wine.vintage}, rated ${score.toFixed(1)} out of 5, price ${formatKrwSpoken}`) |
+| `accessibilityHint` | `t('home.wineFeed.openDetail')` — i18n 신규 키 (예: ko "상세 화면으로", en "Open wine detail") |
+| `allowFontScaling` | wine name/producer/price: 기본 허용 (12px 이상). MapPin 옆 location 11px: `allowFontScaling={false}` 권장 (레이아웃 안정) — design-reviewer 검증 항목 |
+| 대비 (dark) | cream on #3D2A4A = 10.6:1 (AAA), gold on #3D2A4A = 4.9:1 (AA) ✓ |
+| 대비 (light) | #2A1A14 on #FFFFFF = 17.3:1 (AAA), gold #C9A84C on #FFFFFF = 2.9:1 — **FAIL** AA. 라이트 모드 score 텍스트 색은 brand.wineRed (#8B1A2A on #FFFFFF = 8.4:1 AAA) 또는 darker gold로 보완 권장. **§9-PATCH 검토 항목**. |
+
+### i18n 키 호환성
+
+- 기존 `home.wineFeed.heading` / `home.wineFeed.subtitle` / `home.wineFeed.tabs.{featured|trending|explore}` 그대로 사용 (사양 §7 ko/en json 정의됨)
+- **신규 추가 권장**: `home.wineFeed.openDetail` (ko: "상세 화면으로", en: "Open wine detail") — accessibilityHint용
+- **신규 추가 권장**: `home.wineFeed.priceUnit` (현재 인라인 `₩` + formatKrwShort 사용). 키 추가 없이도 동작 가능 — 변경 없음 채택.
+- 가격/평점 단위는 현재 RN의 `formatKrwShort(krw, i18n.language)` 함수 (ko='10만'/en='100K')가 처리. 추가 i18n 키 불필요.
+
+### RN deviation 사유 (PATCH)
+
+| 항목 | 키스크린 | RN 변경 | 사유 |
+|---|---|---|---|
+| ChevronRight 우측 | 16px text-muted | 제거 | 사용자 image #7 reference에 chevron 없음. 카드 폭 압박 해소. Pressable이 이미 link 역할 — chevron 시각 노이즈 |
+| WMBottle 차원 | 40×130 | 90×150 | image #7 reference. 키스크린 next.js wine-feed.tsx는 mobile mock-up 시안이라 작게 그렸으나, 실제 RN 카드 안 시각 균형은 90×150이 적절. WMBottle SVG viewBox(40×130 고정) + preserveAspectRatio="xMidYMid meet"로 자동 fit — 컴포넌트 자체 수정 0 |
+| 카드 padding 12 → 16 | 12 | 16 | 키스크린 verbatim 위반. 사유: image #7 reference가 더 큰 padding 사용. 다른 home 카드(DraftNoteResume p=12_14, MapCameo p=12_14_0)와 비교해도 16이 카드 위계상 적합 |
+| 카드 radius 12 → 14 | 12 | 14 | home의 다른 large 카드(MapCameo, DraftNoteResume, HomeCommunityPeek)는 모두 radius 14. WineFeedRow만 12였던 것 자체가 키스크린의 inconsistency — 14로 통일 |
+| Typography 1pt ↑ | (각 항목 keyscreen verbatim) | name 16, producer 12, grapes/location 11, price 14 | 키스크린 verbatim 위반. 사유: 사용자 image #6 회귀 방지 + a11y dynamic type 10px 미만 회피 + image #7 reference 위계 매칭. 1pt씩만 ↑하여 디자인 시안 정신 유지 |
+| items center → stretch | center | stretch | bottle 90×150 + 우측 column이 카드 높이 따라 늘어나야 자연스러운 vertical 분포 |
+
+### 검증 체크리스트 (PATCH 후 design-reviewer 항목)
+
+- [ ] WineFeedRow 카드 padding 16 / gap 16 / radius 14 시각 일치
+- [ ] WMBottle 90×150 — 카드 안에서 명확히 보이고 한 컬럼으로 응집
+- [ ] Wine name Playfair 16 (Playfair 폰트 로드 확인 — `app/_layout.tsx`)
+- [ ] 2줄 clamp 작동 (긴 와인명 ellipsis 노출 확인)
+- [ ] 우측 column에 chevron 없음, rating + price만 vertical center
+- [ ] Rating row: WMGlassRating size 10, score Inter 12 600 gold, gap 5
+- [ ] Price Playfair 14, ₩ prefix + formatKrwShort
+- [ ] dark/light 양쪽 모드 카드 bg/border 색 분기 확인
+- [ ] **light 모드 gold score 대비 검증** — AA 미달 시 wineRed 또는 darker gold 대안 (위 §접근성 검토)
+- [ ] Pressable opacity/scale feedback
+- [ ] Haptics.selectionAsync 동작
+- [ ] accessibilityLabel 통합 읽기 (와인명 + 평점 + 가격)
+- [ ] 한글/영문 양쪽 모드 텍스트 wrap·ellipsis 확인 (한글 어절 단위 wrap 부재로 인한 줄바꿈 점검)
+
+### 영향 범위
+
+- 수정 파일: `src/components/home/wine-feed.tsx` (WineFeedRow JSX inline style + className 일괄 갱신)
+- 신규 컴포넌트/토큰/i18n: **0**
+- WMBottle (`src/components/shared/wm-bottle.tsx`) 수정: **불필요** (viewBox aspect ratio 자동 fit)
+- 다른 home 섹션 영향: **없음** — WineFeed 섹션 단독 변경
+- design-reviewer 게이트: image #7 reference와 라이트/다크 양쪽 캡처 비교
+
+### 작업자 노트
+
+- rn-screen-builder는 본 §3-8-PATCH + 갱신된 §2-1 트리만 입력으로 받음. §3-8 원본 매핑표 행은 PATCH 행이 override (table 행 별 "PATCH:" 표기로 명시).
+- 코드 변경 분량: ~30 LOC (WineFeedRow 함수 내부만)
+- WMBottle viewBox 40×130을 90×150 박스에 그릴 때 — SVG는 카드 가운데 정렬 + 비율 유지 → 실제 SVG drawing은 ~41×150 박스를 차지 (병 모양 키는 150px, 폭은 비율상 ~46px). 나머지 ~50px (96-46)는 좌우 padding으로 자연 흡수. 시각 비례 OK.
+- 만약 design-reviewer가 90×150도 시각 부족하다고 판단 시 → 100×166 또는 110×180으로 확장 가능. 단 카드 padding 16 + gap 16 + meta 컬럼 최소 폭 고려하면 bottle column 96~110 범위가 안전.
