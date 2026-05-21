@@ -19,6 +19,7 @@ import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { brand } from '@/lib/design-tokens';
+import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { getDefaultBottleColor } from '@/lib/lwin';
 import type { TypeCanonical } from '@/lib/design-tokens';
 import type { TastingNoteWithWine } from '@/hooks/use-notes';
@@ -51,12 +52,14 @@ function formatDateShort(iso: string | null | undefined): string {
 }
 
 function NoteCard({ note }: { note: TastingNoteWithWine }) {
+  const tokens = useThemeTokens();
   const wine = note.wine;
   if (!wine?.lwin || !wine?.display_name) return null;
   const type = asTypeCanonical(wine.type_canonical);
   const bottleColor = wine.bottle_color ?? getDefaultBottleColor(type);
   const rating = typeof note.rating === 'number' ? note.rating : 0;
 
+  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
   return (
     <Pressable
       onPress={() => {
@@ -65,35 +68,38 @@ function NoteCard({ note }: { note: TastingNoteWithWine }) {
       }}
       accessibilityRole="link"
       accessibilityLabel={`${wine.name_ko ?? wine.display_name} ${wine.vintage ?? ''} ${rating} stars`}
-      className="rounded-xl bg-surface dark:bg-surface border border-border-default dark:border-border-default"
-      style={({ pressed }) => ({
-        width: 200,
-        flexShrink: 0,
-        padding: 12,
-        gap: 8,
-        opacity: pressed ? 0.9 : 1,
-      })}
+      style={({ pressed }) => ({ width: 200, flexShrink: 0, opacity: pressed ? 0.9 : 1 })}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        <WMBottle width={26} height={86} bottleColor={bottleColor} type={type} />
-        <View style={{ flex: 1, minWidth: 0 }}>
-          <WineNameDisplay
-            lwin={wine.lwin}
-            name_ko={wine.name_ko}
-            display_name={wine.display_name}
-            size="card"
-          />
-          <Text
-            className="text-text-muted dark:text-text-muted"
-            style={{ fontSize: 9, marginTop: 4 }}
-            allowFontScaling={false}
-          >
-            {wine.vintage ?? ''}
-            {wine.vintage && note.tasted_at ? ' · ' : ''}
-            {formatDateShort(note.tasted_at)}
-          </Text>
-          <View style={{ marginTop: 6 }}>
-            <WMGlassRating value={rating} size={8} />
+      <View
+        style={{
+          padding: 12,
+          gap: 8,
+          borderRadius: 12,
+          backgroundColor: tokens.bg.surface,
+          borderWidth: 1,
+          borderColor: tokens.border.default,
+        }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <WMBottle width={26} height={86} bottleColor={bottleColor} type={type} />
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <WineNameDisplay
+              lwin={wine.lwin}
+              name_ko={wine.name_ko}
+              display_name={wine.display_name}
+              size="card"
+            />
+            <Text
+              style={{ fontSize: 9, marginTop: 4, color: tokens.text.muted }}
+              allowFontScaling={false}
+            >
+              {wine.vintage ?? ''}
+              {wine.vintage && note.tasted_at ? ' · ' : ''}
+              {formatDateShort(note.tasted_at)}
+            </Text>
+            <View style={{ marginTop: 6 }}>
+              <WMGlassRating value={rating} size={8} />
+            </View>
           </View>
         </View>
       </View>

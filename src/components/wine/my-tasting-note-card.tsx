@@ -114,30 +114,33 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
 
   const tastedAtDisplay = note.tasted_at?.slice(0, 10) ?? '';
 
+  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
   return (
     <Pressable
       onPress={handleOpen}
       accessibilityRole="link"
       accessibilityLabel={`${t('wineDetail.myNote.label')} ${ratingDisplay}`}
       accessibilityHint={t('wineDetail.myNote.openHint')}
-      className="mx-4 rounded-2xl bg-surface dark:bg-surface"
-      style={({ pressed }) => ({
-        borderWidth: 1,
-        borderColor: brand.gold,
-        padding: 16,
-        gap: 12,
-        opacity: pressed ? 0.92 : 1,
-        ...shadows.goldGlow,
-      })}
+      style={({ pressed }) => ({ marginHorizontal: 16, opacity: pressed ? 0.92 : 1 })}
     >
+      <View
+        className="bg-surface dark:bg-surface"
+        style={{
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor: brand.gold,
+          padding: 16,
+          gap: 12,
+          ...shadows.goldGlow,
+        }}
+      >
       {/* Header row */}
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center" style={{ gap: 8 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <BookOpen size={16} color={brand.gold} />
           <Text
             allowFontScaling={false}
-            className="font-inter-semibold text-[12px] uppercase"
-            style={{ color: brand.gold, letterSpacing: 0.72 }}
+            style={{ fontFamily: 'Inter_600SemiBold', fontSize: 12, textTransform: 'uppercase', color: brand.gold, letterSpacing: 0.72 }}
           >
             {t('wineDetail.myNote.label')}
           </Text>
@@ -147,16 +150,18 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
           accessibilityRole="button"
           accessibilityLabel={t('wineDetail.myNote.edit')}
           hitSlop={8}
-          className="flex-row items-center"
-          style={({ pressed }) => ({ gap: 4, opacity: pressed ? 0.7 : 1 })}
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         >
-          <Pencil size={11} color={brand.cream} />
-          <Text
-            allowFontScaling={false}
-            className="font-inter-semibold text-[11px] text-text-secondary dark:text-text-secondary"
-          >
-            {t('wineDetail.myNote.edit')}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Pencil size={11} color={brand.cream} />
+            <Text
+              allowFontScaling={false}
+              className="text-text-secondary dark:text-text-secondary"
+              style={{ fontFamily: 'Inter_600SemiBold', fontSize: 11 }}
+            >
+              {t('wineDetail.myNote.edit')}
+            </Text>
+          </View>
         </Pressable>
       </View>
 
@@ -206,8 +211,8 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
 
       {/* WSET 4-grid mini (mode-specific dims) */}
       <View
-        className="flex-row"
         style={{
+          flexDirection: 'row',
           gap: 6,
           padding: 10,
           backgroundColor: wsetBg,
@@ -217,24 +222,25 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
         {DIM_KEYS.map((key) => {
           const raw = readDim(fields, key);
           return (
-            <View key={key} className="flex-1 items-center">
+            <View key={key} style={{ flex: 1, alignItems: 'center' }}>
               <Text
                 allowFontScaling={false}
-                className="text-[9px] uppercase text-text-muted dark:text-text-muted text-center mb-0.5"
-                style={{ letterSpacing: 0.36 }}
+                className="text-text-muted dark:text-text-muted"
+                style={{ fontSize: 9, textTransform: 'uppercase', textAlign: 'center', marginBottom: 2, letterSpacing: 0.36 }}
               >
                 {t(`notes.beginner.wset${key.charAt(0).toUpperCase() + key.slice(1)}`)}
               </Text>
               <Text
                 allowFontScaling={false}
-                className="font-playfair text-[13px] text-text-primary dark:text-text-primary text-center"
-                style={{ lineHeight: 14.3 }}
+                className="text-text-primary dark:text-text-primary"
+                style={{ fontFamily: 'PlayfairDisplay_400Regular', fontSize: 13, textAlign: 'center', lineHeight: 14.3 }}
               >
                 {shortWsetValue(t, raw)}
               </Text>
             </View>
           );
         })}
+      </View>
       </View>
     </Pressable>
   );

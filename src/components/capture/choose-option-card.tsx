@@ -64,6 +64,14 @@ export function ChooseOptionCard({
     onPress();
   };
 
+  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
+  const scheme = useColorScheme();
+  const isLight = scheme === 'light';
+  const surfaceBg = isLight ? light.bg.surface : dark.bg.surface;
+  const borderColor = isLight ? light.border.default : dark.border.default;
+  const titleColor = isLight ? light.text.primary : dark.text.primary;
+  const subColor = isLight ? light.text.muted : dark.text.muted;
+
   return (
     <Pressable
       onPress={handlePress}
@@ -71,37 +79,49 @@ export function ChooseOptionCard({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? `${title} — ${sub}`}
       accessibilityHint={accessibilityHint}
-      // height 104 (spacing.26) / padding 18 / gap 16 / radius 16 / border 1px border-default / bg surface
-      className={`h-26 flex-row items-center gap-4 rounded-2xl border border-border-default bg-surface dark:bg-surface ${disabled ? 'opacity-50' : ''}`}
-      style={({ pressed }) => ({ padding: 18, transform: [{ scale: pressed ? 0.98 : 1 }] })}
+      style={({ pressed }) => ({ opacity: disabled ? 0.5 : pressed ? 0.9 : 1 })}
     >
-      <View className="shrink-0">
-        <Icon size={32} strokeWidth={1.5} color={color} />
-      </View>
-      <View className="min-w-0 flex-1">
-        <Text
-          numberOfLines={1}
-          className="text-text-primary dark:text-text-primary"
-          style={{
-            fontFamily: typography.optionCardTitle.family,
-            fontSize: typography.optionCardTitle.size,
-            lineHeight: typography.optionCardTitle.lineHeight,
-            marginBottom: 4,
-          }}
-        >
-          {title}
-        </Text>
-        <Text
-          numberOfLines={2}
-          className="text-text-muted dark:text-text-muted"
-          style={{
-            fontFamily: typography.optionCardSub.family,
-            fontSize: typography.optionCardSub.size,
-            lineHeight: typography.optionCardSub.lineHeight,
-          }}
-        >
-          {sub}
-        </Text>
+      <View
+        style={{
+          height: 104,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+          padding: 18,
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor,
+          backgroundColor: surfaceBg,
+        }}
+      >
+        <View style={{ flexShrink: 0 }}>
+          <Icon size={32} strokeWidth={1.5} color={color} />
+        </View>
+        <View style={{ minWidth: 0, flex: 1 }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontFamily: typography.optionCardTitle.family,
+              fontSize: typography.optionCardTitle.size,
+              lineHeight: typography.optionCardTitle.lineHeight,
+              marginBottom: 4,
+              color: titleColor,
+            }}
+          >
+            {title}
+          </Text>
+          <Text
+            numberOfLines={2}
+            style={{
+              fontFamily: typography.optionCardSub.family,
+              fontSize: typography.optionCardSub.size,
+              lineHeight: typography.optionCardSub.lineHeight,
+              color: subColor,
+            }}
+          >
+            {sub}
+          </Text>
+        </View>
       </View>
     </Pressable>
   );

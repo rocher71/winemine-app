@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { brand } from '@/lib/design-tokens';
+import { useThemeTokens } from '@/lib/use-theme-tokens';
 
 interface QuickActionsProps {
   cellaredCount: number;
@@ -33,36 +34,43 @@ interface ActionCardProps {
 }
 
 function ActionCard({ Icon, title, sub, onPress }: ActionCardProps) {
+  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
+  const tokens = useThemeTokens();
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="link"
       accessibilityLabel={`${title} ${sub}`}
-      className="bg-surface dark:bg-surface border border-border-default dark:border-border-default"
       style={({ pressed }) => ({
         flexBasis: '48%',
         flexGrow: 1,
-        minHeight: 86,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
-        borderRadius: 14,
-        gap: 6,
         opacity: pressed ? 0.9 : 1,
       })}
     >
-      <Icon size={20} strokeWidth={1.75} color={brand.gold} />
-      <Text
-        className="font-inter-semibold text-text-primary dark:text-text-primary"
-        style={{ fontSize: 14 }}
+      <View
+        style={{
+          minHeight: 86,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+          borderRadius: 14,
+          gap: 6,
+          backgroundColor: tokens.bg.surface,
+          borderWidth: 1,
+          borderColor: tokens.border.default,
+        }}
       >
-        {title}
-      </Text>
-      <Text
-        className="font-inter text-text-muted dark:text-text-muted"
-        style={{ fontSize: 12, lineHeight: 14.4 }}
-      >
-        {sub}
-      </Text>
+        <Icon size={20} strokeWidth={1.75} color={brand.gold} />
+        <Text
+          style={{ fontSize: 14, fontFamily: 'Inter_600SemiBold', color: tokens.text.primary }}
+        >
+          {title}
+        </Text>
+        <Text
+          style={{ fontSize: 12, lineHeight: 14.4, fontFamily: 'Inter_400Regular', color: tokens.text.muted }}
+        >
+          {sub}
+        </Text>
+      </View>
     </Pressable>
   );
 }

@@ -28,31 +28,37 @@ export function AddToCellarCta({ onPress }: Props) {
     onPress();
   };
 
+  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
   return (
-    <View className="px-4 pt-2">
+    <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
       <Pressable
         onPress={handlePress}
         accessibilityRole="button"
         accessibilityLabel={t('wineDetail.actions.addToCellar')}
-        className="rounded-[14px] flex-row items-center justify-center"
-        style={({ pressed }) => ({
-          height: 52,
-          paddingHorizontal: 20,
-          gap: 8,
-          backgroundColor: brand.wineRed,
-          opacity: pressed ? 0.92 : 1,
-          ...shadows.wineRedCardLg,
-        })}
+        style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
       >
-        <Plus size={18} strokeWidth={2} color={brand.cream} />
-        <Text
-          allowFontScaling={false}
-          className="font-inter-semibold text-[15px]"
-          style={{ color: brand.cream }}
-          numberOfLines={1}
+        <View
+          style={{
+            height: 52,
+            paddingHorizontal: 20,
+            gap: 8,
+            borderRadius: 14,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: brand.wineRed,
+            ...shadows.wineRedCardLg,
+          }}
         >
-          {t('wineDetail.actions.addToCellar')}
-        </Text>
+          <Plus size={18} strokeWidth={2} color={brand.cream} />
+          <Text
+            allowFontScaling={false}
+            style={{ fontFamily: 'Inter_600SemiBold', fontSize: 15, color: brand.cream }}
+            numberOfLines={1}
+          >
+            {t('wineDetail.actions.addToCellar')}
+          </Text>
+        </View>
       </Pressable>
     </View>
   );

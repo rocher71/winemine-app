@@ -40,8 +40,13 @@ export function SettingsRadioRow({
   accessibilityHint,
 }: SettingsRadioRowProps) {
   const scheme = useColorScheme();
-  const borderDefault = scheme === 'light' ? light.border.default : dark.border.default;
+  const isLight = scheme === 'light';
+  const borderDefault = isLight ? light.border.default : dark.border.default;
+  const surfaceBg = isLight ? light.bg.surface : dark.bg.surface;
+  const textPrimary = isLight ? light.text.primary : dark.text.primary;
+  const textMuted = isLight ? light.text.muted : dark.text.muted;
 
+  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
   return (
     <Pressable
       onPress={onPress}
@@ -51,45 +56,64 @@ export function SettingsRadioRow({
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
       hitSlop={6}
-      className="flex-row items-start gap-3 rounded-xl bg-surface dark:bg-surface px-4 py-3.5"
-      style={({ pressed }) => ({
-        borderWidth: 1,
-        borderColor: selected ? brand.gold : borderDefault,
-        opacity: pressed ? 0.92 : 1,
-        transform: [{ scale: pressed ? 0.99 : 1 }],
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
     >
-      {/* radio indicator */}
       <View
         style={{
-          width: 20,
-          height: 20,
-          borderRadius: 10,
-          borderWidth: 2,
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          gap: 12,
+          borderRadius: 12,
+          backgroundColor: surfaceBg,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+          borderWidth: 1,
           borderColor: selected ? brand.gold : borderDefault,
-          backgroundColor: selected ? brand.gold : 'transparent',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: 2,
         }}
       >
-        {selected ? <Check size={12} strokeWidth={3} color={brand.deepestDark} /> : null}
-      </View>
-
-      {/* text column */}
-      <View className="flex-1">
-        <Text
-          className="font-inter-medium text-[14px] leading-[20px] text-text-primary dark:text-text-primary"
+        {/* radio indicator */}
+        <View
+          style={{
+            width: 20,
+            height: 20,
+            borderRadius: 10,
+            borderWidth: 2,
+            borderColor: selected ? brand.gold : borderDefault,
+            backgroundColor: selected ? brand.gold : 'transparent',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 2,
+          }}
         >
-          {label}
-        </Text>
-        {description ? (
+          {selected ? <Check size={12} strokeWidth={3} color={brand.deepestDark} /> : null}
+        </View>
+
+        {/* text column */}
+        <View style={{ flex: 1 }}>
           <Text
-            className="mt-1 font-inter text-[12px] leading-[17px] text-text-muted dark:text-text-muted"
+            style={{
+              fontFamily: 'Inter_500Medium',
+              fontSize: 14,
+              lineHeight: 20,
+              color: textPrimary,
+            }}
           >
-            {description}
+            {label}
           </Text>
-        ) : null}
+          {description ? (
+            <Text
+              style={{
+                marginTop: 4,
+                fontFamily: 'Inter_400Regular',
+                fontSize: 12,
+                lineHeight: 17,
+                color: textMuted,
+              }}
+            >
+              {description}
+            </Text>
+          ) : null}
+        </View>
       </View>
     </Pressable>
   );
