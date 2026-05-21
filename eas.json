@@ -1,0 +1,59 @@
+{
+  "cli": {
+    "version": ">= 13.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "channel": "development",
+      "env": {
+        "EXPO_PUBLIC_APP_ENV": "development"
+      }
+    },
+    "preview": {
+      "distribution": "store",
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "channel": "preview",
+      "env": {
+        "EXPO_PUBLIC_APP_ENV": "preview"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "distribution": "store",
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_APP_ENV": "production"
+      }
+    }
+  },
+  "submit": {
+    "preview": {
+      "ios": {
+        "appleId": "set-via-eas-credentials",
+        "ascAppId": "set-via-eas-credentials",
+        "appleTeamId": "set-via-eas-credentials"
+      }
+    },
+    "production": {
+      "ios": {
+        "appleId": "set-via-eas-credentials",
+        "ascAppId": "set-via-eas-credentials",
+        "appleTeamId": "set-via-eas-credentials"
+      }
+    }
+  }
+}
