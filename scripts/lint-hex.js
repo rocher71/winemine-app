@@ -18,6 +18,9 @@ const SKIP_DIRS = new Set([
   'docs',
   '_workspace',
   'scripts',
+  // mock 데이터의 wine bottle_color, badge 색 등은 도메인 hex (DB의 wine_metadata.bottle_color와 동등).
+  // 실 production 에서는 supabase에서 hex로 옴 — 클라이언트 UI 색이 아니므로 허용.
+  'mock',
 ]);
 const EXTS = new Set(['.ts', '.tsx']);
 

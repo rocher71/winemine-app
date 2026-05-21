@@ -22,6 +22,13 @@ export const brand = {
   textInk: '#2a1a14',
 } as const;
 
+// Badge tier 색 — keyscreen profile-me 배지 패턴 (bronze/silver/gold/platinum).
+export const badge = {
+  bronze: '#A77044',
+  silver: '#C8C8D0',
+  // gold/platinum은 brand.gold / brand.goldSoft 재사용
+} as const;
+
 // ---- 다크 모드 ----
 export const dark = {
   bg: {

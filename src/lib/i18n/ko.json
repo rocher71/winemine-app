@@ -1018,5 +1018,54 @@
       "title": "즐겨찾기를 불러오지 못했어요",
       "body": "잠시 후 다시 시도해주세요"
     }
+  },
+  "profile": {
+    "title": "프로필",
+    "joinedFor": "가입 {{months}}개월",
+    "rankingDetailCta": "랭킹·등급 상세 보기",
+    "comingSoonToast": "v0.2.0 출시 예정",
+    "stats": {
+      "tasted": "마신 와인",
+      "countries": "방문 국가",
+      "regions": "탐험 지역",
+      "notes": "노트 수"
+    },
+    "links": {
+      "favorites": "즐겨찾기",
+      "badges": "뱃지",
+      "notifications": "알림",
+      "settings": "설정",
+      "signOut": "로그아웃"
+    },
+    "signOutConfirm": {
+      "title": "로그아웃하시겠어요?",
+      "desc": "다시 로그인하기 전까지는 익명 데이터가 보이지 않습니다.",
+      "confirm": "로그아웃",
+      "cancel": "취소"
+    },
+    "signOutToast": "로그아웃되었습니다",
+    "unauth": {
+      "title": "로그인이 필요합니다",
+      "desc": "프로필을 보려면 익명 또는 OAuth 로그인을 진행하세요",
+      "cta": "온보딩으로 이동"
+    },
+    "error": {
+      "title": "데이터를 불러올 수 없습니다",
+      "body": "잠시 후 다시 시도해주세요"
+    },
+    "a11y": {
+      "level": "레벨 {{level}}",
+      "stat": "{{value}} {{label}}",
+      "progress": "{{name}}, {{current}}/{{next}} XP"
+    }
+  },
+  "levels": {
+    "1": { "name": "입문자" },
+    "2": { "name": "애호가" },
+    "3": { "name": "감식가" },
+    "4": { "name": "소믈리에" },
+    "5": { "name": "마스터" },
+    "maxed": "최고 단계",
+    "progress": "{{current}} / {{next}} XP"
   }
 }

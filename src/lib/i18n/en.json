@@ -1018,5 +1018,54 @@
       "title": "Couldn't load favorites",
       "body": "Try again in a moment"
     }
+  },
+  "profile": {
+    "title": "Profile",
+    "joinedFor": "{{months}} months on winemine",
+    "rankingDetailCta": "View ranking & tier details",
+    "comingSoonToast": "Coming in v0.2.0",
+    "stats": {
+      "tasted": "Wines tasted",
+      "countries": "Countries",
+      "regions": "Regions",
+      "notes": "Notes"
+    },
+    "links": {
+      "favorites": "Favorites",
+      "badges": "Badges",
+      "notifications": "Notifications",
+      "settings": "Settings",
+      "signOut": "Sign out"
+    },
+    "signOutConfirm": {
+      "title": "Sign out?",
+      "desc": "Your anonymous data will not be visible until you sign in again.",
+      "confirm": "Sign out",
+      "cancel": "Cancel"
+    },
+    "signOutToast": "Signed out",
+    "unauth": {
+      "title": "Sign in required",
+      "desc": "Sign in anonymously or with OAuth to view your profile",
+      "cta": "Go to onboarding"
+    },
+    "error": {
+      "title": "Couldn't load profile",
+      "body": "Try again in a moment"
+    },
+    "a11y": {
+      "level": "Level {{level}}",
+      "stat": "{{value}} {{label}}",
+      "progress": "{{name}}, {{current}} of {{next}} XP"
+    }
+  },
+  "levels": {
+    "1": { "name": "Novice" },
+    "2": { "name": "Enthusiast" },
+    "3": { "name": "Connoisseur" },
+    "4": { "name": "Sommelier" },
+    "5": { "name": "Master" },
+    "maxed": "Maxed",
+    "progress": "{{current}} / {{next}} XP"
   }
 }
