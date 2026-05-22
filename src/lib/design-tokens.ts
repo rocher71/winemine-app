@@ -169,6 +169,38 @@ export const wsetGridBg = {
 // ---- Bottle gradient end (그라데이션 종점 — 다크 기준; light는 dark.bg.bottleShelf 사용) ----
 export const bottleGradientEnd = '#1a0a1e';
 
+// ---- Community tonight Seoul map SVG 야경 plate 색 (§6-3 의도된 deviation) ----
+//
+// community-side.md tonight 화면 Seoul map 내부 SVG. light 모드라도 야경 plate 유지 (시각 identity).
+export const communityTonightMap = {
+  bgStart: '#2a141c',           // 야경 시작 (= communityPost.vinePatternBg 와 동일하지만 의미 분리)
+  bgEnd: '#0a050f',             // 야경 끝 (매우 어두운 자주)
+  gridStroke: 'rgba(245,240,232,0.05)',
+  riverDark: '#2D1540',         // 어두운 보라 (≈ dark.bg.deep)
+  riverLight: 'rgba(91,156,230,0.15)',
+  riverLabel: '#9B8B7A',        // = level.L1
+} as const;
+
+// ---- Community post-detail 전용 토큰 (Column hero + Album bottle Pattern + Question card 등) ----
+//
+// design-spec community-post.md §1-C (column variant) + §1-E (album variant) 내부 SVG pattern 색.
+// 의도된 hex 패턴 인장이라 light 모드에서도 변함 없음 (SVG color shading).
+export const communityPost = {
+  // Column / Question variant cover hero gradient 시작색 (wine-red 디퍼)
+  heroDeepStart: '#5A1A28',
+  // Album thumb SVG bottle pattern 4색 (vine-like decorative)
+  albumPatternColors: ['#1a0a1e', '#2a141c', '#3a1a26', '#1a0a1e'] as readonly string[],
+  // wine_metadata.bottle_color null fallback (Album thumb bg)
+  bottleColorFallback: '#6B1A2A',
+  // Column hero SVG <Pattern id="vine"> 인장 2색 (decorative shading)
+  vinePatternBg: '#2a141c',
+  vinePatternStripe: '#3a1a26',
+  // Album thumb SVG bottle silhouette 색 (4 elements)
+  bottleSilhouetteOuter: '#1a0a1e',
+  bottleSilhouetteBody: '#5a1a28',
+  bottleSilhouetteNeck: '#0a0612',
+} as const;
+
 // ---- Capture 화면 전용 토큰 (design-spec capture.md §9 P0 + design-review S4) ----
 //
 // PhotoFrame gradient end는 wine-detail의 `#1a0a1e`와 다른 값 (colors.md §6-3 verbatim "#1a0a0e").
@@ -677,12 +709,15 @@ export type NoteAuthorLevel = keyof typeof noteAuthorAvatarGradient;
 // ---- PostTypeBadge color tokens (design-spec home.md §3-6-PATCH — 2026-05-21) ----
 //
 // keyscreen src/components/community/post-type-badge.tsx TYPE_MAP verbatim 포팅.
-// 양쪽 모드 동일 (badge 색은 type identity — 테마 무관).
 // 5색 중 note=brand.gold, column=brand.cream 재사용. question/news/album은 신규 색.
 //   - question = #A08EE0 (purple, thoughtful tone)
 //   - news     = #5B9CE6 (sky blue, bright/fresh tone)
 //   - album    = #E8B4D2 (soft pink, visual/soft tone)
 // keyscreen TYPE_MAP의 column 색(#F5F0E8)은 brand.cream(#F5F0E8)과 동일 — 토큰 재사용.
+//
+// **DEVIATION community-components.md §10 F**: light 모드에서 column = brand.cream (#F5F0E8) 은
+// surface (#FFFFFF) 위 invisible. type identity 보존 위해 light fallback = #8B7766 (= light.text.muted)
+// — soft brown tone, cream과 같은 "warm neutral" 계열 유지.
 export const postTypeBadgeColor = {
   note:     brand.gold,
   question: '#A08EE0',
@@ -691,7 +726,29 @@ export const postTypeBadgeColor = {
   album:    '#E8B4D2',
 } as const;
 
+export const postTypeBadgeColorLight = {
+  note:     brand.gold,
+  question: '#A08EE0',
+  column:   '#8B7766',    // light.text.muted — cream verbatim invisible 대체
+  news:     '#5B9CE6',
+  album:    '#E8B4D2',
+} as const;
+
 export type PostTypeKey = keyof typeof postTypeBadgeColor;
+
+// ---- ReactionBar 4종 색 (community-components.md §1-6) ----
+//
+// keyscreen reaction-bar.tsx REACTION_ITEMS verbatim 포팅.
+// glass(잔 들기) / sparkle(통찰) / bookmark(저장) / drank(나도) — type identity 양쪽 모드 동일.
+// bookmark 색은 postTypeBadgeColor.question 과 동일 (#A08EE0) — 의미는 다름 (저장 reaction).
+export const reactionColor = {
+  glass:    brand.gold,
+  sparkle:  brand.cream,
+  bookmark: '#A08EE0',
+  drank:    brand.wineRed,
+} as const;
+
+export type ReactionColorKey = keyof typeof reactionColor;
 
 // ---- Capture PhotoFrame gradient factory (design-spec capture.md §9 P0) ----
 //

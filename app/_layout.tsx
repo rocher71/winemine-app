@@ -132,6 +132,25 @@ export default function RootLayout() {
           {/* glossary 그룹 — 자체 _layout.tsx 가 있는 디렉토리 라우트.
            * 단일 등록 가능 (notes/settings 처럼 sub-route 명시 불필요 — _layout 있는 경우). */}
           <Stack.Screen name="glossary" />
+          {/* community/[postId] 그룹 — 자체 _layout.tsx 가 있는 디렉토리 라우트.
+           * 포스트 상세 + 댓글 화면. */}
+          <Stack.Screen name="community/[postId]" />
+          {/* community/new 그룹 — 글 작성 (intro + column + album). */}
+          <Stack.Screen name="community/new/index" />
+          <Stack.Screen name="community/new/column" />
+          <Stack.Screen name="community/new/album" />
+          {/* community 부가 화면. */}
+          <Stack.Screen name="community/tonight" />
+          <Stack.Screen name="community/discover" />
+          <Stack.Screen name="community/templates" />
+          {/* P3 화면 — favorites, profile, notifications */}
+          <Stack.Screen name="favorites/index" />
+          <Stack.Screen name="profile/index" />
+          <Stack.Screen name="notifications/index" />
+          {/* wine 서브 라우트 — story, prices, community-peak */}
+          <Stack.Screen name="wine/[lwin]/story" />
+          <Stack.Screen name="wine/[lwin]/prices" />
+          <Stack.Screen name="wine/[lwin]/community-peak" />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

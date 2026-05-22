@@ -17,7 +17,13 @@
     "empty": "Nothing yet",
     "refresh": "Refresh",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "add": "Add",
+    "share": "Share",
+    "bookmark": "Bookmark",
+    "send": "Send",
+    "justNow": "just now",
+    "ok": "OK"
   },
   "placeholders": {
     "comingSoon": "Coming in v0.2.0",
@@ -747,16 +753,24 @@
     }
   },
   "winePrices": {
-    "header": { "title": "Price details" },
+    "header": {
+      "title": "Price details"
+    },
     "notFound": "Wine not found",
     "priceChart": {
       "title": "Price history",
       "empty": "No purchases yet",
       "avgLabel": "Avg",
       "range": {
-        "3M": { "label": "Last 3 months" },
-        "1Y": { "label": "Last year" },
-        "ALL": { "label": "All time" }
+        "3M": {
+          "label": "Last 3 months"
+        },
+        "1Y": {
+          "label": "Last year"
+        },
+        "ALL": {
+          "label": "All time"
+        }
       },
       "myEntry": "My entry",
       "dot": {
@@ -814,11 +828,21 @@
     }
   },
   "wineStory": {
-    "header": { "title": "Winery story" },
-    "hero": { "foundedAt": "Founded {{year}} · " },
-    "history": { "title": "History" },
-    "funFact": { "label": "Fun fact" },
-    "philosophy": { "title": "Winemaking philosophy" },
+    "header": {
+      "title": "Winery story"
+    },
+    "hero": {
+      "foundedAt": "Founded {{year}} · "
+    },
+    "history": {
+      "title": "History"
+    },
+    "funFact": {
+      "label": "Fun fact"
+    },
+    "philosophy": {
+      "title": "Winemaking philosophy"
+    },
     "meta": {
       "founded": "Founded",
       "vineyardArea": "Vineyard area",
@@ -826,8 +850,12 @@
       "avgPrice": "Avg price",
       "noValue": "—"
     },
-    "cta": { "backToWine": "Back to wine" },
-    "empty": { "body": "Story coming soon" },
+    "cta": {
+      "backToWine": "Back to wine"
+    },
+    "empty": {
+      "body": "Story coming soon"
+    },
     "notFound": "Wine not found",
     "glossary": {
       "openLabel": "Open definition of {{termId}}",
@@ -887,7 +915,9 @@
     }
   },
   "wineCommunityPeak": {
-    "header": { "title": "Community drinking window" },
+    "header": {
+      "title": "Community drinking window"
+    },
     "notFound": "Wine not found",
     "intro": {
       "body": "Estimates from other users (L3+ only). Compare with system suggestion.",
@@ -985,12 +1015,238 @@
     }
   },
   "community": {
+    "title": "Community",
+    "pageTitle": "Community",
+    "allTitle": "All Stories",
+    "tabs": {
+      "following": "Following",
+      "all": "All"
+    },
+    "typeFilter": {
+      "all": "All"
+    },
+    "tonight": {
+      "count": "{{count}} people are raising a glass",
+      "places": "Gangnam · Seongsu · Hannam-dong + more",
+      "deferredToast": "Tonight screen coming soon",
+      "label": "{{count}} people drinking tonight",
+      "eyebrow": "Tonight · As of {{time}}",
+      "headlineLead": "{{count}} people",
+      "headlineTrail": "are raising a glass",
+      "participateCta": "Anyone joining tonight?",
+      "participateSub": "Your wine · just your neighborhood",
+      "joinLabel": "Join",
+      "joinDeferred": "Coming soon — we'll match you with drinkers nearby",
+      "sectionTitle": "Tonight glasses",
+      "toastLabel": "Toast",
+      "toastDeferred": "Coming soon — toast together",
+      "hanRiver": "Han River",
+      "empty": "Tonight is quiet so far"
+    },
+    "discover": {
+      "headerTitle": "Follow Suggestions",
+      "title": "People close to",
+      "titleAccent": "your taste",
+      "sub": "Similar notes & ratings in the last 7 days",
+      "compatibility": "{{pct}}% match",
+      "follow": "Follow",
+      "following": "Following",
+      "followDeferred": "Coming soon — follow",
+      "empty": "No suggestions yet"
+    },
+    "templates": {
+      "headerTitle": "Community templates",
+      "intro": "Save a template — it will appear in your note picker.",
+      "sortPopular": "Popular",
+      "sortLatest": "Latest",
+      "metaLine": "by {{author}} · {{fields}} fields · {{saves}} saves",
+      "save": "Save",
+      "saved": "Saved",
+      "savedToast": "You can now write notes with this template",
+      "removedToast": "Removed from saved",
+      "empty": "No templates shared yet"
+    },
+    "new": {
+      "deferredToast": "Compose screen coming soon",
+      "label": "New post"
+    },
+    "bell": {
+      "label": "Notifications",
+      "labelWithCount": "{{count}} unread notifications"
+    },
+    "empty": {
+      "followingTitle": "Not following anyone yet",
+      "followingHint": "Tap the pen to share your first story",
+      "filterTitle": "No posts of this type yet",
+      "filterHint": "Try another filter"
+    },
     "postType": {
       "note": "Tasting Note",
       "question": "Question",
       "column": "Column",
       "news": "News",
-      "album": "Album"
+      "album": "Album",
+      "label": "Post type: {{type}}"
+    },
+    "shortcut": {
+      "title": "Today's wine talk",
+      "deferredToast": "Community screen coming soon",
+      "cardLabel": "Community - {{title}}"
+    },
+    "feed": {
+      "cardLabel": "{{author}} - {{title}}",
+      "moreLabel": "More options",
+      "meCount": "Me too {{count}}"
+    },
+    "avatar": {
+      "label": "{{name}} - {{levelLabel}} profile",
+      "hint": "Opens profile"
+    },
+    "comment": {
+      "expert": "Expert",
+      "reply": "Reply",
+      "profileLabel": "Profile of {{name}}",
+      "replyLabel": "Reply to {{name}}",
+      "reactLabel": "Toast {{name}}'s comment ({{count}})"
+    },
+    "reaction": {
+      "glass": "Toast",
+      "sparkle": "Insight",
+      "bookmark": "Save",
+      "drank": "Me too",
+      "comments": "{{count}} comments",
+      "label": "{{label}} ({{count}})",
+      "commentsLabel": "View {{count}} comments"
+    },
+    "addComment": "Add a comment...",
+    "alsoTriedCta": "I tried this too",
+    "alsoTriedSub": "Log your tasting",
+    "compose": {
+      "deferredToast": "Comments coming soon",
+      "hint": "Opens the comments screen",
+      "newPost": "New Post",
+      "todayIs": "TODAY IS",
+      "heading": "What story do you\nwant to share?",
+      "closeLabel": "Close",
+      "backLabel": "Back",
+      "tonightTitle": "I'm drinking now",
+      "tonightSub": "Put a dot on tonight's map",
+      "tonightDeferred": "Tonight screen coming soon",
+      "questionDeferred": "Question composer coming soon",
+      "newsDeferred": "News composer coming soon",
+      "cardLabel": {
+        "note": "Share Tasting Note",
+        "question": "Question / Recommendation",
+        "column": "Long-form Column",
+        "news": "Industry News",
+        "album": "Photo Album"
+      },
+      "cardSub": {
+        "note": "Pick a note from your collection",
+        "question": "\"I wonder about...\" or \"Please recommend...\"",
+        "column": "Winery visits, vintage analysis",
+        "news": "Releases, events, tastings",
+        "album": "Multiple photos + captions"
+      }
+    },
+    "profile": {
+      "deferred": "Profile screen coming soon"
+    },
+    "post": {
+      "notFoundHeader": "Post",
+      "notFound": "Post not found.",
+      "shareDeferred": "Share coming soon",
+      "bookmarkDeferred": "Bookmark coming soon",
+      "comments": "Comments",
+      "answers": "Answers",
+      "commentsCount": "Comments {{count}}",
+      "seeAllComments": "See all {{count}} comments",
+      "related": "Related",
+      "mostRecommended": "Most recommended wines",
+      "mostHelpful": "Most helpful",
+      "recCount": "{{count}} recommended · ₩{{price}}K",
+      "readTime": "About {{min}} min read",
+      "ratingLabel": "Rating {{value}} out of 5",
+      "albumMainLabel": "Photo {{n}} of {{total}}",
+      "wineRowLabel": "{{name}} - recommended by {{recs}}",
+      "expertNote": {
+        "label": "Expert note · {{author}}",
+        "body": {
+          "pommard": "Balloon decanter + 2 hours is standard for Les Rugiens. Reduction dissipating at 30 min is typical young Burgundy behavior.",
+          "default": "Expert annotation coming soon."
+        }
+      },
+      "column": {
+        "p3": {
+          "body": "What struck me was the idea that the soil matters more than the label. \"The same vineyard — the top five rows and the bottom five rows are different wines,\" she said.",
+          "quote": "\"Wine is the farmer's time, not the winemaker's.\"",
+          "body2": "On the flight back I kept turning the phrase over. How different is the score we assign from the meaning the farmer saw in that year?"
+        }
+      }
+    },
+    "comments": {
+      "headerTitle": "{{count}} Comments",
+      "sortHelpful": "Most helpful",
+      "sortRecent": "Most recent",
+      "expertsOnly": "Experts only",
+      "composePlaceholder": "Leave a reply...",
+      "replyPlaceholder": "Reply to @{{name}}",
+      "replyingTo": "Replying to @{{name}}",
+      "cancelReply": "Cancel reply",
+      "composeLabel": "Comment input",
+      "sortHint": "Change sort order",
+      "expertsHint": "Show experts only",
+      "empty": "No comments yet"
+    },
+    "column": {
+      "title": "Write Column",
+      "publish": "Publish",
+      "publishDeferred": "Publishing coming soon",
+      "coverHint": "Add cover image (optional)",
+      "titlePlaceholder": "Title",
+      "titleLabel": "Title",
+      "titleCounter": "Title · {{n}} / 80",
+      "bodyPlaceholder": "Continue here...",
+      "wineAttached": "{{count}} wine attached",
+      "tapToWine": "Tap to go to wine detail",
+      "removeWine": "Remove wine",
+      "collapseToolbar": "Collapse toolbar",
+      "confirmDiscardTitle": "Discard unsaved post?",
+      "confirmDiscardBody": "Your draft will be lost",
+      "confirmDiscardOk": "Discard",
+      "confirmDiscardCancel": "Keep writing",
+      "wineDeferred": "Wine attach coming soon",
+      "placeDeferred": "Place attach coming soon",
+      "quoteDeferred": "Quote block coming soon",
+      "headingDeferred": "Heading insert coming soon",
+      "toolbar": {
+        "photo": "Photo",
+        "wine": "Wine",
+        "place": "Place",
+        "quote": "Quote",
+        "heading": "Heading"
+      }
+    },
+    "album": {
+      "title": "Photo Album",
+      "publish": "Publish",
+      "publishDeferred": "Publishing coming soon",
+      "caption": "CAPTION",
+      "captionPlaceholder": "A quiet day of cellar organizing. Clearing B-3 and making room for 6 new arrivals.",
+      "taggedWines": "TAGGED WINES",
+      "addWine": "Add",
+      "addWineButton": "Add wine",
+      "addWineDeferred": "Wine picker coming soon",
+      "addPhoto": "Add photo",
+      "photoLabel": "Photo {{index}} of {{total}}",
+      "removePhotoTitle": "Remove this photo?",
+      "removePhotoCancel": "Cancel",
+      "removePhotoOk": "Remove",
+      "removeWine": "Remove wine tag",
+      "addLocation": "Add location",
+      "locationDeferred": "Location picker coming soon",
+      "uploadFailed": "Photo upload failed",
+      "permissionDenied": "Photo library permission required"
     }
   },
   "errors": {
@@ -1092,11 +1348,21 @@
     }
   },
   "levels": {
-    "1": { "name": "Novice" },
-    "2": { "name": "Enthusiast" },
-    "3": { "name": "Connoisseur" },
-    "4": { "name": "Sommelier" },
-    "5": { "name": "Master" },
+    "1": {
+      "name": "Novice"
+    },
+    "2": {
+      "name": "Enthusiast"
+    },
+    "3": {
+      "name": "Connoisseur"
+    },
+    "4": {
+      "name": "Sommelier"
+    },
+    "5": {
+      "name": "Master"
+    },
     "maxed": "Maxed",
     "progress": "{{current}} / {{next}} XP"
   }

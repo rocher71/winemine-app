@@ -17,7 +17,13 @@
     "empty": "아직 없습니다",
     "refresh": "새로고침",
     "yes": "예",
-    "no": "아니오"
+    "no": "아니오",
+    "add": "추가",
+    "share": "공유",
+    "bookmark": "북마크",
+    "send": "보내기",
+    "justNow": "방금 전",
+    "ok": "확인"
   },
   "placeholders": {
     "comingSoon": "v0.2.0 출시 예정",
@@ -747,16 +753,24 @@
     }
   },
   "winePrices": {
-    "header": { "title": "가격 상세" },
+    "header": {
+      "title": "가격 상세"
+    },
     "notFound": "와인 정보를 찾을 수 없어요",
     "priceChart": {
       "title": "가격 추이",
       "empty": "아직 등록된 가격이 없어요",
       "avgLabel": "평균",
       "range": {
-        "3M": { "label": "최근 3개월" },
-        "1Y": { "label": "최근 1년" },
-        "ALL": { "label": "전체 기간" }
+        "3M": {
+          "label": "최근 3개월"
+        },
+        "1Y": {
+          "label": "최근 1년"
+        },
+        "ALL": {
+          "label": "전체 기간"
+        }
       },
       "myEntry": "내 등록",
       "dot": {
@@ -814,11 +828,21 @@
     }
   },
   "wineStory": {
-    "header": { "title": "와이너리 이야기" },
-    "hero": { "foundedAt": "설립 {{year}} · " },
-    "history": { "title": "역사" },
-    "funFact": { "label": "재미있는 이야기" },
-    "philosophy": { "title": "양조 철학" },
+    "header": {
+      "title": "와이너리 이야기"
+    },
+    "hero": {
+      "foundedAt": "설립 {{year}} · "
+    },
+    "history": {
+      "title": "역사"
+    },
+    "funFact": {
+      "label": "재미있는 이야기"
+    },
+    "philosophy": {
+      "title": "양조 철학"
+    },
     "meta": {
       "founded": "설립년도",
       "vineyardArea": "포도밭 면적",
@@ -826,8 +850,12 @@
       "avgPrice": "평균 시판가",
       "noValue": "—"
     },
-    "cta": { "backToWine": "이 와인 다시 보기" },
-    "empty": { "body": "이 와인의 스토리는 준비 중" },
+    "cta": {
+      "backToWine": "이 와인 다시 보기"
+    },
+    "empty": {
+      "body": "이 와인의 스토리는 준비 중"
+    },
     "notFound": "와인 정보를 찾을 수 없어요",
     "glossary": {
       "openLabel": "{{termId}} 용어 설명 열기",
@@ -887,7 +915,9 @@
     }
   },
   "wineCommunityPeak": {
-    "header": { "title": "커뮤니티 음용 적기" },
+    "header": {
+      "title": "커뮤니티 음용 적기"
+    },
     "notFound": "와인 정보를 찾을 수 없어요",
     "intro": {
       "body": "다른 사용자들이 추정한 절정 시점입니다. 시스템 추정과 비교해 보세요.",
@@ -985,12 +1015,238 @@
     }
   },
   "community": {
+    "title": "커뮤니티",
+    "pageTitle": "커뮤니티",
+    "allTitle": "모든 잔의 이야기",
+    "tabs": {
+      "following": "팔로잉",
+      "all": "전체"
+    },
+    "typeFilter": {
+      "all": "전체"
+    },
+    "tonight": {
+      "count": "지금 마시는 사람들 · {{count}}명",
+      "places": "강남 · 성수 · 한남동 외",
+      "deferredToast": "오늘 밤 화면 준비 중",
+      "label": "오늘 밤 마시는 사람들 {{count}}명",
+      "eyebrow": "오늘 밤 · {{time}} 기준",
+      "headlineLead": "{{count}}명이",
+      "headlineTrail": "한 잔을 들고 있어요",
+      "participateCta": "친구들과 함께 마실 사람?",
+      "participateSub": "지금 마시는 와인 · 위치만 살짝",
+      "joinLabel": "참여",
+      "joinDeferred": "곧 출시 — 함께 마실 친구를 찾아드릴게요",
+      "sectionTitle": "이 순간의 잔들",
+      "toastLabel": "잔 들기",
+      "toastDeferred": "곧 출시 — 같이 잔 들기",
+      "hanRiver": "한강",
+      "empty": "오늘 밤은 아직 조용해요"
+    },
+    "discover": {
+      "headerTitle": "팔로우 추천",
+      "title": "내 취향과",
+      "titleAccent": "가까운 사람들",
+      "sub": "최근 7일 노트와 평점이 비슷한 사람들",
+      "compatibility": "취향 일치 {{pct}}%",
+      "follow": "팔로우",
+      "following": "팔로잉",
+      "followDeferred": "곧 출시 — 팔로우",
+      "empty": "추천할 사람이 아직 없어요"
+    },
+    "templates": {
+      "headerTitle": "커뮤니티 양식",
+      "intro": "양식을 저장하면 노트 작성 화면 picker에 등장해요.",
+      "sortPopular": "인기순",
+      "sortLatest": "최신순",
+      "metaLine": "by {{author}} · {{fields}}개 필드 · {{saves}} 저장",
+      "save": "저장",
+      "saved": "저장됨",
+      "savedToast": "이제 이 양식으로도 노트를 쓸 수 있어요",
+      "removedToast": "저장 해제됐어요",
+      "empty": "공유된 양식이 아직 없어요"
+    },
+    "new": {
+      "deferredToast": "글쓰기 화면 준비 중",
+      "label": "새 글 쓰기"
+    },
+    "bell": {
+      "label": "알림",
+      "labelWithCount": "읽지 않은 알림 {{count}}개"
+    },
+    "empty": {
+      "followingTitle": "아직 팔로우한 사람이 없어요",
+      "followingHint": "오른쪽 아래 펜 버튼으로 첫 글을 남겨보세요",
+      "filterTitle": "이 타입의 글이 아직 없어요",
+      "filterHint": "다른 필터를 눌러보세요"
+    },
     "postType": {
       "note": "시음 노트",
       "question": "질문",
       "column": "칼럼",
       "news": "소식",
-      "album": "사진 앨범"
+      "album": "사진 앨범",
+      "label": "포스트 종류: {{type}}"
+    },
+    "shortcut": {
+      "title": "오늘의 와인 이야기",
+      "deferredToast": "커뮤니티 화면 준비 중",
+      "cardLabel": "커뮤니티 - {{title}}"
+    },
+    "feed": {
+      "cardLabel": "{{author}} - {{title}}",
+      "moreLabel": "더 보기",
+      "meCount": "나도 {{count}}"
+    },
+    "avatar": {
+      "label": "{{name}} - {{levelLabel}} 프로필",
+      "hint": "프로필 화면을 엽니다"
+    },
+    "comment": {
+      "expert": "전문가",
+      "reply": "답글",
+      "profileLabel": "{{name}} 프로필",
+      "replyLabel": "{{name}}에게 답글",
+      "reactLabel": "{{name}}의 댓글에 잔 들기 ({{count}})"
+    },
+    "reaction": {
+      "glass": "잔 들기",
+      "sparkle": "통찰",
+      "bookmark": "저장",
+      "drank": "나도",
+      "comments": "댓글 {{count}}",
+      "label": "{{label}} ({{count}})",
+      "commentsLabel": "댓글 {{count}}개 보기"
+    },
+    "addComment": "댓글 달기...",
+    "alsoTriedCta": "나도 마셔봤어요",
+    "alsoTriedSub": "이 와인 시음 기록 남기기",
+    "compose": {
+      "deferredToast": "댓글 기능 준비 중",
+      "hint": "댓글 화면으로 이동합니다",
+      "newPost": "새 글 작성",
+      "todayIs": "오늘은",
+      "heading": "어떤 이야기를\n나누고 싶으세요?",
+      "closeLabel": "닫기",
+      "backLabel": "뒤로",
+      "tonightTitle": "지금 마시고 있어요",
+      "tonightSub": "오늘 밤 지도에 점 하나 찍기",
+      "tonightDeferred": "오늘 밤 화면 준비 중",
+      "questionDeferred": "질문 작성은 곧 추가됩니다",
+      "newsDeferred": "소식 작성은 곧 추가됩니다",
+      "cardLabel": {
+        "note": "시음 노트 공유",
+        "question": "질문 · 추천 요청",
+        "column": "긴 글 · 칼럼",
+        "news": "업계 소식",
+        "album": "사진 앨범"
+      },
+      "cardSub": {
+        "note": "내 노트를 골라 공개해요",
+        "question": "\"··· 궁금해요\" 또는 \"··· 추천해주세요\"",
+        "column": "와이너리 방문기, 빈티지 분석",
+        "news": "출시·이벤트·시음회 알림",
+        "album": "여러 장 + 캡션"
+      }
+    },
+    "profile": {
+      "deferred": "프로필 화면 준비 중"
+    },
+    "post": {
+      "notFoundHeader": "포스트",
+      "notFound": "포스트를 찾을 수 없어요.",
+      "shareDeferred": "공유 기능 준비 중",
+      "bookmarkDeferred": "북마크 기능 준비 중",
+      "comments": "댓글",
+      "answers": "답변",
+      "commentsCount": "댓글 {{count}}",
+      "seeAllComments": "댓글 {{count}}개 전체 보기",
+      "related": "관련 글",
+      "mostRecommended": "가장 많이 추천된 와인",
+      "mostHelpful": "도움 순",
+      "recCount": "{{count}}명 추천 · ₩{{price}}K",
+      "readTime": "약 {{min}}분 읽기",
+      "ratingLabel": "평점 {{value}} 5점 만점",
+      "albumMainLabel": "사진 {{n}} / {{total}}",
+      "wineRowLabel": "{{name}} - {{recs}}명 추천",
+      "expertNote": {
+        "label": "전문가 각주 · {{author}}",
+        "body": {
+          "pommard": "레 루지엥은 광구 디캔터 + 2시간이 표준. 30분의 환원취 사라짐은 영(young) 부르고뉴의 전형적 행동이에요.",
+          "default": "전문가의 추가 설명이 곧 표시됩니다."
+        }
+      },
+      "column": {
+        "p3": {
+          "body": "이름값보다 토양값을 더 무겁게 본다는 안의 말이 인상적이었다. 같은 빈야드도 위쪽 다섯 줄과 아래쪽 다섯 줄은 다른 와인이 된다.",
+          "quote": "\"와인은 농부의 시간이지, 양조가의 시간이 아닙니다.\"",
+          "body2": "돌아오는 비행기에서 그 말을 계속 곱씹었다. 우리가 매기는 점수와, 농부가 본 그 해의 의미는 얼마나 다를까."
+        }
+      }
+    },
+    "comments": {
+      "headerTitle": "댓글 {{count}}",
+      "sortHelpful": "도움 순",
+      "sortRecent": "최신 순",
+      "expertsOnly": "전문가만",
+      "composePlaceholder": "답글 남기기...",
+      "replyPlaceholder": "@{{name}}에게 답글",
+      "replyingTo": "@{{name}}에게 답글 작성 중",
+      "cancelReply": "답글 취소",
+      "composeLabel": "댓글 입력",
+      "sortHint": "정렬 방식 변경",
+      "expertsHint": "전문가 댓글만 표시",
+      "empty": "아직 댓글이 없어요"
+    },
+    "column": {
+      "title": "긴 글 작성",
+      "publish": "게시",
+      "publishDeferred": "곧 게시 기능이 추가됩니다",
+      "coverHint": "커버 이미지 추가 (선택)",
+      "titlePlaceholder": "제목 / Title",
+      "titleLabel": "제목",
+      "titleCounter": "제목 · {{n}} / 80",
+      "bodyPlaceholder": "여기에 이어 쓰세요...",
+      "wineAttached": "와인 {{count}}개 첨부됨",
+      "tapToWine": "탭하면 와인 상세로 이동",
+      "removeWine": "와인 제거",
+      "collapseToolbar": "툴바 접기",
+      "confirmDiscardTitle": "저장 안 한 글 버릴까요?",
+      "confirmDiscardBody": "작성 중인 내용이 사라집니다",
+      "confirmDiscardOk": "버리기",
+      "confirmDiscardCancel": "계속 쓰기",
+      "wineDeferred": "와인 첨부 기능 준비 중",
+      "placeDeferred": "장소 첨부 준비 중",
+      "quoteDeferred": "인용 삽입 준비 중",
+      "headingDeferred": "소제목 삽입 준비 중",
+      "toolbar": {
+        "photo": "사진",
+        "wine": "와인",
+        "place": "장소",
+        "quote": "인용",
+        "heading": "소제목"
+      }
+    },
+    "album": {
+      "title": "사진 앨범",
+      "publish": "게시",
+      "publishDeferred": "곧 게시 기능이 추가됩니다",
+      "caption": "캡션",
+      "captionPlaceholder": "소소한 셀러 정리의 하루. B-3 공간을 비우고 새로 들어온 6병 자리 잡기.",
+      "taggedWines": "태그된 와인",
+      "addWine": "추가",
+      "addWineButton": "와인 추가",
+      "addWineDeferred": "와인 picker 준비 중",
+      "addPhoto": "사진 추가",
+      "photoLabel": "사진 {{index}}/{{total}}",
+      "removePhotoTitle": "사진을 제거할까요?",
+      "removePhotoCancel": "취소",
+      "removePhotoOk": "제거",
+      "removeWine": "와인 태그 제거",
+      "addLocation": "장소 추가",
+      "locationDeferred": "곧 장소 선택이 추가됩니다",
+      "uploadFailed": "사진 업로드 실패",
+      "permissionDenied": "사진 라이브러리 권한이 필요합니다"
     }
   },
   "errors": {
@@ -1092,11 +1348,21 @@
     }
   },
   "levels": {
-    "1": { "name": "입문자" },
-    "2": { "name": "애호가" },
-    "3": { "name": "감식가" },
-    "4": { "name": "소믈리에" },
-    "5": { "name": "마스터" },
+    "1": {
+      "name": "입문자"
+    },
+    "2": {
+      "name": "애호가"
+    },
+    "3": {
+      "name": "감식가"
+    },
+    "4": {
+      "name": "소믈리에"
+    },
+    "5": {
+      "name": "마스터"
+    },
     "maxed": "최고 단계",
     "progress": "{{current}} / {{next}} XP"
   }
