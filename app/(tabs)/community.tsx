@@ -214,10 +214,10 @@ export default function CommunityScreen() {
         <View
           accessibilityRole="tablist"
           style={{
-            paddingTop: 6,
+            paddingTop: 14,
             paddingHorizontal: 20,
             flexDirection: 'row',
-            gap: 22,
+            gap: 24,
             borderBottomWidth: StyleSheet.hairlineWidth,
             borderBottomColor: light.border.default,
           }}
@@ -235,7 +235,7 @@ export default function CommunityScreen() {
               >
                 <View
                   style={{
-                    paddingBottom: 10,
+                    paddingBottom: 14,
                     marginBottom: -1, // hairline overlap (§6-10, 유형 B 허용)
                     borderBottomWidth: 2,
                     borderBottomColor: active ? light.border.active : 'transparent',

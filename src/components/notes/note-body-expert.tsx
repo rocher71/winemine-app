@@ -236,12 +236,13 @@ export function NoteBodyExpert({ fields }: Props) {
   }
 
   // ---- New canonical shape — palate only has flavor_intensity/tannin/bubble ----
+  const palate = fields.palate as { flavor_intensity?: number; tannin?: number; bubble?: number } | undefined;
   const palateItems: { label: string; value: string }[] = [];
-  if (typeof (fields.palate as { tannin?: number }).tannin === 'number') {
-    palateItems.push({ label: t('notes.expert.palateTannin'), value: wsetShort((fields.palate as { tannin: number }).tannin, locale) });
+  if (palate && typeof palate.tannin === 'number') {
+    palateItems.push({ label: t('notes.expert.palateTannin'), value: wsetShort(palate.tannin, locale) });
   }
-  if (typeof (fields.palate as { bubble?: number }).bubble === 'number') {
-    palateItems.push({ label: t('notes.expert.palateBubble'), value: wsetShort((fields.palate as { bubble: number }).bubble, locale) });
+  if (palate && typeof palate.bubble === 'number') {
+    palateItems.push({ label: t('notes.expert.palateBubble'), value: wsetShort(palate.bubble, locale) });
   }
 
   return (
@@ -249,12 +250,13 @@ export function NoteBodyExpert({ fields }: Props) {
       {/* Variant + aroma intensity */}
       <Card>
         <Eyebrow>{t('notes.expert.sectionAroma')}</Eyebrow>
-        <DimRow label={t('notes.expert.aromaIntensity')} value={wsetShort(fields.aroma_intensity, locale)} />
-        <DimRow
-          label={t('notes.expert.palateFlavor')}
-          value={wsetShort(fields.palate.flavor_intensity, locale)}
-        />
-        {fields.aromas.length > 0 ? (
+        {typeof fields.aroma_intensity === 'number' && (
+          <DimRow label={t('notes.expert.aromaIntensity')} value={wsetShort(fields.aroma_intensity, locale)} />
+        )}
+        {palate && typeof palate.flavor_intensity === 'number' && (
+          <DimRow label={t('notes.expert.palateFlavor')} value={wsetShort(palate.flavor_intensity, locale)} />
+        )}
+        {fields.aromas?.length > 0 ? (
           <View style={{ marginTop: 10 }}>
             <Text
               allowFontScaling={false}
