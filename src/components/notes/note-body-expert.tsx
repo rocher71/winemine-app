@@ -235,18 +235,13 @@ export function NoteBodyExpert({ fields }: Props) {
     );
   }
 
-  // ---- New canonical shape ----
-  const palateItems = [
-    { label: t('notes.expert.palateSweetness'), value: wsetShort(fields.palate.sweetness, locale) },
-    { label: t('notes.expert.palateAcidity'), value: wsetShort(fields.palate.acidity, locale) },
-    { label: t('notes.expert.palateBody'), value: wsetShort(fields.palate.body, locale) },
-    { label: t('notes.expert.palateAlcohol'), value: wsetShort(fields.palate.alcohol, locale) },
-  ];
-  if (typeof fields.palate.tannin === 'number' && fields.variant === 'red') {
-    palateItems.push({ label: t('notes.expert.palateTannin'), value: wsetShort(fields.palate.tannin, locale) });
+  // ---- New canonical shape — palate only has flavor_intensity/tannin/bubble ----
+  const palateItems: { label: string; value: string }[] = [];
+  if (typeof (fields.palate as { tannin?: number }).tannin === 'number') {
+    palateItems.push({ label: t('notes.expert.palateTannin'), value: wsetShort((fields.palate as { tannin: number }).tannin, locale) });
   }
-  if (typeof fields.palate.bubble === 'number' && fields.variant === 'sparkling') {
-    palateItems.push({ label: t('notes.expert.palateBubble'), value: wsetShort(fields.palate.bubble, locale) });
+  if (typeof (fields.palate as { bubble?: number }).bubble === 'number') {
+    palateItems.push({ label: t('notes.expert.palateBubble'), value: wsetShort((fields.palate as { bubble: number }).bubble, locale) });
   }
 
   return (

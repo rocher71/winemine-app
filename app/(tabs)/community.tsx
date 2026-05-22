@@ -41,7 +41,8 @@
  * BottomNav 자동 표시 (tabs). ScrollView paddingBottom 156 = FAB 56 + BottomNav 56 + gap 44.
  */
 import { useMemo, useState } from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet, Animated } from 'react-native';
+import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -71,6 +72,37 @@ export default function CommunityScreen() {
 
   const displayInitial = (profile?.anonymous_display ?? '?')[0]?.toUpperCase() ?? '?';
   const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
+
+  // ── Scroll-aware header (Blind 앱 패턴) ───────────────────────────────────
+  const HEADER_HEIGHT = insets.top + 56;
+  const headerTranslateY = useRef(new Animated.Value(0)).current;
+  const lastScrollY = useRef(0);
+  const headerVisible = useRef(true);
+
+  const handleScroll = (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+    const currentY = event.nativeEvent.contentOffset.y;
+    const diff = currentY - lastScrollY.current;
+    const THRESHOLD = 8;
+
+    if (currentY <= 0) {
+      // 최상단 — 항상 표시
+      if (!headerVisible.current) {
+        headerVisible.current = true;
+        Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+      }
+    } else if (diff > THRESHOLD && headerVisible.current) {
+      // 아래로 스크롤 — 숨김
+      headerVisible.current = false;
+      Animated.timing(headerTranslateY, { toValue: -HEADER_HEIGHT, duration: 250, useNativeDriver: true }).start();
+    } else if (diff < -THRESHOLD && !headerVisible.current) {
+      // 위로 스크롤 — 표시
+      headerVisible.current = true;
+      Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+    }
+
+    lastScrollY.current = currentY;
+  };
+  // ──────────────────────────────────────────────────────────────────────────
 
   const [tab, setTab] = useState<TabId>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilterId>('all');
@@ -117,74 +149,67 @@ export default function CommunityScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
-      {/* AppHeader inline — keyscreen 의 AppHeader 는 title 비어있고 Bell 우측만.
-       *   기존 src/components/nav/app-header.tsx 의 title prop 은 비워두면 빈 Text 자리만 남으므로
-       *   본 화면은 inline header 로 Bell 만 우측 배치 (§6-1).
-       */}
-      <View
+      {/* ── Scroll-aware 헤더 ── */}
+      <Animated.View
         style={{
-          paddingTop: insets.top,
-          height: insets.top + 56,
-          paddingHorizontal: 16,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          transform: [{ translateY: headerTranslateY }],
+          backgroundColor: light.bg.deepest,
+          paddingTop: insets.top + 10,
+          paddingBottom: 10,
+          paddingHorizontal: 20,
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: light.bg.deepest,
-          gap: 8,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          borderBottomColor: light.border.default,
         }}
       >
-        <View style={{ flex: 1 }} />
-        <BellButton unreadCount={unreadCount} />
-        <LevelChip levelId={levelId} initial={displayInitial} />
-      </View>
+        {/* 좌측: eyebrow + title */}
+        <View style={{ flex: 1 }}>
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Inter_600SemiBold',
+              fontSize: 10,
+              color: light.border.active,
+              letterSpacing: 1.8,
+              textTransform: 'uppercase',
+            }}
+          >
+            {t('community.title')}
+          </Text>
+          <Text
+            allowFontScaling={false}
+            accessibilityRole="header"
+            style={{
+              fontFamily: 'PlayfairDisplay_400Regular',
+              fontSize: 20,
+              lineHeight: 26,
+              color: light.text.primary,
+              marginTop: 1,
+            }}
+          >
+            {tab === 'following' ? t('community.pageTitle') : t('community.allTitle')}
+          </Text>
+        </View>
+        {/* 우측: Bell + LevelChip */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <BellButton unreadCount={unreadCount} />
+          <LevelChip levelId={levelId} initial={displayInitial} />
+        </View>
+      </Animated.View>
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 156 }}
+        contentContainerStyle={{ paddingTop: HEADER_HEIGHT, paddingBottom: 156 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        scrollEventThrottle={16}
+        onScroll={handleScroll}
       >
-        {/* ── Title row (§1, keyscreen line 79~134 verbatim — Search btn 제거 §10 C) ── */}
-        <View
-          style={{
-            paddingTop: 14,
-            paddingHorizontal: 20,
-            paddingBottom: 8,
-            flexDirection: 'row',
-            alignItems: 'baseline',
-            gap: 8,
-          }}
-        >
-          <View>
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Inter_600SemiBold',
-                fontSize: 10,
-                fontWeight: '600',
-                color: light.border.active,
-                letterSpacing: 1.8,
-                textTransform: 'uppercase',
-              }}
-            >
-              {t('community.title')}
-            </Text>
-            <Text
-              allowFontScaling={false}
-              accessibilityRole="header"
-              style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
-                fontSize: 22,
-                lineHeight: 28.6,
-                color: light.text.primary,
-                marginTop: 2,
-              }}
-            >
-              {tab === 'following' ? t('community.pageTitle') : t('community.allTitle')}
-            </Text>
-          </View>
-          <View style={{ flex: 1 }} />
-          {/* §10 C: Search button 제거 — v0.1.0 미바인딩 */}
-        </View>
-
         {/* ── Tab bar (2탭, §6-9 plain View; §6-10 hairline overlap) ── */}
         <View
           accessibilityRole="tablist"
