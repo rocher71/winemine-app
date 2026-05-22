@@ -1019,6 +1019,38 @@
       "body": "잠시 후 다시 시도해주세요"
     }
   },
+  "notifications": {
+    "title": "알림",
+    "markAllRead": "모두 읽음",
+    "markAllReadA11y": "모든 알림을 읽음으로 표시",
+    "markedAllRead": "모두 읽음으로 표시했어요",
+    "row": {
+      "openA11y": "{{title}} 알림 열기",
+      "unreadA11y": "읽지 않음",
+      "openHint": {
+        "wine": "와인 상세로 이동합니다",
+        "cellar": "셀러 상세로 이동합니다",
+        "badges": "뱃지 화면으로 이동합니다",
+        "profile": "프로필로 이동합니다",
+        "self": "알림 목록입니다"
+      }
+    },
+    "kind": {
+      "favoritePurchase": "관심 와인 등록",
+      "drinkWindowReached": "시음 적기 도달",
+      "badgeEarned": "뱃지 획득",
+      "levelUp": "레벨 업",
+      "reviewLiked": "리뷰 좋아요"
+    },
+    "empty": {
+      "title": "알림이 없어요",
+      "description": "새 소식이 오면 여기 표시돼요"
+    },
+    "error": {
+      "title": "알림을 불러오지 못했어요",
+      "body": "잠시 후 다시 시도해주세요"
+    }
+  },
   "profile": {
     "title": "프로필",
     "joinedFor": "가입 {{months}}개월",

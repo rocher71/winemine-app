@@ -1019,6 +1019,38 @@
       "body": "Try again in a moment"
     }
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "markAllReadA11y": "Mark all notifications as read",
+    "markedAllRead": "Marked all as read",
+    "row": {
+      "openA11y": "Open notification {{title}}",
+      "unreadA11y": "Unread",
+      "openHint": {
+        "wine": "Goes to wine details",
+        "cellar": "Goes to cellar item",
+        "badges": "Goes to badges",
+        "profile": "Goes to profile",
+        "self": "Notifications list"
+      }
+    },
+    "kind": {
+      "favoritePurchase": "Favourite logged",
+      "drinkWindowReached": "Drink window opened",
+      "badgeEarned": "Badge earned",
+      "levelUp": "Level up",
+      "reviewLiked": "Review liked"
+    },
+    "empty": {
+      "title": "No notifications",
+      "description": "New activity will show up here"
+    },
+    "error": {
+      "title": "Couldn't load notifications",
+      "body": "Try again in a moment"
+    }
+  },
   "profile": {
     "title": "Profile",
     "joinedFor": "{{months}} months on winemine",
