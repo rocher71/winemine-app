@@ -20,6 +20,10 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { GlassWater } from 'lucide-react-native';
 import { AppHeader } from '@/components/nav/app-header';
+import { BellButton } from '@/components/nav/bell-button';
+import { LevelChip } from '@/components/shared/level-chip';
+import { useNotifications } from '@/hooks/use-notifications';
+import { useProfile } from '@/hooks/use-profile';
 import { CellarTabs, type CellarTab } from '@/components/cellar/cellar-tabs';
 import { CellarSearchInput } from '@/components/cellar/cellar-search-input';
 import { TypeFilterChips, type TypeFilter } from '@/components/cellar/type-filter-chips';
@@ -125,8 +129,13 @@ export default function CellarListScreen() {
   const [sort, setSort] = useState<CellarSortKey>('recent');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
-  // cellar 탭은 cellared 데이터. tasted는 placeholder.
+  const { unreadCount } = useNotifications();
+  const { profile } = useProfile();
+  const displayInitial = (profile?.anonymous_display ?? '?')[0]?.toUpperCase() ?? '?';
+  const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
+
   const { items: rawItems, loading, refresh } = useCellarList('cellared');
+  const { items: consumedItems, loading: consumedLoading, refresh: consumedRefresh } = useCellarList('consumed');
   const { cellaredCount, consumedCount } = useCellarSummary();
 
   const isFiltered = query.trim().length > 0 || typeFilter !== 'all';
@@ -147,23 +156,43 @@ export default function CellarListScreen() {
     setTimeout(() => setToastMsg(null), 2500);
   }, [t]);
 
-  // ---- Render: tasted 탭 placeholder ----
+  const HeaderRight = (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <BellButton unreadCount={unreadCount} />
+      <LevelChip levelId={levelId} initial={displayInitial} />
+    </View>
+  );
+
+  // ---- Render: tasted 탭 ----
   if (tab === 'tasted') {
+    const consumedSorted = [...consumedItems].sort((a, b) => {
+      const aKey = a.consumed_at ?? a.acquired_at;
+      const bKey = b.consumed_at ?? b.acquired_at;
+      return (bKey ?? '').localeCompare(aKey ?? '');
+    });
     return (
       <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-        <AppHeader title={t('cellar.title')} />
+        <AppHeader title={t('cellar.title')} right={HeaderRight} />
         <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 }}>
-          <CellarTabs
-            value={tab}
-            onChange={setTab}
-            cellarCount={cellaredCount}
-            tastedCount={consumedCount}
-          />
+          <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
         </View>
-        <EmptyState
-          title={t('cellar.tasted.comingSoon')}
-          description={t('common.empty')}
-        />
+        {consumedLoading ? (
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={brand.gold} />
+          </View>
+        ) : consumedSorted.length === 0 ? (
+          <EmptyState title={t('cellar.tasted.empty')} description={t('cellar.tasted.emptyHint')} />
+        ) : (
+          <FlatList
+            data={consumedSorted}
+            keyExtractor={(it) => it.id}
+            numColumns={2}
+            contentContainerStyle={{ padding: 12, gap: 12 }}
+            columnWrapperStyle={{ gap: 12 }}
+            renderItem={({ item }) => <CellarCard item={item as import('@/hooks/use-cellar').CellarItemWithWine} />}
+            refreshControl={<RefreshControl refreshing={consumedLoading} onRefresh={consumedRefresh} tintColor={brand.gold} />}
+          />
+        )}
       </View>
     );
   }
@@ -245,7 +274,7 @@ export default function CellarListScreen() {
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-      <AppHeader title={t('cellar.title')} />
+      <AppHeader title={t('cellar.title')} right={HeaderRight} />
 
       <FlatList
         data={displayItems}

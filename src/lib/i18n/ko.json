@@ -502,14 +502,14 @@
     }
   },
   "cellar": {
-    "title": "내 셀러",
+    "title": "셀러",
     "addCta": "+ 등록",
     "addToast": "셀러 등록은 추후 추가될 예정이에요",
     "clearSearch": "검색 지우기",
     "clearFilters": "필터 지우기",
     "searchPlaceholder": "와인·생산자·지역·품종·빈티지 검색",
     "tabs": {
-      "cellar": "내 셀러",
+      "cellar": "셀러",
       "tasted": "마신 와인",
       "cellared": "보관 중",
       "consumed": "음용 완료"
@@ -603,7 +603,9 @@
       "noResults": "검색 결과가 없어요"
     },
     "tasted": {
-      "comingSoon": "마신 와인 탭은 곧 출시 (v0.2.0)"
+      "comingSoon": "마신 와인 탭은 곧 출시 (v0.2.0)",
+      "empty": "아직 마신 와인이 없어요",
+      "emptyHint": "와인을 마신 후 셀러에서 기록해보세요"
     },
     "meta": {
       "acquiredAt": "구매일",

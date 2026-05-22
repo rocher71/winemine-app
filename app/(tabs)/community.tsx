@@ -50,11 +50,13 @@ import * as Haptics from 'expo-haptics';
 import { PenLine } from 'lucide-react-native';
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { BellButton } from '@/components/nav/bell-button';
+import { LevelChip } from '@/components/shared/level-chip';
 import { CommFeedCard, CommFeedRow } from '@/components/community/comm-feed-card';
 import { getCommunityPosts, type CommPost, type PostType } from '@/lib/mock/community-posts';
 import { useNotifications } from '@/hooks/use-notifications';
+import { useProfile } from '@/hooks/use-profile';
 
-type TabId = 'following' | 'all';
+type TabId = 'all' | 'following';
 type TypeFilterId = 'all' | PostType;
 
 const TYPE_FILTERS: TypeFilterId[] = ['all', 'note', 'question', 'column', 'news', 'album'];
@@ -65,8 +67,12 @@ export default function CommunityScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { unreadCount } = useNotifications();
+  const { profile } = useProfile();
 
-  const [tab, setTab] = useState<TabId>('following');
+  const displayInitial = (profile?.anonymous_display ?? '?')[0]?.toUpperCase() ?? '?';
+  const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
+
+  const [tab, setTab] = useState<TabId>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilterId>('all');
 
   // Posts mock — community-posts.ts verbatim.
@@ -122,11 +128,13 @@ export default function CommunityScreen() {
           paddingHorizontal: 16,
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'flex-end',
           backgroundColor: light.bg.deepest,
+          gap: 8,
         }}
       >
+        <View style={{ flex: 1 }} />
         <BellButton unreadCount={unreadCount} />
+        <LevelChip levelId={levelId} initial={displayInitial} />
       </View>
 
       <ScrollView
@@ -189,7 +197,7 @@ export default function CommunityScreen() {
             borderBottomColor: light.border.default,
           }}
         >
-          {(['following', 'all'] as TabId[]).map((id) => {
+          {(['all', 'following'] as TabId[]).map((id) => {
             const active = tab === id;
             return (
               <Pressable
@@ -348,7 +356,7 @@ export default function CommunityScreen() {
       {/* ── FAB (absolute outer View, 3-layer §4-11, §6-7) ── */}
       {/* §4-11 fix: position/right/bottom은 outer View에. Pressable은 opacity-only style fn. */}
       <View
-        style={{ position: 'absolute', right: 18, bottom: 100, zIndex: 10 }}
+        style={{ position: 'absolute', right: 18, bottom: 12 + insets.bottom + 57 + 8, zIndex: 10 }}
         pointerEvents="box-none"
       >
         <Pressable

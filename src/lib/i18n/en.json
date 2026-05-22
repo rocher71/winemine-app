@@ -603,7 +603,9 @@
       "noResults": "No results"
     },
     "tasted": {
-      "comingSoon": "Tasted tab coming soon (v0.2.0)"
+      "comingSoon": "Tasted tab coming soon (v0.2.0)",
+      "empty": "No wines tasted yet",
+      "emptyHint": "Mark a wine as consumed in your cellar to see it here"
     },
     "meta": {
       "acquiredAt": "Acquired",
