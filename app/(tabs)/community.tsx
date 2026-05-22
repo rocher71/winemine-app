@@ -50,6 +50,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { PenLine } from 'lucide-react-native';
 import { brand, light, withAlpha } from '@/lib/design-tokens';
+import { AppHeader } from '@/components/nav/app-header';
 import { BellButton } from '@/components/nav/bell-button';
 import { LevelChip } from '@/components/shared/level-chip';
 import { CommFeedCard, CommFeedRow } from '@/components/community/comm-feed-card';
@@ -158,49 +159,18 @@ export default function CommunityScreen() {
           right: 0,
           zIndex: 10,
           transform: [{ translateY: headerTranslateY }],
-          backgroundColor: light.bg.deepest,
-          paddingTop: insets.top + 10,
-          paddingBottom: 10,
-          paddingHorizontal: 20,
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          borderBottomColor: light.border.default,
         }}
       >
-        {/* 좌측: eyebrow + title */}
-        <View style={{ flex: 1 }}>
-          <Text
-            allowFontScaling={false}
-            style={{
-              fontFamily: 'Freesentation_5Medium',
-              fontSize: 11,
-              color: light.border.active,
-              letterSpacing: 1.8,
-              textTransform: 'uppercase',
-            }}
-          >
-            {t('community.title')}
-          </Text>
-          <Text
-            allowFontScaling={false}
-            accessibilityRole="header"
-            style={{
-              fontFamily: 'Freesentation_7Bold',
-              fontSize: 24,
-              lineHeight: 29,
-              color: light.text.primary,
-              marginTop: 2,
-            }}
-          >
-            {tab === 'following' ? t('community.pageTitle') : t('community.allTitle')}
-          </Text>
-        </View>
-        {/* 우측: Bell + LevelChip */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <BellButton unreadCount={unreadCount} />
-          <LevelChip levelId={levelId} initial={displayInitial} />
-        </View>
+        <AppHeader
+          eyebrow={t('community.title')}
+          title={tab === 'following' ? t('community.pageTitle') : t('community.allTitle')}
+          right={
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <BellButton unreadCount={unreadCount} />
+              <LevelChip levelId={levelId} initial={displayInitial} />
+            </View>
+          }
+        />
       </Animated.View>
 
       <ScrollView

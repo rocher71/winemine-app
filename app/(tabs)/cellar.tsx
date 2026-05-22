@@ -88,6 +88,8 @@ export default function CellarListScreen() {
     </View>
   );
 
+  const headerProps = { eyebrow: t('nav.cellar'), title: t('cellar.title') } as const;
+
   // ---- Render: tasted 탭 ----
   if (tab === 'tasted') {
     const consumedSorted = [...consumedItems].sort((a, b) => {
@@ -97,7 +99,7 @@ export default function CellarListScreen() {
     });
     return (
       <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-        <AppHeader title={t('cellar.title')} right={HeaderRight} />
+        <AppHeader {...headerProps} right={HeaderRight} />
         <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 }}>
           <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
         </View>
@@ -199,7 +201,7 @@ export default function CellarListScreen() {
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-      <AppHeader title={t('cellar.title')} right={HeaderRight} />
+      <AppHeader {...headerProps} right={HeaderRight} />
 
       <FlatList
         data={displayItems}

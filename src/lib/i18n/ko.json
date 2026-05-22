@@ -502,7 +502,7 @@
     }
   },
   "cellar": {
-    "title": "셀러",
+    "title": "내 셀러",
     "addCta": "+ 등록",
     "addToast": "셀러 등록은 추후 추가될 예정이에요",
     "clearSearch": "검색 지우기",
