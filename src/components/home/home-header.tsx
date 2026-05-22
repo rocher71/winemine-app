@@ -3,21 +3,23 @@
  *
  * AppHeader (다른 화면 공용)와 별개. 키스크린 verbatim:
  * - padding 12_20_14, gap 10, border-bottom hairline border-default, bg-bg-deep
- * - Left: WMLogoMark SVG 26 + Wordmark "wine·mine" Playfair 18 cream (separator '·' gold)
- * - Right: BellButton 36×36 + LevelChip (heavy) / Avatar circle (first-time)
+ * - Left: WMLogoMark SVG 26 + WMLogoWordmark "WineMine" Playfair 18 cream/gold
+ * - Right: BellButton 36×36 + LevelChip (heavy) / FirstTimeAvatar (first-time)
  *
  * `mode`:
  *  - 'heavy' → LevelChip (avatar gradient + L{n})
- *  - 'first-time' → Avatar circle wine-red bg + cream initial
+ *  - 'first-time' → FirstTimeAvatar (wine-red circle + cream initial)
  */
 import { View, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
-import { brand, light } from '@/lib/design-tokens';
+import { brand } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { LevelChip } from '@/components/shared/level-chip';
+import { WMLogoMark } from '@/components/shared/wm-logo-mark';
+import { WMLogoWordmark } from '@/components/shared/wm-logo-wordmark';
 
 type LevelId = 1 | 2 | 3 | 4 | 5;
 
@@ -26,44 +28,6 @@ interface HomeHeaderProps {
   levelId: LevelId;
   displayInitial: string;
   unreadNotifications?: boolean;
-}
-
-function WMLogoMark({ size = 26 }: { size?: number }) {
-  // 키스크린 wm-logo-mark SVG: 와인잔 실루엣
-  return (
-    <Svg width={size} height={size} viewBox="0 0 32 32">
-      <Path
-        d="M10 4 L22 4 Q22 14 16 18 Q10 14 10 4 Z"
-        stroke={brand.gold}
-        strokeWidth={1.5}
-        fill={brand.wineRed}
-        fillOpacity={0.9}
-      />
-      <Path d="M16 18 L16 26" stroke={brand.gold} strokeWidth={1.5} />
-      <Path d="M11 27 L21 27" stroke={brand.gold} strokeWidth={1.5} />
-    </Svg>
-  );
-}
-
-function WMLogoWordmark() {
-  // 워드마크: locale 무관 항상 PlayfairDisplay (영문 브랜드 폰트 고정)
-  // 텍스트: "WineMine" (camelCase, 사용자 요청)
-  return (
-    <Text
-      allowFontScaling={false}
-      style={{
-        fontFamily: 'PlayfairDisplay_400Regular',
-        fontSize: 18,
-        letterSpacing: -0.18,
-        color: light.text.primary,
-      }}
-    >
-      Wine
-      <Text style={{ fontFamily: 'PlayfairDisplay_400Regular', color: brand.gold }}>
-        Mine
-      </Text>
-    </Text>
-  );
 }
 
 function BellButton({ unread }: { unread: boolean }) {
@@ -160,7 +124,7 @@ export function HomeHeader({
         accessibilityLabel="Home"
         style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
       >
-        <WMLogoMark size={26} />
+        <WMLogoMark />
         <WMLogoWordmark />
       </Pressable>
       <View style={{ flex: 1 }} />
