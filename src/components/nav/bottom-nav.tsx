@@ -117,22 +117,23 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
         );
       })}
 
-      {/* FAB — Round 8: Pressable에서 visual style 분리. NativeWind cssInterop + Fabric에서
-       *   복잡한 style 함수가 무시되는 케이스 회피. position absolute는 outer wrapper에 (positioning),
-       *   visual style은 inner View에 inline (cssInterop wrapping 우회). Pressable은 hit target만.
+      {/* FAB — left:0/right:0 + alignItems:center로 정확한 가로 중앙 정렬.
+       *   left:'50%'+marginLeft 방식은 부모 padding 영향으로 왼쪽으로 치우치는 케이스 발생.
+       *   Pressable은 opacity hit target만, visual(gradient+border+shadow)은 inner View 2-layer 분리:
+       *   - shadow wrapper: shadow prop + borderRadius (overflow:hidden 없이 shadow 보존)
+       *   - gradient container: overflow:hidden으로 LinearGradient 클리핑 + 테두리
        */}
       <View
         pointerEvents="box-none"
         style={{
           position: 'absolute',
-          // FAB top이 container top(= paddingTop 8 + tab content ~49 + paddingBottom 12+insets = 69+insets)
-          // 보다 ~16px 위로 튀어나오도록: bottom = 69 + insets + 16 - 56(FAB height) = 29 + insets.
-          // 사용자 피드백: 37+insets는 너무 높아 보임 → 29+insets로 조정.
-          bottom: 29 + insets.bottom,
-          left: '50%',
-          marginLeft: -28,
-          width: 56,
-          height: 56,
+          left: 0,
+          right: 0,
+          // marginTop -24 verbatim: 바 상단에서 24px 솟아오름.
+          // bottom = paddingBottom(12+insets) + tabContent(~49) + paddingTop(8) + 24 - FABheight(52) = 41+insets
+          bottom: 41 + insets.bottom,
+          height: 52,
+          alignItems: 'center',
           zIndex: 10,
         }}
       >
@@ -152,25 +153,46 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
           accessibilityLabel={t('nav.captureA11y')}
           style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
         >
+          {/* shadow wrapper — overflow:hidden 없이 shadow 보존 */}
           <View
             style={{
-              width: 56,
-              height: 56,
-              borderRadius: 28,
-              // light mode: gold FAB, dark mode: wineRed (키스크린 verbatim — light 모드 FAB은 따뜻한 골드).
-              backgroundColor: tokens.scheme === 'light' ? brand.gold : brand.wineRed,
-              borderWidth: 1.5,
-              borderColor: tokens.scheme === 'light' ? brand.goldDeep : brand.gold,
-              alignItems: 'center',
-              justifyContent: 'center',
-              shadowColor: tokens.scheme === 'light' ? brand.goldDeep : brand.wineRed,
-              shadowOpacity: tokens.scheme === 'light' ? 0.32 : 0.45,
-              shadowOffset: { width: 0, height: 6 },
-              shadowRadius: 20,
-              elevation: 12,
+              width: 52,
+              height: 52,
+              borderRadius: 26,
+              ...fabShadow,
             }}
           >
-            <Camera size={26} color={tokens.scheme === 'light' ? brand.cream : brand.cream} strokeWidth={1.6} />
+            {/* gradient + border container — overflow:hidden으로 LinearGradient 클리핑 */}
+            <View
+              style={{
+                flex: 1,
+                borderRadius: 26,
+                borderWidth: 1,
+                borderColor: brand.gold,
+                overflow: 'hidden',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <LinearGradient
+                colors={fabGradient.colors as unknown as readonly [string, string]}
+                start={fabGradient.start}
+                end={fabGradient.end}
+                style={StyleSheet.absoluteFillObject}
+              />
+              {/* inset top highlight — web의 inset 0 1px 0 rgba(255,255,255,0.12) 대체 */}
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 1,
+                  backgroundColor: 'rgba(255,255,255,0.12)',
+                }}
+              />
+              <Camera size={24} color={brand.cream} strokeWidth={1.6} />
+            </View>
           </View>
         </Pressable>
       </View>
