@@ -43,6 +43,7 @@ import { PriceCapture, defaultPriceCapture, type PriceCaptureState } from './pri
 import { ShareToCommunity } from './share-to-community';
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { currentLocale } from '@/lib/i18n';
+import { type WSETScale, wsetToNumber } from '@/lib/notes/tasting-note-lexicon';
 import type { WineLocalized } from '@/hooks/use-wine';
 
 // ---- New canonical Expert shape ----
@@ -50,19 +51,19 @@ import type { WineLocalized } from '@/hooks/use-wine';
 export type { Readiness };
 
 export interface ExpertPalate {
-  sweetness: number;
-  acidity: number;
-  body: number;
-  alcohol: number;
-  flavor_intensity: number;
-  tannin?: number;
-  bubble?: number;
+  sweetness: WSETScale;
+  acidity: WSETScale;
+  body: WSETScale;
+  alcohol: WSETScale;
+  flavor_intensity: WSETScale;
+  tannin?: WSETScale;
+  bubble?: WSETScale;
 }
 
 export interface ExpertFields {
   variant: WineVariant;
   blind: boolean;
-  aroma_intensity: number;
+  aroma_intensity: WSETScale;
   aromas: AromaTag[];
   palate: ExpertPalate;
   finish: FinishLevel;
@@ -106,7 +107,7 @@ export function ExpertForm({
 
   // --- patch helpers ---
   const patch = (next: Partial<ExpertFields>) => onFieldsChange({ ...fields, ...next });
-  const patchPalate = (key: keyof ExpertPalate, value: number) =>
+  const patchPalate = (key: keyof ExpertPalate, value: WSETScale) =>
     onFieldsChange({ ...fields, palate: { ...fields.palate, [key]: value } });
 
   const setVariant = (v: WineVariant) => patch({ variant: v, blind: v === 'blind' ? true : fields.blind });
@@ -217,14 +218,14 @@ export function ExpertForm({
         {showTannin ? (
           <WSETSlider5
             label={t('notes.expert.palateTannin')}
-            value={fields.palate.tannin ?? 3}
+            value={fields.palate.tannin ?? 'medium'}
             onChange={(v) => patchPalate('tannin', v)}
           />
         ) : null}
         {showBubble ? (
           <WSETSlider5
             label={t('notes.expert.palateBubble')}
-            value={fields.palate.bubble ?? 3}
+            value={fields.palate.bubble ?? 'medium'}
             onChange={(v) => patchPalate('bubble', v)}
           />
         ) : null}
@@ -439,16 +440,18 @@ function summarizeExpert(f: ExpertFields, rating: number, locale: 'ko' | 'en'): 
         : ` ${rating.toFixed(rating % 1 === 0 ? 0 : 1)}/5.`
       : '';
 
+  const bodyN = wsetToNumber(f.palate.body);
+  const acidN = wsetToNumber(f.palate.acidity);
   if (locale === 'ko') {
-    const bodyTxt = f.palate.body >= 4 ? '묵직한 바디' : f.palate.body <= 2 ? '가벼운 바디' : '균형 잡힌 바디';
-    const acidTxt = f.palate.acidity >= 4 ? '또렷한 산미' : f.palate.acidity <= 2 ? '부드러운 산미' : '안정된 산미';
+    const bodyTxt = bodyN >= 4 ? '묵직한 바디' : bodyN <= 2 ? '가벼운 바디' : '균형 잡힌 바디';
+    const acidTxt = acidN >= 4 ? '또렷한 산미' : acidN <= 2 ? '부드러운 산미' : '안정된 산미';
     const finishTxt = f.finish === 'long' ? '긴 여운' : f.finish === 'short' ? '짧은 여운' : '적당한 여운';
     const variantTxt =
       f.variant === 'red' ? '레드' : f.variant === 'white' ? '화이트' : f.variant === 'sparkling' ? '스파클링' : '블라인드';
     return `${variantTxt} 와인. ${bodyTxt}, ${acidTxt}에 ${finishTxt}.${ratingTxt}`.trim();
   }
-  const bodyTxt = f.palate.body >= 4 ? 'full-bodied' : f.palate.body <= 2 ? 'light-bodied' : 'medium-bodied';
-  const acidTxt = f.palate.acidity >= 4 ? 'bright acidity' : f.palate.acidity <= 2 ? 'soft acidity' : 'balanced acidity';
+  const bodyTxt = bodyN >= 4 ? 'full-bodied' : bodyN <= 2 ? 'light-bodied' : 'medium-bodied';
+  const acidTxt = acidN >= 4 ? 'bright acidity' : acidN <= 2 ? 'soft acidity' : 'balanced acidity';
   const finishTxt = f.finish === 'long' ? 'long finish' : f.finish === 'short' ? 'short finish' : 'medium finish';
   const variantTxt =
     f.variant === 'red' ? 'red' : f.variant === 'white' ? 'white' : f.variant === 'sparkling' ? 'sparkling' : 'blind';
@@ -460,15 +463,15 @@ export function defaultExpertFields(): ExpertFields {
   return {
     variant: 'red',
     blind: false,
-    aroma_intensity: 3,
+    aroma_intensity: 'medium',
     aromas: [],
     palate: {
-      sweetness: 2,
-      acidity: 3,
-      body: 3,
-      alcohol: 3,
-      flavor_intensity: 3,
-      tannin: 3,
+      sweetness: 'low',
+      acidity: 'medium',
+      body: 'medium',
+      alcohol: 'medium',
+      flavor_intensity: 'medium',
+      tannin: 'medium',
     },
     finish: 'medium',
     quality: 3,

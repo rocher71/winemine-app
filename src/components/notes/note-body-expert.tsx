@@ -235,14 +235,14 @@ export function NoteBodyExpert({ fields }: Props) {
     );
   }
 
-  // ---- New canonical shape — palate only has flavor_intensity/tannin/bubble ----
-  const palate = fields.palate as { flavor_intensity?: number; tannin?: number; bubble?: number } | undefined;
+  // ---- New canonical shape — palate has WSETScale fields ----
+  const palate = fields.palate as unknown as { flavor_intensity?: string; tannin?: string; bubble?: string } | undefined;
   const palateItems: { label: string; value: string }[] = [];
-  if (palate && typeof palate.tannin === 'number') {
-    palateItems.push({ label: t('notes.expert.palateTannin'), value: wsetShort(palate.tannin, locale) });
+  if (palate?.tannin) {
+    palateItems.push({ label: t('notes.expert.palateTannin'), value: palate.tannin });
   }
-  if (palate && typeof palate.bubble === 'number') {
-    palateItems.push({ label: t('notes.expert.palateBubble'), value: wsetShort(palate.bubble, locale) });
+  if (palate?.bubble) {
+    palateItems.push({ label: t('notes.expert.palateBubble'), value: palate.bubble });
   }
 
   return (
@@ -253,8 +253,8 @@ export function NoteBodyExpert({ fields }: Props) {
         {typeof fields.aroma_intensity === 'number' && (
           <DimRow label={t('notes.expert.aromaIntensity')} value={wsetShort(fields.aroma_intensity, locale)} />
         )}
-        {palate && typeof palate.flavor_intensity === 'number' && (
-          <DimRow label={t('notes.expert.palateFlavor')} value={wsetShort(palate.flavor_intensity, locale)} />
+        {palate?.flavor_intensity && (
+          <DimRow label={t('notes.expert.palateFlavor')} value={String(palate.flavor_intensity)} />
         )}
         {fields.aromas?.length > 0 ? (
           <View style={{ marginTop: 10 }}>
