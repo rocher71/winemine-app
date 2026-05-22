@@ -229,7 +229,7 @@ export default function CommunityNewAlbumScreen() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.border.active,
               letterSpacing: 1.8,
@@ -259,7 +259,7 @@ export default function CommunityNewAlbumScreen() {
               selectionColor={light.border.active}
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 15,
                 lineHeight: 24,
                 color: light.text.primary,
@@ -283,7 +283,7 @@ export default function CommunityNewAlbumScreen() {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.border.active,
                 letterSpacing: 1.8,
@@ -294,7 +294,7 @@ export default function CommunityNewAlbumScreen() {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.text.muted,
               }}
@@ -349,7 +349,7 @@ export default function CommunityNewAlbumScreen() {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 color: location ? light.text.primary : light.text.muted,
               }}
@@ -428,7 +428,7 @@ function LightBackHeader({
         style={{
           flex: 1,
           textAlign: 'center',
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 15,
           color: light.text.primary,
         }}
@@ -459,7 +459,7 @@ function LightBackHeader({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 12,
               color: brand.cream,
@@ -537,7 +537,7 @@ function PhotoSlot({ uri, index, total, size, onPress }: PhotoSlotProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'PlayfairDisplay_700Bold',
+              fontFamily: 'Freesentation_7Bold',
               fontWeight: '700',
               fontSize: 10,
               // §6-17 cream 유지 (textInk bg 위 가독성 OK)
@@ -637,7 +637,7 @@ function WineChip({ wine, onPress, onRemove }: WineChipProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 11,
             color: light.text.primary,
           }}
@@ -703,7 +703,7 @@ function AddWineChip({ onPress }: AddWineChipProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 11,
             color: light.text.muted,
           }}

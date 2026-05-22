@@ -63,7 +63,7 @@ function SettingsRow({ label, value, onPress, disabled = false, hint }: RowProps
         <View style={{ flex: 1, gap: 2 }}>
           <Text
             style={{
-              fontFamily: 'Inter_500Medium',
+              fontFamily: 'Freesentation_5Medium',
               fontSize: 14,
               lineHeight: 20,
               color: tokens.text.primary,
@@ -74,7 +74,7 @@ function SettingsRow({ label, value, onPress, disabled = false, hint }: RowProps
           {hint ? (
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 lineHeight: 17,
                 color: tokens.text.muted,
@@ -88,7 +88,7 @@ function SettingsRow({ label, value, onPress, disabled = false, hint }: RowProps
           {value ? (
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 13,
                 color: tokens.text.muted,
               }}
@@ -110,7 +110,7 @@ function SectionLabel({ children }: { children: string }) {
   return (
     <Text
       style={{
-        fontFamily: 'Inter_500Medium',
+        fontFamily: 'Freesentation_5Medium',
         fontSize: 11,
         lineHeight: 14,
         letterSpacing: 0.56,

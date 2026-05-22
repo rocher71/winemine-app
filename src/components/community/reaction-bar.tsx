@@ -110,7 +110,7 @@ export function ReactionBar({
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Inter_600SemiBold',
+                    fontFamily: 'Freesentation_6SemiBold',
                     fontSize: 11,
                     fontWeight: '600',
                     color: fgColor,
@@ -147,7 +147,7 @@ export function ReactionBar({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_500Medium',
+              fontFamily: 'Freesentation_5Medium',
               fontSize: 11,
               fontWeight: '500',
               color: light.text.muted,

@@ -130,7 +130,7 @@ export function ProfileHero({
         >
           <Text
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 28,
               lineHeight: 33,
               color: brand.cream,
@@ -145,7 +145,7 @@ export function ProfileHero({
           <Text
             numberOfLines={1}
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 20,
               lineHeight: 24,
               color: light.text.primary,
@@ -178,7 +178,7 @@ export function ProfileHero({
             >
               <Text
                 style={{
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontWeight: '600',
                   fontSize: 10,
                   lineHeight: 10,
@@ -194,7 +194,7 @@ export function ProfileHero({
           {/* JoinedFor */}
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 11,
               lineHeight: 14,
               color: light.text.muted,
@@ -236,7 +236,7 @@ export function ProfileHero({
             <Award size={16} color={brand.gold} />
             <Text
               style={{
-                fontFamily: 'Inter_500Medium',
+                fontFamily: 'Freesentation_5Medium',
                 fontWeight: '500',
                 fontSize: 13,
                 lineHeight: 16,

@@ -65,7 +65,7 @@ export function NoResults({ onClear }: Props) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 12,
               lineHeight: 14.4,
               color: brand.gold,

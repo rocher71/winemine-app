@@ -91,10 +91,10 @@ const config: Config = {
       },
 
       fontFamily: {
-        playfair: ['PlayfairDisplay_400Regular'],
-        inter: ['Inter_400Regular'],
-        'inter-medium': ['Inter_500Medium'],
-        'inter-semibold': ['Inter_600SemiBold'],
+        playfair: ['Freesentation_4Regular'],
+        inter: ['Freesentation_4Regular'],
+        'inter-medium': ['Freesentation_5Medium'],
+        'inter-semibold': ['Freesentation_6SemiBold'],
       },
 
       // 키스크린 globals.css의 .wm-* 유틸 클래스 1:1 매핑.

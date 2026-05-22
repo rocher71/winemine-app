@@ -173,7 +173,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -235,7 +235,7 @@ function CategoryChips({ cat, onChange }: CategoryChipsProps) {
                 <Text
                   numberOfLines={1}
                   style={{
-                    fontFamily: 'Inter_600SemiBold',
+                    fontFamily: 'Freesentation_6SemiBold',
                     fontSize: 12,
                     fontWeight: '600',
                     color: active ? brand.cream : light.text.secondary,
@@ -283,7 +283,7 @@ function SearchSection({ value, onChange }: SearchSectionProps) {
           borderColor: light.border.default,
           borderRadius: 12,
           color: light.text.primary,
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 13,
         }}
       />
@@ -356,7 +356,7 @@ function TermRow({ entry }: TermRowProps) {
           <Text
             numberOfLines={1}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 14,
               fontWeight: '600',
               color: light.text.primary,
@@ -369,7 +369,7 @@ function TermRow({ entry }: TermRowProps) {
             numberOfLines={1}
             ellipsizeMode="tail"
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               color: light.text.muted,
               marginTop: 2,
@@ -399,7 +399,7 @@ function NoResults() {
     >
       <Text
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 13,
           color: light.text.muted,
           textAlign: 'center',

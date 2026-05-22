@@ -99,7 +99,7 @@ export default function WinePricesScreen() {
           <AlertCircle size={32} strokeWidth={1.5} color={light.text.muted} />
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               color: light.text.muted,
               textAlign: 'center',
@@ -199,7 +199,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,

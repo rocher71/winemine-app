@@ -74,7 +74,7 @@ export function BadgeDots({ badges = [] }: Props) {
       {overflow > 0 ? (
         <Text
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 11,
             lineHeight: 14,
             color: light.text.muted,

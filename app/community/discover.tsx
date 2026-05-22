@@ -111,7 +111,7 @@ function LightBackHeader() {
         accessibilityRole="header"
         style={{
           marginLeft: 4,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           color: light.text.primary,
@@ -138,7 +138,7 @@ function HeaderSection() {
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 22,
           lineHeight: 26.4,
           color: light.text.primary,
@@ -152,7 +152,7 @@ function HeaderSection() {
         allowFontScaling={false}
         style={{
           marginTop: 8,
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           color: light.text.muted,
         }}
@@ -245,7 +245,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 14,
                 color: light.text.primary,
               }}
@@ -266,7 +266,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 9,
                 color: light.text.secondary,
@@ -280,7 +280,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
           allowFontScaling={false}
           style={{
             marginTop: 3,
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 10,
             color: light.text.muted,
           }}
@@ -315,7 +315,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 10,
               color: light.border.active,
@@ -346,7 +346,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 11,
               color: isFollowing ? brand.cream : light.border.active,

@@ -69,7 +69,7 @@ export function ReadinessTriad({ value, onChange }: Props) {
                   allowFontScaling={false}
                   numberOfLines={1}
                   style={{
-                    fontFamily: 'Inter_600SemiBold',
+                    fontFamily: 'Freesentation_6SemiBold',
                     fontSize: 12,
                     lineHeight: 14.4,
                     color: active ? brand.deepestDark : light.text.secondary,

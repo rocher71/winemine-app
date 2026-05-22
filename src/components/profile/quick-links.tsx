@@ -131,7 +131,7 @@ export function QuickLinks({
               <Text
                 style={{
                   flex: 1,
-                  fontFamily: 'Inter_500Medium',
+                  fontFamily: 'Freesentation_5Medium',
                   fontWeight: '500',
                   fontSize: 14,
                   lineHeight: 17,

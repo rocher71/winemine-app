@@ -96,7 +96,7 @@ export default function WineCommunityPeakScreen() {
           <AlertCircle size={32} strokeWidth={1.5} color={light.text.muted} />
           <Text
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 14,
               color: light.text.primary,
@@ -108,7 +108,7 @@ export default function WineCommunityPeakScreen() {
           </Text>
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               color: light.text.muted,
               textAlign: 'center',
@@ -138,7 +138,7 @@ export default function WineCommunityPeakScreen() {
             >
               <Text
                 style={{
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontWeight: '600',
                   fontSize: 13,
                   color: brand.gold,
@@ -185,7 +185,7 @@ export default function WineCommunityPeakScreen() {
           >
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 13,
                 color: light.text.secondary,
                 lineHeight: 20.8,
@@ -196,7 +196,7 @@ export default function WineCommunityPeakScreen() {
             </Text>
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 // §6 #2: gold → light.border.active (§10 L (a) — 시각 강조 우선).
                 color: light.border.active,
@@ -234,7 +234,7 @@ export default function WineCommunityPeakScreen() {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'PlayfairDisplay_700Bold',
+                    fontFamily: 'Freesentation_7Bold',
                     fontWeight: '700',
                     fontSize: 22,
                     // §6 #3: cream → light.text.primary.
@@ -249,7 +249,7 @@ export default function WineCommunityPeakScreen() {
               )}
               <Text
                 style={{
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 11,
                   color: light.text.muted,
                   lineHeight: 13,
@@ -266,7 +266,7 @@ export default function WineCommunityPeakScreen() {
                   paddingVertical: 32,
                   paddingHorizontal: 16,
                   textAlign: 'center',
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 13,
                   color: light.text.muted,
                   lineHeight: 20.8,
@@ -335,7 +335,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,

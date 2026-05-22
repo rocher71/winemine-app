@@ -129,7 +129,7 @@ export function NotificationRow({
             <Text
               numberOfLines={1}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 13,
                 lineHeight: 16,
@@ -142,7 +142,7 @@ export function NotificationRow({
             <Text
               numberOfLines={2}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 lineHeight: 16.8,
                 color: light.text.muted,
@@ -164,7 +164,7 @@ export function NotificationRow({
           >
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 lineHeight: 12,
                 color: light.text.muted,

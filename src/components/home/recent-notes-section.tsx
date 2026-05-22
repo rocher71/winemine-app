@@ -64,7 +64,7 @@ function NoteCard({ note }: { note: TastingNoteWithWine }) {
           />
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               color: tokens.text.muted,
               marginTop: 4,
@@ -86,7 +86,7 @@ export function RecentNotesSection({ notes }: Props) {
     <View>
       <Text
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           color: tokens.text.secondary,
           textTransform: 'uppercase',
           fontSize: 11,
@@ -97,7 +97,7 @@ export function RecentNotesSection({ notes }: Props) {
       {notes.length === 0 ? (
         <Text
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             color: tokens.text.muted,
             marginTop: 12,

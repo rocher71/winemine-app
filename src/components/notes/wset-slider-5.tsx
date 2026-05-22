@@ -61,7 +61,7 @@ export function WSETSlider5({ label, value, onChange, labels = INTENSITY_LABELS,
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontSize: 13,
             lineHeight: 15.6,
             color: light.text.primary,
@@ -72,7 +72,7 @@ export function WSETSlider5({ label, value, onChange, labels = INTENSITY_LABELS,
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 12,
             lineHeight: 14.4,
             color: brand.gold,

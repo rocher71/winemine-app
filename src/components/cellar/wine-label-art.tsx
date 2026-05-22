@@ -68,7 +68,7 @@ export function WineLabelArt({ bottleColor, displayName, width = 100, height = 1
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize,
             color: brand.cream,
             letterSpacing: -fontSize * 0.02,

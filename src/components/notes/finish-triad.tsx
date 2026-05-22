@@ -66,7 +66,7 @@ export function FinishTriad({ value, onChange }: Props) {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Inter_400Regular',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 13,
                     lineHeight: 15.6,
                     color: active ? brand.cream : idleText,

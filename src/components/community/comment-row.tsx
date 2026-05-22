@@ -99,7 +99,7 @@ export function CommentRow({
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontSize: 11,
                 fontWeight: '600',
                 color: light.text.primary,
@@ -119,7 +119,7 @@ export function CommentRow({
               borderWidth: 1,
               borderColor: withAlpha(user.color, 0.4),
               color: user.color,
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 9,
               fontWeight: '600',
               letterSpacing: 0.36,
@@ -139,7 +139,7 @@ export function CommentRow({
                 borderWidth: 1,
                 borderColor: withAlpha(brand.gold, 0.4),
                 color: light.border.active,
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontSize: 9,
                 fontWeight: '600',
                 letterSpacing: 0.54,
@@ -154,7 +154,7 @@ export function CommentRow({
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 12,
             lineHeight: 18.6,
             color: light.text.secondary,
@@ -175,7 +175,7 @@ export function CommentRow({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
             }}
@@ -193,7 +193,7 @@ export function CommentRow({
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.text.muted,
               }}
@@ -225,7 +225,7 @@ export function CommentRow({
               <Text
                 allowFontScaling={false}
                 style={{
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 10,
                   color: light.text.muted,
                 }}

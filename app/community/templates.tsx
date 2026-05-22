@@ -183,7 +183,7 @@ function LightBackHeader() {
         accessibilityRole="header"
         style={{
           marginLeft: 4,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           color: light.text.primary,
@@ -206,7 +206,7 @@ function Intro() {
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           lineHeight: 18.6,
           color: light.text.muted,
@@ -286,7 +286,7 @@ function SortChip({ sortKey, active, onPress }: SortChipProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 11,
             color: active ? brand.cream : light.text.muted,
@@ -364,7 +364,7 @@ function TemplateCard({ tpl, saved, onToggle }: TemplateCardProps) {
             value={tpl.title}
             allowFontScaling={false}
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 15,
               lineHeight: 19.5,
               color: light.text.primary,
@@ -374,7 +374,7 @@ function TemplateCard({ tpl, saved, onToggle }: TemplateCardProps) {
             allowFontScaling={false}
             style={{
               marginTop: 4,
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 11,
               color: light.text.muted,
             }}
@@ -414,7 +414,7 @@ function TemplateCard({ tpl, saved, onToggle }: TemplateCardProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 11,
                 color: saved ? light.border.active : light.text.secondary,
@@ -434,7 +434,7 @@ function TemplateCard({ tpl, saved, onToggle }: TemplateCardProps) {
           numberOfLines={2}
           ellipsizeMode="tail"
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 12,
             lineHeight: 18.6,
             color: light.text.secondary,

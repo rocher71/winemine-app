@@ -66,7 +66,7 @@ function Eyebrow({ children }: { children: string }) {
     <Text
       allowFontScaling={false}
       style={{
-        fontFamily: 'Inter_600SemiBold',
+        fontFamily: 'Freesentation_6SemiBold',
         fontSize: 10,
         lineHeight: 12,
         letterSpacing: 1.8,
@@ -111,13 +111,13 @@ function DimRow({ label, value }: { label: string; value: string }) {
     >
       <Text
         allowFontScaling={false}
-        style={{ fontFamily: 'Inter_400Regular', fontSize: 12, lineHeight: 14.4, color: light.text.muted }}
+        style={{ fontFamily: 'Freesentation_4Regular', fontSize: 12, lineHeight: 14.4, color: light.text.muted }}
       >
         {label}
       </Text>
       <Text
         allowFontScaling={false}
-        style={{ fontFamily: 'PlayfairDisplay_400Regular', fontSize: 13, lineHeight: 14.4, color: light.text.primary }}
+        style={{ fontFamily: 'Freesentation_4Regular', fontSize: 13, lineHeight: 14.4, color: light.text.primary }}
       >
         {value}
       </Text>
@@ -141,7 +141,7 @@ function DimGrid({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 9,
               lineHeight: 11,
               letterSpacing: 0.36,
@@ -155,7 +155,7 @@ function DimGrid({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               lineHeight: 14.3,
               color: light.text.primary,
@@ -261,7 +261,7 @@ export function NoteBodyExpert({ fields }: Props) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 lineHeight: 12,
                 letterSpacing: 0.6,
@@ -288,7 +288,7 @@ export function NoteBodyExpert({ fields }: Props) {
                   <Text
                     allowFontScaling={false}
                     style={{
-                      fontFamily: 'Inter_400Regular',
+                      fontFamily: 'Freesentation_4Regular',
                       fontSize: 11,
                       lineHeight: 13.2,
                       color: light.text.primary,

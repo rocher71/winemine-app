@@ -225,7 +225,7 @@ export function PeakDistributionChart({
               y={tick.y + 3}
               fill={light.text.muted}
               fontSize={10}
-              fontFamily="Inter_400Regular"
+              fontFamily="Freesentation_4Regular"
               textAnchor="end"
             >
               {tick.label}
@@ -240,7 +240,7 @@ export function PeakDistributionChart({
               y={svgH - 6}
               fill={light.text.muted}
               fontSize={10}
-              fontFamily="Inter_400Regular"
+              fontFamily="Freesentation_4Regular"
               textAnchor="middle"
             >
               {tick.label}
@@ -283,7 +283,7 @@ export function PeakDistributionChart({
               y={padT - 6}
               fill={r.stroke}
               fontSize={9}
-              fontFamily="Inter_400Regular"
+              fontFamily="Freesentation_4Regular"
               textAnchor="middle"
             >
               {r.label}
@@ -339,7 +339,7 @@ export function PeakDistributionChart({
           >
             <Text
               style={{
-                fontFamily: 'Inter_700Bold',
+                fontFamily: 'Freesentation_7Bold',
                 fontWeight: '700',
                 fontSize: 12,
                 color: brand.gold,
@@ -350,7 +350,7 @@ export function PeakDistributionChart({
             </Text>
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 color: light.text.secondary,
                 marginTop: 2,
@@ -424,7 +424,7 @@ function LegendDot({
       </Svg>
       <Text
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 10,
           color: light.text.muted,
           lineHeight: 12,

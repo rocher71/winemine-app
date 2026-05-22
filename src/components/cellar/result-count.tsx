@@ -57,7 +57,7 @@ export function ResultCount({ total, shown, isFiltered, onClear }: Props) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 11,
               lineHeight: 13.2,
               color: goldText,

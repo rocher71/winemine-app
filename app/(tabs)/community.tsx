@@ -173,7 +173,7 @@ export default function CommunityScreen() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 10,
               color: light.border.active,
               letterSpacing: 1.8,
@@ -186,7 +186,7 @@ export default function CommunityScreen() {
             allowFontScaling={false}
             accessibilityRole="header"
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 20,
               lineHeight: 26,
               color: light.text.primary,
@@ -245,7 +245,7 @@ export default function CommunityScreen() {
                     allowFontScaling={false}
                     numberOfLines={1}
                     style={{
-                      fontFamily: active ? 'Inter_600SemiBold' : 'Inter_400Regular',
+                      fontFamily: active ? 'Freesentation_6SemiBold' : 'Freesentation_4Regular',
                       fontSize: 13,
                       fontWeight: active ? '600' : '400',
                       color: active ? light.text.primary : light.text.muted,
@@ -337,7 +337,7 @@ export default function CommunityScreen() {
                         allowFontScaling={false}
                         numberOfLines={1}
                         style={{
-                          fontFamily: 'Inter_600SemiBold',
+                          fontFamily: 'Freesentation_6SemiBold',
                           fontSize: 11,
                           fontWeight: '600',
                           color: active ? light.border.active : light.text.secondary,
@@ -439,7 +439,7 @@ function EmptyState({ title, hint }: EmptyStateProps) {
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 18,
           lineHeight: 23.4,
           color: light.text.primary,
@@ -451,7 +451,7 @@ function EmptyState({ title, hint }: EmptyStateProps) {
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 13,
           lineHeight: 19.5,
           color: light.text.muted,

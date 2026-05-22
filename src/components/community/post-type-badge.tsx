@@ -58,7 +58,7 @@ export function PostTypeBadge({ type }: PostTypeBadgeProps) {
       <Icon size={10} strokeWidth={2} color={color} />
       <Text
         style={{
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           color,
           fontSize: 10,
           fontWeight: '600',

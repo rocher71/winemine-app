@@ -398,76 +398,76 @@ export const radius = {
 // 키스크린 globals.css의 .wm-* 유틸 클래스 1:1 변환.
 // lineHeight는 키스크린 ratio × size로 계산. letterSpacing은 em → px 변환 (em × size).
 export const typography = {
-  pageTitle:    { family: 'PlayfairDisplay_400Regular', size: 24, lineHeight: 28.8, letterSpacing: -0.24 },
-  cardTitle:    { family: 'PlayfairDisplay_400Regular', size: 16, lineHeight: 20.8 },
-  backTitle:    { family: 'Inter_600SemiBold',          size: 16, lineHeight: 19.2 },
-  modalTitle:   { family: 'PlayfairDisplay_400Regular', size: 22, lineHeight: 26.4 },
-  modalDesc:    { family: 'Inter_400Regular',           size: 14, lineHeight: 21 },
-  emptyTitle:   { family: 'PlayfairDisplay_400Regular', size: 22, lineHeight: 28.6 },
-  emptyDesc:    { family: 'Inter_400Regular',           size: 14, lineHeight: 22.4 },
-  sectionTitle: { family: 'Inter_500Medium',            size: 14, lineHeight: 14, letterSpacing: 0.56, textTransform: 'uppercase' as const },
-  sectionLink:  { family: 'Inter_500Medium',            size: 12, lineHeight: 12 },
-  cardMeta:     { family: 'Inter_400Regular',           size: 12, lineHeight: 14.4 },
-  cardBody:     { family: 'Inter_400Regular',           size: 13, lineHeight: 19.5 },
-  levelName:    { family: 'Inter_600SemiBold',          size: 13, lineHeight: 15.6 },
-  glossaryTerm: { family: 'PlayfairDisplay_400Regular', size: 16 },
-  glossaryDef:  { family: 'Inter_400Regular',           size: 13, lineHeight: 19.5 },
-  bottomNavActive: { family: 'Inter_600SemiBold', size: 10, letterSpacing: 0.2 },
-  bottomNavIdle:   { family: 'Inter_400Regular',  size: 10, letterSpacing: 0.2 },
-  primaryButtonSm: { family: 'Inter_600SemiBold', size: 13 },
-  primaryButtonMd: { family: 'Inter_600SemiBold', size: 14 },
-  primaryButtonLg: { family: 'Inter_600SemiBold', size: 15 },
+  pageTitle:    { family: 'Freesentation_4Regular', size: 24, lineHeight: 28.8, letterSpacing: -0.24 },
+  cardTitle:    { family: 'Freesentation_4Regular', size: 16, lineHeight: 20.8 },
+  backTitle:    { family: 'Freesentation_6SemiBold',          size: 16, lineHeight: 19.2 },
+  modalTitle:   { family: 'Freesentation_4Regular', size: 22, lineHeight: 26.4 },
+  modalDesc:    { family: 'Freesentation_4Regular',           size: 14, lineHeight: 21 },
+  emptyTitle:   { family: 'Freesentation_4Regular', size: 22, lineHeight: 28.6 },
+  emptyDesc:    { family: 'Freesentation_4Regular',           size: 14, lineHeight: 22.4 },
+  sectionTitle: { family: 'Freesentation_5Medium',            size: 14, lineHeight: 14, letterSpacing: 0.56, textTransform: 'uppercase' as const },
+  sectionLink:  { family: 'Freesentation_5Medium',            size: 12, lineHeight: 12 },
+  cardMeta:     { family: 'Freesentation_4Regular',           size: 12, lineHeight: 14.4 },
+  cardBody:     { family: 'Freesentation_4Regular',           size: 13, lineHeight: 19.5 },
+  levelName:    { family: 'Freesentation_6SemiBold',          size: 13, lineHeight: 15.6 },
+  glossaryTerm: { family: 'Freesentation_4Regular', size: 16 },
+  glossaryDef:  { family: 'Freesentation_4Regular',           size: 13, lineHeight: 19.5 },
+  bottomNavActive: { family: 'Freesentation_6SemiBold', size: 10, letterSpacing: 0.2 },
+  bottomNavIdle:   { family: 'Freesentation_4Regular',  size: 10, letterSpacing: 0.2 },
+  primaryButtonSm: { family: 'Freesentation_6SemiBold', size: 13 },
+  primaryButtonMd: { family: 'Freesentation_6SemiBold', size: 14 },
+  primaryButtonLg: { family: 'Freesentation_6SemiBold', size: 15 },
 
   // ---- home retroactive (design-spec home.md §9) ----
-  peakGreetingQuestion:  { family: 'PlayfairDisplay_400Regular', size: 22, lineHeight: 27.5, letterSpacing: -0.22 },
-  firstTimeHeadline:     { family: 'PlayfairDisplay_400Regular', size: 28, lineHeight: 33.6 },
-  mapCameoTitle:         { family: 'PlayfairDisplay_400Regular', size: 14 },
-  communityPeekTitle:    { family: 'PlayfairDisplay_400Regular', size: 17, lineHeight: 20.4 },
-  homeEyebrow:           { family: 'Inter_500Medium', size: 10, letterSpacing: 1.8, textTransform: 'uppercase' as const },
-  homeStatValue:         { family: 'PlayfairDisplay_400Regular', size: 20, lineHeight: 22, letterSpacing: -0.4 },
-  homeWineFeedTitle:     { family: 'PlayfairDisplay_400Regular', size: 18 },
-  homeWineFeedRowName:   { family: 'PlayfairDisplay_400Regular', size: 15, lineHeight: 18 },
-  homeRecentNoteName:    { family: 'PlayfairDisplay_400Regular', size: 12, lineHeight: 15 },
+  peakGreetingQuestion:  { family: 'Freesentation_4Regular', size: 22, lineHeight: 27.5, letterSpacing: -0.22 },
+  firstTimeHeadline:     { family: 'Freesentation_4Regular', size: 28, lineHeight: 33.6 },
+  mapCameoTitle:         { family: 'Freesentation_4Regular', size: 14 },
+  communityPeekTitle:    { family: 'Freesentation_4Regular', size: 17, lineHeight: 20.4 },
+  homeEyebrow:           { family: 'Freesentation_5Medium', size: 10, letterSpacing: 1.8, textTransform: 'uppercase' as const },
+  homeStatValue:         { family: 'Freesentation_4Regular', size: 20, lineHeight: 22, letterSpacing: -0.4 },
+  homeWineFeedTitle:     { family: 'Freesentation_4Regular', size: 18 },
+  homeWineFeedRowName:   { family: 'Freesentation_4Regular', size: 15, lineHeight: 18 },
+  homeRecentNoteName:    { family: 'Freesentation_4Regular', size: 12, lineHeight: 15 },
 
   // ---- wine-detail retroactive (design-spec wine-detail.md §9) ----
-  cardSectionTitle:    { family: 'Inter_600SemiBold',          size: 14, lineHeight: 16.8 },
-  cardBig:             { family: 'PlayfairDisplay_700Bold',    size: 20, lineHeight: 22 },
-  ratingPillScore:     { family: 'PlayfairDisplay_700Bold',    size: 18, lineHeight: 19.8 },
-  wineStoryHeadline:   { family: 'PlayfairDisplay_700Bold',    size: 22, lineHeight: 26.4 },
-  wsetMiniDim:         { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 14.3 },
-  microLabel:          { family: 'Inter_400Regular',           size: 9,  letterSpacing: 0.36, textTransform: 'uppercase' as const },
-  servingTempPill:     { family: 'Inter_500Medium',            size: 11, lineHeight: 13.2 },
+  cardSectionTitle:    { family: 'Freesentation_6SemiBold',          size: 14, lineHeight: 16.8 },
+  cardBig:             { family: 'Freesentation_7Bold',    size: 20, lineHeight: 22 },
+  ratingPillScore:     { family: 'Freesentation_7Bold',    size: 18, lineHeight: 19.8 },
+  wineStoryHeadline:   { family: 'Freesentation_7Bold',    size: 22, lineHeight: 26.4 },
+  wsetMiniDim:         { family: 'Freesentation_4Regular', size: 13, lineHeight: 14.3 },
+  microLabel:          { family: 'Freesentation_4Regular',           size: 9,  letterSpacing: 0.36, textTransform: 'uppercase' as const },
+  servingTempPill:     { family: 'Freesentation_5Medium',            size: 11, lineHeight: 13.2 },
 
   // ---- cellar retroactive (design-spec cellar-list.md §9 P0 — 5 신규) ----
   // TabSegment + AddCta label (Inter 12 600)
-  tabSegmentLabel:  { family: 'Inter_600SemiBold', size: 12, lineHeight: 14.4 },
+  tabSegmentLabel:  { family: 'Freesentation_6SemiBold', size: 12, lineHeight: 14.4 },
   // TabSegment count badge (Inter 10 700)
-  tabCount:         { family: 'Inter_700Bold',     size: 10, lineHeight: 12 },
+  tabCount:         { family: 'Freesentation_7Bold',     size: 10, lineHeight: 12 },
   // TypeFilterChip + SortChip label (Inter 11 600)
-  chipLabel:        { family: 'Inter_600SemiBold', size: 11, lineHeight: 13.2 },
+  chipLabel:        { family: 'Freesentation_6SemiBold', size: 11, lineHeight: 13.2 },
   // CellarCard wine name (Playfair 12 lh 15) — keyscreen cellar-card.tsx verbatim
-  cellarCardName:   { family: 'PlayfairDisplay_400Regular', size: 12, lineHeight: 15 },
+  cellarCardName:   { family: 'Freesentation_4Regular', size: 12, lineHeight: 15 },
   // DrinkWindowBadge label (Inter 10 600 lh 12 nowrap)
-  drinkWindowBadge: { family: 'Inter_600SemiBold', size: 10, lineHeight: 12 },
+  drinkWindowBadge: { family: 'Freesentation_6SemiBold', size: 10, lineHeight: 12 },
 
   // ---- cellar-detail retroactive (design-spec cellar-detail.md §9-2 P0 — 2 신규) ----
   // ProducerLine (Inter 13 lh 15.6 = 1.2 ratio) — 기존 cardBody(13 / 19.5) 와 lineHeight 다름
-  cellarHeroProducer: { family: 'Inter_400Regular', size: 13, lineHeight: 15.6 },
+  cellarHeroProducer: { family: 'Freesentation_4Regular', size: 13, lineHeight: 15.6 },
   // Timeline from/to 양끝 라벨 (Inter 10 lh 12) — 기존 bottomNavActive(10) 와 lineHeight 명시
-  timelineYearLabel: { family: 'Inter_400Regular', size: 10, lineHeight: 12 },
+  timelineYearLabel: { family: 'Freesentation_4Regular', size: 10, lineHeight: 12 },
 
   // ---- capture retroactive (design-spec capture.md §9 P0 — 11 신규) ----
-  captureHeaderTitle:  { family: 'Inter_600SemiBold',          size: 17, lineHeight: 20.4 },
-  optionCardTitle:     { family: 'PlayfairDisplay_400Regular', size: 18, lineHeight: 21.6 },
-  optionCardSub:       { family: 'Inter_400Regular',           size: 12, lineHeight: 16.8 },
-  simulatingMessage:   { family: 'Inter_400Regular',           size: 14, lineHeight: 19.6 },
-  aiBadgeTitle:        { family: 'Inter_600SemiBold',          size: 13, lineHeight: 15.6 },
-  aiBadgeSubtitle:     { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
-  recognizedName:      { family: 'PlayfairDisplay_400Regular', size: 17, lineHeight: 21.25 },
-  metaRowLabel:        { family: 'Inter_400Regular',           size: 11, lineHeight: 15.4 },
-  metaRowValue:        { family: 'Inter_400Regular',           size: 11, lineHeight: 15.4 },
-  fileNotFoundTitle:   { family: 'Inter_700Bold',              size: 11, lineHeight: 16.5 },
-  fileNotFoundBody:    { family: 'Inter_400Regular',           size: 11, lineHeight: 16.5 },
+  captureHeaderTitle:  { family: 'Freesentation_6SemiBold',          size: 17, lineHeight: 20.4 },
+  optionCardTitle:     { family: 'Freesentation_4Regular', size: 18, lineHeight: 21.6 },
+  optionCardSub:       { family: 'Freesentation_4Regular',           size: 12, lineHeight: 16.8 },
+  simulatingMessage:   { family: 'Freesentation_4Regular',           size: 14, lineHeight: 19.6 },
+  aiBadgeTitle:        { family: 'Freesentation_6SemiBold',          size: 13, lineHeight: 15.6 },
+  aiBadgeSubtitle:     { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
+  recognizedName:      { family: 'Freesentation_4Regular', size: 17, lineHeight: 21.25 },
+  metaRowLabel:        { family: 'Freesentation_4Regular',           size: 11, lineHeight: 15.4 },
+  metaRowValue:        { family: 'Freesentation_4Regular',           size: 11, lineHeight: 15.4 },
+  fileNotFoundTitle:   { family: 'Freesentation_7Bold',              size: 11, lineHeight: 16.5 },
+  fileNotFoundBody:    { family: 'Freesentation_4Regular',           size: 11, lineHeight: 16.5 },
 
   // ---- notes-new retroactive (design-spec notes-new.md §4-2 P0 — 10 신규) ----
   //
@@ -476,16 +476,16 @@ export const typography = {
   // Stage 1 4-tier (title/author/desc/badge) + Stage 2 2-tier (title/sub) + Stage 3 4 tier
   // (sheetTitle/rowName/rowMeta/backLink).
   // CustomBadge letter-spacing 0.05em → 9 × 0.05 = 0.45px. textTransform uppercase.
-  templateCardTitle:    { family: 'Inter_600SemiBold',          size: 14, lineHeight: 16.8 },
-  templateCardAuthor:   { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
-  templateCardDesc:     { family: 'Inter_400Regular',           size: 12, lineHeight: 17.4 },
-  templateCustomBadge:  { family: 'Inter_600SemiBold',          size: 9,  lineHeight: 11, letterSpacing: 0.45, textTransform: 'uppercase' as const },
-  sourceCardTitle:      { family: 'Inter_600SemiBold',          size: 16, lineHeight: 19.2 },
-  sourceCardSub:        { family: 'Inter_400Regular',           size: 12, lineHeight: 16.8 },
-  bottomSheetTitle:     { family: 'PlayfairDisplay_400Regular', size: 18, lineHeight: 21.6 },
-  cellarRowName:        { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 15.6 },
-  cellarRowMeta:        { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
-  backToTemplateLink:   { family: 'Inter_600SemiBold',          size: 11, lineHeight: 13.2 },
+  templateCardTitle:    { family: 'Freesentation_6SemiBold',          size: 14, lineHeight: 16.8 },
+  templateCardAuthor:   { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
+  templateCardDesc:     { family: 'Freesentation_4Regular',           size: 12, lineHeight: 17.4 },
+  templateCustomBadge:  { family: 'Freesentation_6SemiBold',          size: 9,  lineHeight: 11, letterSpacing: 0.45, textTransform: 'uppercase' as const },
+  sourceCardTitle:      { family: 'Freesentation_6SemiBold',          size: 16, lineHeight: 19.2 },
+  sourceCardSub:        { family: 'Freesentation_4Regular',           size: 12, lineHeight: 16.8 },
+  bottomSheetTitle:     { family: 'Freesentation_4Regular', size: 18, lineHeight: 21.6 },
+  cellarRowName:        { family: 'Freesentation_4Regular', size: 13, lineHeight: 15.6 },
+  cellarRowMeta:        { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
+  backToTemplateLink:   { family: 'Freesentation_6SemiBold',          size: 11, lineHeight: 13.2 },
 
   // ---- notes-write retroactive (design-spec notes-write.md §4-2 P0 — 5 신규) ----
   //
@@ -495,11 +495,11 @@ export const typography = {
   // stepHeaderTitle은 cardSectionTitle (Inter 600 14 lh 16.8) 재사용. shareToggleSub은 cellarRowMeta 재사용.
   // beginnerEyebrow letter-spacing 0.16em → 11 × 0.16 = 1.76px.
   // summaryEyebrow letter-spacing 0.10em → 11 × 0.10 = 1.1px.
-  beginnerEyebrow:    { family: 'Inter_500Medium',            size: 11, lineHeight: 11,   letterSpacing: 1.76, textTransform: 'uppercase' as const },
-  beginnerGreeting:   { family: 'Inter_400Regular',           size: 12, lineHeight: 18 },
-  stepHeaderBadge:    { family: 'Inter_700Bold',              size: 11, lineHeight: 13.2 },
-  summaryEyebrow:     { family: 'Inter_400Regular',           size: 11, lineHeight: 11,   letterSpacing: 1.1,  textTransform: 'uppercase' as const },
-  summaryText:        { family: 'PlayfairDisplay_400Regular', size: 13, lineHeight: 19.5, fontStyle: 'italic' as const },
+  beginnerEyebrow:    { family: 'Freesentation_5Medium',            size: 11, lineHeight: 11,   letterSpacing: 1.76, textTransform: 'uppercase' as const },
+  beginnerGreeting:   { family: 'Freesentation_4Regular',           size: 12, lineHeight: 18 },
+  stepHeaderBadge:    { family: 'Freesentation_7Bold',              size: 11, lineHeight: 13.2 },
+  summaryEyebrow:     { family: 'Freesentation_4Regular',           size: 11, lineHeight: 11,   letterSpacing: 1.1,  textTransform: 'uppercase' as const },
+  summaryText:        { family: 'Freesentation_4Regular', size: 13, lineHeight: 19.5, fontStyle: 'italic' as const },
 
   // ---- notes-detail retroactive (design-spec notes-detail.md §6-1 P0 — 10 신규) ----
   //
@@ -508,26 +508,26 @@ export const typography = {
   // 카드 Eyebrow 공통 위계는 beginnerEyebrow(11 ls 1.76)와 거의 동일(10 ls 1.8) — 본 cycle은 컴팩트
   // notesDetailCardEyebrow를 별도로 두어 (size 10) keyscreen verbatim 적용.
   // Aroma chip / Fault chip은 chipLabelRegular (Inter 400 11).
-  notesDetailCardEyebrow: { family: 'Inter_600SemiBold',          size: 10, lineHeight: 12,   letterSpacing: 1.8,  textTransform: 'uppercase' as const },
-  noteAuthorName:         { family: 'PlayfairDisplay_400Regular', size: 14, lineHeight: 16.8 },
-  noteAvatarLetter:       { family: 'PlayfairDisplay_700Bold',    size: 13, lineHeight: 15.6 },
-  noteTemplatePill:       { family: 'Inter_400Regular',           size: 10, lineHeight: 12 },
-  noteRatingChip:         { family: 'Inter_600SemiBold',          size: 12, lineHeight: 14.4 },
-  noteMemoBody:           { family: 'PlayfairDisplay_400Regular', size: 14, lineHeight: 23.1, fontStyle: 'italic' as const },
-  noteBeginnerDimValue:   { family: 'PlayfairDisplay_400Regular', size: 14, lineHeight: 15.4 },
-  noteRowValue:           { family: 'PlayfairDisplay_400Regular', size: 12, lineHeight: 14.4 },
-  noteAromaCatLabel:      { family: 'Inter_400Regular',           size: 10, lineHeight: 12,   letterSpacing: 0.6,  textTransform: 'uppercase' as const },
-  notePeakNote:           { family: 'Inter_400Regular',           size: 12, lineHeight: 18,   fontStyle: 'italic' as const },
-  chipLabelRegular:       { family: 'Inter_400Regular',           size: 11, lineHeight: 13.2 },
+  notesDetailCardEyebrow: { family: 'Freesentation_6SemiBold',          size: 10, lineHeight: 12,   letterSpacing: 1.8,  textTransform: 'uppercase' as const },
+  noteAuthorName:         { family: 'Freesentation_4Regular', size: 14, lineHeight: 16.8 },
+  noteAvatarLetter:       { family: 'Freesentation_7Bold',    size: 13, lineHeight: 15.6 },
+  noteTemplatePill:       { family: 'Freesentation_4Regular',           size: 10, lineHeight: 12 },
+  noteRatingChip:         { family: 'Freesentation_6SemiBold',          size: 12, lineHeight: 14.4 },
+  noteMemoBody:           { family: 'Freesentation_4Regular', size: 14, lineHeight: 23.1, fontStyle: 'italic' as const },
+  noteBeginnerDimValue:   { family: 'Freesentation_4Regular', size: 14, lineHeight: 15.4 },
+  noteRowValue:           { family: 'Freesentation_4Regular', size: 12, lineHeight: 14.4 },
+  noteAromaCatLabel:      { family: 'Freesentation_4Regular',           size: 10, lineHeight: 12,   letterSpacing: 0.6,  textTransform: 'uppercase' as const },
+  notePeakNote:           { family: 'Freesentation_4Regular',           size: 12, lineHeight: 18,   fontStyle: 'italic' as const },
+  chipLabelRegular:       { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
 
   // ---- onboarding step retroactive (design-spec onboarding-2-language.md §3-2 P0 — 3 신규) ----
   //
   // step 2/3/4 (language/experience/mode) 공유 위계. step 1 (welcome) 워드마크(56)는 별도.
   // keyscreen StepLanguage line 184~196 verbatim + line 378~383 (ChoiceCard title).
   // 1.2 ratio (size × 1.2 = lineHeight).
-  onboardingStepTitle:    { family: 'PlayfairDisplay_400Regular', size: 28, lineHeight: 33.6 },
-  onboardingStepSubtitle: { family: 'Inter_400Regular',           size: 14, lineHeight: 20 },
-  onboardingChoiceLabel:  { family: 'Inter_600SemiBold',          size: 18, lineHeight: 21.6 },
+  onboardingStepTitle:    { family: 'Freesentation_4Regular', size: 28, lineHeight: 33.6 },
+  onboardingStepSubtitle: { family: 'Freesentation_4Regular',           size: 14, lineHeight: 20 },
+  onboardingChoiceLabel:  { family: 'Freesentation_6SemiBold',          size: 18, lineHeight: 21.6 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----

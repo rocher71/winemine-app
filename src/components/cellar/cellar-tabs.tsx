@@ -58,7 +58,7 @@ function TabButton({
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontSize: 12,
           lineHeight: 14.4,
           color: labelColor,
@@ -69,7 +69,7 @@ function TabButton({
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_700Bold',
+          fontFamily: 'Freesentation_7Bold',
           fontSize: 10,
           lineHeight: 12,
           color: countColor,
