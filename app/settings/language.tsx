@@ -18,7 +18,6 @@ import * as Haptics from 'expo-haptics';
 import { BackHeader } from '@/components/nav/back-header';
 import { Toast } from '@/components/shared/toast';
 import { SettingsRadioRow } from '@/components/settings/settings-radio-row';
-import { useProfile } from '@/hooks/use-profile';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
 import { changeLanguage, currentLocale, type AppLocale } from '@/lib/i18n';
@@ -28,22 +27,15 @@ const TOAST_DURATION_MS = 2500;
 
 export default function LanguageSettingsScreen() {
   const { t } = useTranslation();
-  const { profile } = useProfile();
   const insets = useSafeAreaInsets();
 
-  const initial: AppLocale = (profile?.language as AppLocale) ?? currentLocale();
-  const [selected, setSelected] = useState<AppLocale>(initial);
+  // i18n 실제 상태를 진실 소스로 사용. _layout.tsx가 부팅 시 profile.language → changeLanguage 완료 후
+  // 이 화면에 진입하므로 currentLocale()이 항상 저장된 언어를 반영.
+  const [selected, setSelected] = useState<AppLocale>(currentLocale());
   const [toast, setToast] = useState<{ tone: 'info' | 'error'; message: string } | null>(null);
 
   const backTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // profile fetch 후 selected 동기화 (mount 시 profile이 null → 이후 fetch 완료 시 갱신)
-  useEffect(() => {
-    if (profile?.language) {
-      setSelected(profile.language as AppLocale);
-    }
-  }, [profile?.language]);
 
   // 언마운트 시 타이머 클린업
   useEffect(() => {
