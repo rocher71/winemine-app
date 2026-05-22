@@ -1,3 +1,13 @@
+/**
+ * PrimaryButton — 앱 전체 공통 버튼.
+ *
+ * size:    sm(36) / md(44) / lg(48)
+ * variant: primary(wine-red) / secondary(surface+gold border) / ghost(transparent) / cellar(gold border)
+ *
+ * 비활성(disabled/loading): bg-text-disabled + text-text-muted, opacity 없음.
+ * press: scale 0.97 transform.
+ * haptic: impactAsync Light.
+ */
 import { Pressable, Text, ActivityIndicator, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 

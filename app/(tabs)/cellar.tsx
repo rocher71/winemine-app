@@ -41,83 +41,8 @@ import {
   type CellarItemWithWine,
   type CellarSortKey,
 } from '@/hooks/use-cellar';
-import { parseLwinVintage } from '@/lib/lwin';
 import { brand } from '@/lib/design-tokens';
-import { getDrinkWindow } from '@/lib/drink-window';
-
-// ---- Filter / Sort helpers ----
-
-function applySearch(items: CellarItemWithWine[], q: string): CellarItemWithWine[] {
-  if (!q.trim()) return items;
-  const needle = q.trim().toLowerCase();
-  return items.filter((it) => {
-    const w = it.wine;
-    if (!w) return false;
-    return (
-      (w.display_name?.toLowerCase().includes(needle) ?? false) ||
-      (w.name_ko?.toLowerCase().includes(needle) ?? false) ||
-      (w.producer_name?.toLowerCase().includes(needle) ?? false) ||
-      (w.region?.toLowerCase().includes(needle) ?? false) ||
-      (w.country?.toLowerCase().includes(needle) ?? false)
-    );
-  });
-}
-
-function applyTypeFilter(items: CellarItemWithWine[], tf: TypeFilter): CellarItemWithWine[] {
-  if (tf === 'all') return items;
-  return items.filter((it) => it.wine?.type_canonical === tf);
-}
-
-function vintageOf(it: CellarItemWithWine): number {
-  return it.wine?.vintage ?? (it.wine?.lwin ? parseLwinVintage(it.wine.lwin) ?? 0 : 0);
-}
-
-function drinkSoonScore(it: CellarItemWithWine, currentYear: number): number {
-  // from year가 가까울수록 (또는 이미 from 지난) 우선. 미정인 경우 Infinity (뒤로).
-  const dw = getDrinkWindow({
-    vintage: it.wine?.vintage ?? null,
-    type_canonical: it.wine?.type_canonical ?? null,
-  });
-  if (!dw) return Number.POSITIVE_INFINITY;
-  // from 이전 → 남은 햇수; from 이후 → 0 (즉시 시음 가능) — 음수는 0으로
-  return Math.max(0, dw.from - currentYear);
-}
-
-function applySort(
-  items: CellarItemWithWine[],
-  sort: CellarSortKey,
-  isCellared: boolean,
-): CellarItemWithWine[] {
-  const copy = items.slice();
-  const currentYear = new Date().getFullYear();
-  switch (sort) {
-    case 'vintage':
-      copy.sort((a, b) => vintageOf(b) - vintageOf(a));
-      break;
-    case 'price':
-      copy.sort((a, b) => (b.purchase_price_krw ?? 0) - (a.purchase_price_krw ?? 0));
-      break;
-    case 'region':
-      copy.sort((a, b) => (a.wine?.region ?? '').localeCompare(b.wine?.region ?? ''));
-      break;
-    case 'storage':
-      copy.sort((a, b) => (a.storage ?? '').localeCompare(b.storage ?? ''));
-      break;
-    case 'drinkSoon':
-      copy.sort((a, b) => drinkSoonScore(a, currentYear) - drinkSoonScore(b, currentYear));
-      break;
-    case 'recent':
-    default: {
-      copy.sort((a, b) => {
-        const aKey = isCellared ? a.acquired_at : a.consumed_at ?? a.acquired_at;
-        const bKey = isCellared ? b.acquired_at : b.consumed_at ?? b.acquired_at;
-        return new Date(bKey).getTime() - new Date(aKey).getTime();
-      });
-      break;
-    }
-  }
-  return copy;
-}
+import { applySearch, applyTypeFilter, applySort } from '@/lib/cellar-filters';
 
 export default function CellarListScreen() {
   const { t } = useTranslation();

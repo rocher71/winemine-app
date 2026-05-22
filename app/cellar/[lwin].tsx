@@ -13,7 +13,7 @@
  *     ├── Section 5: 내 노트 카운트 (v0.1.0 SCOPE-OUT community reviews 대체) + ViewWineDetailsLink + Edit/Status 보조 액션
  *     └── (absolute) Section 6: DrinkThisCta (fade + wine-red CTA)
  *   AddToCellarSheet (편집 시)
- *   Toast (성공/실패)
+ *   Toast (성공/실패) / WineNotifyBanner (알림 토글 확인)
  */
 import { useCallback, useState } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Alert, Pressable } from 'react-native';
@@ -25,6 +25,7 @@ import { BackHeader } from '@/components/nav/back-header';
 import { PrimaryButton } from '@/components/shared/primary-button';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Toast } from '@/components/shared/toast';
+import { WineNotifyBanner } from '@/components/shared/wine-notify-banner';
 import { CellarHero } from '@/components/cellar/cellar-hero';
 import { DrinkWindowCard } from '@/components/cellar/drink-window-card';
 import { NotifyToggleCard } from '@/components/cellar/notify-toggle-card';
@@ -68,6 +69,7 @@ export default function CellarDetailScreen() {
   const [busy, setBusy] = useState(false);
   const [notify, setNotify] = useState(false);
   const [toast, setToast] = useState<{ tone: 'success' | 'error'; message: string } | null>(null);
+  const [notifyBanner, setNotifyBanner] = useState<{ title: string; body: string } | null>(null);
 
   const flashToast = useCallback((tone: 'success' | 'error', message: string) => {
     setToast({ tone, message });
@@ -77,12 +79,12 @@ export default function CellarDetailScreen() {
   const handleNotifyChange = useCallback(
     (next: boolean) => {
       setNotify(next);
-      flashToast(
-        'success',
-        next ? t('cellar.notify.toggledOn') : t('cellar.notify.toggledOff'),
-      );
+      setNotifyBanner({
+        title: next ? t('cellar.notify.banner.onTitle') : t('cellar.notify.banner.offTitle'),
+        body: next ? t('cellar.notify.banner.onBody') : t('cellar.notify.banner.offBody'),
+      });
     },
-    [flashToast, t],
+    [t],
   );
 
   const onToggleStatus = useCallback(async () => {
@@ -344,6 +346,15 @@ export default function CellarDetailScreen() {
         <DrinkThisCta onConfirm={onDrinkThisConfirm} disabled={busy} />
       ) : null}
 
+      {/* 알림 토글 확인 배너 — 상단 슬라이드인 */}
+      <WineNotifyBanner
+        visible={!!notifyBanner}
+        title={notifyBanner?.title ?? ''}
+        body={notifyBanner?.body ?? ''}
+        onHide={() => setNotifyBanner(null)}
+      />
+
+      {/* 편집 성공/실패 toast — 하단 */}
       {toast ? (
         <View
           pointerEvents="none"

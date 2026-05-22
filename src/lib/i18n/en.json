@@ -555,7 +555,13 @@
       "label": "Notify me at peak",
       "toggledOn": "Notifications enabled",
       "toggledOff": "Notifications disabled",
-      "a11yHint": "Toggle to receive push when peak is reached"
+      "a11yHint": "Toggle to receive push when peak is reached",
+      "banner": {
+        "onTitle": "Reminder set",
+        "onBody": "We'll let you know when this wine reaches peak.",
+        "offTitle": "Reminder removed",
+        "offBody": "You won't receive peak alerts for this wine."
+      }
     },
     "drinkThis": "Drink this wine",
     "drinkThisConfirm": "Mark this cellar wine as consumed?",

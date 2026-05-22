@@ -1,3 +1,15 @@
+/**
+ * EmptyState — 데이터 없음 / 오류 상태 공통 레이아웃.
+ *
+ * 구조: illustration? → title → description? → action?
+ * 중앙 정렬, flex-1 (부모가 남은 공간 채움).
+ *
+ * 사용 사례:
+ *   - 셀러 비어있음 (GlassWater 56 gold + PrimaryButton → /capture)
+ *   - 셀러 상세 미발견 (AlertCircle 48 gold + PrimaryButton back)
+ *   - tasted 탭 비어있음
+ *   - 노트 목록 비어있음
+ */
 import { View, Text } from 'react-native';
 import { type ReactNode } from 'react';
 
