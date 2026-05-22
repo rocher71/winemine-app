@@ -182,7 +182,7 @@ export default function CommunityPostCommentsScreen() {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Inter_400Regular',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 11,
                     color: light.text.muted,
                   }}
@@ -194,7 +194,7 @@ export default function CommunityPostCommentsScreen() {
                 allowFontScaling={false}
                 numberOfLines={2}
                 style={{
-                  fontFamily: 'PlayfairDisplay_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 13,
                   lineHeight: 16.9,
                   color: light.text.primary,
@@ -271,7 +271,7 @@ export default function CommunityPostCommentsScreen() {
               <Text
                 allowFontScaling={false}
                 style={{
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 13,
                   color: light.text.muted,
                   marginTop: 12,
@@ -308,7 +308,7 @@ export default function CommunityPostCommentsScreen() {
                 allowFontScaling={false}
                 style={{
                   flex: 1,
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 11,
                   color: light.text.muted,
                 }}
@@ -378,7 +378,7 @@ export default function CommunityPostCommentsScreen() {
                 multiline={false}
                 style={{
                   flex: 1,
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 12,
                   color: light.text.primary,
                   padding: 0,
@@ -463,7 +463,7 @@ function LightBackHeader({ title }: { title: string }) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -489,7 +489,7 @@ function PostNotFound() {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             color: light.text.muted,
           }}
@@ -526,7 +526,7 @@ function SortFilterButton({ label, hint, active, onPress }: SortFilterButtonProp
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: active ? 'Inter_600SemiBold' : 'Inter_400Regular',
+          fontFamily: active ? 'Freesentation_6SemiBold' : 'Freesentation_4Regular',
           fontWeight: active ? '600' : '400',
           fontSize: 11,
           color: active ? light.border.active : light.text.muted,

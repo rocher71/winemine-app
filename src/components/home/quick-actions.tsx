@@ -59,12 +59,12 @@ function ActionCard({ Icon, title, sub, onPress }: ActionCardProps) {
       >
         <Icon size={20} strokeWidth={1.75} color={brand.gold} />
         <Text
-          style={{ fontSize: 14, fontFamily: 'Inter_600SemiBold', color: tokens.text.primary }}
+          style={{ fontSize: 14, fontFamily: 'Freesentation_6SemiBold', color: tokens.text.primary }}
         >
           {title}
         </Text>
         <Text
-          style={{ fontSize: 12, lineHeight: 14.4, fontFamily: 'Inter_400Regular', color: tokens.text.muted }}
+          style={{ fontSize: 12, lineHeight: 14.4, fontFamily: 'Freesentation_4Regular', color: tokens.text.muted }}
         >
           {sub}
         </Text>

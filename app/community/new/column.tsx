@@ -213,7 +213,7 @@ export default function CommunityNewColumnScreen() {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Inter_400Regular',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 11,
                     color: light.text.muted,
                   }}
@@ -236,7 +236,7 @@ export default function CommunityNewColumnScreen() {
             selectionColor={light.border.active}
             allowFontScaling={false}
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 24,
               lineHeight: 30,
               color: light.text.primary,
@@ -249,7 +249,7 @@ export default function CommunityNewColumnScreen() {
               allowFontScaling={false}
               style={{
                 marginTop: 4,
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.text.muted,
               }}
@@ -271,7 +271,7 @@ export default function CommunityNewColumnScreen() {
             selectionColor={light.border.active}
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 16,
               lineHeight: 27.2,
               color: light.text.primary,
@@ -310,7 +310,7 @@ export default function CommunityNewColumnScreen() {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Inter_600SemiBold',
+                    fontFamily: 'Freesentation_6SemiBold',
                     fontWeight: '600',
                     fontSize: 12,
                     color: light.text.primary,
@@ -322,7 +322,7 @@ export default function CommunityNewColumnScreen() {
                   allowFontScaling={false}
                   style={{
                     marginTop: 2,
-                    fontFamily: 'Inter_400Regular',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 10,
                     color: light.text.muted,
                   }}
@@ -494,7 +494,7 @@ function LightBackHeader({
         style={{
           flex: 1,
           textAlign: 'center',
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 15,
           color: light.text.primary,
         }}
@@ -525,7 +525,7 @@ function LightBackHeader({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 12,
               color: brand.cream,
@@ -574,7 +574,7 @@ function ToolbarButton({ Icon, labelKey, onPress }: ToolbarButtonProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.secondary,
             }}

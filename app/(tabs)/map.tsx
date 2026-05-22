@@ -20,7 +20,7 @@ export default function MapPlaceholder() {
       <Text
         style={{
           marginTop: 16,
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 22,
           lineHeight: 28.6,
           textAlign: 'center',
@@ -32,7 +32,7 @@ export default function MapPlaceholder() {
       <Text
         style={{
           marginTop: 8,
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 14,
           lineHeight: 22.4,
           textAlign: 'center',
@@ -54,7 +54,7 @@ export default function MapPlaceholder() {
       >
         <Text
           style={{
-            fontFamily: 'Inter_500Medium',
+            fontFamily: 'Freesentation_5Medium',
             fontSize: 11,
             letterSpacing: 0.4,
             color: brand.gold,

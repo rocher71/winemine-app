@@ -226,13 +226,13 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
         {/* Meta column — flex */}
         <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
           <Text
-            style={{ fontSize: 16, lineHeight: 19.2, fontFamily: 'PlayfairDisplay_400Regular', color: tokens.text.primary }}
+            style={{ fontSize: 16, lineHeight: 19.2, fontFamily: 'Freesentation_4Regular', color: tokens.text.primary }}
             numberOfLines={2}
           >
             {wine.name}
           </Text>
           <Text
-            style={{ fontSize: 12, lineHeight: 14.4, fontFamily: 'Inter_400Regular', color: tokens.text.secondary }}
+            style={{ fontSize: 12, lineHeight: 14.4, fontFamily: 'Freesentation_4Regular', color: tokens.text.secondary }}
             numberOfLines={1}
           >
             {wine.producer} · {wine.vintage}
@@ -240,7 +240,7 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <MapPin size={11} strokeWidth={1.75} color={tokens.text.muted} />
             <Text
-              style={{ fontSize: 11, fontFamily: 'Inter_400Regular', color: tokens.text.muted }}
+              style={{ fontSize: 11, fontFamily: 'Freesentation_4Regular', color: tokens.text.muted }}
               numberOfLines={1}
               allowFontScaling={false}
             >
@@ -248,7 +248,7 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
             </Text>
           </View>
           <Text
-            style={{ fontSize: 11, marginTop: 1, opacity: 0.85, fontFamily: 'Inter_400Regular', color: tokens.text.muted }}
+            style={{ fontSize: 11, marginTop: 1, opacity: 0.85, fontFamily: 'Freesentation_4Regular', color: tokens.text.muted }}
             numberOfLines={1}
           >
             {wine.grapes}
@@ -266,11 +266,11 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
           <View style={{ alignItems: 'flex-end', gap: 6 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
               <WMGlassRating value={wine.score} size={10} />
-              <Text style={{ color: brand.gold, fontSize: 12, fontFamily: 'Inter_600SemiBold' }}>
+              <Text style={{ color: brand.gold, fontSize: 12, fontFamily: 'Freesentation_6SemiBold' }}>
                 {wine.score.toFixed(1)}
               </Text>
             </View>
-            <Text style={{ fontSize: 14, lineHeight: 16.8, fontFamily: 'PlayfairDisplay_400Regular', color: tokens.text.primary }}>
+            <Text style={{ fontSize: 14, lineHeight: 16.8, fontFamily: 'Freesentation_4Regular', color: tokens.text.primary }}>
               ₩{formatKrwShort(wine.priceKrw, i18n.language)}
             </Text>
           </View>

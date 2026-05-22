@@ -17,7 +17,7 @@ export function CellarSummarySection({ cellaredCount }: Props) {
     <View>
       <Text
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           color: tokens.text.secondary,
           textTransform: 'uppercase',
           fontSize: 11,
@@ -47,7 +47,7 @@ export function CellarSummarySection({ cellaredCount }: Props) {
             <Wine size={22} strokeWidth={1.5} color={brand.gold} />
             <Text
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontSize: 16,
                 color: tokens.text.primary,
                 marginLeft: 12,

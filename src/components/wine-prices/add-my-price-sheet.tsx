@@ -162,7 +162,7 @@ export function AddMyPriceSheet({
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'PlayfairDisplay_700Bold',
+            fontFamily: 'Freesentation_7Bold',
             fontSize: 22,
             fontWeight: '700',
             color: light.text.primary,
@@ -182,7 +182,7 @@ export function AddMyPriceSheet({
           <View style={{ gap: 4 }}>
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 color: light.text.muted,
                 lineHeight: 14,
@@ -207,7 +207,7 @@ export function AddMyPriceSheet({
                 borderRadius: 10,
                 color: light.text.primary,
                 fontSize: 14,
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
               }}
             />
           </View>
@@ -216,7 +216,7 @@ export function AddMyPriceSheet({
           <View style={{ gap: 4 }}>
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 color: light.text.muted,
                 lineHeight: 14,
@@ -268,7 +268,7 @@ export function AddMyPriceSheet({
                     >
                       <Text
                         style={{
-                          fontFamily: 'Inter_600SemiBold',
+                          fontFamily: 'Freesentation_6SemiBold',
                           fontWeight: '600',
                           fontSize: 12,
                           color: active ? brand.cream : light.text.primary,
@@ -288,7 +288,7 @@ export function AddMyPriceSheet({
           <View style={{ gap: 4 }}>
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 color: light.text.muted,
                 lineHeight: 14,
@@ -316,7 +316,7 @@ export function AddMyPriceSheet({
                 borderRadius: 10,
                 color: light.text.primary,
                 fontSize: 14,
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
               }}
             />
           </View>
@@ -341,7 +341,7 @@ export function AddMyPriceSheet({
             >
               <Text
                 style={{
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontWeight: '600',
                   fontSize: 14,
                   color: brand.cream,

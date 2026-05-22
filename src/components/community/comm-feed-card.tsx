@@ -120,7 +120,7 @@ export function CommFeedCard({
               <Text
                 allowFontScaling={false}
                 style={{
-                  fontFamily: 'PlayfairDisplay_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 13,
                   color: light.text.primary,
                 }}
@@ -138,7 +138,7 @@ export function CommFeedCard({
                   borderWidth: 1,
                   borderColor: withAlpha(user.color, 0.4),
                   color: user.color,
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontSize: 9,
                   fontWeight: '600',
                 }}
@@ -150,7 +150,7 @@ export function CommFeedCard({
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.text.muted,
                 marginTop: 2,
@@ -186,7 +186,7 @@ export function CommFeedCard({
           allowFontScaling={false}
           accessibilityRole="header"
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 16,
             lineHeight: 20.8,
             color: light.text.primary,
@@ -202,7 +202,7 @@ export function CommFeedCard({
             allowFontScaling={false}
             numberOfLines={3}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12.5,
               lineHeight: 20.625,
               color: light.text.secondary,
@@ -229,7 +229,7 @@ export function CommFeedCard({
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_500Medium',
+                fontFamily: 'Freesentation_5Medium',
                 fontSize: 11,
                 color: light.text.muted,
               }}
@@ -309,7 +309,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 11,
               fontWeight: '600',
               color: light.text.primary,
@@ -322,7 +322,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
             }}
@@ -335,7 +335,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             lineHeight: 18.2,
             color: light.text.primary,
@@ -350,7 +350,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
             allowFontScaling={false}
             numberOfLines={2}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 11.5,
               lineHeight: 17.825,
               color: light.text.secondary,
@@ -373,7 +373,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.text.muted,
               }}
@@ -387,7 +387,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.text.muted,
               }}
@@ -402,7 +402,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
               <Text
                 allowFontScaling={false}
                 style={{
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 10,
                   color: brand.wineRed,
                 }}

@@ -121,7 +121,7 @@ function LightCloseHeader() {
         style={{
           flex: 1,
           textAlign: 'center',
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 16,
           color: light.text.primary,
         }}
@@ -145,7 +145,7 @@ function IntroSection() {
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 10,
           color: light.border.active,
           letterSpacing: 1.8,
@@ -157,7 +157,7 @@ function IntroSection() {
         allowFontScaling={false}
         style={{
           marginTop: 6,
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 24,
           lineHeight: 28.8,
           color: light.text.primary,
@@ -256,7 +256,7 @@ function PostTypeCard({ option }: PostTypeCardProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 15,
                 color: light.text.primary,
               }}
@@ -275,7 +275,7 @@ function PostTypeCard({ option }: PostTypeCardProps) {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Inter_600SemiBold',
+                    fontFamily: 'Freesentation_6SemiBold',
                     fontWeight: '600',
                     fontSize: 9,
                     color: light.border.active,
@@ -290,7 +290,7 @@ function PostTypeCard({ option }: PostTypeCardProps) {
             allowFontScaling={false}
             style={{
               marginTop: 3,
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 11,
               color: light.text.muted,
             }}
@@ -345,7 +345,7 @@ function TonightCta() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 12,
               color: light.text.primary,
@@ -357,7 +357,7 @@ function TonightCta() {
             allowFontScaling={false}
             style={{
               marginTop: 2,
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
             }}

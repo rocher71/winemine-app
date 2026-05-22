@@ -174,7 +174,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 14,
             color: light.text.primary,
@@ -211,7 +211,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
                 >
                   <Text
                     style={{
-                      fontFamily: 'Inter_600SemiBold',
+                      fontFamily: 'Freesentation_6SemiBold',
                       fontWeight: '600',
                       fontSize: 11,
                       lineHeight: 13,
@@ -238,7 +238,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
         >
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               color: light.text.muted,
               textAlign: 'center',
@@ -281,7 +281,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
                   y={avgY - 4}
                   fill={brand.gold}
                   fontSize={10}
-                  fontFamily="Inter_400Regular"
+                  fontFamily="Freesentation_4Regular"
                   textAnchor="end"
                 >
                   {t('winePrices.priceChart.avgLabel')}
@@ -297,7 +297,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
                 y={tick.y + 3}
                 fill={light.text.muted}
                 fontSize={10}
-                fontFamily="Inter_400Regular"
+                fontFamily="Freesentation_4Regular"
                 textAnchor="end"
               >
                 {tick.label}
@@ -312,7 +312,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
                 y={svgH - 6}
                 fill={light.text.muted}
                 fontSize={10}
-                fontFamily="Inter_400Regular"
+                fontFamily="Freesentation_4Regular"
                 textAnchor="middle"
               >
                 {tick.label}

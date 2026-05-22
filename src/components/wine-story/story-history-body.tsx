@@ -39,7 +39,7 @@ export function StoryHistoryBody({
         <Text
           key={idx}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             lineHeight: 23.1,
             color: light.text.secondary,
@@ -131,7 +131,7 @@ function annotateGlossaryTerms(
         <Text
           style={{
             color: light.text.primary,
-            fontFamily: 'Inter_500Medium',
+            fontFamily: 'Freesentation_5Medium',
             fontWeight: '500',
           }}
         >

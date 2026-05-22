@@ -180,7 +180,7 @@ function Hero() {
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_500Medium',
+          fontFamily: 'Freesentation_5Medium',
           fontSize: 10,
           color: light.border.active,
           letterSpacing: 2,
@@ -193,7 +193,7 @@ function Hero() {
         allowFontScaling={false}
         style={{
           marginTop: 6,
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 26,
           lineHeight: 29.9,
           fontStyle: 'italic',
@@ -210,7 +210,7 @@ function Hero() {
         allowFontScaling={false}
         style={{
           marginTop: 8,
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           color: light.text.muted,
         }}
@@ -363,7 +363,7 @@ function ParticipateCta() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 12,
               color: light.text.primary,
@@ -375,7 +375,7 @@ function ParticipateCta() {
             allowFontScaling={false}
             style={{
               marginTop: 2,
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
             }}
@@ -401,7 +401,7 @@ function ParticipateCta() {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 11,
                 color: brand.cream,
@@ -427,7 +427,7 @@ function SectionLabel() {
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_500Medium',
+          fontFamily: 'Freesentation_5Medium',
           fontSize: 10,
           color: light.border.active,
           letterSpacing: 1.8,
@@ -520,7 +520,7 @@ function EntryRow({ entry }: { entry: TonightEntry }) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 11,
                 color: light.text.primary,
@@ -532,7 +532,7 @@ function EntryRow({ entry }: { entry: TonightEntry }) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
             }}
@@ -552,7 +552,7 @@ function EntryRow({ entry }: { entry: TonightEntry }) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10.5,
               color: light.text.secondary,
             }}
@@ -564,7 +564,7 @@ function EntryRow({ entry }: { entry: TonightEntry }) {
           allowFontScaling={false}
           style={{
             marginTop: 2,
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontStyle: 'italic',
             fontSize: 10,
             color: light.text.muted,
@@ -593,7 +593,7 @@ function EntryRow({ entry }: { entry: TonightEntry }) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 10,
               color: light.border.active,

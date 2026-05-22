@@ -73,7 +73,7 @@ export function PeakGreeting({ name, wines = [] }: PeakGreetingProps) {
                         color: brand.gold,
                         // home spec §9 P0 — use the dedicated italic face,
                         // not system fake italic on the Regular face.
-                        fontFamily: 'PlayfairDisplay_400Regular_Italic',
+                        fontFamily: 'Freesentation_4Regular',
                       }}
                     />
                   ),

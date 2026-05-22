@@ -116,7 +116,7 @@ export function FavoriteRow({
                   numberOfLines={1}
                   style={{
                     flexShrink: 1,
-                    fontFamily: 'PlayfairDisplay_400Regular',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 14,
                     lineHeight: 18,
                     color: light.text.primary,
@@ -136,7 +136,7 @@ export function FavoriteRow({
                   >
                     <Text
                       style={{
-                        fontFamily: 'Inter_400Regular',
+                        fontFamily: 'Freesentation_4Regular',
                         fontSize: 9,
                         lineHeight: 11,
                         color: light.text.muted,
@@ -153,7 +153,7 @@ export function FavoriteRow({
                 numberOfLines={1}
                 style={{
                   marginTop: 2,
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 11,
                   lineHeight: 14,
                   color: light.text.muted,
@@ -167,7 +167,7 @@ export function FavoriteRow({
                 numberOfLines={1}
                 style={{
                   marginTop: 4,
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 12,
                   lineHeight: 16,
                   color: light.text.secondary,
@@ -191,7 +191,7 @@ export function FavoriteRow({
       >
         <Text
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 10,
             lineHeight: 12,
             color: light.text.muted,

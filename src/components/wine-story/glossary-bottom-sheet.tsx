@@ -125,7 +125,7 @@ export function GlossaryBottomSheet({
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 18,
             lineHeight: 21.6,
             color: light.text.primary,
@@ -140,7 +140,7 @@ export function GlossaryBottomSheet({
         >
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               lineHeight: 22.4,
               color: light.text.secondary,
@@ -152,7 +152,7 @@ export function GlossaryBottomSheet({
           {exampleText ? (
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 13,
                 lineHeight: 19.5,
                 color: light.text.muted,
@@ -166,7 +166,7 @@ export function GlossaryBottomSheet({
           {sourceText ? (
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 11,
                 lineHeight: 13.2,
                 color: light.text.muted,
@@ -212,7 +212,7 @@ export function GlossaryBottomSheet({
               >
                 <Text
                   style={{
-                    fontFamily: 'Inter_600SemiBold',
+                    fontFamily: 'Freesentation_6SemiBold',
                     fontSize: 13,
                     fontWeight: '600',
                     color: light.border.active,
@@ -238,7 +238,7 @@ export function GlossaryBottomSheet({
             >
               <Text
                 style={{
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontSize: 13,
                   fontWeight: '600',
                   color: light.text.muted,

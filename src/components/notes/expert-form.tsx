@@ -144,7 +144,7 @@ export function ExpertForm({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 13,
               lineHeight: 15.6,
               color: light.text.primary,
@@ -155,7 +155,7 @@ export function ExpertForm({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 11,
               lineHeight: 13.2,
               color: light.text.muted,
@@ -254,7 +254,7 @@ export function ExpertForm({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               lineHeight: 14.4,
               color: light.text.primary,
@@ -297,7 +297,7 @@ export function ExpertForm({
             color: light.text.primary,
             minHeight: 96,
             textAlignVertical: 'top',
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
           }}
         />
       </View>
@@ -319,7 +319,7 @@ export function ExpertForm({
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontSize: 13,
             lineHeight: 15.6,
             color: light.text.primary,
@@ -373,7 +373,7 @@ function PriceEstimate({
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           lineHeight: 14.4,
           color: light.text.primary,
@@ -405,7 +405,7 @@ function PriceEstimate({
           paddingVertical: 10,
           fontSize: 14,
           color: light.text.primary,
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
         }}
       />
     </View>

@@ -110,7 +110,7 @@ export default function WineStoryScreen() {
           <AlertCircle size={32} strokeWidth={1.5} color={light.text.muted} />
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               color: light.text.muted,
               textAlign: 'center',
@@ -138,7 +138,7 @@ export default function WineStoryScreen() {
         >
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               color: light.text.muted,
               textAlign: 'center',
@@ -209,7 +209,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -274,7 +274,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
           <Text
             accessibilityRole="header"
             style={{
-              fontFamily: 'PlayfairDisplay_700Bold',
+              fontFamily: 'Freesentation_7Bold',
               fontSize: 28,
               fontWeight: '700',
               color: light.text.primary,
@@ -287,7 +287,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
           <Text
             style={{
               marginTop: 6,
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               color: light.text.secondary,
               lineHeight: 18,
@@ -305,7 +305,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontSize: 14,
             fontWeight: '600',
             color: light.border.active,
@@ -348,7 +348,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
             />
             <Text
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontSize: 13,
                 fontWeight: '600',
                 color: light.border.active,
@@ -360,7 +360,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
           </View>
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               lineHeight: 22.4,
               color: light.text.primary,
@@ -377,7 +377,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
           <Text
             accessibilityRole="header"
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 14,
               fontWeight: '600',
               color: light.border.active,
@@ -390,7 +390,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
           </Text>
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               lineHeight: 23.1,
               color: light.text.secondary,
@@ -453,7 +453,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
             <ArrowLeft size={16} strokeWidth={2} color={light.border.active} />
             <Text
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontSize: 14,
                 fontWeight: '600',
                 color: light.border.active,

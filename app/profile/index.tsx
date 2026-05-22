@@ -332,7 +332,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -434,7 +434,7 @@ function UnauthView({ onCta }: UnauthViewProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'PlayfairDisplay_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 18,
           lineHeight: 23.4,
@@ -446,7 +446,7 @@ function UnauthView({ onCta }: UnauthViewProps) {
       </Text>
       <Text
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 13,
           lineHeight: 19.5,
           color: light.text.muted,
@@ -476,7 +476,7 @@ function UnauthView({ onCta }: UnauthViewProps) {
         >
           <Text
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 13,
               color: light.border.active,
@@ -513,7 +513,7 @@ function ErrorView({ message, onRetry }: ErrorViewProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'PlayfairDisplay_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 18,
           lineHeight: 23.4,
@@ -525,7 +525,7 @@ function ErrorView({ message, onRetry }: ErrorViewProps) {
       </Text>
       <Text
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           lineHeight: 18,
           color: light.text.muted,
@@ -555,7 +555,7 @@ function ErrorView({ message, onRetry }: ErrorViewProps) {
         >
           <Text
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 13,
               color: light.border.active,

@@ -118,7 +118,7 @@ function FallbackLabel({ producerName, wineName, vintage }: FallbackLabelProps) 
           x={45}
           y={48}
           fontSize="6"
-          fontFamily="Inter_500Medium"
+          fontFamily="Freesentation_5Medium"
           fill={textColor}
           textAnchor="middle"
         >
@@ -130,7 +130,7 @@ function FallbackLabel({ producerName, wineName, vintage }: FallbackLabelProps) 
           x={45}
           y={48 + lineGap}
           fontSize="7"
-          fontFamily="PlayfairDisplay_400Regular"
+          fontFamily="Freesentation_4Regular"
           fill={textColor}
           textAnchor="middle"
         >
@@ -142,7 +142,7 @@ function FallbackLabel({ producerName, wineName, vintage }: FallbackLabelProps) 
           x={45}
           y={48 + lineGap * 2}
           fontSize="7"
-          fontFamily="PlayfairDisplay_400Regular"
+          fontFamily="Freesentation_4Regular"
           fill={textColor}
           textAnchor="middle"
         >
@@ -154,7 +154,7 @@ function FallbackLabel({ producerName, wineName, vintage }: FallbackLabelProps) 
           x={45}
           y={48 + lineGap * 3}
           fontSize="6"
-          fontFamily="Inter_400Regular"
+          fontFamily="Freesentation_4Regular"
           fill={textColor}
           textAnchor="middle"
         >

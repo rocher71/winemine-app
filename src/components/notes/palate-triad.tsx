@@ -96,7 +96,7 @@ export function PalateTriad({ value, onChange, dims = DEFAULT_DIMS }: Props) {
                     <Text
                       allowFontScaling={false}
                       style={{
-                        fontFamily: 'Inter_400Regular',
+                        fontFamily: 'Freesentation_4Regular',
                         fontSize: 12,
                         lineHeight: 14.4,
                         color: active ? brand.cream : idleText,

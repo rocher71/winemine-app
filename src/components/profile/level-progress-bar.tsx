@@ -84,7 +84,7 @@ export function LevelProgressBar({ xp, onPress }: Props) {
             >
               <Text
                 style={{
-                  fontFamily: 'Inter_700Bold',
+                  fontFamily: 'Freesentation_7Bold',
                   fontWeight: '700',
                   fontSize: 11,
                   lineHeight: 13,
@@ -96,7 +96,7 @@ export function LevelProgressBar({ xp, onPress }: Props) {
             </View>
             <Text
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 13,
                 lineHeight: 15.6,
@@ -108,7 +108,7 @@ export function LevelProgressBar({ xp, onPress }: Props) {
           </View>
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               lineHeight: 14.4,
               color: light.text.muted,

@@ -123,7 +123,7 @@ export function PriceDetailTable({ purchases }: PriceDetailTableProps) {
       >
         <Text
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 13,
             color: light.text.muted,
             textAlign: 'center',
@@ -150,7 +150,7 @@ export function PriceDetailTable({ purchases }: PriceDetailTableProps) {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 14,
             color: light.text.primary,
@@ -190,7 +190,7 @@ export function PriceDetailTable({ purchases }: PriceDetailTableProps) {
               <LocaleText
                 value={g.store.name}
                 style={{
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontWeight: '600',
                   fontSize: 14,
                   color: light.text.primary,
@@ -201,7 +201,7 @@ export function PriceDetailTable({ purchases }: PriceDetailTableProps) {
                 <LocaleText
                   value={g.store.branch}
                   style={{
-                    fontFamily: 'Inter_400Regular',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 12,
                     color: light.text.muted,
                     lineHeight: 16,
@@ -253,7 +253,7 @@ function SortBtn({ label, active, onPress }: SortBtnProps) {
       >
         <Text
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 11,
             lineHeight: 13,
@@ -309,7 +309,7 @@ function PurchaseRow({ purchase }: PurchaseRowProps) {
         <View style={{ flexDirection: 'column', gap: 4, minWidth: 0, flex: 1 }}>
           <Text
             style={{
-              fontFamily: 'PlayfairDisplay_700Bold',
+              fontFamily: 'Freesentation_7Bold',
               fontWeight: '700',
               fontSize: 15,
               color: light.text.primary,
@@ -328,7 +328,7 @@ function PurchaseRow({ purchase }: PurchaseRowProps) {
           >
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 11,
                 color: light.text.muted,
               }}
@@ -346,7 +346,7 @@ function PurchaseRow({ purchase }: PurchaseRowProps) {
             <LevelPillNum level={levelId} size="sm" />
             <Text
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 11,
                 color: light.text.muted,
               }}

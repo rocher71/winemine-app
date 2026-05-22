@@ -72,7 +72,7 @@ export function StatGrid({
           >
             <Text
               style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 22,
                 lineHeight: 22,
                 color: light.text.primary,
@@ -83,7 +83,7 @@ export function StatGrid({
             <Text
               numberOfLines={1}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 lineHeight: 12,
                 color: light.text.muted,

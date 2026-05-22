@@ -53,7 +53,7 @@ export function LevelChip({ levelId, initial, onPress }: LevelChipProps) {
       >
         <Text
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 12,
             fontWeight: '700',
             color: brand.deepestDark,

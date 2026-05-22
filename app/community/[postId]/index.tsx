@@ -249,7 +249,7 @@ function NotFoundView() {
           accessibilityRole="header"
           style={{
             flex: 1,
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 16,
             lineHeight: 19.2,
@@ -263,7 +263,7 @@ function NotFoundView() {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             color: light.text.muted,
           }}
@@ -308,7 +308,7 @@ function UserRow({ userId, ago }: UserRowProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 13,
                 color: light.text.primary,
               }}
@@ -320,7 +320,7 @@ function UserRow({ userId, ago }: UserRowProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 10,
             color: light.text.muted,
             marginTop: 2,
@@ -382,7 +382,7 @@ function WineEmbedStub({ wineId }: WineEmbedStubProps) {
             allowFontScaling={false}
             numberOfLines={2}
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               color: light.text.primary,
               lineHeight: 16.9,
@@ -395,7 +395,7 @@ function WineEmbedStub({ wineId }: WineEmbedStubProps) {
               allowFontScaling={false}
               numberOfLines={1}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 10,
                 color: light.text.muted,
                 marginTop: 2,
@@ -442,7 +442,7 @@ function AlsoTriedCta() {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 22,
             color: light.border.active,
           }}
@@ -453,7 +453,7 @@ function AlsoTriedCta() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 12,
               color: light.text.primary,
@@ -464,7 +464,7 @@ function AlsoTriedCta() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
               marginTop: 2,
@@ -493,7 +493,7 @@ function AlsoTriedCta() {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 11,
                 color: brand.cream,
@@ -551,7 +551,7 @@ function CommentsPreview({
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 16,
             color: light.text.primary,
           }}
@@ -561,7 +561,7 @@ function CommentsPreview({
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 11,
             color: light.text.muted,
           }}
@@ -602,7 +602,7 @@ function CommentsPreview({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontWeight: '600',
               fontSize: 11,
               color: light.border.active,
@@ -648,7 +648,7 @@ function NoteVariant({ post, mine }: VariantProps) {
           allowFontScaling={false}
           accessibilityRole="header"
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 22,
             lineHeight: 27.5,
             color: light.text.primary,
@@ -677,7 +677,7 @@ function NoteVariant({ post, mine }: VariantProps) {
                     key={i}
                     allowFontScaling={false}
                     style={{
-                      fontFamily: 'PlayfairDisplay_400Regular',
+                      fontFamily: 'Freesentation_4Regular',
                       fontSize: 17,
                       color: light.border.active,
                       opacity: filled ? 1 : 0.25,
@@ -691,7 +691,7 @@ function NoteVariant({ post, mine }: VariantProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 17,
                 color: light.border.active,
               }}
@@ -704,7 +704,7 @@ function NoteVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 13.5,
             lineHeight: 23.625,
             color: light.text.secondary,
@@ -738,7 +738,7 @@ function NoteVariant({ post, mine }: VariantProps) {
               <Text
                 allowFontScaling={false}
                 style={{
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontWeight: '600',
                   fontSize: 9,
                   color: light.border.active,
@@ -752,7 +752,7 @@ function NoteVariant({ post, mine }: VariantProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 11.5,
                 lineHeight: 18.4,
                 color: light.text.secondary,
@@ -861,7 +861,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
             allowFontScaling={false}
             accessibilityRole="header"
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular_Italic',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 26,
               lineHeight: 29.9,
               fontStyle: 'italic',
@@ -896,7 +896,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 13,
                 color: light.text.primary,
               }}
@@ -907,7 +907,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
               marginTop: 2,
@@ -924,7 +924,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular_Italic',
+            fontFamily: 'Freesentation_4Regular',
             fontStyle: 'italic',
             fontSize: 18,
             lineHeight: 29.7,
@@ -938,7 +938,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             lineHeight: 25.9,
             color: light.text.secondary,
@@ -960,7 +960,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
             allowFontScaling={false}
             style={{
               fontStyle: 'italic',
-              fontFamily: 'PlayfairDisplay_400Regular_Italic',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 20,
               lineHeight: 28,
               color: light.border.active,
@@ -971,7 +971,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.text.muted,
               letterSpacing: 0.6,
@@ -985,7 +985,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             lineHeight: 25.9,
             color: light.text.secondary,
@@ -1011,7 +1011,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 10,
             color: light.border.active,
@@ -1071,7 +1071,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
           allowFontScaling={false}
           accessibilityRole="header"
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 21,
             lineHeight: 27.3,
             color: light.text.primary,
@@ -1083,7 +1083,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             lineHeight: 24.5,
             color: light.text.secondary,
@@ -1106,7 +1106,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
                 borderWidth: 1,
                 borderColor: light.border.default,
                 color: light.text.muted,
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 11,
               }}
             >
@@ -1139,7 +1139,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 10,
             color: light.border.active,
@@ -1199,7 +1199,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
                     <Text
                       allowFontScaling={false}
                       style={{
-                        fontFamily: 'PlayfairDisplay_700Bold',
+                        fontFamily: 'Freesentation_7Bold',
                         fontWeight: '700',
                         fontSize: 11,
                         // §10 O: i=0 → brand.textInk on light.border.active (대비 4.85:1)
@@ -1225,7 +1225,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
                       allowFontScaling={false}
                       numberOfLines={1}
                       style={{
-                        fontFamily: 'PlayfairDisplay_400Regular',
+                        fontFamily: 'Freesentation_4Regular',
                         fontSize: 11,
                         color: light.text.primary,
                         lineHeight: 14.3,
@@ -1236,7 +1236,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
                     <Text
                       allowFontScaling={false}
                       style={{
-                        fontFamily: 'Inter_400Regular',
+                        fontFamily: 'Freesentation_4Regular',
                         fontSize: 9,
                         color: light.text.muted,
                         marginTop: 2,
@@ -1266,7 +1266,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 16,
             color: light.text.primary,
           }}
@@ -1276,7 +1276,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 11,
             color: light.text.muted,
           }}
@@ -1287,7 +1287,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontWeight: '600',
             fontSize: 11,
             color: light.border.active,
@@ -1361,7 +1361,7 @@ function AlbumVariant({ post, mine }: VariantProps) {
           allowFontScaling={false}
           accessibilityRole="header"
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 20,
             lineHeight: 25,
             color: light.text.primary,
@@ -1372,7 +1372,7 @@ function AlbumVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 13,
             lineHeight: 22.1,
             color: light.text.secondary,
@@ -1439,7 +1439,7 @@ function AlbumVariant({ post, mine }: VariantProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_600SemiBold',
+                fontFamily: 'Freesentation_6SemiBold',
                 fontWeight: '600',
                 fontSize: 11,
                 color: brand.cream,
@@ -1503,7 +1503,7 @@ function AlbumVariant({ post, mine }: VariantProps) {
                     <Text
                       allowFontScaling={false}
                       style={{
-                        fontFamily: 'PlayfairDisplay_400Regular',
+                        fontFamily: 'Freesentation_4Regular',
                         fontSize: 12,
                         color: brand.cream,
                       }}
@@ -1533,7 +1533,7 @@ function AlbumVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 15,
             color: light.text.primary,
           }}
@@ -1583,7 +1583,7 @@ function UserRowInline({ userId, ago }: UserRowProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'PlayfairDisplay_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               color: light.text.primary,
             }}
@@ -1594,7 +1594,7 @@ function UserRowInline({ userId, ago }: UserRowProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 10,
             color: light.text.muted,
             marginTop: 2,
@@ -1629,7 +1629,7 @@ function NewsVariant({ post, mine }: VariantProps) {
           allowFontScaling={false}
           accessibilityRole="header"
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 21,
             lineHeight: 27.3,
             color: light.text.primary,
@@ -1641,7 +1641,7 @@ function NewsVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             lineHeight: 24.5,
             color: light.text.secondary,
@@ -1751,7 +1751,7 @@ function ComposeFooter({ postId, insetsBottom }: ComposeFooterProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
                 color: light.text.muted,
               }}

@@ -106,7 +106,7 @@ export default function GlossaryDetailScreen() {
         <View style={{ padding: 24 }}>
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               color: light.text.muted,
             }}
@@ -181,7 +181,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -223,7 +223,7 @@ function HeroSection({ entry, locale }: SectionProps) {
       >
         <Text
           style={{
-            fontFamily: 'Inter_600SemiBold',
+            fontFamily: 'Freesentation_6SemiBold',
             fontSize: 11,
             fontWeight: '600',
             color: categoryColor(entry.category),
@@ -236,7 +236,7 @@ function HeroSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'PlayfairDisplay_700Bold',
+          fontFamily: 'Freesentation_7Bold',
           fontSize: 32,
           fontWeight: '700',
           color: light.text.primary,
@@ -263,7 +263,7 @@ function DefinitionSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontSize: 12,
           fontWeight: '600',
           color: light.text.muted,
@@ -277,7 +277,7 @@ function DefinitionSection({ entry, locale }: SectionProps) {
       {/* Definition body (p). */}
       <Text
         style={{
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 14,
           color: light.text.primary,
           lineHeight: 22.4,
@@ -299,7 +299,7 @@ function DefinitionSection({ entry, locale }: SectionProps) {
         >
           <Text
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 10,
               fontWeight: '600',
               textTransform: 'uppercase',
@@ -312,7 +312,7 @@ function DefinitionSection({ entry, locale }: SectionProps) {
           </Text>
           <Text
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               color: light.text.secondary,
               lineHeight: 18,
@@ -339,7 +339,7 @@ function ExamplesSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontSize: 12,
           fontWeight: '600',
           color: light.text.muted,
@@ -359,11 +359,11 @@ function ExamplesSection({ entry, locale }: SectionProps) {
           borderLeftColor: brand.wineRed,
         }}
       >
-        {/* §10 D — PlayfairDisplay_400Regular_Italic 폰트 로드됨 (app/_layout.tsx).
+        {/* §10 D — Freesentation_4Regular (Italic fallback) 폰트 로드됨 (app/_layout.tsx).
             fontStyle: 'italic' 도 함께 부여 (안전 fallback — 폰트 미로드 환경에서 RN 자동 italic). */}
         <Text
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular_Italic',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 15,
             fontStyle: 'italic',
             color: light.text.secondary,
@@ -386,7 +386,7 @@ function RelatedTermsSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Freesentation_6SemiBold',
           fontSize: 12,
           fontWeight: '600',
           color: light.text.muted,
@@ -458,7 +458,7 @@ function RelatedTermChip({ rid, label, a11yLabel, a11yHint }: RelatedTermChipPro
           <Text
             numberOfLines={1}
             style={{
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               color: light.text.primary,
             }}
@@ -501,7 +501,7 @@ function MoreSection() {
         >
           <Text
             style={{
-              fontFamily: 'Inter_600SemiBold',
+              fontFamily: 'Freesentation_6SemiBold',
               fontSize: 13,
               fontWeight: '600',
               color: light.border.active,

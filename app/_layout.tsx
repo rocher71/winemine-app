@@ -7,30 +7,14 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { colorScheme } from 'nativewind';
 import * as SplashScreen from 'expo-splash-screen';
-import {
-  useFonts as useInterFonts,
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-} from '@expo-google-fonts/inter';
-import {
-  useFonts as usePlayfairFonts,
-  PlayfairDisplay_400Regular,
-  PlayfairDisplay_400Regular_Italic,
-  PlayfairDisplay_700Bold,
-} from '@expo-google-fonts/playfair-display';
+import { useFonts } from 'expo-font';
 import { initI18n, changeLanguage, type AppLocale } from '@/lib/i18n';
 import { signInAnonymouslyIfNeeded, getCurrentUserId } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { brand } from '@/lib/design-tokens';
 
-// Keep the native splash visible while fonts + auth/profile bootstrap.
-// home spec §9 P0: PlayfairDisplay_400Regular_Italic is required for
-// PeakGreeting wine name inline italic — system fake italic must not be used.
-// Inter weights match tailwind.config.ts fontFamily mapping (400/500/600).
-// Playfair weights cover: 400 Regular (font-playfair default), 700 Bold
-// (LevelChip avatar + CommUserAvatar initial — see home spec §3-1, §3-6),
-// 400 Italic (PeakGreeting wine name — home spec §9 P0).
+// Freesentation 로컬 폰트 — Inter + Playfair 대체 (4/5/6/7 weight).
+// Italic 폰트 없으므로 4Regular로 fallback.
 SplashScreen.preventAutoHideAsync().catch(() => {
   /* preventAutoHideAsync may reject if called too late — non-fatal. */
 });
@@ -38,23 +22,18 @@ SplashScreen.preventAutoHideAsync().catch(() => {
 export default function RootLayout() {
   const [bootstrapped, setBootstrapped] = useState(false);
 
-  const [interLoaded, interError] = useInterFonts({
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-  });
-  const [playfairLoaded, playfairError] = usePlayfairFonts({
-    PlayfairDisplay_400Regular,
-    PlayfairDisplay_400Regular_Italic,
-    PlayfairDisplay_700Bold,
+  const [fontsLoaded, fontError] = useFonts({
+    Freesentation_4Regular:  require('../assets/fonts/Freesentation-4Regular.ttf'),
+    Freesentation_5Medium:   require('../assets/fonts/Freesentation-5Medium.ttf'),
+    Freesentation_6SemiBold: require('../assets/fonts/Freesentation-6SemiBold.ttf'),
+    Freesentation_7Bold:     require('../assets/fonts/Freesentation-7Bold.ttf'),
   });
 
-  const fontsReady = interLoaded && playfairLoaded;
+  const fontsReady = fontsLoaded;
 
   useEffect(() => {
-    if (interError) console.warn('[winemine] Inter fonts failed to load:', interError);
-    if (playfairError) console.warn('[winemine] Playfair fonts failed to load:', playfairError);
-  }, [interError, playfairError]);
+    if (fontError) console.warn('[winemine] Freesentation fonts failed to load:', fontError);
+  }, [fontError]);
 
   useEffect(() => {
     let cancelled = false;

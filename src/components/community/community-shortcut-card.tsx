@@ -85,7 +85,7 @@ export function CommunityShortcutCard() {
                   borderWidth: 1,
                   borderColor: withAlpha(brand.gold, 0.4),
                   color: light.border.active,
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontSize: 9,
                   fontWeight: '600',
                   letterSpacing: 0.72,
@@ -104,7 +104,7 @@ export function CommunityShortcutCard() {
                   backgroundColor: brand.wineRed,
                   color: brand.cream,
                   // Inter_700Bold 폰트 미로드 — Inter_600SemiBold + fontWeight 700 사용 (system fallback bold)
-                  fontFamily: 'Inter_600SemiBold',
+                  fontFamily: 'Freesentation_6SemiBold',
                   fontSize: 9,
                   fontWeight: '700',
                   letterSpacing: 0.54,
@@ -118,7 +118,7 @@ export function CommunityShortcutCard() {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'PlayfairDisplay_400Regular',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 14,
                 lineHeight: 18.2,
                 color: light.text.primary,
@@ -133,7 +133,7 @@ export function CommunityShortcutCard() {
                 allowFontScaling={false}
                 numberOfLines={1}
                 style={{
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 11,
                   color: light.text.muted,
                   marginTop: 4,

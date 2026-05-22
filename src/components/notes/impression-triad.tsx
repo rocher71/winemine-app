@@ -79,7 +79,7 @@ export function ImpressionTriad({ value, onChange }: Props) {
                 <Icon size={26} strokeWidth={1.5} color={active ? brand.gold : idleText} />
                 <Text
                   allowFontScaling={false}
-                  style={{ fontFamily: 'Inter_600SemiBold', fontSize: 12, lineHeight: 14.4, color: active ? brand.gold : idleText }}
+                  style={{ fontFamily: 'Freesentation_6SemiBold', fontSize: 12, lineHeight: 14.4, color: active ? brand.gold : idleText }}
                 >
                   {label}
                 </Text>
