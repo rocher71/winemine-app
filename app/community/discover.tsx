@@ -26,17 +26,17 @@
  * isFollowing 정적 (index === 0 만 true — keyscreen verbatim).
  */
 import { useCallback } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
-import { ChevronLeft } from 'lucide-react-native';
 
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { currentLocale } from '@/lib/i18n';
 import { getCommunityUser } from '@/lib/mock/community-posts';
 import { CommUserAvatar } from '@/components/community/comm-user-avatar';
+import { CommunityBackHeader } from '@/components/community/community-back-header';
 import { DISCOVER_ROWS, type DiscoverRow } from '@/lib/mock/community-discover';
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -46,9 +46,11 @@ import { DISCOVER_ROWS, type DiscoverRow } from '@/lib/mock/community-discover';
 export default function DiscoverScreen() {
   const insets = useSafeAreaInsets();
 
+  const { t } = useTranslation();
+
   return (
     <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
-      <LightBackHeader />
+      <CommunityBackHeader title={t('community.discover.headerTitle')} />
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
@@ -57,68 +59,6 @@ export default function DiscoverScreen() {
         <HeaderSection />
         <UserCardsList />
       </ScrollView>
-    </View>
-  );
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// LightBackHeader (inline — §10 F)
-// ────────────────────────────────────────────────────────────────────────────
-
-function LightBackHeader() {
-  const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
-
-  const handleBack = useCallback(() => {
-    Haptics.selectionAsync().catch(() => undefined);
-    router.back();
-  }, []);
-
-  return (
-    <View
-      style={{
-        backgroundColor: light.bg.deepest,
-        paddingTop: insets.top + 8,
-        paddingBottom: 8,
-        paddingHorizontal: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: light.border.default,
-      }}
-    >
-      <Pressable
-        onPress={handleBack}
-        accessibilityRole="button"
-        accessibilityLabel={t('nav.back', { defaultValue: 'Back' })}
-        hitSlop={8}
-        style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-      >
-        <View
-          style={{
-            width: 32,
-            height: 32,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <ChevronLeft size={24} strokeWidth={1.75} color={light.text.primary} />
-        </View>
-      </Pressable>
-      <Text
-        allowFontScaling={false}
-        accessibilityRole="header"
-        style={{
-          marginLeft: 4,
-          fontFamily: 'Freesentation_4Regular',
-          fontWeight: '600',
-          fontSize: 16,
-          color: light.text.primary,
-        }}
-      >
-        {t('community.discover.headerTitle')}
-      </Text>
     </View>
   );
 }

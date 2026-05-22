@@ -38,7 +38,7 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
-import { ChevronLeft, Moon, Wine } from 'lucide-react-native';
+import { Moon, Wine } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, {
   Circle,
@@ -58,6 +58,7 @@ import { brand, light, withAlpha, communityTonightMap } from '@/lib/design-token
 import { currentLocale } from '@/lib/i18n';
 import { getCommunityUser } from '@/lib/mock/community-posts';
 import { CommUserAvatar } from '@/components/community/comm-user-avatar';
+import { CommunityBackHeader } from '@/components/community/community-back-header';
 import {
   MAP_DOTS,
   TONIGHT_ENTRIES,
@@ -91,7 +92,7 @@ export default function TonightScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
-      <LightBackHeader />
+      <CommunityBackHeader />
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
@@ -103,54 +104,6 @@ export default function TonightScreen() {
         <SectionLabel />
         <EntriesList />
       </ScrollView>
-    </View>
-  );
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// LightBackHeader (inline — §10 F)
-// tonight 만 title="" (invisible) + border 생략 (§6-7)
-// ────────────────────────────────────────────────────────────────────────────
-
-function LightBackHeader() {
-  const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
-
-  const handleBack = useCallback(() => {
-    Haptics.selectionAsync().catch(() => undefined);
-    router.back();
-  }, []);
-
-  return (
-    <View
-      style={{
-        backgroundColor: light.bg.deepest,
-        paddingTop: insets.top + 8,
-        paddingBottom: 8,
-        paddingHorizontal: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-      }}
-    >
-      <Pressable
-        onPress={handleBack}
-        accessibilityRole="button"
-        accessibilityLabel={t('nav.back', { defaultValue: 'Back' })}
-        hitSlop={8}
-        style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-      >
-        <View
-          style={{
-            width: 32,
-            height: 32,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <ChevronLeft size={24} strokeWidth={1.75} color={light.text.primary} />
-        </View>
-      </Pressable>
     </View>
   );
 }

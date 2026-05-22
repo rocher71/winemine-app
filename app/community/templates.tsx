@@ -31,7 +31,6 @@ import { useCallback, useState } from 'react';
 import {
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -39,12 +38,13 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
-import { Bookmark, ChevronLeft } from 'lucide-react-native';
+import { Bookmark } from 'lucide-react-native';
 
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { currentLocale } from '@/lib/i18n';
 import { LocaleText } from '@/components/shared/locale-text';
 import { Toast } from '@/components/shared/toast';
+import { CommunityBackHeader } from '@/components/community/community-back-header';
 import { useTastingTemplates } from '@/hooks/use-tasting-templates';
 import {
   getCommunityTemplatesSorted,
@@ -100,7 +100,7 @@ export default function CommunityTemplatesScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
-      <LightBackHeader />
+      <CommunityBackHeader title={t('community.templates.headerTitle')} />
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
@@ -129,68 +129,6 @@ export default function CommunityTemplatesScreen() {
           <Toast message={toast.message} tone="info" />
         </View>
       ) : null}
-    </View>
-  );
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// LightBackHeader (inline — §10 F)
-// ────────────────────────────────────────────────────────────────────────────
-
-function LightBackHeader() {
-  const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
-
-  const handleBack = useCallback(() => {
-    Haptics.selectionAsync().catch(() => undefined);
-    router.back();
-  }, []);
-
-  return (
-    <View
-      style={{
-        backgroundColor: light.bg.deepest,
-        paddingTop: insets.top + 8,
-        paddingBottom: 8,
-        paddingHorizontal: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: light.border.default,
-      }}
-    >
-      <Pressable
-        onPress={handleBack}
-        accessibilityRole="button"
-        accessibilityLabel={t('nav.back', { defaultValue: 'Back' })}
-        hitSlop={8}
-        style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-      >
-        <View
-          style={{
-            width: 32,
-            height: 32,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <ChevronLeft size={24} strokeWidth={1.75} color={light.text.primary} />
-        </View>
-      </Pressable>
-      <Text
-        allowFontScaling={false}
-        accessibilityRole="header"
-        style={{
-          marginLeft: 4,
-          fontFamily: 'Freesentation_4Regular',
-          fontWeight: '600',
-          fontSize: 16,
-          color: light.text.primary,
-        }}
-      >
-        {t('community.templates.headerTitle')}
-      </Text>
     </View>
   );
 }
