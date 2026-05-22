@@ -53,7 +53,7 @@ export function AddToCellarCta({ onPress }: Props) {
           <Plus size={18} strokeWidth={2} color={brand.cream} />
           <Text
             allowFontScaling={false}
-            style={{ fontFamily: 'Freesentation_6SemiBold', fontSize: 15, color: brand.cream }}
+            style={{ fontFamily: 'Freesentation_4Regular', fontSize: 15, color: brand.cream }}
             numberOfLines={1}
           >
             {t('wineDetail.actions.addToCellar')}

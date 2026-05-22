@@ -55,7 +55,7 @@ export function MetaCell({ label, value, valueLocalized }: MetaCellProps) {
       <Text
         style={{
           marginTop: 4,
-          fontFamily: 'Freesentation_7Bold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 16,
           fontWeight: '700',
           color: light.text.primary,

@@ -105,7 +105,7 @@ export function ContributorsList({ estimates }: ContributorsListProps) {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 14,
             color: light.text.primary,
@@ -185,7 +185,7 @@ function SortBtn({ label, a11yLabel, active, onPress }: SortBtnProps) {
       >
         <Text
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 11,
             color: active ? brand.cream : light.text.muted,
@@ -262,7 +262,7 @@ function ContributorRow({ estimate }: ContributorRowProps) {
           >
             <Text
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '600',
                 fontSize: 11,
                 color: brand.cream,
@@ -276,7 +276,7 @@ function ContributorRow({ estimate }: ContributorRowProps) {
           {/* Level name + anonId */}
           <Text
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 13,
               color: light.text.primary,
@@ -320,7 +320,7 @@ function ContributorRow({ estimate }: ContributorRowProps) {
       >
         <Text
           style={{
-            fontFamily: 'Freesentation_7Bold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '700',
             fontSize: 18,
             color: light.border.active,
@@ -339,7 +339,7 @@ function ContributorRow({ estimate }: ContributorRowProps) {
         >
           <Text
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 10,
               color: conf.fg,

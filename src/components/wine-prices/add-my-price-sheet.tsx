@@ -162,7 +162,7 @@ export function AddMyPriceSheet({
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Freesentation_7Bold',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 22,
             fontWeight: '700',
             color: light.text.primary,
@@ -268,7 +268,7 @@ export function AddMyPriceSheet({
                     >
                       <Text
                         style={{
-                          fontFamily: 'Freesentation_6SemiBold',
+                          fontFamily: 'Freesentation_4Regular',
                           fontWeight: '600',
                           fontSize: 12,
                           color: active ? brand.cream : light.text.primary,
@@ -341,7 +341,7 @@ export function AddMyPriceSheet({
             >
               <Text
                 style={{
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontWeight: '600',
                   fontSize: 14,
                   color: brand.cream,

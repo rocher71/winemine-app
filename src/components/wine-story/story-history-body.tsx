@@ -131,7 +131,7 @@ function annotateGlossaryTerms(
         <Text
           style={{
             color: light.text.primary,
-            fontFamily: 'Freesentation_5Medium',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '500',
           }}
         >

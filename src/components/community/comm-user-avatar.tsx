@@ -66,7 +66,7 @@ export function CommUserAvatar({
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Freesentation_7Bold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: Math.round(size * 0.42),
           fontWeight: '700',
           color: brand.cream,

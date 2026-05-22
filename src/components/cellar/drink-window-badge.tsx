@@ -79,7 +79,7 @@ export function DrinkWindowBadge({ status, dw }: Props) {
         allowFontScaling={false}
         numberOfLines={1}
         style={{
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 10,
           lineHeight: 12,
           color,

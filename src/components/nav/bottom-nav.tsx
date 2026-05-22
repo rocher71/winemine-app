@@ -214,7 +214,7 @@ function NavTab({ icon: Icon, label, focused, idleColor, onPress }: NavTabProps)
             numberOfLines={1}
             ellipsizeMode="tail"
             style={{
-              fontFamily: focused ? 'Freesentation_6SemiBold' : 'Freesentation_4Regular',
+              fontFamily: focused ? 'Freesentation_4Regular' : 'Freesentation_4Regular',
               fontSize: 10,
               lineHeight: 12,
               letterSpacing: 0.2,

@@ -8,6 +8,15 @@ import { StatusBar } from 'expo-status-bar';
 import { colorScheme } from 'nativewind';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+} from '@expo-google-fonts/inter';
+import {
+  PlayfairDisplay_400Regular,
+  PlayfairDisplay_700Bold,
+} from '@expo-google-fonts/playfair-display';
 import { initI18n, changeLanguage, type AppLocale } from '@/lib/i18n';
 import { signInAnonymouslyIfNeeded, getCurrentUserId } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
@@ -23,16 +32,20 @@ export default function RootLayout() {
   const [bootstrapped, setBootstrapped] = useState(false);
 
   const [fontsLoaded, fontError] = useFonts({
-    Freesentation_4Regular:  require('../assets/fonts/Freesentation-4Regular.ttf'),
-    Freesentation_5Medium:   require('../assets/fonts/Freesentation-5Medium.ttf'),
-    Freesentation_6SemiBold: require('../assets/fonts/Freesentation-6SemiBold.ttf'),
-    Freesentation_7Bold:     require('../assets/fonts/Freesentation-7Bold.ttf'),
+    // Korean UI font (단일 weight — Freesentation 4 Regular)
+    Freesentation_4Regular: require('../assets/fonts/Freesentation-4Regular.ttf'),
+    // English UI fonts (locale='en' + 워드마크 고정 사용)
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    PlayfairDisplay_400Regular,
+    PlayfairDisplay_700Bold,
   });
 
   const fontsReady = fontsLoaded;
 
   useEffect(() => {
-    if (fontError) console.warn('[winemine] Freesentation fonts failed to load:', fontError);
+    if (fontError) console.warn('[winemine] Font load error:', fontError);
   }, [fontError]);
 
   useEffect(() => {

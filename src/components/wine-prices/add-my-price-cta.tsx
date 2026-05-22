@@ -71,7 +71,7 @@ export function AddMyPriceCta({ onPress }: AddMyPriceCtaProps) {
           <Plus size={18} strokeWidth={2} color={brand.cream} />
           <Text
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 15,
               color: brand.cream,

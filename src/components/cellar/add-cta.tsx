@@ -53,7 +53,7 @@ export function AddCta({ onPress }: Props) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 12,
               lineHeight: 14.4,
               color: brand.gold,

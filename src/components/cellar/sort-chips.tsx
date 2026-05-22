@@ -57,7 +57,7 @@ function Chip({
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 11,
           lineHeight: 13.2,
           color: active ? brand.cream : text.secondary,

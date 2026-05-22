@@ -111,7 +111,7 @@ function LightBackHeader() {
         accessibilityRole="header"
         style={{
           marginLeft: 4,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           color: light.text.primary,
@@ -266,7 +266,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '600',
                 fontSize: 9,
                 color: light.text.secondary,
@@ -315,7 +315,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 10,
               color: light.border.active,
@@ -346,7 +346,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 11,
               color: isFollowing ? brand.cream : light.border.active,

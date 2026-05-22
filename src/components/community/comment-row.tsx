@@ -99,7 +99,7 @@ export function CommentRow({
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 11,
                 fontWeight: '600',
                 color: light.text.primary,
@@ -119,7 +119,7 @@ export function CommentRow({
               borderWidth: 1,
               borderColor: withAlpha(user.color, 0.4),
               color: user.color,
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 9,
               fontWeight: '600',
               letterSpacing: 0.36,
@@ -139,7 +139,7 @@ export function CommentRow({
                 borderWidth: 1,
                 borderColor: withAlpha(brand.gold, 0.4),
                 color: light.border.active,
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 9,
                 fontWeight: '600',
                 letterSpacing: 0.54,

@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
-import { brand } from '@/lib/design-tokens';
+import { brand, light } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { LevelChip } from '@/components/shared/level-chip';
 
@@ -46,14 +46,22 @@ function WMLogoMark({ size = 26 }: { size?: number }) {
 }
 
 function WMLogoWordmark() {
+  // 워드마크: locale 무관 항상 PlayfairDisplay (영문 브랜드 폰트 고정)
+  // 텍스트: "WineMine" (camelCase, 사용자 요청)
   return (
     <Text
-      className="font-playfair text-text-primary dark:text-text-primary"
-      style={{ fontSize: 18, fontWeight: '500', letterSpacing: -0.18 }}
+      allowFontScaling={false}
+      style={{
+        fontFamily: 'PlayfairDisplay_400Regular',
+        fontSize: 18,
+        letterSpacing: -0.18,
+        color: light.text.primary,
+      }}
     >
-      wine
-      <Text style={{ color: brand.gold }}>·</Text>
-      mine
+      Wine
+      <Text style={{ fontFamily: 'PlayfairDisplay_400Regular', color: brand.gold }}>
+        Mine
+      </Text>
     </Text>
   );
 }

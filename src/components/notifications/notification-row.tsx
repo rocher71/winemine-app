@@ -129,7 +129,7 @@ export function NotificationRow({
             <Text
               numberOfLines={1}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '600',
                 fontSize: 13,
                 lineHeight: 16,

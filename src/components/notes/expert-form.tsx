@@ -145,7 +145,7 @@ export function ExpertForm({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               lineHeight: 15.6,
               color: light.text.primary,
@@ -320,7 +320,7 @@ export function ExpertForm({
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 13,
             lineHeight: 15.6,
             color: light.text.primary,

@@ -183,7 +183,7 @@ function LightBackHeader() {
         accessibilityRole="header"
         style={{
           marginLeft: 4,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           color: light.text.primary,
@@ -286,7 +286,7 @@ function SortChip({ sortKey, active, onPress }: SortChipProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 11,
             color: active ? brand.cream : light.text.muted,
@@ -414,7 +414,7 @@ function TemplateCard({ tpl, saved, onToggle }: TemplateCardProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '600',
                 fontSize: 11,
                 color: saved ? light.border.active : light.text.secondary,

@@ -209,7 +209,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -274,7 +274,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
           <Text
             accessibilityRole="header"
             style={{
-              fontFamily: 'Freesentation_7Bold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 28,
               fontWeight: '700',
               color: light.text.primary,
@@ -305,7 +305,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 14,
             fontWeight: '600',
             color: light.border.active,
@@ -348,7 +348,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
             />
             <Text
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 13,
                 fontWeight: '600',
                 color: light.border.active,
@@ -377,7 +377,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
           <Text
             accessibilityRole="header"
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               fontWeight: '600',
               color: light.border.active,
@@ -453,7 +453,7 @@ function StoryContent({ wine, story, onOpenGlossary }: StoryContentProps) {
             <ArrowLeft size={16} strokeWidth={2} color={light.border.active} />
             <Text
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 14,
                 fontWeight: '600',
                 color: light.border.active,

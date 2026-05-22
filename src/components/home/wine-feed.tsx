@@ -266,7 +266,7 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
           <View style={{ alignItems: 'flex-end', gap: 6 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
               <WMGlassRating value={wine.score} size={10} />
-              <Text style={{ color: brand.gold, fontSize: 12, fontFamily: 'Freesentation_6SemiBold' }}>
+              <Text style={{ color: brand.gold, fontSize: 12, fontFamily: 'Freesentation_4Regular' }}>
                 {wine.score.toFixed(1)}
               </Text>
             </View>

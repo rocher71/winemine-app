@@ -127,7 +127,7 @@ export function AddMyEstimateCta({ userLevelId }: AddMyEstimateCtaProps) {
             <Text
               numberOfLines={1}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '600',
                 // §10 G (a): locked 한국어 길이 → fontSize 축소.
                 fontSize: allowed ? 15 : 13,

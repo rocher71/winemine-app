@@ -140,7 +140,7 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
           <BookOpen size={16} color={brand.gold} />
           <Text
             allowFontScaling={false}
-            style={{ fontFamily: 'Freesentation_6SemiBold', fontSize: 12, textTransform: 'uppercase', color: brand.gold, letterSpacing: 0.72 }}
+            style={{ fontFamily: 'Freesentation_4Regular', fontSize: 12, textTransform: 'uppercase', color: brand.gold, letterSpacing: 0.72 }}
           >
             {t('wineDetail.myNote.label')}
           </Text>
@@ -157,7 +157,7 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
             <Text
               allowFontScaling={false}
               className="text-text-secondary dark:text-text-secondary"
-              style={{ fontFamily: 'Freesentation_6SemiBold', fontSize: 11 }}
+              style={{ fontFamily: 'Freesentation_4Regular', fontSize: 11 }}
             >
               {t('wineDetail.myNote.edit')}
             </Text>

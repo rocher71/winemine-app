@@ -96,7 +96,7 @@ export default function WineCommunityPeakScreen() {
           <AlertCircle size={32} strokeWidth={1.5} color={light.text.muted} />
           <Text
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 14,
               color: light.text.primary,
@@ -138,7 +138,7 @@ export default function WineCommunityPeakScreen() {
             >
               <Text
                 style={{
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontWeight: '600',
                   fontSize: 13,
                   color: brand.gold,
@@ -234,7 +234,7 @@ export default function WineCommunityPeakScreen() {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Freesentation_7Bold',
+                    fontFamily: 'Freesentation_4Regular',
                     fontWeight: '700',
                     fontSize: 22,
                     // §6 #3: cream → light.text.primary.
@@ -335,7 +335,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,

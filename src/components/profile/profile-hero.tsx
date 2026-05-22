@@ -178,7 +178,7 @@ export function ProfileHero({
             >
               <Text
                 style={{
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontWeight: '600',
                   fontSize: 10,
                   lineHeight: 10,
@@ -236,7 +236,7 @@ export function ProfileHero({
             <Award size={16} color={brand.gold} />
             <Text
               style={{
-                fontFamily: 'Freesentation_5Medium',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '500',
                 fontSize: 13,
                 lineHeight: 16,

@@ -459,7 +459,7 @@ function LightBackHeader({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 12,
               color: brand.cream,
@@ -537,7 +537,7 @@ function PhotoSlot({ uri, index, total, size, onPress }: PhotoSlotProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_7Bold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '700',
               fontSize: 10,
               // §6-17 cream 유지 (textInk bg 위 가독성 OK)

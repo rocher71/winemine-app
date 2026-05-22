@@ -92,7 +92,7 @@ export function SettingsRadioRow({
         <View style={{ flex: 1 }}>
           <Text
             style={{
-              fontFamily: 'Freesentation_5Medium',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               lineHeight: 20,
               color: textPrimary,

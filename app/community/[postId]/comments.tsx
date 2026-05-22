@@ -463,7 +463,7 @@ function LightBackHeader({ title }: { title: string }) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -526,7 +526,7 @@ function SortFilterButton({ label, hint, active, onPress }: SortFilterButtonProp
       <Text
         allowFontScaling={false}
         style={{
-          fontFamily: active ? 'Freesentation_6SemiBold' : 'Freesentation_4Regular',
+          fontFamily: active ? 'Freesentation_4Regular' : 'Freesentation_4Regular',
           fontWeight: active ? '600' : '400',
           fontSize: 11,
           color: active ? light.border.active : light.text.muted,

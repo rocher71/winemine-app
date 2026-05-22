@@ -118,7 +118,7 @@ function FallbackLabel({ producerName, wineName, vintage }: FallbackLabelProps) 
           x={45}
           y={48}
           fontSize="6"
-          fontFamily="Freesentation_5Medium"
+          fontFamily="Freesentation_4Regular"
           fill={textColor}
           textAnchor="middle"
         >

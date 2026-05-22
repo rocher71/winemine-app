@@ -175,7 +175,7 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
             </View>
             {post.appellation && (
               <Text
-                style={{ color: brand.gold, fontSize: 10, letterSpacing: 0.5, fontFamily: 'Freesentation_5Medium' }}
+                style={{ color: brand.gold, fontSize: 10, letterSpacing: 0.5, fontFamily: 'Freesentation_4Regular' }}
                 allowFontScaling={false}
               >
                 · {post.appellation}

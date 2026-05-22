@@ -173,7 +173,7 @@ export default function CommunityScreen() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               color: light.border.active,
               letterSpacing: 1.8,
@@ -245,7 +245,7 @@ export default function CommunityScreen() {
                     allowFontScaling={false}
                     numberOfLines={1}
                     style={{
-                      fontFamily: active ? 'Freesentation_6SemiBold' : 'Freesentation_4Regular',
+                      fontFamily: active ? 'Freesentation_4Regular' : 'Freesentation_4Regular',
                       fontSize: 13,
                       fontWeight: active ? '600' : '400',
                       color: active ? light.text.primary : light.text.muted,
@@ -337,7 +337,7 @@ export default function CommunityScreen() {
                         allowFontScaling={false}
                         numberOfLines={1}
                         style={{
-                          fontFamily: 'Freesentation_6SemiBold',
+                          fontFamily: 'Freesentation_4Regular',
                           fontSize: 11,
                           fontWeight: '600',
                           color: active ? light.border.active : light.text.secondary,

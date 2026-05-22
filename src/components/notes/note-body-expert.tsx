@@ -66,7 +66,7 @@ function Eyebrow({ children }: { children: string }) {
     <Text
       allowFontScaling={false}
       style={{
-        fontFamily: 'Freesentation_6SemiBold',
+        fontFamily: 'Freesentation_4Regular',
         fontSize: 10,
         lineHeight: 12,
         letterSpacing: 1.8,

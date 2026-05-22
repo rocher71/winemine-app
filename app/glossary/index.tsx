@@ -173,7 +173,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -235,7 +235,7 @@ function CategoryChips({ cat, onChange }: CategoryChipsProps) {
                 <Text
                   numberOfLines={1}
                   style={{
-                    fontFamily: 'Freesentation_6SemiBold',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 12,
                     fontWeight: '600',
                     color: active ? brand.cream : light.text.secondary,
@@ -356,7 +356,7 @@ function TermRow({ entry }: TermRowProps) {
           <Text
             numberOfLines={1}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               fontWeight: '600',
               color: light.text.primary,

@@ -275,7 +275,7 @@ function PostTypeCard({ option }: PostTypeCardProps) {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Freesentation_6SemiBold',
+                    fontFamily: 'Freesentation_4Regular',
                     fontWeight: '600',
                     fontSize: 9,
                     color: light.border.active,
@@ -345,7 +345,7 @@ function TonightCta() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 12,
               color: light.text.primary,

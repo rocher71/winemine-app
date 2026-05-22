@@ -400,55 +400,55 @@ export const radius = {
 export const typography = {
   pageTitle:    { family: 'Freesentation_4Regular', size: 24, lineHeight: 28.8, letterSpacing: -0.24 },
   cardTitle:    { family: 'Freesentation_4Regular', size: 16, lineHeight: 20.8 },
-  backTitle:    { family: 'Freesentation_6SemiBold',          size: 16, lineHeight: 19.2 },
+  backTitle:    { family: 'Freesentation_4Regular',          size: 16, lineHeight: 19.2 },
   modalTitle:   { family: 'Freesentation_4Regular', size: 22, lineHeight: 26.4 },
   modalDesc:    { family: 'Freesentation_4Regular',           size: 14, lineHeight: 21 },
   emptyTitle:   { family: 'Freesentation_4Regular', size: 22, lineHeight: 28.6 },
   emptyDesc:    { family: 'Freesentation_4Regular',           size: 14, lineHeight: 22.4 },
-  sectionTitle: { family: 'Freesentation_5Medium',            size: 14, lineHeight: 14, letterSpacing: 0.56, textTransform: 'uppercase' as const },
-  sectionLink:  { family: 'Freesentation_5Medium',            size: 12, lineHeight: 12 },
+  sectionTitle: { family: 'Freesentation_4Regular',            size: 14, lineHeight: 14, letterSpacing: 0.56, textTransform: 'uppercase' as const },
+  sectionLink:  { family: 'Freesentation_4Regular',            size: 12, lineHeight: 12 },
   cardMeta:     { family: 'Freesentation_4Regular',           size: 12, lineHeight: 14.4 },
   cardBody:     { family: 'Freesentation_4Regular',           size: 13, lineHeight: 19.5 },
-  levelName:    { family: 'Freesentation_6SemiBold',          size: 13, lineHeight: 15.6 },
+  levelName:    { family: 'Freesentation_4Regular',          size: 13, lineHeight: 15.6 },
   glossaryTerm: { family: 'Freesentation_4Regular', size: 16 },
   glossaryDef:  { family: 'Freesentation_4Regular',           size: 13, lineHeight: 19.5 },
-  bottomNavActive: { family: 'Freesentation_6SemiBold', size: 10, letterSpacing: 0.2 },
+  bottomNavActive: { family: 'Freesentation_4Regular', size: 10, letterSpacing: 0.2 },
   bottomNavIdle:   { family: 'Freesentation_4Regular',  size: 10, letterSpacing: 0.2 },
-  primaryButtonSm: { family: 'Freesentation_6SemiBold', size: 13 },
-  primaryButtonMd: { family: 'Freesentation_6SemiBold', size: 14 },
-  primaryButtonLg: { family: 'Freesentation_6SemiBold', size: 15 },
+  primaryButtonSm: { family: 'Freesentation_4Regular', size: 13 },
+  primaryButtonMd: { family: 'Freesentation_4Regular', size: 14 },
+  primaryButtonLg: { family: 'Freesentation_4Regular', size: 15 },
 
   // ---- home retroactive (design-spec home.md §9) ----
   peakGreetingQuestion:  { family: 'Freesentation_4Regular', size: 22, lineHeight: 27.5, letterSpacing: -0.22 },
   firstTimeHeadline:     { family: 'Freesentation_4Regular', size: 28, lineHeight: 33.6 },
   mapCameoTitle:         { family: 'Freesentation_4Regular', size: 14 },
   communityPeekTitle:    { family: 'Freesentation_4Regular', size: 17, lineHeight: 20.4 },
-  homeEyebrow:           { family: 'Freesentation_5Medium', size: 10, letterSpacing: 1.8, textTransform: 'uppercase' as const },
+  homeEyebrow:           { family: 'Freesentation_4Regular', size: 10, letterSpacing: 1.8, textTransform: 'uppercase' as const },
   homeStatValue:         { family: 'Freesentation_4Regular', size: 20, lineHeight: 22, letterSpacing: -0.4 },
   homeWineFeedTitle:     { family: 'Freesentation_4Regular', size: 18 },
   homeWineFeedRowName:   { family: 'Freesentation_4Regular', size: 15, lineHeight: 18 },
   homeRecentNoteName:    { family: 'Freesentation_4Regular', size: 12, lineHeight: 15 },
 
   // ---- wine-detail retroactive (design-spec wine-detail.md §9) ----
-  cardSectionTitle:    { family: 'Freesentation_6SemiBold',          size: 14, lineHeight: 16.8 },
-  cardBig:             { family: 'Freesentation_7Bold',    size: 20, lineHeight: 22 },
-  ratingPillScore:     { family: 'Freesentation_7Bold',    size: 18, lineHeight: 19.8 },
-  wineStoryHeadline:   { family: 'Freesentation_7Bold',    size: 22, lineHeight: 26.4 },
+  cardSectionTitle:    { family: 'Freesentation_4Regular',          size: 14, lineHeight: 16.8 },
+  cardBig:             { family: 'Freesentation_4Regular',    size: 20, lineHeight: 22 },
+  ratingPillScore:     { family: 'Freesentation_4Regular',    size: 18, lineHeight: 19.8 },
+  wineStoryHeadline:   { family: 'Freesentation_4Regular',    size: 22, lineHeight: 26.4 },
   wsetMiniDim:         { family: 'Freesentation_4Regular', size: 13, lineHeight: 14.3 },
   microLabel:          { family: 'Freesentation_4Regular',           size: 9,  letterSpacing: 0.36, textTransform: 'uppercase' as const },
-  servingTempPill:     { family: 'Freesentation_5Medium',            size: 11, lineHeight: 13.2 },
+  servingTempPill:     { family: 'Freesentation_4Regular',            size: 11, lineHeight: 13.2 },
 
   // ---- cellar retroactive (design-spec cellar-list.md §9 P0 — 5 신규) ----
   // TabSegment + AddCta label (Inter 12 600)
-  tabSegmentLabel:  { family: 'Freesentation_6SemiBold', size: 12, lineHeight: 14.4 },
+  tabSegmentLabel:  { family: 'Freesentation_4Regular', size: 12, lineHeight: 14.4 },
   // TabSegment count badge (Inter 10 700)
-  tabCount:         { family: 'Freesentation_7Bold',     size: 10, lineHeight: 12 },
+  tabCount:         { family: 'Freesentation_4Regular',     size: 10, lineHeight: 12 },
   // TypeFilterChip + SortChip label (Inter 11 600)
-  chipLabel:        { family: 'Freesentation_6SemiBold', size: 11, lineHeight: 13.2 },
+  chipLabel:        { family: 'Freesentation_4Regular', size: 11, lineHeight: 13.2 },
   // CellarCard wine name (Playfair 12 lh 15) — keyscreen cellar-card.tsx verbatim
   cellarCardName:   { family: 'Freesentation_4Regular', size: 12, lineHeight: 15 },
   // DrinkWindowBadge label (Inter 10 600 lh 12 nowrap)
-  drinkWindowBadge: { family: 'Freesentation_6SemiBold', size: 10, lineHeight: 12 },
+  drinkWindowBadge: { family: 'Freesentation_4Regular', size: 10, lineHeight: 12 },
 
   // ---- cellar-detail retroactive (design-spec cellar-detail.md §9-2 P0 — 2 신규) ----
   // ProducerLine (Inter 13 lh 15.6 = 1.2 ratio) — 기존 cardBody(13 / 19.5) 와 lineHeight 다름
@@ -457,16 +457,16 @@ export const typography = {
   timelineYearLabel: { family: 'Freesentation_4Regular', size: 10, lineHeight: 12 },
 
   // ---- capture retroactive (design-spec capture.md §9 P0 — 11 신규) ----
-  captureHeaderTitle:  { family: 'Freesentation_6SemiBold',          size: 17, lineHeight: 20.4 },
+  captureHeaderTitle:  { family: 'Freesentation_4Regular',          size: 17, lineHeight: 20.4 },
   optionCardTitle:     { family: 'Freesentation_4Regular', size: 18, lineHeight: 21.6 },
   optionCardSub:       { family: 'Freesentation_4Regular',           size: 12, lineHeight: 16.8 },
   simulatingMessage:   { family: 'Freesentation_4Regular',           size: 14, lineHeight: 19.6 },
-  aiBadgeTitle:        { family: 'Freesentation_6SemiBold',          size: 13, lineHeight: 15.6 },
+  aiBadgeTitle:        { family: 'Freesentation_4Regular',          size: 13, lineHeight: 15.6 },
   aiBadgeSubtitle:     { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
   recognizedName:      { family: 'Freesentation_4Regular', size: 17, lineHeight: 21.25 },
   metaRowLabel:        { family: 'Freesentation_4Regular',           size: 11, lineHeight: 15.4 },
   metaRowValue:        { family: 'Freesentation_4Regular',           size: 11, lineHeight: 15.4 },
-  fileNotFoundTitle:   { family: 'Freesentation_7Bold',              size: 11, lineHeight: 16.5 },
+  fileNotFoundTitle:   { family: 'Freesentation_4Regular',              size: 11, lineHeight: 16.5 },
   fileNotFoundBody:    { family: 'Freesentation_4Regular',           size: 11, lineHeight: 16.5 },
 
   // ---- notes-new retroactive (design-spec notes-new.md §4-2 P0 — 10 신규) ----
@@ -476,16 +476,16 @@ export const typography = {
   // Stage 1 4-tier (title/author/desc/badge) + Stage 2 2-tier (title/sub) + Stage 3 4 tier
   // (sheetTitle/rowName/rowMeta/backLink).
   // CustomBadge letter-spacing 0.05em → 9 × 0.05 = 0.45px. textTransform uppercase.
-  templateCardTitle:    { family: 'Freesentation_6SemiBold',          size: 14, lineHeight: 16.8 },
+  templateCardTitle:    { family: 'Freesentation_4Regular',          size: 14, lineHeight: 16.8 },
   templateCardAuthor:   { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
   templateCardDesc:     { family: 'Freesentation_4Regular',           size: 12, lineHeight: 17.4 },
-  templateCustomBadge:  { family: 'Freesentation_6SemiBold',          size: 9,  lineHeight: 11, letterSpacing: 0.45, textTransform: 'uppercase' as const },
-  sourceCardTitle:      { family: 'Freesentation_6SemiBold',          size: 16, lineHeight: 19.2 },
+  templateCustomBadge:  { family: 'Freesentation_4Regular',          size: 9,  lineHeight: 11, letterSpacing: 0.45, textTransform: 'uppercase' as const },
+  sourceCardTitle:      { family: 'Freesentation_4Regular',          size: 16, lineHeight: 19.2 },
   sourceCardSub:        { family: 'Freesentation_4Regular',           size: 12, lineHeight: 16.8 },
   bottomSheetTitle:     { family: 'Freesentation_4Regular', size: 18, lineHeight: 21.6 },
   cellarRowName:        { family: 'Freesentation_4Regular', size: 13, lineHeight: 15.6 },
   cellarRowMeta:        { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
-  backToTemplateLink:   { family: 'Freesentation_6SemiBold',          size: 11, lineHeight: 13.2 },
+  backToTemplateLink:   { family: 'Freesentation_4Regular',          size: 11, lineHeight: 13.2 },
 
   // ---- notes-write retroactive (design-spec notes-write.md §4-2 P0 — 5 신규) ----
   //
@@ -495,9 +495,9 @@ export const typography = {
   // stepHeaderTitle은 cardSectionTitle (Inter 600 14 lh 16.8) 재사용. shareToggleSub은 cellarRowMeta 재사용.
   // beginnerEyebrow letter-spacing 0.16em → 11 × 0.16 = 1.76px.
   // summaryEyebrow letter-spacing 0.10em → 11 × 0.10 = 1.1px.
-  beginnerEyebrow:    { family: 'Freesentation_5Medium',            size: 11, lineHeight: 11,   letterSpacing: 1.76, textTransform: 'uppercase' as const },
+  beginnerEyebrow:    { family: 'Freesentation_4Regular',            size: 11, lineHeight: 11,   letterSpacing: 1.76, textTransform: 'uppercase' as const },
   beginnerGreeting:   { family: 'Freesentation_4Regular',           size: 12, lineHeight: 18 },
-  stepHeaderBadge:    { family: 'Freesentation_7Bold',              size: 11, lineHeight: 13.2 },
+  stepHeaderBadge:    { family: 'Freesentation_4Regular',              size: 11, lineHeight: 13.2 },
   summaryEyebrow:     { family: 'Freesentation_4Regular',           size: 11, lineHeight: 11,   letterSpacing: 1.1,  textTransform: 'uppercase' as const },
   summaryText:        { family: 'Freesentation_4Regular', size: 13, lineHeight: 19.5, fontStyle: 'italic' as const },
 
@@ -508,11 +508,11 @@ export const typography = {
   // 카드 Eyebrow 공통 위계는 beginnerEyebrow(11 ls 1.76)와 거의 동일(10 ls 1.8) — 본 cycle은 컴팩트
   // notesDetailCardEyebrow를 별도로 두어 (size 10) keyscreen verbatim 적용.
   // Aroma chip / Fault chip은 chipLabelRegular (Inter 400 11).
-  notesDetailCardEyebrow: { family: 'Freesentation_6SemiBold',          size: 10, lineHeight: 12,   letterSpacing: 1.8,  textTransform: 'uppercase' as const },
+  notesDetailCardEyebrow: { family: 'Freesentation_4Regular',          size: 10, lineHeight: 12,   letterSpacing: 1.8,  textTransform: 'uppercase' as const },
   noteAuthorName:         { family: 'Freesentation_4Regular', size: 14, lineHeight: 16.8 },
-  noteAvatarLetter:       { family: 'Freesentation_7Bold',    size: 13, lineHeight: 15.6 },
+  noteAvatarLetter:       { family: 'Freesentation_4Regular',    size: 13, lineHeight: 15.6 },
   noteTemplatePill:       { family: 'Freesentation_4Regular',           size: 10, lineHeight: 12 },
-  noteRatingChip:         { family: 'Freesentation_6SemiBold',          size: 12, lineHeight: 14.4 },
+  noteRatingChip:         { family: 'Freesentation_4Regular',          size: 12, lineHeight: 14.4 },
   noteMemoBody:           { family: 'Freesentation_4Regular', size: 14, lineHeight: 23.1, fontStyle: 'italic' as const },
   noteBeginnerDimValue:   { family: 'Freesentation_4Regular', size: 14, lineHeight: 15.4 },
   noteRowValue:           { family: 'Freesentation_4Regular', size: 12, lineHeight: 14.4 },
@@ -527,7 +527,7 @@ export const typography = {
   // 1.2 ratio (size × 1.2 = lineHeight).
   onboardingStepTitle:    { family: 'Freesentation_4Regular', size: 28, lineHeight: 33.6 },
   onboardingStepSubtitle: { family: 'Freesentation_4Regular',           size: 14, lineHeight: 20 },
-  onboardingChoiceLabel:  { family: 'Freesentation_6SemiBold',          size: 18, lineHeight: 21.6 },
+  onboardingChoiceLabel:  { family: 'Freesentation_4Regular',          size: 18, lineHeight: 21.6 },
 } as const;
 
 // ---- Shadows (RN ShadowProps + Android elevation) ----

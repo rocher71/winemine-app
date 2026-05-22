@@ -48,7 +48,7 @@ export function LevelPillNum({ level, size = 'sm' }: LevelPillNumProps) {
   const text = (
     <Text
       style={{
-        fontFamily: 'Freesentation_6SemiBold',
+        fontFamily: 'Freesentation_4Regular',
         fontWeight: '600',
         fontSize,
         color,

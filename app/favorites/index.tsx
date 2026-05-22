@@ -205,7 +205,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -316,7 +316,7 @@ function EmptyView() {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 18,
             lineHeight: 23.4,
@@ -365,7 +365,7 @@ function ErrorView({ onRetry }: ErrorViewProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 18,
           lineHeight: 23.4,
@@ -410,7 +410,7 @@ function ErrorView({ onRetry }: ErrorViewProps) {
         >
           <Text
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               fontWeight: '600',
               color: light.border.active,

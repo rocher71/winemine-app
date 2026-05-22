@@ -310,7 +310,7 @@ export default function CommunityNewColumnScreen() {
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontFamily: 'Freesentation_6SemiBold',
+                    fontFamily: 'Freesentation_4Regular',
                     fontWeight: '600',
                     fontSize: 12,
                     color: light.text.primary,
@@ -525,7 +525,7 @@ function LightBackHeader({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 12,
               color: brand.cream,

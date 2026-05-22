@@ -150,7 +150,7 @@ export function PriceDetailTable({ purchases }: PriceDetailTableProps) {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 14,
             color: light.text.primary,
@@ -190,7 +190,7 @@ export function PriceDetailTable({ purchases }: PriceDetailTableProps) {
               <LocaleText
                 value={g.store.name}
                 style={{
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontWeight: '600',
                   fontSize: 14,
                   color: light.text.primary,
@@ -253,7 +253,7 @@ function SortBtn({ label, active, onPress }: SortBtnProps) {
       >
         <Text
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 11,
             lineHeight: 13,
@@ -309,7 +309,7 @@ function PurchaseRow({ purchase }: PurchaseRowProps) {
         <View style={{ flexDirection: 'column', gap: 4, minWidth: 0, flex: 1 }}>
           <Text
             style={{
-              fontFamily: 'Freesentation_7Bold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '700',
               fontSize: 15,
               color: light.text.primary,

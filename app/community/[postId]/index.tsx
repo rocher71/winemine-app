@@ -249,7 +249,7 @@ function NotFoundView() {
           accessibilityRole="header"
           style={{
             flex: 1,
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 16,
             lineHeight: 19.2,
@@ -453,7 +453,7 @@ function AlsoTriedCta() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 12,
               color: light.text.primary,
@@ -493,7 +493,7 @@ function AlsoTriedCta() {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '600',
                 fontSize: 11,
                 color: brand.cream,
@@ -602,7 +602,7 @@ function CommentsPreview({
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontWeight: '600',
               fontSize: 11,
               color: light.border.active,
@@ -738,7 +738,7 @@ function NoteVariant({ post, mine }: VariantProps) {
               <Text
                 allowFontScaling={false}
                 style={{
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontWeight: '600',
                   fontSize: 9,
                   color: light.border.active,
@@ -1011,7 +1011,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 10,
             color: light.border.active,
@@ -1139,7 +1139,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 10,
             color: light.border.active,
@@ -1199,7 +1199,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
                     <Text
                       allowFontScaling={false}
                       style={{
-                        fontFamily: 'Freesentation_7Bold',
+                        fontFamily: 'Freesentation_4Regular',
                         fontWeight: '700',
                         fontSize: 11,
                         // §10 O: i=0 → brand.textInk on light.border.active (대비 4.85:1)
@@ -1287,7 +1287,7 @@ function QuestionVariant({ post, mine }: VariantProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 11,
             color: light.border.active,
@@ -1439,7 +1439,7 @@ function AlbumVariant({ post, mine }: VariantProps) {
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '600',
                 fontSize: 11,
                 color: brand.cream,

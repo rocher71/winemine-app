@@ -85,7 +85,7 @@ export function CommunityShortcutCard() {
                   borderWidth: 1,
                   borderColor: withAlpha(brand.gold, 0.4),
                   color: light.border.active,
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 9,
                   fontWeight: '600',
                   letterSpacing: 0.72,
@@ -104,7 +104,7 @@ export function CommunityShortcutCard() {
                   backgroundColor: brand.wineRed,
                   color: brand.cream,
                   // Inter_700Bold 폰트 미로드 — Inter_600SemiBold + fontWeight 700 사용 (system fallback bold)
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 9,
                   fontWeight: '700',
                   letterSpacing: 0.54,

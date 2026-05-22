@@ -63,7 +63,7 @@ function SettingsRow({ label, value, onPress, disabled = false, hint }: RowProps
         <View style={{ flex: 1, gap: 2 }}>
           <Text
             style={{
-              fontFamily: 'Freesentation_5Medium',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 14,
               lineHeight: 20,
               color: tokens.text.primary,
@@ -110,7 +110,7 @@ function SectionLabel({ children }: { children: string }) {
   return (
     <Text
       style={{
-        fontFamily: 'Freesentation_5Medium',
+        fontFamily: 'Freesentation_4Regular',
         fontSize: 11,
         lineHeight: 14,
         letterSpacing: 0.56,

@@ -181,7 +181,7 @@ function LightBackHeader({ title }: LightBackHeaderProps) {
         numberOfLines={1}
         style={{
           flex: 1,
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontWeight: '600',
           fontSize: 16,
           lineHeight: 19.2,
@@ -223,7 +223,7 @@ function HeroSection({ entry, locale }: SectionProps) {
       >
         <Text
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 11,
             fontWeight: '600',
             color: categoryColor(entry.category),
@@ -236,7 +236,7 @@ function HeroSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Freesentation_7Bold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 32,
           fontWeight: '700',
           color: light.text.primary,
@@ -263,7 +263,7 @@ function DefinitionSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           fontWeight: '600',
           color: light.text.muted,
@@ -299,7 +299,7 @@ function DefinitionSection({ entry, locale }: SectionProps) {
         >
           <Text
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 10,
               fontWeight: '600',
               textTransform: 'uppercase',
@@ -339,7 +339,7 @@ function ExamplesSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           fontWeight: '600',
           color: light.text.muted,
@@ -386,7 +386,7 @@ function RelatedTermsSection({ entry, locale }: SectionProps) {
       <Text
         accessibilityRole="header"
         style={{
-          fontFamily: 'Freesentation_6SemiBold',
+          fontFamily: 'Freesentation_4Regular',
           fontSize: 12,
           fontWeight: '600',
           color: light.text.muted,
@@ -501,7 +501,7 @@ function MoreSection() {
         >
           <Text
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 13,
               fontWeight: '600',
               color: light.border.active,

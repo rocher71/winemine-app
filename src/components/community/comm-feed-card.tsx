@@ -138,7 +138,7 @@ export function CommFeedCard({
                   borderWidth: 1,
                   borderColor: withAlpha(user.color, 0.4),
                   color: user.color,
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 9,
                   fontWeight: '600',
                 }}
@@ -229,7 +229,7 @@ export function CommFeedCard({
             <Text
               allowFontScaling={false}
               style={{
-                fontFamily: 'Freesentation_5Medium',
+                fontFamily: 'Freesentation_4Regular',
                 fontSize: 11,
                 color: light.text.muted,
               }}
@@ -309,7 +309,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_6SemiBold',
+              fontFamily: 'Freesentation_4Regular',
               fontSize: 11,
               fontWeight: '600',
               color: light.text.primary,

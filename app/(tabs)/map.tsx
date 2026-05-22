@@ -54,7 +54,7 @@ export default function MapPlaceholder() {
       >
         <Text
           style={{
-            fontFamily: 'Freesentation_5Medium',
+            fontFamily: 'Freesentation_4Regular',
             fontSize: 11,
             letterSpacing: 0.4,
             color: brand.gold,

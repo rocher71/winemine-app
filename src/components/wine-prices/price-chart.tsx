@@ -174,7 +174,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
         <Text
           accessibilityRole="header"
           style={{
-            fontFamily: 'Freesentation_6SemiBold',
+            fontFamily: 'Freesentation_4Regular',
             fontWeight: '600',
             fontSize: 14,
             color: light.text.primary,
@@ -211,7 +211,7 @@ export function PriceChart({ purchases }: PriceChartProps) {
                 >
                   <Text
                     style={{
-                      fontFamily: 'Freesentation_6SemiBold',
+                      fontFamily: 'Freesentation_4Regular',
                       fontWeight: '600',
                       fontSize: 11,
                       lineHeight: 13,

@@ -339,7 +339,7 @@ export function PeakDistributionChart({
           >
             <Text
               style={{
-                fontFamily: 'Freesentation_7Bold',
+                fontFamily: 'Freesentation_4Regular',
                 fontWeight: '700',
                 fontSize: 12,
                 color: brand.gold,

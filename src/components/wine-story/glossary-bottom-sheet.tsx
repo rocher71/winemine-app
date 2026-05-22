@@ -212,7 +212,7 @@ export function GlossaryBottomSheet({
               >
                 <Text
                   style={{
-                    fontFamily: 'Freesentation_6SemiBold',
+                    fontFamily: 'Freesentation_4Regular',
                     fontSize: 13,
                     fontWeight: '600',
                     color: light.border.active,
@@ -238,7 +238,7 @@ export function GlossaryBottomSheet({
             >
               <Text
                 style={{
-                  fontFamily: 'Freesentation_6SemiBold',
+                  fontFamily: 'Freesentation_4Regular',
                   fontSize: 13,
                   fontWeight: '600',
                   color: light.text.muted,
