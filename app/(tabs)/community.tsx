@@ -173,8 +173,8 @@ export default function CommunityScreen() {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_4Regular',
-              fontSize: 10,
+              fontFamily: 'Freesentation_5Medium',
+              fontSize: 11,
               color: light.border.active,
               letterSpacing: 1.8,
               textTransform: 'uppercase',
@@ -186,11 +186,11 @@ export default function CommunityScreen() {
             allowFontScaling={false}
             accessibilityRole="header"
             style={{
-              fontFamily: 'Freesentation_4Regular',
-              fontSize: 20,
-              lineHeight: 26,
+              fontFamily: 'Freesentation_7Bold',
+              fontSize: 24,
+              lineHeight: 29,
               color: light.text.primary,
-              marginTop: 1,
+              marginTop: 2,
             }}
           >
             {tab === 'following' ? t('community.pageTitle') : t('community.allTitle')}
@@ -245,9 +245,8 @@ export default function CommunityScreen() {
                     allowFontScaling={false}
                     numberOfLines={1}
                     style={{
-                      fontFamily: active ? 'Freesentation_4Regular' : 'Freesentation_4Regular',
-                      fontSize: 13,
-                      fontWeight: active ? '600' : '400',
+                      fontFamily: active ? 'Freesentation_6SemiBold' : 'Freesentation_4Regular',
+                      fontSize: 15,
                       color: active ? light.text.primary : light.text.muted,
                     }}
                   >
@@ -337,9 +336,8 @@ export default function CommunityScreen() {
                         allowFontScaling={false}
                         numberOfLines={1}
                         style={{
-                          fontFamily: 'Freesentation_4Regular',
-                          fontSize: 11,
-                          fontWeight: '600',
+                          fontFamily: active ? 'Freesentation_6SemiBold' : 'Freesentation_5Medium',
+                          fontSize: 13,
                           color: active ? light.border.active : light.text.secondary,
                         }}
                       >

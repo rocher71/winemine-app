@@ -135,14 +135,14 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
           >
             <PostTypeBadge type={post.type} />
             <Text
-              style={{ fontSize: 11, color: tokens.text.muted, fontFamily: 'Freesentation_4Regular' }}
+              style={{ fontSize: 13, color: tokens.text.muted, fontFamily: 'Freesentation_4Regular' }}
               allowFontScaling={false}
             >
               {post.author} · {post.ago}
             </Text>
           </View>
           <Text
-            style={{ fontSize: 14, lineHeight: 19.6, fontFamily: 'Freesentation_4Regular', color: tokens.text.primary }}
+            style={{ fontSize: 17, lineHeight: 22.1, fontFamily: 'Freesentation_6SemiBold', color: tokens.text.primary }}
             numberOfLines={2}
           >
             {post.title}
@@ -158,7 +158,7 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
               <Wine size={11} strokeWidth={1.7} color={brand.gold} />
               <Text
-                style={{ fontSize: 11, color: tokens.text.muted, fontFamily: 'Freesentation_4Regular' }}
+                style={{ fontSize: 13, color: tokens.text.muted, fontFamily: 'Freesentation_4Regular' }}
                 allowFontScaling={false}
               >
                 {post.wineCount}
@@ -167,7 +167,7 @@ function PostRow({ post, last }: { post: MockPost; last: boolean }) {
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
               <MessageSquare size={11} strokeWidth={1.7} color={tokens.text.muted} />
               <Text
-                style={{ fontSize: 11, color: tokens.text.muted, fontFamily: 'Freesentation_4Regular' }}
+                style={{ fontSize: 13, color: tokens.text.muted, fontFamily: 'Freesentation_4Regular' }}
                 allowFontScaling={false}
               >
                 {post.messageCount}

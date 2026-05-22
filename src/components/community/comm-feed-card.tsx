@@ -120,8 +120,8 @@ export function CommFeedCard({
               <Text
                 allowFontScaling={false}
                 style={{
-                  fontFamily: 'Freesentation_4Regular',
-                  fontSize: 13,
+                  fontFamily: 'Freesentation_6SemiBold',
+                  fontSize: 14,
                   color: light.text.primary,
                 }}
               >
@@ -139,7 +139,7 @@ export function CommFeedCard({
                   borderColor: withAlpha(user.color, 0.4),
                   color: user.color,
                   fontFamily: 'Freesentation_4Regular',
-                  fontSize: 9,
+                  fontSize: 10,
                   fontWeight: '600',
                 }}
               >
@@ -151,7 +151,7 @@ export function CommFeedCard({
               allowFontScaling={false}
               style={{
                 fontFamily: 'Freesentation_4Regular',
-                fontSize: 10,
+                fontSize: 12,
                 color: light.text.muted,
                 marginTop: 2,
               }}
@@ -186,9 +186,9 @@ export function CommFeedCard({
           allowFontScaling={false}
           accessibilityRole="header"
           style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 16,
-            lineHeight: 20.8,
+            fontFamily: 'Freesentation_7Bold',
+            fontSize: 19,
+            lineHeight: 24.7,
             color: light.text.primary,
             marginTop: 10,
           }}
@@ -203,8 +203,8 @@ export function CommFeedCard({
             numberOfLines={3}
             style={{
               fontFamily: 'Freesentation_4Regular',
-              fontSize: 12.5,
-              lineHeight: 20.625,
+              fontSize: 14.5,
+              lineHeight: 21.75,
               color: light.text.secondary,
               marginTop: 6,
             }}
@@ -309,9 +309,8 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_4Regular',
-              fontSize: 11,
-              fontWeight: '600',
+              fontFamily: 'Freesentation_5Medium',
+              fontSize: 13,
               color: light.text.primary,
             }}
           >
@@ -323,7 +322,7 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
             allowFontScaling={false}
             style={{
               fontFamily: 'Freesentation_4Regular',
-              fontSize: 10,
+              fontSize: 12,
               color: light.text.muted,
             }}
           >
@@ -335,9 +334,9 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 14,
-            lineHeight: 18.2,
+            fontFamily: 'Freesentation_6SemiBold',
+            fontSize: 17,
+            lineHeight: 22.1,
             color: light.text.primary,
           }}
         >
@@ -351,8 +350,8 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
             numberOfLines={2}
             style={{
               fontFamily: 'Freesentation_4Regular',
-              fontSize: 11.5,
-              lineHeight: 17.825,
+              fontSize: 13.5,
+              lineHeight: 20.25,
               color: light.text.secondary,
             }}
           >

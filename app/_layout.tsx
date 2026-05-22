@@ -32,8 +32,11 @@ export default function RootLayout() {
   const [bootstrapped, setBootstrapped] = useState(false);
 
   const [fontsLoaded, fontError] = useFonts({
-    // Korean UI font (단일 weight — Freesentation 4 Regular)
-    Freesentation_4Regular: require('../assets/fonts/Freesentation-4Regular.ttf'),
+    // Korean UI font (4~7 weight)
+    Freesentation_4Regular:  require('../assets/fonts/Freesentation-4Regular.ttf'),
+    Freesentation_5Medium:   require('../assets/fonts/Freesentation-5Medium.ttf'),
+    Freesentation_6SemiBold: require('../assets/fonts/Freesentation-6SemiBold.ttf'),
+    Freesentation_7Bold:     require('../assets/fonts/Freesentation-7Bold.ttf'),
     // English UI fonts (locale='en' + 워드마크 고정 사용)
     Inter_400Regular,
     Inter_500Medium,

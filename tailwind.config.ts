@@ -91,10 +91,13 @@ const config: Config = {
       },
 
       fontFamily: {
-        playfair: ['Freesentation_4Regular'],
-        inter: ['Freesentation_4Regular'],
-        'inter-medium': ['Freesentation_4Regular'],
-        'inter-semibold': ['Freesentation_4Regular'],
+        playfair:              ['Freesentation_4Regular'],
+        'playfair-semibold':   ['Freesentation_6SemiBold'],
+        'playfair-bold':       ['Freesentation_7Bold'],
+        inter:                 ['Freesentation_4Regular'],
+        'inter-medium':        ['Freesentation_5Medium'],
+        'inter-semibold':      ['Freesentation_6SemiBold'],
+        'inter-bold':          ['Freesentation_7Bold'],
       },
 
       // 키스크린 globals.css의 .wm-* 유틸 클래스 1:1 매핑.

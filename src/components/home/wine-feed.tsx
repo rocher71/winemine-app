@@ -226,13 +226,13 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
         {/* Meta column — flex */}
         <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
           <Text
-            style={{ fontSize: 16, lineHeight: 19.2, fontFamily: 'Freesentation_4Regular', color: tokens.text.primary }}
+            style={{ fontSize: 19, lineHeight: 23, fontFamily: 'Freesentation_6SemiBold', color: tokens.text.primary }}
             numberOfLines={2}
           >
             {wine.name}
           </Text>
           <Text
-            style={{ fontSize: 12, lineHeight: 14.4, fontFamily: 'Freesentation_4Regular', color: tokens.text.secondary }}
+            style={{ fontSize: 14, lineHeight: 16.8, fontFamily: 'Freesentation_4Regular', color: tokens.text.secondary }}
             numberOfLines={1}
           >
             {wine.producer} · {wine.vintage}
@@ -240,7 +240,7 @@ function WineFeedRow({ wine }: { wine: MockWine }) {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <MapPin size={11} strokeWidth={1.75} color={tokens.text.muted} />
             <Text
-              style={{ fontSize: 11, fontFamily: 'Freesentation_4Regular', color: tokens.text.muted }}
+              style={{ fontSize: 13, fontFamily: 'Freesentation_4Regular', color: tokens.text.muted }}
               numberOfLines={1}
               allowFontScaling={false}
             >
