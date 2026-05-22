@@ -1,152 +1,356 @@
 /**
- * NoteBodyExpert — note detail 화면에서 ExpertFields 표시 (read-only, WSET 4-section).
+ * NoteBodyExpert — note detail에서 ExpertFields 표시 (read-only).
  *
- * 사양: design-spec notes-detail.md §2-5B + §10 E8 (a) — 4-section 유지 (RN ExpertFields shape 정합).
- * §13 retroactive: 카드 Eyebrow 위계 keyscreen verbatim (Inter 600 10 gold uppercase ls 1.8 mb 10),
- *                  Section radius 14 통일.
+ * 새 canonical shape (variant/aroma_intensity/aromas/palate/finish/quality/readiness/...) 우선.
+ * Legacy shape (appearance/nose/palate/conclusions) fallback 지원 (Day 5 이전 노트 호환).
+ *
+ * 사양: design-spec notes-detail.md §2-5B + §13.
+ * 키스크린 영감: src/app/notes/[noteId]/page.tsx DimensionsExpert.
+ *
+ * Light 모드만 (light.* 직접 사용).
  */
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { brand } from '@/lib/design-tokens';
-import { WSETReadOnly } from './wset-readonly';
+import { brand, light, withAlpha } from '@/lib/design-tokens';
 import type { ExpertFields, Readiness } from './expert-form';
+
+// ---- Legacy shape (Day 5 이전) ----
+interface LegacyExpertFields {
+  appearance?: { intensity: number; clarity: number; notes: string };
+  nose?: { intensity: number; development: number; aromas: string };
+  palate?: {
+    sweetness: number;
+    acidity: number;
+    tannin: number;
+    alcohol: number;
+    body: number;
+    flavor: number;
+    finish: number;
+  };
+  conclusions?: {
+    quality: number;
+    readiness: Readiness;
+    estimated_price_krw: number | null;
+  };
+  blind?: boolean;
+}
+
+type AnyExpertFields = ExpertFields & LegacyExpertFields;
 
 interface Props {
   fields: ExpertFields;
 }
 
-function readinessLabel(t: (k: string) => string, r: Readiness): string {
-  switch (r) {
-    case 'tooYoung':
-      return t('notes.expert.readinessTooYoung');
-    case 'drink':
-      return t('notes.expert.readinessDrink');
-    case 'pastPeak':
-      return t('notes.expert.readinessPastPeak');
-  }
+const WSET_LABELS_KO: Record<number, string> = { 1: '낮음', 2: '중−', 3: '중', 4: '중+', 5: '높음' };
+const WSET_LABELS_EN: Record<number, string> = { 1: 'Low', 2: 'M−', 3: 'Med', 4: 'M+', 5: 'High' };
+
+const AROMA_LABEL_KEY = (id: string) => `notes.beginner.aromaCard.${id}`;
+const FINISH_LABEL_KEY = (id: string) => `notes.beginner.finishLevel.${id}`;
+
+function isNewShape(f: AnyExpertFields): boolean {
+  return (
+    f.variant !== undefined ||
+    f.aroma_intensity !== undefined ||
+    (f.palate && typeof (f.palate as { flavor_intensity?: number }).flavor_intensity === 'number')
+  );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function readinessLabel(t: (k: string) => string, r: Readiness): string {
+  if (r === 'tooYoung') return t('notes.expert.readinessTooYoung');
+  if (r === 'pastPeak') return t('notes.expert.readinessPastPeak');
+  return t('notes.expert.readinessDrink');
+}
+
+function Eyebrow({ children }: { children: string }) {
+  return (
+    <Text
+      allowFontScaling={false}
+      style={{
+        fontFamily: 'Inter_600SemiBold',
+        fontSize: 10,
+        lineHeight: 12,
+        letterSpacing: 1.8,
+        textTransform: 'uppercase',
+        color: brand.gold,
+        marginBottom: 10,
+      }}
+      accessibilityRole="header"
+    >
+      {children}
+    </Text>
+  );
+}
+
+function Card({ children }: { children: React.ReactNode }) {
   return (
     <View
-      className="bg-surface border-border-default"
       style={{
+        backgroundColor: light.bg.surface,
+        borderColor: light.border.default,
         borderRadius: 14,
         borderWidth: 1,
         padding: 14,
-        rowGap: 12,
       }}
     >
-      <Text
-        allowFontScaling={false}
-        className="font-inter-semibold"
-        style={{
-          fontSize: 10,
-          lineHeight: 12,
-          letterSpacing: 1.8,
-          textTransform: 'uppercase',
-          color: brand.gold,
-          marginBottom: -2, // rowGap 12 보정 (eyebrow→첫 항목은 keyscreen mb 10 → rowGap 12 - 2)
-        }}
-        accessibilityRole="header"
-      >
-        {title}
-      </Text>
       {children}
     </View>
   );
 }
 
-function NoteText({ label, value }: { label: string; value: string }) {
-  const { t } = useTranslation();
+function DimRow({ label, value }: { label: string; value: string }) {
   return (
-    <View>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        paddingVertical: 6,
+        borderTopWidth: 1,
+        borderTopColor: withAlpha(brand.gold, 0.12),
+      }}
+    >
       <Text
         allowFontScaling={false}
-        className="font-inter text-text-secondary dark:text-text-secondary"
-        style={{ fontSize: 12, lineHeight: 14.4, textTransform: 'uppercase' }}
+        style={{ fontFamily: 'Inter_400Regular', fontSize: 12, lineHeight: 14.4, color: light.text.muted }}
       >
         {label}
       </Text>
       <Text
         allowFontScaling={false}
-        className="font-inter text-text-primary dark:text-text-primary"
-        style={{ fontSize: 13, lineHeight: 19.5, marginTop: 6 }}
+        style={{ fontFamily: 'PlayfairDisplay_400Regular', fontSize: 13, lineHeight: 14.4, color: light.text.primary }}
       >
-        {value?.trim() ? value : t('notes.detail.noComment')}
+        {value}
       </Text>
     </View>
   );
 }
 
-export function NoteBodyExpert({ fields }: Props) {
-  const { t } = useTranslation();
-  const a = fields.appearance;
-  const n = fields.nose;
-  const p = fields.palate;
-  const c = fields.conclusions;
-
+function DimGrid({
+  items,
+  cols,
+}: {
+  items: ReadonlyArray<{ label: string; value: string }>;
+  cols: number;
+}) {
+  // RN flex-wrap grid (D1 verbatim deviation: CSS grid → flex-wrap with width %)
+  const widthPct = `${100 / cols - 1}%`;
   return (
-    <View className="gap-4">
-      <Section title={t('notes.expert.sectionAppearance')}>
-        <WSETReadOnly label={t('notes.expert.appearanceIntensity')} value={a.intensity} />
-        <WSETReadOnly label={t('notes.expert.appearanceClarity')} value={a.clarity} min={1} max={3} />
-        <NoteText label={t('notes.expert.appearanceNotes')} value={a.notes} />
-      </Section>
-
-      <Section title={t('notes.expert.sectionNose')}>
-        <WSETReadOnly label={t('notes.expert.noseIntensity')} value={n.intensity} />
-        <WSETReadOnly label={t('notes.expert.noseDevelopment')} value={n.development} min={1} max={3} />
-        <NoteText label={t('notes.expert.noseAromas')} value={n.aromas} />
-      </Section>
-
-      <Section title={t('notes.expert.sectionPalate')}>
-        <WSETReadOnly label={t('notes.expert.palateSweetness')} value={p.sweetness} />
-        <WSETReadOnly label={t('notes.expert.palateAcidity')} value={p.acidity} />
-        <WSETReadOnly label={t('notes.expert.palateTannin')} value={p.tannin} />
-        <WSETReadOnly label={t('notes.expert.palateAlcohol')} value={p.alcohol} />
-        <WSETReadOnly label={t('notes.expert.palateBody')} value={p.body} />
-        <WSETReadOnly label={t('notes.expert.palateFlavor')} value={p.flavor} />
-        <WSETReadOnly label={t('notes.expert.palateFinish')} value={p.finish} />
-      </Section>
-
-      <Section title={t('notes.expert.sectionConclusions')}>
-        <WSETReadOnly label={t('notes.expert.conclusionsQuality')} value={c.quality} />
-        <View>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 6, rowGap: 8 }}>
+      {items.map((it, i) => (
+        <View key={`${it.label}-${i}`} style={{ width: widthPct as `${number}%`, alignItems: 'center' }}>
           <Text
             allowFontScaling={false}
-            className="font-inter text-text-secondary dark:text-text-secondary"
-            style={{ fontSize: 12, lineHeight: 14.4, textTransform: 'uppercase' }}
+            style={{
+              fontFamily: 'Inter_400Regular',
+              fontSize: 9,
+              lineHeight: 11,
+              letterSpacing: 0.36,
+              textTransform: 'uppercase',
+              color: light.text.muted,
+              marginBottom: 4,
+            }}
           >
-            {t('notes.expert.conclusionsReadiness')}
+            {it.label}
           </Text>
           <Text
             allowFontScaling={false}
-            className="font-inter-semibold text-text-primary dark:text-text-primary"
-            style={{ fontSize: 13, lineHeight: 19.5, marginTop: 6 }}
+            style={{
+              fontFamily: 'PlayfairDisplay_400Regular',
+              fontSize: 13,
+              lineHeight: 14.3,
+              color: light.text.primary,
+            }}
           >
-            {readinessLabel(t, c.readiness)}
+            {it.value}
           </Text>
         </View>
-        {typeof c.estimated_price_krw === 'number' ? (
-          <View>
+      ))}
+    </View>
+  );
+}
+
+function wsetShort(value: number, locale: 'ko' | 'en'): string {
+  const labels = locale === 'en' ? WSET_LABELS_EN : WSET_LABELS_KO;
+  return labels[value] ?? labels[3] ?? 'Med';
+}
+
+import { currentLocale } from '@/lib/i18n';
+
+export function NoteBodyExpert({ fields }: Props) {
+  const { t } = useTranslation();
+  const any = fields as AnyExpertFields;
+  const locale = currentLocale() === 'en' ? 'en' : 'ko';
+
+  // ---- Legacy fallback (appearance / nose / palate(numeric 4-section) / conclusions) ----
+  if (!isNewShape(any) && any.appearance && any.nose && any.palate && any.conclusions) {
+    const p = any.palate as NonNullable<LegacyExpertFields['palate']>;
+    const c = any.conclusions as NonNullable<LegacyExpertFields['conclusions']>;
+    return (
+      <View style={{ rowGap: 16 }}>
+        <Card>
+          <Eyebrow>{t('notes.expert.sectionAppearance')}</Eyebrow>
+          <DimGrid
+            items={[
+              { label: t('notes.expert.appearanceIntensity'), value: wsetShort(any.appearance.intensity, locale) },
+              { label: t('notes.expert.appearanceClarity'), value: `${any.appearance.clarity}/3` },
+            ]}
+            cols={2}
+          />
+        </Card>
+        <Card>
+          <Eyebrow>{t('notes.expert.sectionNose')}</Eyebrow>
+          <DimGrid
+            items={[
+              { label: t('notes.expert.noseIntensity'), value: wsetShort(any.nose.intensity, locale) },
+              { label: t('notes.expert.noseDevelopment'), value: `${any.nose.development}/3` },
+            ]}
+            cols={2}
+          />
+        </Card>
+        <Card>
+          <Eyebrow>{t('notes.expert.sectionPalate')}</Eyebrow>
+          <DimGrid
+            items={[
+              { label: t('notes.expert.palateSweetness'), value: wsetShort(p.sweetness, locale) },
+              { label: t('notes.expert.palateAcidity'), value: wsetShort(p.acidity, locale) },
+              { label: t('notes.expert.palateTannin'), value: wsetShort(p.tannin, locale) },
+              { label: t('notes.expert.palateAlcohol'), value: wsetShort(p.alcohol, locale) },
+              { label: t('notes.expert.palateBody'), value: wsetShort(p.body, locale) },
+            ]}
+            cols={5}
+          />
+        </Card>
+        <Card>
+          <Eyebrow>{t('notes.expert.sectionConclusions')}</Eyebrow>
+          <DimRow label={t('notes.expert.conclusionsQuality')} value={wsetShort(c.quality, locale)} />
+          <DimRow label={t('notes.expert.conclusionsReadiness')} value={readinessLabel(t, c.readiness)} />
+          {typeof c.estimated_price_krw === 'number' ? (
+            <DimRow
+              label={t('notes.expert.conclusionsPriceKrw')}
+              value={`₩${c.estimated_price_krw.toLocaleString()}`}
+            />
+          ) : null}
+        </Card>
+      </View>
+    );
+  }
+
+  // ---- New canonical shape ----
+  const palateItems = [
+    { label: t('notes.expert.palateSweetness'), value: wsetShort(fields.palate.sweetness, locale) },
+    { label: t('notes.expert.palateAcidity'), value: wsetShort(fields.palate.acidity, locale) },
+    { label: t('notes.expert.palateBody'), value: wsetShort(fields.palate.body, locale) },
+    { label: t('notes.expert.palateAlcohol'), value: wsetShort(fields.palate.alcohol, locale) },
+  ];
+  if (typeof fields.palate.tannin === 'number' && fields.variant === 'red') {
+    palateItems.push({ label: t('notes.expert.palateTannin'), value: wsetShort(fields.palate.tannin, locale) });
+  }
+  if (typeof fields.palate.bubble === 'number' && fields.variant === 'sparkling') {
+    palateItems.push({ label: t('notes.expert.palateBubble'), value: wsetShort(fields.palate.bubble, locale) });
+  }
+
+  return (
+    <View style={{ rowGap: 16 }}>
+      {/* Variant + aroma intensity */}
+      <Card>
+        <Eyebrow>{t('notes.expert.sectionAroma')}</Eyebrow>
+        <DimRow label={t('notes.expert.aromaIntensity')} value={wsetShort(fields.aroma_intensity, locale)} />
+        <DimRow
+          label={t('notes.expert.palateFlavor')}
+          value={wsetShort(fields.palate.flavor_intensity, locale)}
+        />
+        {fields.aromas.length > 0 ? (
+          <View style={{ marginTop: 10 }}>
             <Text
               allowFontScaling={false}
-              className="font-inter text-text-secondary dark:text-text-secondary"
-              style={{ fontSize: 12, lineHeight: 14.4, textTransform: 'uppercase' }}
+              style={{
+                fontFamily: 'Inter_400Regular',
+                fontSize: 10,
+                lineHeight: 12,
+                letterSpacing: 0.6,
+                textTransform: 'uppercase',
+                color: light.text.muted,
+                marginBottom: 6,
+              }}
             >
-              {t('notes.expert.conclusionsPriceKrw')}
+              {t('notes.detail.sectionAromaWheel')}
             </Text>
-            <Text
-              allowFontScaling={false}
-              className="font-inter-semibold text-text-primary dark:text-text-primary"
-              style={{ fontSize: 13, lineHeight: 19.5, marginTop: 6 }}
-            >
-              {c.estimated_price_krw.toLocaleString()} {t('cellar.meta.priceUnit')}
-            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 6, rowGap: 6 }}>
+              {fields.aromas.map((id) => (
+                <View
+                  key={id}
+                  style={{
+                    paddingVertical: 3,
+                    paddingHorizontal: 9,
+                    borderRadius: 999,
+                    borderWidth: 1,
+                    borderColor: light.border.default,
+                    backgroundColor: light.bg.sunken,
+                  }}
+                >
+                  <Text
+                    allowFontScaling={false}
+                    style={{
+                      fontFamily: 'Inter_400Regular',
+                      fontSize: 11,
+                      lineHeight: 13.2,
+                      color: light.text.primary,
+                    }}
+                  >
+                    {t(AROMA_LABEL_KEY(id))}
+                  </Text>
+                </View>
+              ))}
+            </View>
           </View>
         ) : null}
-      </Section>
+      </Card>
+
+      {/* Palate WSET dimensions */}
+      <Card>
+        <Eyebrow>{t('notes.detail.sectionWset')}</Eyebrow>
+        <DimGrid items={palateItems} cols={palateItems.length <= 4 ? palateItems.length : 5} />
+      </Card>
+
+      {/* Finish */}
+      <Card>
+        <Eyebrow>{t('notes.expert.sectionFinish')}</Eyebrow>
+        <DimRow
+          label={t('notes.expert.palateFinish')}
+          value={t(FINISH_LABEL_KEY(fields.finish))}
+        />
+      </Card>
+
+      {/* Conclusions */}
+      <Card>
+        <Eyebrow>{t('notes.expert.sectionConclusions')}</Eyebrow>
+        <DimRow
+          label={t('notes.expert.conclusionsQuality')}
+          value={`${fields.quality}/5`}
+        />
+        <DimRow
+          label={t('notes.expert.conclusionsReadiness')}
+          value={readinessLabel(t, fields.readiness)}
+        />
+        {typeof fields.estimated_price_krw === 'number' && fields.estimated_price_krw > 0 ? (
+          <DimRow
+            label={t('notes.expert.conclusionsPriceKrw')}
+            value={`₩${fields.estimated_price_krw.toLocaleString()}`}
+          />
+        ) : null}
+        <DimRow
+          label={t('notes.expert.wouldBuyAgain')}
+          value={
+            fields.would_buy_again
+              ? locale === 'en'
+                ? 'Yes — will reorder'
+                : '네, 다시 살 거예요'
+              : locale === 'en'
+                ? 'Not this time'
+                : '이번엔 한 번이면 충분'
+          }
+        />
+      </Card>
     </View>
   );
 }

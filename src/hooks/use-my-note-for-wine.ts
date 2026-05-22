@@ -8,6 +8,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { MOCK_TASTING_NOTES } from '@/lib/mock/tasting-notes';
 import type { Database } from '@shared/types/database.types';
 
 type TastingNoteRow = Database['public']['Tables']['tasting_notes']['Row'];
@@ -35,6 +37,14 @@ export function useMyNoteForWine(
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        const matches = MOCK_TASTING_NOTES.filter((n) => n.wine_lwin === wineLwin);
+        const latest = matches
+          .slice()
+          .sort((a, b) => (b.tasted_at ?? '').localeCompare(a.tasted_at ?? ''))[0];
+        setNote(latest ?? null);
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setNote(null);

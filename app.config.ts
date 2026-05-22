@@ -56,5 +56,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
     anonymizationSaltDev: process.env.EXPO_PUBLIC_ANONYMIZATION_SALT_DEV ?? '',
     appEnv: process.env.EXPO_PUBLIC_APP_ENV ?? 'development',
+    demoMode: process.env.EXPO_PUBLIC_DEMO_MODE === 'true',
   },
 });

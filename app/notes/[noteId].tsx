@@ -52,8 +52,7 @@ function resolveMemo(
     const fromLegacy = (beginnerFields as { comments?: string } | null)?.comments;
     return typeof fromLegacy === 'string' ? fromLegacy : '';
   }
-  // Expert memo는 v0.1.0 SCOPE-OUT (E4 별도 cycle: notes-write 사양 갱신 + expert-form 수정).
-  // 안전 fallback — jsonb이라 미정의 컬럼 접근은 undefined.
+  // Expert memo는 새 shape에서 fields.memo로 노출됨. legacy(appearance.notes/nose.aromas)는 별도 카드.
   const expertMemo = (expertFields as { memo?: string } | null)?.memo;
   return typeof expertMemo === 'string' ? expertMemo : '';
 }
@@ -181,7 +180,9 @@ export default function NoteDetailScreen() {
   const displayName = wine.display_name as string;
   const beginnerFields = (note.beginner_fields ?? null) as BeginnerFields | null;
   const expertFields = (note.expert_fields ?? null) as ExpertFields | null;
-  const isBlind = mode === 'expert' && expertFields?.blind === true;
+  const isBlind =
+    mode === 'expert' &&
+    (expertFields?.blind === true || (expertFields as { variant?: string } | null)?.variant === 'blind');
   const memo = resolveMemo(mode, beginnerFields, expertFields);
 
   // Author label — anonymous_display (UUID 노출 금지 §4-5), v0.1.0 mine only.
@@ -196,10 +197,26 @@ export default function NoteDetailScreen() {
       ? t('notes.detail.modeExpertBadge')
       : t('notes.detail.modeBeginnerBadge');
 
-  const priceKrw =
-    typeof expertFields?.conclusions?.estimated_price_krw === 'number'
-      ? expertFields.conclusions.estimated_price_krw
-      : null;
+  // Resolve priceKrw from new shape OR legacy shape.
+  // New: expertFields.estimated_price_krw / expertFields.priceCapture.krw
+  // Legacy: expertFields.conclusions.estimated_price_krw
+  // Also support beginnerFields.priceCapture.krw.
+  const priceKrw = (() => {
+    const ef = expertFields as
+      | (ExpertFields & {
+          conclusions?: { estimated_price_krw?: number | null };
+          priceCapture?: { krw?: number | null };
+        })
+      | null;
+    if (typeof ef?.estimated_price_krw === 'number') return ef.estimated_price_krw;
+    if (typeof ef?.priceCapture?.krw === 'number') return ef.priceCapture.krw;
+    if (typeof ef?.conclusions?.estimated_price_krw === 'number') return ef.conclusions.estimated_price_krw;
+    const bf = beginnerFields as
+      | (BeginnerFields & { priceCapture?: { krw?: number | null } })
+      | null;
+    if (typeof bf?.priceCapture?.krw === 'number') return bf.priceCapture.krw;
+    return null;
+  })();
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">

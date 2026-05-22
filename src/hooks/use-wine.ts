@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { getMockWineByLwin } from '@/lib/mock/wines';
 import type { Database } from '@shared/types/database.types';
 
 export type WineLocalized = Database['public']['Views']['wines_localized']['Row'];
@@ -25,6 +27,12 @@ export function useWine(lwin: string | null | undefined): UseWineResult {
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        // demo mode: mock 카탈로그 우선 (12 와인). 매핑 없으면 fallback Margaux.
+        const mock = getMockWineByLwin(lwin);
+        setWine(mock);
+        return;
+      }
       const { data, error: err } = await supabase
         .from('wines_localized')
         .select('*')

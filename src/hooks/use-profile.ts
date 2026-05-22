@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { MOCK_ME_PROFILE } from '@/lib/mock/users';
 import type { Database } from '@shared/types/database.types';
 
 export type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -21,6 +23,10 @@ export function useProfile(): UseProfileResult {
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        setProfile(MOCK_ME_PROFILE);
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setProfile(null);

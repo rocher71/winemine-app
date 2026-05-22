@@ -96,32 +96,48 @@ const BeginnerInputSchema = z.object({
   shareToCommunity: z.boolean().optional(),
 });
 
+// ---- New canonical Expert shape (keyscreen-aligned 7-step) ----
+const ExpertVariantSchema = z.enum(['white', 'red', 'sparkling', 'blind']);
+const ReadinessSchema = z.enum(['tooYoung', 'drink', 'pastPeak']);
+const FinishSchema = z.enum(['short', 'medium', 'long']);
+const AromaTagSchema = z.enum([
+  'berry',
+  'citrus',
+  'stoneFruit',
+  'floral',
+  'spice',
+  'sweet',
+  'earth',
+  'yeast',
+]);
+const WSETNumSchema = z.number().int().min(1).max(5);
+
+const ExpertPalateSchema = z.object({
+  sweetness: WSETNumSchema,
+  acidity: WSETNumSchema,
+  body: WSETNumSchema,
+  alcohol: WSETNumSchema,
+  flavor_intensity: WSETNumSchema,
+  tannin: WSETNumSchema.optional(),
+  bubble: WSETNumSchema.optional(),
+});
+
 const ExpertInputSchema = z.object({
-  appearance: z.object({
-    intensity: z.number().int().min(1).max(5),
-    clarity: z.number().int().min(1).max(3),
-    notes: z.string().max(2000),
-  }),
-  nose: z.object({
-    intensity: z.number().int().min(1).max(5),
-    development: z.number().int().min(1).max(3),
-    aromas: z.string().max(2000),
-  }),
-  palate: z.object({
-    sweetness: z.number().int().min(1).max(5),
-    acidity: z.number().int().min(1).max(5),
-    tannin: z.number().int().min(1).max(5),
-    alcohol: z.number().int().min(1).max(5),
-    body: z.number().int().min(1).max(5),
-    flavor: z.number().int().min(1).max(5),
-    finish: z.number().int().min(1).max(5),
-  }),
-  conclusions: z.object({
-    quality: z.number().int().min(1).max(5),
-    readiness: z.enum(['tooYoung', 'drink', 'pastPeak']),
-    estimated_price_krw: z.number().int().min(0).nullable(),
-  }),
+  variant: ExpertVariantSchema,
   blind: z.boolean(),
+  aroma_intensity: WSETNumSchema,
+  aromas: z.array(AromaTagSchema),
+  palate: ExpertPalateSchema,
+  finish: FinishSchema,
+  quality: WSETNumSchema,
+  readiness: ReadinessSchema,
+  estimated_price_krw: z.number().int().min(0).nullable(),
+  would_buy_again: z.boolean(),
+  memo: z.string().max(5000),
+  priceCapture: z
+    .object({ enabled: z.boolean(), krw: z.number().int().min(0).nullable() })
+    .optional(),
+  shareToCommunity: z.boolean().optional(),
 });
 
 const NoteInputSchema = z.object({
@@ -394,6 +410,7 @@ export default function NoteWriteScreen() {
               />
             ) : (
               <ExpertForm
+                wine={wine}
                 rating={rating}
                 onRatingChange={onRatingChange}
                 tastedAt={tastedAt}

@@ -47,7 +47,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import { Moon, ChevronRight, PenLine } from 'lucide-react-native';
+import { PenLine } from 'lucide-react-native';
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { BellButton } from '@/components/nav/bell-button';
 import { CommFeedCard, CommFeedRow } from '@/components/community/comm-feed-card';
@@ -59,8 +59,6 @@ type TypeFilterId = 'all' | PostType;
 
 const TYPE_FILTERS: TypeFilterId[] = ['all', 'note', 'question', 'column', 'news', 'album'];
 
-// §10 D: Tonight count v0.1.0 hardcoded (keyscreen mock). v0.2.0 supabase aggregator.
-const TONIGHT_COUNT = 14;
 
 export default function CommunityScreen() {
   const insets = useSafeAreaInsets();
@@ -96,12 +94,6 @@ export default function CommunityScreen() {
   const handleTypeFilterPress = (f: TypeFilterId) => {
     Haptics.selectionAsync().catch(() => undefined);
     setTypeFilter(f);
-  };
-
-  // §10 B: Tonight banner → /community/tonight (Phase 5 생성).
-  const handleTonightPress = () => {
-    Haptics.selectionAsync().catch(() => undefined);
-    router.push('/community/tonight' as never);
   };
 
   // §10 A: FAB → /community/new (Phase 4 생성).
@@ -235,78 +227,9 @@ export default function CommunityScreen() {
         </View>
 
         {/* ── tab === 'following' ── */}
+        {/* v1.0 스코프 제외: Tonight 배너 제거 (사용자 요청). /community/tonight 화면은 존재하지만 진입 경로 없음. */}
         {tab === 'following' ? (
           <>
-            {/* Tonight banner (3-layer §4-11) */}
-            <Pressable
-              onPress={handleTonightPress}
-              accessibilityRole="link"
-              accessibilityLabel={t('community.tonight.label', { count: TONIGHT_COUNT })}
-              style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
-            >
-              <LinearGradient
-                colors={[withAlpha(brand.wineRed, 0.33), light.bg.surface]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{
-                  marginTop: 12,
-                  marginHorizontal: 16,
-                  paddingVertical: 12,
-                  paddingHorizontal: 14,
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: withAlpha(brand.gold, 0.33),
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 12,
-                }}
-              >
-                {/* Moon wrap (§6-5 size/2 = 18) */}
-                <View
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 18,
-                    backgroundColor: light.bg.deep,
-                    borderWidth: 1,
-                    borderColor: light.border.active,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Moon size={18} strokeWidth={1.75} color={light.border.active} />
-                </View>
-
-                {/* Text block */}
-                <View style={{ flex: 1 }}>
-                  <Text
-                    allowFontScaling={false}
-                    style={{
-                      fontFamily: 'Inter_600SemiBold',
-                      fontSize: 12,
-                      fontWeight: '600',
-                      color: light.text.primary,
-                    }}
-                  >
-                    {t('community.tonight.count', { count: TONIGHT_COUNT })}
-                  </Text>
-                  <Text
-                    allowFontScaling={false}
-                    style={{
-                      fontFamily: 'Inter_400Regular',
-                      fontSize: 10,
-                      color: light.text.muted,
-                      marginTop: 2,
-                    }}
-                  >
-                    {t('community.tonight.places')}
-                  </Text>
-                </View>
-
-                <ChevronRight size={16} strokeWidth={1.75} color={light.border.active} />
-              </LinearGradient>
-            </Pressable>
-
             {/* Feed list — 3 CommFeedCard keyscreen verbatim 순서 */}
             <View
               style={{
@@ -422,42 +345,41 @@ export default function CommunityScreen() {
         <View style={{ height: 32 }} />
       </ScrollView>
 
-      {/* ── FAB (absolute, 3-layer §4-11, §6-7) ── */}
-      <Pressable
-        onPress={handleFabPress}
-        accessibilityRole="button"
-        accessibilityLabel={t('community.new.label')}
-        style={({ pressed }) => ({
-          position: 'absolute',
-          right: 18,
-          bottom: 100,
-          opacity: pressed ? 0.85 : 1,
-        })}
+      {/* ── FAB (absolute outer View, 3-layer §4-11, §6-7) ── */}
+      {/* §4-11 fix: position/right/bottom은 outer View에. Pressable은 opacity-only style fn. */}
+      <View
+        style={{ position: 'absolute', right: 18, bottom: 100, zIndex: 10 }}
+        pointerEvents="box-none"
       >
-        <LinearGradient
-          colors={[brand.gold, brand.goldDeep]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: 28, // §6-5 size/2 명시
-            borderWidth: 1,
-            borderColor: light.border.active,
-            alignItems: 'center',
-            justifyContent: 'center',
-            // §6-7 4속성 inline + elevation. §10 F: brand.gold shadow (gradient 일관).
-            shadowColor: brand.gold,
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 12,
-            elevation: 8,
-          }}
+        <Pressable
+          onPress={handleFabPress}
+          accessibilityRole="button"
+          accessibilityLabel={t('community.new.label')}
+          style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
         >
-          {/* §10 G: PenLine cream verbatim (gradient 위 wine bar 분위기). */}
-          <PenLine size={22} strokeWidth={1.75} color={brand.cream} />
-        </LinearGradient>
-      </Pressable>
+          <LinearGradient
+            colors={[brand.gold, brand.goldDeep]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              borderWidth: 1,
+              borderColor: light.border.active,
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: brand.gold,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 12,
+              elevation: 8,
+            }}
+          >
+            <PenLine size={22} strokeWidth={1.75} color={brand.cream} />
+          </LinearGradient>
+        </Pressable>
+      </View>
     </View>
   );
 }

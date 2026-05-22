@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { MOCK_CELLAR_ITEMS } from '@/lib/mock/cellar';
+import { MOCK_TASTING_NOTES } from '@/lib/mock/tasting-notes';
+import { getMockWineByLwin } from '@/lib/mock/wines';
 import type { Database } from '@shared/types/database.types';
 
 type WineLocalizedRow = Database['public']['Views']['wines_localized']['Row'];
@@ -55,6 +59,13 @@ export function useCellarSummary(): UseCellarSummaryResult {
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        const cellaredN = MOCK_CELLAR_ITEMS.filter((i) => i.status === 'cellared').length;
+        const consumedN = MOCK_CELLAR_ITEMS.filter((i) => i.status === 'consumed').length;
+        setCellaredCount(cellaredN);
+        setConsumedCount(consumedN);
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setCellaredCount(0);
@@ -107,6 +118,21 @@ export function useCellarList(status: CellarStatus): UseCellarListResult {
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        const filtered = MOCK_CELLAR_ITEMS.filter((i) => i.status === status).map((i) => ({
+          ...i,
+          wine: getMockWineByLwin(i.wine_lwin) as CellarItemWithWine['wine'],
+        }));
+        // sort by acquired_at (cellared) or consumed_at (consumed) desc
+        const orderColumn = status === 'cellared' ? 'acquired_at' : 'consumed_at';
+        filtered.sort((a, b) => {
+          const av = (a[orderColumn] as string | null) ?? '';
+          const bv = (b[orderColumn] as string | null) ?? '';
+          return bv.localeCompare(av);
+        });
+        setItems(filtered);
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setItems([]);
@@ -178,6 +204,26 @@ export function useCellarItem(
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        const matches = MOCK_CELLAR_ITEMS.filter((i) => i.wine_lwin === lwin);
+        let found: typeof matches[number] | undefined;
+        if (cellarItemId) {
+          found = matches.find((i) => i.id === cellarItemId);
+        } else {
+          found = matches
+            .slice()
+            .sort((a, b) => (b.acquired_at ?? '').localeCompare(a.acquired_at ?? ''))[0];
+        }
+        if (!found) {
+          setItem(null);
+          return;
+        }
+        setItem({
+          ...found,
+          wine: getMockWineByLwin(found.wine_lwin) as CellarItemWithWine['wine'],
+        });
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setItem(null);
@@ -230,6 +276,11 @@ export function useNotesCountForWine(lwin: string | null | undefined): UseNotesC
     }
     setLoading(true);
     try {
+      if (DEMO_MODE) {
+        const n = MOCK_TASTING_NOTES.filter((note) => note.wine_lwin === lwin).length;
+        setCount(n);
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setCount(0);

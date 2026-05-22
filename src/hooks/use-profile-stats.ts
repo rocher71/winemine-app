@@ -13,6 +13,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { MOCK_CELLAR_ITEMS } from '@/lib/mock/cellar';
+import { MOCK_TASTING_NOTES } from '@/lib/mock/tasting-notes';
+import { getMockWineByLwin } from '@/lib/mock/wines';
 
 export interface ProfileStats {
   /** distinct wine_lwin 수 (마신 와인) */
@@ -51,6 +55,25 @@ export function useProfileStats(): UseProfileStatsResult {
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        const tastedLwins = new Set<string>();
+        const countries = new Set<string>();
+        const regions = new Set<string>();
+        for (const n of MOCK_TASTING_NOTES) {
+          if (n.wine_lwin) tastedLwins.add(n.wine_lwin);
+          const w = getMockWineByLwin(n.wine_lwin);
+          if (w?.country) countries.add(w.country);
+          if (w?.country && w?.region) regions.add(`${w.country}/${w.region}`);
+        }
+        setStats({
+          winesTasted: tastedLwins.size,
+          countriesExplored: countries.size,
+          regionsExplored: regions.size,
+          notesCount: MOCK_TASTING_NOTES.length,
+          cellarCount: MOCK_CELLAR_ITEMS.length,
+        });
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setStats(EMPTY);

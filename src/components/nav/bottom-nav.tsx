@@ -64,7 +64,9 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
         alignItems: 'flex-end',
         paddingTop: spacing['2'],          // 8
         paddingHorizontal: spacing['3'],   // 12
-        paddingBottom: 28 + insets.bottom, // safe area 흡수
+        // 12 (design margin) + insets.bottom (home indicator). CSS web의 28은 home indicator 없는
+        // 환경 전제 — iOS에서 28+insets는 ~62px로 과도. 12+insets로 home indicator 위 적정 breathing room 확보.
+        paddingBottom: 12 + insets.bottom,
         borderTopWidth: 0.5,
         borderTopColor: tokens.border.default,
       }}
@@ -123,7 +125,10 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
         pointerEvents="box-none"
         style={{
           position: 'absolute',
-          bottom: 28 + insets.bottom + 10,
+          // FAB top이 container top(= paddingTop 8 + tab content ~49 + paddingBottom 12+insets = 69+insets)
+          // 보다 ~16px 위로 튀어나오도록: bottom = 69 + insets + 16 - 56(FAB height) = 29 + insets.
+          // 사용자 피드백: 37+insets는 너무 높아 보임 → 29+insets로 조정.
+          bottom: 29 + insets.bottom,
           left: '50%',
           marginLeft: -28,
           width: 56,
@@ -152,14 +157,13 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
               width: 56,
               height: 56,
               borderRadius: 28,
-              // light mode: gold FAB (gradients.fab.light 시작색), dark mode: wineRed
-              // 키스크린 verbatim — light 모드 FAB은 따뜻한 골드/사플 색.
-              backgroundColor: tokens.scheme === 'light' ? '#C9A84C' : brand.wineRed,
+              // light mode: gold FAB, dark mode: wineRed (키스크린 verbatim — light 모드 FAB은 따뜻한 골드).
+              backgroundColor: tokens.scheme === 'light' ? brand.gold : brand.wineRed,
               borderWidth: 1.5,
-              borderColor: tokens.scheme === 'light' ? '#A07F2E' : brand.gold,
+              borderColor: tokens.scheme === 'light' ? brand.goldDeep : brand.gold,
               alignItems: 'center',
               justifyContent: 'center',
-              shadowColor: tokens.scheme === 'light' ? '#A07F2E' : '#8B1A2A',
+              shadowColor: tokens.scheme === 'light' ? brand.goldDeep : brand.wineRed,
               shadowOpacity: tokens.scheme === 'light' ? 0.32 : 0.45,
               shadowOffset: { width: 0, height: 6 },
               shadowRadius: 20,

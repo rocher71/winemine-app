@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { MOCK_TASTING_NOTES } from '@/lib/mock/tasting-notes';
+import { getMockWineByLwin } from '@/lib/mock/wines';
 import type { Database } from '@shared/types/database.types';
 
 type WineLocalizedRow = Database['public']['Views']['wines_localized']['Row'];
@@ -45,6 +48,18 @@ export function useNote(noteId: string | null | undefined): UseNoteResult {
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        const found = MOCK_TASTING_NOTES.find((n) => n.id === noteId) ?? null;
+        if (!found) {
+          setNote(null);
+          return;
+        }
+        setNote({
+          ...found,
+          wine: getMockWineByLwin(found.wine_lwin),
+        });
+        return;
+      }
       const { data, error: err } = await supabase
         .from('tasting_notes')
         .select('*, wine:wines_localized!inner(*)')
@@ -86,6 +101,17 @@ export function useRecentNotes(limit = 3): UseRecentNotesResult {
     setLoading(true);
     setError(null);
     try {
+      if (DEMO_MODE) {
+        const sorted = MOCK_TASTING_NOTES.slice().sort((a, b) =>
+          (b.tasted_at ?? '').localeCompare(a.tasted_at ?? ''),
+        );
+        const sliced = sorted.slice(0, limit).map((n) => ({
+          ...n,
+          wine: getMockWineByLwin(n.wine_lwin) as TastingNoteWithWine['wine'],
+        }));
+        setNotes(sliced);
+        return;
+      }
       const uid = await getCurrentUserId();
       if (!uid) {
         setNotes([]);
