@@ -26,7 +26,7 @@ import { PrimaryButton } from '@/components/shared/primary-button';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Toast } from '@/components/shared/toast';
 import { NoteBodyBeginner } from '@/components/notes/note-body-beginner';
-import { NoteBodyExpert } from '@/components/notes/note-body-expert';
+import { TastingJourneyView } from '@/components/notes/tasting-journey/tasting-journey-view';
 import { NoteWineHeaderLink } from '@/components/notes/note-wine-header-link';
 import { NoteAuthorCard } from '@/components/notes/note-author-card';
 import { NoteMemoCard } from '@/components/notes/note-memo-card';
@@ -226,35 +226,41 @@ export default function NoteDetailScreen() {
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
-        <NoteWineHeaderLink
-          lwin={lwin}
-          display_name={displayName}
-          name_ko={wine.name_ko ?? null}
-          bottle_color={wine.bottle_color ?? null}
-          type_canonical={wine.type_canonical ?? null}
-          vintage={wine.vintage ?? null}
-          region={wine.region ?? null}
-          country={wine.country ?? null}
-        />
+        {mode === 'expert' && expertFields ? (
+          // 전문가 조회 — Tasting Journey (Variant C, 핸드오프 디자인). dark/light·ko/en.
+          <TastingJourneyView note={note} fields={expertFields} />
+        ) : (
+          <>
+            <NoteWineHeaderLink
+              lwin={lwin}
+              display_name={displayName}
+              name_ko={wine.name_ko ?? null}
+              bottle_color={wine.bottle_color ?? null}
+              type_canonical={wine.type_canonical ?? null}
+              vintage={wine.vintage ?? null}
+              region={wine.region ?? null}
+              country={wine.country ?? null}
+            />
 
-        <NoteAuthorCard
-          authorLetter={authorLetter}
-          authorName={authorName}
-          templateLabel={templateLabel}
-          tastedAt={note.tasted_at ?? ''}
-          rating={typeof note.rating === 'number' ? Number(note.rating) : null}
-          priceKrw={priceKrw}
-          blind={isBlind}
-        />
+            <NoteAuthorCard
+              authorLetter={authorLetter}
+              authorName={authorName}
+              templateLabel={templateLabel}
+              tastedAt={note.tasted_at ?? ''}
+              rating={typeof note.rating === 'number' ? Number(note.rating) : null}
+              priceKrw={priceKrw}
+              blind={isBlind}
+            />
 
-        <NoteMemoCard memo={memo} />
+            <NoteMemoCard memo={memo} />
 
-        <View className="mt-4 mx-4">
-          {mode === 'beginner' && beginnerFields ? (
-            <NoteBodyBeginner fields={beginnerFields} />
-          ) : null}
-          {mode === 'expert' && expertFields ? <NoteBodyExpert fields={expertFields} /> : null}
-        </View>
+            <View className="mt-4 mx-4">
+              {mode === 'beginner' && beginnerFields ? (
+                <NoteBodyBeginner fields={beginnerFields} />
+              ) : null}
+            </View>
+          </>
+        )}
       </ScrollView>
 
       {toast ? (
