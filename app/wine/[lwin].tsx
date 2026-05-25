@@ -26,8 +26,7 @@ import { WineHero } from '@/components/wine/wine-hero';
 import { FavoriteToggle } from '@/components/wine/favorite-toggle';
 import { MyTastingNoteCard } from '@/components/wine/my-tasting-note-card';
 import { WriteNoteCta } from '@/components/wine/write-note-cta';
-import { ExternalRatingsCard } from '@/components/wine/external-ratings-card';
-import { AveragePricePill } from '@/components/wine/average-price-pill';
+import { WineRatingsAndPriceRow } from '@/components/wine/wine-ratings-price-row';
 import { PriceChartStub } from '@/components/wine/price-chart-stub';
 import { CommunityDrinkWindowCard } from '@/components/wine/community-drink-window-card';
 import { WineStoryCard } from '@/components/wine/wine-story-card';
@@ -122,11 +121,8 @@ export default function WineDetailScreen() {
           <WriteNoteCta wineLwin={wine.lwin} />
         )}
 
-        {/* 3. ExternalRatingsCard (stub) */}
-        <ExternalRatingsCard />
-
-        {/* 4. AveragePricePill (stub — purchases 부재) */}
-        <AveragePricePill />
+        {/* 3+4. ExternalRatingsCard + AveragePricePill 가로 나란히 (50-50) */}
+        <WineRatingsAndPriceRow />
 
         {/* 5. PriceChart (stub — purchases 부재) */}
         <PriceChartStub />
