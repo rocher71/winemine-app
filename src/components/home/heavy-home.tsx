@@ -24,9 +24,11 @@ import { QuickActions } from './quick-actions';
 
 interface HeavyHomeProps {
   displayName: string;
+  onScroll?: (event: { nativeEvent: { contentOffset: { y: number } } }) => void;
+  paddingTop?: number;
 }
 
-export function HeavyHome({ displayName }: HeavyHomeProps) {
+export function HeavyHome({ displayName, onScroll, paddingTop }: HeavyHomeProps) {
   const { notes, loading: notesLoading, refresh: refreshNotes } = useRecentNotes(8);
   const { cellaredCount, loading: cellarLoading, refresh: refreshCellar } = useCellarSummary();
 
@@ -50,7 +52,9 @@ export function HeavyHome({ displayName }: HeavyHomeProps) {
   return (
     <ScrollView
       className="flex-1 bg-bg-deepest dark:bg-bg-deepest"
-      contentContainerStyle={{ paddingBottom: 32 }}
+      contentContainerStyle={{ paddingBottom: 32, paddingTop }}
+      scrollEventThrottle={16}
+      onScroll={onScroll}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}

@@ -7,11 +7,13 @@
  *  - mode 분기: heavy → HeavyHome (8섹션) / first-time → FirstTimeHome (4섹션)
  *  - 진입 가드 (사양 §1, §1 a14): first-time + !onboardingComplete → /onboarding redirect
  *  - loading 시 ActivityIndicator + HomeHeader(first-time fallback)
+ *  - scroll-aware sticky header (Blind 앱 패턴, community 동일)
  */
-import { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { View, ActivityIndicator, Animated } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HomeHeader } from '@/components/home/home-header';
 import { FirstTimeHome } from '@/components/home/first-time-home';
 import { HeavyHome } from '@/components/home/heavy-home';
@@ -32,13 +34,41 @@ function initialOf(name: string): string {
   if (!name) return '?';
   const trimmed = name.trim();
   if (!trimmed) return '?';
-  // 한글이면 첫 글자, 영어면 첫 알파벳 대문자.
   return trimmed.charAt(0);
 }
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const { profile, loading } = useProfile();
+  const insets = useSafeAreaInsets();
+
+  // ── Scroll-aware header (community 탭 동일 패턴) ───────────────────────────
+  const HEADER_HEIGHT = insets.top + 62;
+  const headerTranslateY = useRef(new Animated.Value(0)).current;
+  const lastScrollY = useRef(0);
+  const headerVisible = useRef(true);
+
+  const handleScroll = (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+    const currentY = event.nativeEvent.contentOffset.y;
+    const diff = currentY - lastScrollY.current;
+    const THRESHOLD = 8;
+
+    if (currentY <= 0) {
+      if (!headerVisible.current) {
+        headerVisible.current = true;
+        Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+      }
+    } else if (diff > THRESHOLD && headerVisible.current) {
+      headerVisible.current = false;
+      Animated.timing(headerTranslateY, { toValue: -HEADER_HEIGHT, duration: 250, useNativeDriver: true }).start();
+    } else if (diff < -THRESHOLD && !headerVisible.current) {
+      headerVisible.current = true;
+      Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+    }
+
+    lastScrollY.current = currentY;
+  };
+  // ──────────────────────────────────────────────────────────────────────────
 
   // 진입 가드 — 사양 §1, §1 a14
   useEffect(() => {
@@ -56,17 +86,6 @@ export default function HomeScreen() {
     };
   }, [profile?.mode]);
 
-  if (loading) {
-    return (
-      <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-        <HomeHeader mode="first-time" levelId={1} displayInitial="?" />
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator color={brand.gold} />
-        </View>
-      </View>
-    );
-  }
-
   const rawDisplay = profile?.anonymous_display ?? null;
   const localizedDisplay = rawDisplay
     ? currentLocale() === 'ko'
@@ -76,18 +95,36 @@ export default function HomeScreen() {
   const mode = profile?.mode ?? 'first-time';
   const levelId = toLevelId(profile?.level);
   const displayInitial = initialOf(localizedDisplay);
+  const headerMode = mode === 'heavy' ? 'heavy' : 'first-time';
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-      <HomeHeader
-        mode={mode === 'heavy' ? 'heavy' : 'first-time'}
-        levelId={levelId}
-        displayInitial={displayInitial}
-      />
-      {mode === 'heavy' ? (
-        <HeavyHome displayName={localizedDisplay} />
+      {/* ── Scroll-aware 헤더 ── */}
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          transform: [{ translateY: headerTranslateY }],
+        }}
+      >
+        <HomeHeader
+          mode={headerMode}
+          levelId={levelId}
+          displayInitial={displayInitial}
+        />
+      </Animated.View>
+
+      {loading ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: HEADER_HEIGHT }}>
+          <ActivityIndicator color={brand.gold} />
+        </View>
+      ) : mode === 'heavy' ? (
+        <HeavyHome displayName={localizedDisplay} onScroll={handleScroll} paddingTop={HEADER_HEIGHT} />
       ) : (
-        <FirstTimeHome displayName={localizedDisplay} />
+        <FirstTimeHome displayName={localizedDisplay} onScroll={handleScroll} paddingTop={HEADER_HEIGHT} />
       )}
     </View>
   );

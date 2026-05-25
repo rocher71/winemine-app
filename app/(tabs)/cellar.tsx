@@ -13,8 +13,8 @@
  *   [tasted 탭]
  *     - v0.1.0 alpha: placeholder ("v0.2.0 출시 예정") — 사양 §12-1
  */
-import { useCallback, useMemo, useState } from 'react';
-import { View, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View, FlatList, ActivityIndicator, RefreshControl, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -53,6 +53,39 @@ export default function CellarListScreen() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [sort, setSort] = useState<CellarSortKey>('recent');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  // ── Scroll-aware header (community 탭 동일 패턴) ───────────────────────────
+  const HEADER_HEIGHT = insets.top + 56;
+  const headerTranslateY = useRef(new Animated.Value(0)).current;
+  const lastScrollY = useRef(0);
+  const headerVisible = useRef(true);
+
+  const handleScroll = (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+    const currentY = event.nativeEvent.contentOffset.y;
+    const diff = currentY - lastScrollY.current;
+    const THRESHOLD = 8;
+    if (currentY <= 0) {
+      if (!headerVisible.current) {
+        headerVisible.current = true;
+        Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+      }
+    } else if (diff > THRESHOLD && headerVisible.current) {
+      headerVisible.current = false;
+      Animated.timing(headerTranslateY, { toValue: -HEADER_HEIGHT, duration: 250, useNativeDriver: true }).start();
+    } else if (diff < -THRESHOLD && !headerVisible.current) {
+      headerVisible.current = true;
+      Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+    }
+    lastScrollY.current = currentY;
+  };
+
+  // 탭 전환 시 헤더 복원
+  useEffect(() => {
+    headerVisible.current = true;
+    headerTranslateY.setValue(0);
+    lastScrollY.current = 0;
+  }, [tab]);
+  // ──────────────────────────────────────────────────────────────────────────
 
   const { unreadCount } = useNotifications();
   const { profile } = useProfile();
@@ -99,8 +132,12 @@ export default function CellarListScreen() {
     });
     return (
       <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-        <AppHeader {...headerProps} right={HeaderRight} />
-        <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 }}>
+        <Animated.View
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, transform: [{ translateY: headerTranslateY }] }}
+        >
+          <AppHeader {...headerProps} right={HeaderRight} />
+        </Animated.View>
+        <View style={{ paddingHorizontal: 16, paddingTop: HEADER_HEIGHT + 8, paddingBottom: 12 }}>
           <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
         </View>
         {consumedLoading ? (
@@ -118,6 +155,8 @@ export default function CellarListScreen() {
             columnWrapperStyle={{ gap: 12 }}
             renderItem={({ item }) => <CellarCard item={item as import('@/hooks/use-cellar').CellarItemWithWine} />}
             refreshControl={<RefreshControl refreshing={consumedLoading} onRefresh={consumedRefresh} tintColor={brand.gold} />}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
           />
         )}
       </View>
@@ -201,7 +240,11 @@ export default function CellarListScreen() {
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
-      <AppHeader {...headerProps} right={HeaderRight} />
+      <Animated.View
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, transform: [{ translateY: headerTranslateY }] }}
+      >
+        <AppHeader {...headerProps} right={HeaderRight} />
+      </Animated.View>
 
       <FlatList
         data={displayItems}
@@ -212,10 +255,13 @@ export default function CellarListScreen() {
         ListHeaderComponent={ListHeader}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={{
+          paddingTop: HEADER_HEIGHT,
           paddingBottom: 24 + insets.bottom,
           flexGrow: 1,
           gap: 12,
         }}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={loading}

@@ -15,13 +15,17 @@ import { WineFeed } from './wine-feed';
 
 interface FirstTimeHomeProps {
   displayName: string;
+  onScroll?: (event: { nativeEvent: { contentOffset: { y: number } } }) => void;
+  paddingTop?: number;
 }
 
-export function FirstTimeHome(_props: FirstTimeHomeProps) {
+export function FirstTimeHome({ onScroll, paddingTop }: FirstTimeHomeProps) {
   return (
     <ScrollView
       className="flex-1 bg-bg-deepest dark:bg-bg-deepest"
-      contentContainerStyle={{ paddingBottom: 32 }}
+      contentContainerStyle={{ paddingBottom: 32, paddingTop }}
+      scrollEventThrottle={16}
+      onScroll={onScroll}
     >
       <StatHero countries={0} wines={0} notes={0} />
       <MapCameo countries={0} regions={0} />
