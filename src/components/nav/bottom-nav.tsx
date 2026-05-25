@@ -26,7 +26,7 @@ import { Home, Globe, Camera, Wine, Users, type LucideIcon } from 'lucide-react-
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
-import { brand, gradients, shadows, radius, spacing } from '@/lib/design-tokens';
+import { brand, gradients, shadows } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 
 const ICONS: Record<string, LucideIcon> = {
@@ -61,12 +61,10 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
       accessibilityLabel={t('nav.a11y.primary')}
       style={{
         flexDirection: 'row',
-        alignItems: 'flex-end',
-        paddingTop: spacing['2'],          // 8
-        paddingHorizontal: spacing['3'],   // 12
-        // 12 (design margin) + insets.bottom (home indicator). CSS web의 28은 home indicator 없는
-        // 환경 전제 — iOS에서 28+insets는 ~62px로 과도. 12+insets로 home indicator 위 적정 breathing room 확보.
-        paddingBottom: 12 + insets.bottom,
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        paddingTop: 8,
+        paddingBottom: 8 + insets.bottom,
         borderTopWidth: 0.5,
         borderTopColor: tokens.border.default,
       }}
@@ -96,10 +94,53 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
         };
 
         if (isCapture) {
-          // Round 7: capture 슬롯은 flex spacer만 (FAB은 컨테이너의 직접 absolute child로 별도 렌더).
-          // Round 5(translateY) / Round 6(nested absolute) 모두 시각 결과 동일 → flex 안에 어떤 형태로
-          // 넣어도 안 됨. FAB을 컨테이너 absolute child로 끌어올려 flex layout과 완전 분리.
-          return <View key={route.key} style={{ flex: 1 }} />;
+          return (
+            <View key={route.key} style={{ flex: 1, alignItems: 'center' }}>
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+                  navigateTo();
+                }}
+                accessibilityRole="button"
+                accessibilityLabel={t('nav.captureA11y')}
+                style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+              >
+                {/* shadow wrapper — overflow:hidden 없이 shadow 보존 */}
+                <View style={{ width: 52, height: 52, borderRadius: 26, ...fabShadow }}>
+                  {/* gradient + border container */}
+                  <View
+                    style={{
+                      flex: 1,
+                      borderRadius: 26,
+                      borderWidth: 1,
+                      borderColor: brand.gold,
+                      overflow: 'hidden',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <LinearGradient
+                      colors={fabGradient.colors as unknown as readonly [string, string]}
+                      start={fabGradient.start}
+                      end={fabGradient.end}
+                      style={StyleSheet.absoluteFillObject}
+                    />
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 1,
+                        backgroundColor: 'rgba(255,255,255,0.12)',
+                      }}
+                    />
+                    <Camera size={26} color={brand.cream} strokeWidth={1.6} />
+                  </View>
+                </View>
+              </Pressable>
+            </View>
+          );
         }
 
         return (
@@ -116,86 +157,6 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
           />
         );
       })}
-
-      {/* FAB — left:0/right:0 + alignItems:center로 정확한 가로 중앙 정렬.
-       *   left:'50%'+marginLeft 방식은 부모 padding 영향으로 왼쪽으로 치우치는 케이스 발생.
-       *   Pressable은 opacity hit target만, visual(gradient+border+shadow)은 inner View 2-layer 분리:
-       *   - shadow wrapper: shadow prop + borderRadius (overflow:hidden 없이 shadow 보존)
-       *   - gradient container: overflow:hidden으로 LinearGradient 클리핑 + 테두리
-       */}
-      <View
-        pointerEvents="box-none"
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          // marginTop -24 verbatim: 바 상단에서 24px 솟아오름.
-          // bottom = paddingBottom(12+insets) + tabContent(~49) + paddingTop(8) + 24 - FABheight(52) = 41+insets
-          bottom: 41 + insets.bottom,
-          height: 52,
-          alignItems: 'center',
-          zIndex: 10,
-        }}
-      >
-        <Pressable
-          onPress={() => {
-            const captureRoute = state.routes.find((r) => r.name === 'capture');
-            if (!captureRoute) return;
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: captureRoute.key,
-              canPreventDefault: true,
-            });
-            if (!event.defaultPrevented) navigation.navigate('capture');
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={t('nav.captureA11y')}
-          style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-        >
-          {/* shadow wrapper — overflow:hidden 없이 shadow 보존 */}
-          <View
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: 26,
-              ...fabShadow,
-            }}
-          >
-            {/* gradient + border container — overflow:hidden으로 LinearGradient 클리핑 */}
-            <View
-              style={{
-                flex: 1,
-                borderRadius: 26,
-                borderWidth: 1,
-                borderColor: brand.gold,
-                overflow: 'hidden',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <LinearGradient
-                colors={fabGradient.colors as unknown as readonly [string, string]}
-                start={fabGradient.start}
-                end={fabGradient.end}
-                style={StyleSheet.absoluteFillObject}
-              />
-              {/* inset top highlight — web의 inset 0 1px 0 rgba(255,255,255,0.12) 대체 */}
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 1,
-                  backgroundColor: 'rgba(255,255,255,0.12)',
-                }}
-              />
-              <Camera size={24} color={brand.cream} strokeWidth={1.6} />
-            </View>
-          </View>
-        </Pressable>
-      </View>
     </View>
   );
 }
@@ -225,7 +186,7 @@ function NavTab({ icon: Icon, label, focused, idleColor, onPress }: NavTabProps)
       >
         <View
           style={{
-            paddingVertical: 6,
+            paddingVertical: 4,
             flexDirection: 'column',
             alignItems: 'center',
             gap: 3,
