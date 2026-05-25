@@ -10,7 +10,7 @@
  * v0.2.0에서 victory-native LineChart + purchases supabase query 채움.
  */
 import { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, useColorScheme } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -22,6 +22,7 @@ const RANGES: Range[] = ['3M', '1Y', 'ALL'];
 
 export function PriceChartStub() {
   const { t } = useTranslation();
+  const scheme = useColorScheme();
   const [range, setRange] = useState<Range>('1Y');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -62,7 +63,7 @@ export function PriceChartStub() {
                 style={({ pressed }) => ({
                   paddingHorizontal: 8,
                   paddingVertical: 4,
-                  backgroundColor: active ? brand.wineRed : 'transparent',
+                  backgroundColor: active ? (scheme === 'light' ? brand.gold : brand.wineRed) : 'transparent',
                   opacity: pressed ? 0.85 : 1,
                 })}
               >
