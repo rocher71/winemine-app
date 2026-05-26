@@ -724,6 +724,7 @@ export const postTypeBadgeColor = {
   column:   brand.cream,
   news:     '#5B9CE6',
   album:    '#E8B4D2',
+  list:     brand.wineRed,
 } as const;
 
 export const postTypeBadgeColorLight = {
@@ -732,6 +733,7 @@ export const postTypeBadgeColorLight = {
   column:   '#8B7766',    // light.text.muted — cream verbatim invisible 대체
   news:     '#5B9CE6',
   album:    '#E8B4D2',
+  list:     brand.wineRed,
 } as const;
 
 export type PostTypeKey = keyof typeof postTypeBadgeColor;
@@ -749,6 +751,14 @@ export const reactionColor = {
 } as const;
 
 export type ReactionColorKey = keyof typeof reactionColor;
+
+// ---- Wine List accent colors (wm-lists-shared.jsx LIST_ACCENT) ----
+//
+// 사용자의 각 리스트에 순환 배정되는 4가지 액센트 색.
+// 다크·라이트 양쪽 모드에서 동일하게 사용 (warm-dark palette — 양쪽 가독성 확인됨).
+// 리스트 생성 순서에 따라 index % 4 로 배정.
+export const listAccent = ['#7A1E2D', '#9C8240', '#8B4458', '#4A6253'] as const;
+export type ListAccentIndex = 0 | 1 | 2 | 3;
 
 // ---- Capture PhotoFrame gradient factory (design-spec capture.md §9 P0) ----
 //

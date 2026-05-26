@@ -24,7 +24,9 @@
     "send": "Send",
     "justNow": "just now",
     "ok": "OK",
-    "bottleUnit": "wines"
+    "bottleUnit": "wines",
+    "andMore": "{{count}} more wines",
+    "confirmDelete": "Delete this list?"
   },
   "placeholders": {
     "comingSoon": "Coming in v0.2.0",
@@ -1338,7 +1340,8 @@
       "question": "Question",
       "column": "Column",
       "news": "News",
-      "album": "Album",
+      "album": "Other",
+      "list": "Lists",
       "label": "Post type: {{type}}"
     },
     "shortcut": {
@@ -1641,6 +1644,7 @@
   },
   "lists": {
     "tab": "Lists",
+    "note_chip": "Note",
     "title": "My Lists",
     "totalCount": "{{count}} lists",
     "sortRecent": "Recently edited",
@@ -1661,9 +1665,12 @@
       "descPlaceholder": "Description (optional)",
       "descHint": "Description (optional) · Max 200 chars",
       "winesHeader": "Add wines",
+      "winesSection": "WINES",
+      "addWinesTitle": "Add Wines",
       "addBySearch": "Search wines",
       "addFromTasted": "From tasted",
       "searchSub": "Wine or producer",
+      "v030Feature": "Coming in v0.3.0",
       "success": "List created",
       "error": "Failed to create list"
     },
@@ -1677,6 +1684,7 @@
       "publicLabel": "Public list",
       "privateLabel": "My list",
       "lastEdited": "Last edited {{time}} · {{count}} wines",
+      "attribution": "Based on {{author}}'s list",
       "follow": "Follow",
       "save": "Save",
       "saved": "Saved",
@@ -1684,11 +1692,23 @@
       "edit": "Edit",
       "importedTitle": "{{title}} (copy)",
       "importSuccess": "Imported to your lists",
+      "shareToFeed": "Share to feed",
+      "privateTitle": "This list is private",
+      "privateSub": "The author made this list private",
+      "statLikes": "Likes",
+      "statComments": "Comments",
+      "statSaves": "Saves",
+      "visibilityPublic": "Public",
+      "visibilityPrivate": "Private",
       "stats": {
         "likes": "Likes",
         "comments": "Comments",
         "saves": "Saved"
       }
+    },
+    "edit": {
+      "title": "Edit List",
+      "save": "Save"
     },
     "makePublic": {
       "title": "Make this list public?",
