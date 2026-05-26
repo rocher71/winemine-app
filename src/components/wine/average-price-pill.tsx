@@ -10,18 +10,38 @@
  * 라이트 모드 업데이트 (wine-detail-light-mode-tasks.md T3):
  *   - 외부 mx-4 + flex-row 제거 → WineRatingsAndPriceRow 가 담당
  *   - 레이아웃 세로 수직 (label → price → trend)
- *   - borderRadius: 12
- *   - padding: 14 (사방)
+ *   - borderRadius: 12 / padding: 14
  *   - TrendingUp 아이콘 추가 (lucide-react-native)
+ *
+ * V2 업데이트 (wine-detail-v2-tasks.md T6):
+ *   - priceData?: AveragePriceData prop 추가 — 데이터 있으면 실제 가격/추이 표시
  */
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp } from 'lucide-react-native';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
+import type { AveragePriceData } from '@/lib/types/wine-detail';
 
-export function AveragePricePill() {
+const TREND_UP_COLOR = '#4ade80';
+
+interface Props {
+  priceData?: AveragePriceData;
+}
+
+export function AveragePricePill({ priceData }: Props) {
   const { t } = useTranslation();
   const tokens = useThemeTokens();
+
+  const hasPrice = priceData?.krw != null;
+  const hasTrend = priceData?.trendPercent != null;
+
+  const priceText = hasPrice
+    ? `₩ ${priceData!.krw!.toLocaleString('ko-KR')}`
+    : '—';
+
+  const trendText = hasTrend
+    ? `+${priceData!.trendPercent!}% / ${priceData!.trendPeriod ?? ''}`
+    : '—';
 
   return (
     <View
@@ -33,7 +53,7 @@ export function AveragePricePill() {
         borderColor: tokens.border.default,
       }}
       accessibilityRole="text"
-      accessibilityLabel={`${t('wineDetail.avgPrice.label')} ${t('wineDetail.avgPrice.empty')}`}
+      accessibilityLabel={`${t('wineDetail.avgPrice.label')} ${priceText}`}
     >
       {/* Label */}
       <Text
@@ -47,31 +67,35 @@ export function AveragePricePill() {
         {t('wineDetail.avgPrice.label')}
       </Text>
 
-      {/* Price stub */}
+      {/* Price */}
       <Text
         allowFontScaling={false}
         style={{
           fontFamily: 'PlayfairDisplay_700Bold',
           fontSize: 18,
-          color: tokens.text.muted,
+          color: hasPrice ? tokens.text.primary : tokens.text.muted,
           marginTop: 4,
         }}
       >
-        —
+        {priceText}
       </Text>
 
-      {/* Trend row stub */}
+      {/* Trend row */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 4 }}>
-        <TrendingUp size={11} strokeWidth={2} color={tokens.text.muted} />
+        <TrendingUp
+          size={11}
+          strokeWidth={2}
+          color={hasTrend ? TREND_UP_COLOR : tokens.text.muted}
+        />
         <Text
           allowFontScaling={false}
           style={{
             fontFamily: 'Inter_400Regular',
             fontSize: 10,
-            color: tokens.text.muted,
+            color: hasTrend ? TREND_UP_COLOR : tokens.text.muted,
           }}
         >
-          —
+          {trendText}
         </Text>
       </View>
     </View>
