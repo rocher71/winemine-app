@@ -138,6 +138,16 @@ export default function RootLayout() {
           <Stack.Screen name="community/tonight" />
           <Stack.Screen name="community/discover" />
           <Stack.Screen name="community/templates" />
+          {/* knowledge 상세 화면 — 레슨/지역/와이너리/빈티지 */}
+          <Stack.Screen name="knowledge/lesson/[lessonId]" />
+          <Stack.Screen name="knowledge/lesson/[lessonId]/done" />
+          <Stack.Screen name="knowledge/lesson/history" />
+          <Stack.Screen name="knowledge/region/[regionId]" />
+          <Stack.Screen name="knowledge/winery/[wineryId]" />
+          <Stack.Screen name="knowledge/winery/[wineryId]/lineup" />
+          <Stack.Screen name="knowledge/vintage/[vintageId]" />
+          <Stack.Screen name="knowledge/vintage/compare" />
+          <Stack.Screen name="knowledge/vintage/[regionId]/chart" />
           {/* P3 화면 — favorites, profile, notifications */}
           <Stack.Screen name="favorites/index" />
           <Stack.Screen name="profile/index" />

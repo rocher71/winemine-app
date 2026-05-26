@@ -25,6 +25,21 @@ const config: Config = {
         'wine-red-deep': '#5b1424',
         cream: '#F5F0E8',
         'deepest-dark': '#05020A',
+        // knowledge 탭 wash (테마 무관 — design-tokens.ts brand.goldWash / brand.wineWash)
+        'gold-wash': '#F2E5BD',
+        'wine-wash': '#F1D9DC',
+
+        // Knowledge 탭 전용 Ivory 팔레트 (KTL verbatim — design-tokens.ts `ivory`).
+        // 전역 light.* 와 의도적 분리: light.bg.surface(#FFFFFF) 순백 대신 KTL.surface(#FAF3E3) warm cream.
+        // knowledge 화면에서만 사용 (bg-ivory-surface / border-ivory-border / text-ivory-text-muted 등).
+        // 테마 무관 단일값 — knowledge 탭은 ivory 고정 (dark 모드 음영은 surface-up/inset 사용).
+        'ivory-page1':           '#F4EBD9',
+        'ivory-page2':           '#EFE3CC',
+        'ivory-surface':         '#FAF3E3',
+        'ivory-border':          '#D8C5A0',
+        'ivory-text-secondary':  '#5A3D2E',
+        'ivory-text-muted':      '#8B7560',
+        'ivory-text-dim':        '#A89580',
 
         // Dual-mode 토큰 (NativeWind v4 표준 — 2026-05-21 fix):
         // DEFAULT = light mode color (기본 = light)
@@ -40,6 +55,9 @@ const config: Config = {
         'bg-sunken':    { DEFAULT: 'rgba(42,26,20,0.06)', dark: 'rgba(0,0,0,0.28)' },
         'bottle-shelf': { DEFAULT: '#FFFFFF', dark: '#1a0a1e' },
         surface:        { DEFAULT: '#FFFFFF', dark: '#3D2A4A' },
+        // knowledge 탭 — raised card + input/progress track (design-tokens.ts light.bg/dark.bg)
+        'surface-up':   { DEFAULT: '#FCF7EB', dark: '#48324F' },
+        inset:          { DEFAULT: '#EAE0C9', dark: '#2A1C36' },
 
         'text-primary':   { DEFAULT: '#2A1A14', dark: '#F8F4ED' },
         'text-secondary': { DEFAULT: '#5A463C', dark: '#EBE0CB' },
@@ -98,6 +116,12 @@ const config: Config = {
         'inter-medium':        ['Freesentation_5Medium'],
         'inter-semibold':      ['Freesentation_6SemiBold'],
         'inter-bold':          ['Freesentation_7Bold'],
+        // knowledge 탭 design-spec의 "Garamond italic" serif 역할 토큰.
+        // CormorantGaramond 미설치(@expo-google-fonts 패키지 자체 미resolve, 프로젝트는 Freesentation
+        // 로컬 TTF만 번들 + italic face 부재) → playfair(Freesentation_4Regular) fallback alias.
+        // italic 표현은 사용처에서 fontStyle:'italic' inline 적용. v0.2.0 폰트 확보 시 이 alias만 교체.
+        cormorant:             ['Freesentation_4Regular'],
+        'cormorant-semibold':  ['Freesentation_6SemiBold'],
       },
 
       // 키스크린 globals.css의 .wm-* 유틸 클래스 1:1 매핑.

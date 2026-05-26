@@ -14,7 +14,7 @@ import { dark, light, type ColorScheme } from './design-tokens';
 // dark/light 양쪽이 같은 shape의 일반 string 매핑이라는 것을 명시.
 // 그렇지 않으면 union 타입이 좁아져 사용 시점에 색 hex literal로 narrowed.
 type TokenBag = {
-  bg: { deepest: string; deep: string; map: string; surface: string; sunken: string; bottleShelf: string };
+  bg: { deepest: string; deep: string; map: string; surface: string; sunken: string; bottleShelf: string; surfaceUp: string; inset: string };
   text: { primary: string; secondary: string; muted: string; disabled: string };
   border: { default: string; active: string };
   glass: { bg: string; bgStrong: string; border: string };

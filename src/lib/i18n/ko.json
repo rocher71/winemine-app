@@ -34,6 +34,7 @@
   "nav": {
     "home": "홈",
     "map": "지도",
+    "knowledge": "지식",
     "capture": "라벨 촬영",
     "cellar": "셀러",
     "community": "커뮤니티",
@@ -1712,6 +1713,108 @@
     "qa": {
       "saveAsList": "이 결과를 리스트로 저장",
       "saveAsListSub": "상위 {{count}}병 · 초안으로 생성됩니다"
+    }
+  },
+  "knowledge": {
+    "tabs": {
+      "lesson": "레슨",
+      "region": "지역",
+      "winery": "와이너리",
+      "vintage": "빈티지"
+    },
+    "lesson": {
+      "todayLabel": "오늘의 레슨",
+      "prevLabel": "이전 레슨",
+      "streakLabel": "연속 학습",
+      "streakUnit": "일째 학습 중",
+      "completeBtn": "오늘 학습 완료",
+      "doneTitle": "오늘도 한 잔,\n채웠어요",
+      "doneBackBtn": "홈으로 돌아가기",
+      "shareBtn": "공유",
+      "historyTitle": "학습 기록",
+      "nextLesson": "내일 만날 레슨",
+      "categoryLabel": "카테고리 분포",
+      "badgesLabel": "획득 배지",
+      "calendarLabel": "{{year}}년 {{month}}월",
+      "dayLabel": "Day {{day}}",
+      "doneEyebrow": "학습 완료",
+      "doneStreakLabel": "연속 학습",
+      "doneNextLabel": "내일 만날 레슨",
+      "doneStatWeek": "이번 주",
+      "doneStatAvg": "평균 소요",
+      "doneStatTotal": "누적 학습",
+      "historyStreakLabel": "현재 연속",
+      "historyBestLabel": "최장 연속",
+      "historyTotalLabel": "총 학습",
+      "historyLegendDone": "완료",
+      "historyLegendToday": "오늘",
+      "historyLegendNone": "미학습",
+      "historyBtn": "기록 보기"
+    },
+    "region": {
+      "hint": "국가를 선택하면 지역·아펠라시옹으로 드릴다운됩니다.",
+      "subRegions": "주요 산지",
+      "subzones": "하위 산지",
+      "tierSystem": "등급 체계",
+      "styleProfile": "스타일 프로파일",
+      "grandCrus": "그랑크뤼",
+      "producers": "주요 도멘"
+    },
+    "done": {
+      "eyebrow": "Day {{day}} · 학습 완료",
+      "title": "오늘도 한 잔,\n채웠어요",
+      "body": "와인 지식이 한 잔 더 채워졌습니다. 내일도 계속 이어가세요.",
+      "streakProgress": "연속 학습 진행",
+      "nextReward": "다음 보상",
+      "next": "내일 만날 레슨",
+      "share": "공유",
+      "home": "홈으로 돌아가기"
+    },
+    "history": {
+      "title": "학습 기록",
+      "categoryDist": "카테고리 분포",
+      "badges": "획득 배지",
+      "empty": "아직 학습 기록이 없어요",
+      "stat": {
+        "current": "현재 연속",
+        "longest": "최장 연속",
+        "total": "총 학습"
+      }
+    },
+    "winery": {
+      "philosophy": "철학",
+      "grandCrus": "보유 그랑크뤼",
+      "lineupBtn": "전체 라인업 {{count}}종 보기",
+      "lineupTitle": "라인업",
+      "lineupFilterAll": "전체",
+      "lineupFilterRed": "레드",
+      "lineupFilterWhite": "화이트",
+      "lineupVintage": "빈티지",
+      "lineupEmpty": "해당 와인이 없어요",
+      "grandCrusSection": "보유 그랑크뤼"
+    },
+    "vintage": {
+      "climateTimeline": "기후 연대기",
+      "styleFeatures": "스타일 특징",
+      "pairing": "음식 페어링",
+      "related": "같은 지역 다른 빈티지",
+      "climate": "성장기 기후",
+      "styleProfile": "스타일 프로파일",
+      "drinkWindow": "음용 적기",
+      "topWines": "대표 와인",
+      "oneLiners": "빈티지 한 줄 평",
+      "compareIntro": "보르도의 두 강세 빈티지가 어떻게 다른지, 같은 축으로 비교합니다.",
+      "keyDiff": "핵심 차이",
+      "styleOverlay": "스타일 오버레이",
+      "empty": "정보 준비 중",
+      "drinkStart": "음용 시작",
+      "peak": "피크",
+      "drinkEnd": "음용 종료",
+      "tipLabel": "소믈리에 팁",
+      "filterLeft": "좌안 (메독)",
+      "filterRight": "우안",
+      "filterWhite": "드라이 화이트",
+      "verdict": "총평"
     }
   }
 }
