@@ -40,21 +40,21 @@
  *
  * BottomNav 자동 표시 (tabs). ScrollView paddingBottom 156 = FAB 56 + BottomNav 56 + gap 44.
  */
-import { useCallback, useMemo, useState } from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet, Animated } from 'react-native';
-import { useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
-import { LinearGradient } from 'expo-linear-gradient';
+import {useCallback, useMemo, useState} from 'react';
+import {View, Text, ScrollView, Pressable, StyleSheet, Animated} from 'react-native';
+import {useRef} from 'react';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useRouter} from 'expo-router';
+import {useTranslation} from 'react-i18next';
+import {LinearGradient} from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import { PenLine, TrendingUp, Flame, ChevronUp, Wine as WineIcon, MessageSquare } from 'lucide-react-native';
-import { brand, light, withAlpha } from '@/lib/design-tokens';
-import { AppHeader } from '@/components/nav/app-header';
-import { BellButton } from '@/components/nav/bell-button';
-import { LevelChip } from '@/components/shared/level-chip';
-import { CommFeedCard } from '@/components/community/comm-feed-card';
-import { PostTypeBadge } from '@/components/community/post-type-badge';
+import {PenLine, TrendingUp, Flame, ChevronUp, Wine as WineIcon, MessageSquare} from 'lucide-react-native';
+import {brand, light, withAlpha} from '@/lib/design-tokens';
+import {AppHeader} from '@/components/nav/app-header';
+import {BellButton} from '@/components/nav/bell-button';
+import {LevelChip} from '@/components/shared/level-chip';
+import {CommFeedCard} from '@/components/community/comm-feed-card';
+import {PostTypeBadge} from '@/components/community/post-type-badge';
 import {
   getCommunityPosts,
   getCommunityUser,
@@ -64,8 +64,8 @@ import {
   type PostType,
   type TrendingKeyword,
 } from '@/lib/mock/community-posts';
-import { useNotifications } from '@/hooks/use-notifications';
-import { useProfile } from '@/hooks/use-profile';
+import {useNotifications} from '@/hooks/use-notifications';
+import {useProfile} from '@/hooks/use-profile';
 
 type TabId = 'all' | 'following' | 'trending';
 type TypeFilterId = 'all' | PostType;
@@ -76,18 +76,18 @@ const TYPE_FILTERS: TypeFilterId[] = ['all', 'note', 'question', 'column', 'news
 export default function CommunityScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { t } = useTranslation();
-  const { unreadCount } = useNotifications();
-  const { profile } = useProfile();
+  const {t} = useTranslation();
+  const {unreadCount} = useNotifications();
+  const {profile} = useProfile();
 
   const displayInitial = (profile?.anonymous_display ?? '?')[0]?.toUpperCase() ?? '?';
-  const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
+  const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1 | 2 | 3 | 4 | 5;
 
   // ── Scroll-aware header (Blind 앱 패턴) ───────────────────────────────────
   // onLayout으로 실제 높이 측정 — hardcode 불일치 방지. app-header.tsx spacer 변경 시 자동 반영.
   const headerHRef = useRef(insets.top + 80);
   const [headerH, setHeaderH] = useState(insets.top + 80);
-  const handleHeaderLayout = useCallback((e: { nativeEvent: { layout: { height: number } } }) => {
+  const handleHeaderLayout = useCallback((e: {nativeEvent: {layout: {height: number}}}) => {
     const h = e.nativeEvent.layout.height;
     if (h !== headerHRef.current) {
       headerHRef.current = h;
@@ -98,7 +98,7 @@ export default function CommunityScreen() {
   const lastScrollY = useRef(0);
   const headerVisible = useRef(true);
 
-  const handleScroll = (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+  const handleScroll = (event: {nativeEvent: {contentOffset: {y: number}}}) => {
     const currentY = event.nativeEvent.contentOffset.y;
     const diff = currentY - lastScrollY.current;
     const THRESHOLD = 8;
@@ -106,14 +106,14 @@ export default function CommunityScreen() {
     if (currentY <= 0) {
       if (!headerVisible.current) {
         headerVisible.current = true;
-        Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+        Animated.timing(headerTranslateY, {toValue: 0, duration: 200, useNativeDriver: true}).start();
       }
     } else if (diff > THRESHOLD && headerVisible.current) {
       headerVisible.current = false;
-      Animated.timing(headerTranslateY, { toValue: -headerHRef.current, duration: 250, useNativeDriver: true }).start();
+      Animated.timing(headerTranslateY, {toValue: -headerHRef.current, duration: 250, useNativeDriver: true}).start();
     } else if (diff < -THRESHOLD && !headerVisible.current) {
       headerVisible.current = true;
-      Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+      Animated.timing(headerTranslateY, {toValue: 0, duration: 200, useNativeDriver: true}).start();
     }
 
     lastScrollY.current = currentY;
@@ -171,7 +171,7 @@ export default function CommunityScreen() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
+    <View style={{flex: 1, backgroundColor: light.bg.deepest}}>
       {/* ── Scroll-aware 헤더 ── */}
       <Animated.View
         style={{
@@ -180,7 +180,7 @@ export default function CommunityScreen() {
           left: 0,
           right: 0,
           zIndex: 10,
-          transform: [{ translateY: headerTranslateY }],
+          transform: [{translateY: headerTranslateY}],
         }}
         onLayout={handleHeaderLayout}
       >
@@ -194,7 +194,7 @@ export default function CommunityScreen() {
                 : t('community.allTitle')
           }
           right={
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
               <BellButton unreadCount={unreadCount} />
               <LevelChip levelId={levelId} initial={displayInitial} />
             </View>
@@ -203,7 +203,7 @@ export default function CommunityScreen() {
       </Animated.View>
 
       <ScrollView
-        contentContainerStyle={{ paddingTop: headerH, paddingBottom: 156 }}
+        contentContainerStyle={{paddingTop: headerH, paddingBottom: 156}}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         scrollEventThrottle={16}
@@ -228,9 +228,9 @@ export default function CommunityScreen() {
                 key={id}
                 onPress={() => handleTabPress(id)}
                 accessibilityRole="tab"
-                accessibilityState={{ selected: active }}
+                accessibilityState={{selected: active}}
                 accessibilityLabel={t(`community.tabs.${id}`)}
-                style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+                style={({pressed}) => ({opacity: pressed ? 0.7 : 1})}
               >
                 <View
                   style={{
@@ -315,9 +315,9 @@ export default function CommunityScreen() {
                     key={f}
                     onPress={() => handleTypeFilterPress(f)}
                     accessibilityRole="button"
-                    accessibilityState={{ selected: active }}
+                    accessibilityState={{selected: active}}
                     accessibilityLabel={t(labelKey)}
-                    style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+                    style={({pressed}) => ({opacity: pressed ? 0.7 : 1})}
                   >
                     <View
                       style={{
@@ -407,7 +407,7 @@ export default function CommunityScreen() {
               >
                 {t('community.trending.keywordsLabel')}
               </Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+              <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 6}}>
                 {trendingKeywords.map((kw) => {
                   const tint = trendingTintTokens(kw.tint);
                   return (
@@ -470,7 +470,7 @@ export default function CommunityScreen() {
             </Text>
 
             {/* Ranked list */}
-            <View style={{ paddingHorizontal: 16, flexDirection: 'column', gap: 8 }}>
+            <View style={{paddingHorizontal: 16, flexDirection: 'column', gap: 8}}>
               {rankedPosts.map((p, i) => (
                 <TrendingRankRow key={p.id} post={p} index={i} onPress={handlePostPress} />
               ))}
@@ -479,25 +479,25 @@ export default function CommunityScreen() {
         ) : null}
 
         {/* Bottom spacer (keyscreen line 666 verbatim) */}
-        <View style={{ height: 32 }} />
+        <View style={{height: 32}} />
       </ScrollView>
 
       {/* ── FAB (absolute outer View, 3-layer §4-11, §6-7) ── */}
       {/* §4-11 fix: position/right/bottom은 outer View에. Pressable은 opacity-only style fn. */}
       <View
-        style={{ position: 'absolute', right: 18, bottom: 6 + insets.bottom + 57 + 8, zIndex: 10 }}
+        style={{position: 'absolute', right: 18, bottom: insets.bottom, zIndex: 10}}
         pointerEvents="box-none"
       >
         <Pressable
           onPress={handleFabPress}
           accessibilityRole="button"
           accessibilityLabel={t('community.new.label')}
-          style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+          style={({pressed}) => ({opacity: pressed ? 0.85 : 1})}
         >
           <LinearGradient
             colors={[brand.gold, brand.goldDeep]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
             style={{
               width: 56,
               height: 56,
@@ -507,7 +507,7 @@ export default function CommunityScreen() {
               alignItems: 'center',
               justifyContent: 'center',
               shadowColor: brand.gold,
-              shadowOffset: { width: 0, height: 4 },
+              shadowOffset: {width: 0, height: 4},
               shadowOpacity: 0.3,
               shadowRadius: 12,
               elevation: 8,
@@ -530,7 +530,7 @@ interface EmptyStateProps {
   hint: string;
 }
 
-function EmptyState({ title, hint }: EmptyStateProps) {
+function EmptyState({title, hint}: EmptyStateProps) {
   return (
     <View
       style={{
@@ -608,7 +608,7 @@ interface TrendingRankRowProps {
   onPress: (postId: string) => void;
 }
 
-function TrendingRankRow({ post, index, onPress }: TrendingRankRowProps) {
+function TrendingRankRow({post, index, onPress}: TrendingRankRowProps) {
   const author = getCommunityUser(post.userId);
   const top = index < 3;
   const rankColor = top ? light.border.active : light.text.muted;
@@ -625,7 +625,7 @@ function TrendingRankRow({ post, index, onPress }: TrendingRankRowProps) {
       onPress={handlePress}
       accessibilityRole="button"
       accessibilityLabel={post.title}
-      style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+      style={({pressed}) => ({opacity: pressed ? 0.85 : 1})}
     >
       <View
         style={{
@@ -640,7 +640,7 @@ function TrendingRankRow({ post, index, onPress }: TrendingRankRowProps) {
         }}
       >
         {/* Rank column */}
-        <View style={{ width: 28, alignItems: 'center' }}>
+        <View style={{width: 28, alignItems: 'center'}}>
           <Text
             allowFontScaling={false}
             style={{
@@ -653,14 +653,14 @@ function TrendingRankRow({ post, index, onPress }: TrendingRankRowProps) {
           >
             {index + 1}
           </Text>
-          <View style={{ marginTop: 4 }}>
+          <View style={{marginTop: 4}}>
             <TrendIcon size={11} strokeWidth={2} color={rankColor} />
           </View>
         </View>
 
         {/* Body column */}
-        <View style={{ flex: 1, minWidth: 0 }}>
-          <View style={{ flexDirection: 'row' }}>
+        <View style={{flex: 1, minWidth: 0}}>
+          <View style={{flexDirection: 'row'}}>
             <PostTypeBadge type={post.type} />
           </View>
           <Text
@@ -697,7 +697,7 @@ function TrendingRankRow({ post, index, onPress }: TrendingRankRowProps) {
                 {author.name}
               </Text>
             ) : null}
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 3}}>
               <WineIcon size={10} strokeWidth={1.75} color={light.border.active} />
               <Text
                 allowFontScaling={false}
@@ -710,7 +710,7 @@ function TrendingRankRow({ post, index, onPress }: TrendingRankRowProps) {
                 {post.reactions.glass}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 3}}>
               <MessageSquare size={10} strokeWidth={1.75} color={light.text.muted} />
               <Text
                 allowFontScaling={false}
