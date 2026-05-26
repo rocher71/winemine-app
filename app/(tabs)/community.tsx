@@ -40,7 +40,7 @@
  *
  * BottomNav 자동 표시 (tabs). ScrollView paddingBottom 156 = FAB 56 + BottomNav 56 + gap 44.
  */
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { View, Text, ScrollView, Pressable, StyleSheet, Animated } from 'react-native';
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -84,7 +84,16 @@ export default function CommunityScreen() {
   const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
 
   // ── Scroll-aware header (Blind 앱 패턴) ───────────────────────────────────
-  const HEADER_HEIGHT = insets.top + 56;
+  // onLayout으로 실제 높이 측정 — hardcode 불일치 방지. app-header.tsx spacer 변경 시 자동 반영.
+  const headerHRef = useRef(insets.top + 80);
+  const [headerH, setHeaderH] = useState(insets.top + 80);
+  const handleHeaderLayout = useCallback((e: { nativeEvent: { layout: { height: number } } }) => {
+    const h = e.nativeEvent.layout.height;
+    if (h !== headerHRef.current) {
+      headerHRef.current = h;
+      setHeaderH(h);
+    }
+  }, []);
   const headerTranslateY = useRef(new Animated.Value(0)).current;
   const lastScrollY = useRef(0);
   const headerVisible = useRef(true);
@@ -95,17 +104,14 @@ export default function CommunityScreen() {
     const THRESHOLD = 8;
 
     if (currentY <= 0) {
-      // 최상단 — 항상 표시
       if (!headerVisible.current) {
         headerVisible.current = true;
         Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
       }
     } else if (diff > THRESHOLD && headerVisible.current) {
-      // 아래로 스크롤 — 숨김
       headerVisible.current = false;
-      Animated.timing(headerTranslateY, { toValue: -HEADER_HEIGHT, duration: 250, useNativeDriver: true }).start();
+      Animated.timing(headerTranslateY, { toValue: -headerHRef.current, duration: 250, useNativeDriver: true }).start();
     } else if (diff < -THRESHOLD && !headerVisible.current) {
-      // 위로 스크롤 — 표시
       headerVisible.current = true;
       Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
     }
@@ -176,6 +182,7 @@ export default function CommunityScreen() {
           zIndex: 10,
           transform: [{ translateY: headerTranslateY }],
         }}
+        onLayout={handleHeaderLayout}
       >
         <AppHeader
           eyebrow={t('community.title')}
@@ -196,7 +203,7 @@ export default function CommunityScreen() {
       </Animated.View>
 
       <ScrollView
-        contentContainerStyle={{ paddingTop: HEADER_HEIGHT, paddingBottom: 156 }}
+        contentContainerStyle={{ paddingTop: headerH, paddingBottom: 156 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         scrollEventThrottle={16}

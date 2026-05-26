@@ -55,7 +55,16 @@ export default function CellarListScreen() {
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   // ── Scroll-aware header (community 탭 동일 패턴) ───────────────────────────
-  const HEADER_HEIGHT = insets.top + 56;
+  // onLayout으로 실제 높이 측정 — 하드코딩 불일치 방지
+  const headerHRef = useRef(insets.top + 80);
+  const [headerH, setHeaderH] = useState(insets.top + 80);
+  const handleHeaderLayout = useCallback((e: { nativeEvent: { layout: { height: number } } }) => {
+    const h = e.nativeEvent.layout.height;
+    if (h !== headerHRef.current) {
+      headerHRef.current = h;
+      setHeaderH(h);
+    }
+  }, []);
   const headerTranslateY = useRef(new Animated.Value(0)).current;
   const lastScrollY = useRef(0);
   const headerVisible = useRef(true);
@@ -71,7 +80,7 @@ export default function CellarListScreen() {
       }
     } else if (diff > THRESHOLD && headerVisible.current) {
       headerVisible.current = false;
-      Animated.timing(headerTranslateY, { toValue: -HEADER_HEIGHT, duration: 250, useNativeDriver: true }).start();
+      Animated.timing(headerTranslateY, { toValue: -headerHRef.current, duration: 250, useNativeDriver: true }).start();
     } else if (diff < -THRESHOLD && !headerVisible.current) {
       headerVisible.current = true;
       Animated.timing(headerTranslateY, { toValue: 0, duration: 200, useNativeDriver: true }).start();
@@ -130,35 +139,47 @@ export default function CellarListScreen() {
       const bKey = b.consumed_at ?? b.acquired_at;
       return (bKey ?? '').localeCompare(aKey ?? '');
     });
+
+    const TastedHeader = (
+      <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 }}>
+        <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
+      </View>
+    );
+
     return (
       <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
         <Animated.View
           style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, transform: [{ translateY: headerTranslateY }] }}
+          onLayout={handleHeaderLayout}
         >
           <AppHeader {...headerProps} right={HeaderRight} />
         </Animated.View>
-        <View style={{ paddingHorizontal: 16, paddingTop: HEADER_HEIGHT + 8, paddingBottom: 12 }}>
-          <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
-        </View>
-        {consumedLoading ? (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <ActivityIndicator color={brand.gold} />
-          </View>
-        ) : consumedSorted.length === 0 ? (
-          <EmptyState title={t('cellar.tasted.empty')} description={t('cellar.tasted.emptyHint')} />
-        ) : (
-          <FlatList
-            data={consumedSorted}
-            keyExtractor={(it) => it.id}
-            numColumns={2}
-            contentContainerStyle={{ padding: 12, gap: 12 }}
-            columnWrapperStyle={{ gap: 12 }}
-            renderItem={({ item }) => <CellarCard item={item as import('@/hooks/use-cellar').CellarItemWithWine} />}
-            refreshControl={<RefreshControl refreshing={consumedLoading} onRefresh={consumedRefresh} tintColor={brand.gold} />}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          />
-        )}
+        <FlatList
+          data={consumedLoading ? [] : consumedSorted}
+          keyExtractor={(it) => it.id}
+          numColumns={2}
+          columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
+          renderItem={({ item }) => <CellarCard item={item as CellarItemWithWine} />}
+          ListHeaderComponent={TastedHeader}
+          ListEmptyComponent={() =>
+            consumedLoading ? (
+              <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 64 }}>
+                <ActivityIndicator color={brand.gold} />
+              </View>
+            ) : (
+              <EmptyState title={t('cellar.tasted.empty')} description={t('cellar.tasted.emptyHint')} />
+            )
+          }
+          contentContainerStyle={{
+            paddingTop: headerH,
+            paddingBottom: 24 + insets.bottom,
+            flexGrow: 1,
+            gap: 12,
+          }}
+          refreshControl={<RefreshControl refreshing={consumedLoading} onRefresh={consumedRefresh} tintColor={brand.gold} />}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        />
       </View>
     );
   }
@@ -242,6 +263,7 @@ export default function CellarListScreen() {
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
       <Animated.View
         style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, transform: [{ translateY: headerTranslateY }] }}
+        onLayout={handleHeaderLayout}
       >
         <AppHeader {...headerProps} right={HeaderRight} />
       </Animated.View>
@@ -255,7 +277,7 @@ export default function CellarListScreen() {
         ListHeaderComponent={ListHeader}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={{
-          paddingTop: HEADER_HEIGHT,
+          paddingTop: headerH,
           paddingBottom: 24 + insets.bottom,
           flexGrow: 1,
           gap: 12,
