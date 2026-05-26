@@ -32,9 +32,10 @@ import { NotifyToggleCard } from '@/components/cellar/notify-toggle-card';
 import { MetaGrid } from '@/components/cellar/meta-grid';
 import { DrinkThisCta } from '@/components/cellar/drink-this-cta';
 import { AddToCellarSheet } from '@/components/wine/add-to-cellar-sheet';
+import { MyTastingNoteCard } from '@/components/wine/my-tasting-note-card';
 import {
   useCellarItem,
-  useNotesCountForWine,
+  useNotesForWine,
   setCellarStatus,
   deleteCellarItem,
   type CellarStatus,
@@ -64,7 +65,7 @@ export default function CellarDetailScreen() {
   const cellarItemId = typeof idParam === 'string' && idParam.length > 0 ? idParam : null;
   const { t } = useTranslation();
   const { item, loading, refresh } = useCellarItem(lwin, cellarItemId);
-  const { count: notesCount } = useNotesCountForWine(lwin);
+  const { notes } = useNotesForWine(lwin);
   const [showEdit, setShowEdit] = useState(false);
   const [busy, setBusy] = useState(false);
   const [notify, setNotify] = useState(false);
@@ -219,6 +220,7 @@ export default function CellarDetailScreen() {
     drink_window_to_year: wine.drink_window_to_year,
   });
 
+  const notesCount = notes.length;
   const notesLabel =
     notesCount === 0
       ? t('cellar.detail.notesCountZero')
@@ -276,8 +278,10 @@ export default function CellarDetailScreen() {
           </View>
         )}
 
-        {/* Section 3: Notify Toggle */}
-        <NotifyToggleCard notify={notify} onChange={handleNotifyChange} />
+        {/* Section 3: Notify Toggle — consumed 상태에서 숨김 */}
+        {item.status !== 'consumed' ? (
+          <NotifyToggleCard notify={notify} onChange={handleNotifyChange} />
+        ) : null}
 
         {/* Section 4: Meta Grid 2×2 */}
         <MetaGrid
@@ -289,30 +293,40 @@ export default function CellarDetailScreen() {
           status={item.status as CellarStatus}
         />
 
-        {/* Section 5: 내 노트 카운트 (v0.1.0 SCOPE-OUT community reviews 대체) + 보조 액션 */}
-        <View className="mx-4">
-          <Text
-            className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase"
-            style={{ marginBottom: 8 }}
-          >
-            {t('cellar.detail.section.notes')}
-          </Text>
-          <View
-            className="bg-surface dark:bg-surface border border-border-default"
-            style={{ borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12 }}
-          >
-            <Text className="font-inter text-card-body text-text-primary dark:text-text-primary">
-              {notesLabel}
-            </Text>
-          </View>
+        {/* Section 5: 내 노트 */}
+        <View>
+          {item.status === 'consumed' && notes.length > 0 ? (
+            <View style={{ gap: 12 }}>
+              {notes.map((note) => (
+                <MyTastingNoteCard key={note.id} note={note} wineLwin={wineLwin} />
+              ))}
+            </View>
+          ) : (
+            <View className="mx-4">
+              <Text
+                className="font-inter text-section-title text-text-secondary dark:text-text-secondary uppercase"
+                style={{ marginBottom: 8 }}
+              >
+                {t('cellar.detail.section.notes')}
+              </Text>
+              <View
+                className="bg-surface dark:bg-surface border border-border-default"
+                style={{ borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12 }}
+              >
+                <Text className="font-inter text-card-body text-text-primary dark:text-text-primary">
+                  {notesLabel}
+                </Text>
+              </View>
+            </View>
+          )}
 
-          {/* ViewWineDetailsLink — Inter 12 600 gold, self-start mt 12 */}
+          {/* ViewWineDetailsLink */}
           <Pressable
             onPress={() => router.push(`/wine/${encodeURIComponent(wineLwin)}`)}
             accessibilityRole="link"
             accessibilityLabel={t('cellar.viewWineDetails')}
             hitSlop={8}
-            style={{ alignSelf: 'flex-start', marginTop: 12 }}
+            style={{ alignSelf: 'flex-start', marginTop: 12, marginHorizontal: 16 }}
           >
             <Text
               className="font-inter-semibold"
