@@ -17,7 +17,7 @@
  */
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { PenLine, CircleQuestionMark, BookOpen, Sparkles, Image as ImageIcon } from 'lucide-react-native';
+import { PenLine, CircleQuestionMark, BookOpen, Sparkles, Image as ImageIcon, Layers } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { postTypeBadgeColorLight, withAlpha, type PostTypeKey } from '@/lib/design-tokens';
 
@@ -29,6 +29,7 @@ const TYPE_ICON: Record<PostType, LucideIcon> = {
   column: BookOpen,
   news: Sparkles,
   album: ImageIcon,
+  list: Layers,
 };
 
 interface PostTypeBadgeProps {

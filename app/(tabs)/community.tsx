@@ -70,7 +70,7 @@ import {useProfile} from '@/hooks/use-profile';
 type TabId = 'all' | 'following' | 'trending';
 type TypeFilterId = 'all' | PostType;
 
-const TYPE_FILTERS: TypeFilterId[] = ['all', 'note', 'question', 'column', 'news', 'album'];
+const TYPE_FILTERS: TypeFilterId[] = ['all', 'note', 'question', 'column', 'news', 'album', 'list'];
 
 
 export default function CommunityScreen() {

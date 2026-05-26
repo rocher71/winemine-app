@@ -34,6 +34,35 @@ import { PostTypeBadge } from './post-type-badge';
 import { ReactionBar } from './reaction-bar';
 import { WineEmbedCard } from './wine-embed-card';
 import { getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
+import { InlineListCard } from './inline-list-card';
+import type { InlineListData } from './inline-list-card';
+import { MOCK_PUBLIC_LIST, MOCK_PUBLIC_LIST_ITEMS } from '@/lib/mock/wine-lists';
+import { getMockWineByLwin } from '@/lib/mock/wines';
+
+function resolveInlineList(listId: string | undefined): InlineListData | null {
+  if (!listId) return null;
+  if (listId !== MOCK_PUBLIC_LIST.id) return null;
+  const previewWines = MOCK_PUBLIC_LIST_ITEMS.slice(0, 5).map((item) => {
+    const w = getMockWineByLwin(String(item.lwin));
+    return {
+      lwin: item.lwin,
+      display_name: w?.display_name ?? null,
+      name_ko: w?.name_ko ?? null,
+      producer_name: w?.producer_name ?? null,
+      vintage: w?.vintage ?? null,
+    };
+  });
+  return {
+    id: MOCK_PUBLIC_LIST.id,
+    title: MOCK_PUBLIC_LIST.title,
+    wineCount: MOCK_PUBLIC_LIST.wine_count,
+    saveCount: MOCK_PUBLIC_LIST.save_count,
+    authorName: '함소믈리에',
+    authorInitial: '함',
+    authorLevel: 5,
+    previewWines,
+  };
+}
 
 interface CommFeedCardProps {
   post: CommPost;
@@ -220,6 +249,20 @@ export function CommFeedCard({
 
         {/* WineEmbedCard — note 타입 wineId resolve 성공 시 full bottle 카드 (실패 시 null) */}
         {post.type === 'note' ? <WineEmbedCard wineId={post.wineId} /> : null}
+
+        {/* InlineListCard — list 타입 포스트에 임베드 */}
+        {post.type === 'list' ? (() => {
+          const listData = resolveInlineList(post.listId);
+          if (!listData) return null;
+          return (
+            <InlineListCard
+              list={listData}
+              onPress={() => {
+                if (onPress) onPress(post.id);
+              }}
+            />
+          );
+        })() : null}
 
         {/* ReactionBar */}
         <ReactionBar

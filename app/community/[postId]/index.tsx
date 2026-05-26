@@ -67,6 +67,7 @@ import { CommentRow } from '@/components/community/comment-row';
 import { CommFeedRow } from '@/components/community/comm-feed-card';
 import { WineEmbedCard } from '@/components/community/wine-embed-card';
 import { WMBottle } from '@/components/shared/wm-bottle';
+import { SaveAsListCta } from '@/components/community/save-as-list-cta';
 
 // ────────────────────────────────────────────────────────────────────────────
 // Main screen
@@ -1174,6 +1175,23 @@ function QuestionVariant({ post, mine }: VariantProps) {
             );
           })}
         </View>
+      </View>
+
+      {/* SaveAsListCta — Q&A 레더보드 결과를 리스트로 저장 */}
+      <View style={{ marginHorizontal: 16, marginTop: 12 }}>
+        <SaveAsListCta
+          topCount={recoWines.length}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+            router.push({
+              pathname: '/cellar/lists/create',
+              params: {
+                prefillLwins: recoWines.map((w) => w.lwin).join(','),
+                prefillTitle: post.title,
+              },
+            });
+          }}
+        />
       </View>
 
       {/* Answers header */}
