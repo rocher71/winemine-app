@@ -21,6 +21,7 @@ import {
   ChevronLeft,
   Share2,
   MoreHorizontal,
+  Pencil,
   Layers,
   Globe,
   Lock,
@@ -262,6 +263,31 @@ export default function ListDetailScreen() {
         </View>
         )}
 
+        {/* Pencil — 편집 바로가기 (owner only) */}
+        {isOwner && (
+          <View>
+            <Pressable
+              onPress={() => router.push(`/cellar/lists/${id}/edit`)}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              hitSlop={8}
+              accessibilityRole="button"
+            >
+              <View
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 19,
+                  backgroundColor: bg.surface,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Pencil size={16} strokeWidth={1.9} color={text.secondary} />
+              </View>
+            </Pressable>
+          </View>
+        )}
+
         {/* More (owner only) */}
         {isOwner && (
           <View>
@@ -328,22 +354,51 @@ export default function ListDetailScreen() {
             {list.title}
           </Text>
 
-          {/* Stats row */}
-          <Text
-            allowFontScaling={false}
-            style={{
-              fontFamily: 'Inter_400Regular',
-              fontSize: 11,
-              color: text.muted,
-              marginTop: 8,
-              lineHeight: 15,
-            }}
-          >
-            {t('lists.detail.lastEdited', {
-              time: formatRelativeTime(list.updated_at),
-              count: list.wine_count,
-            })}
-          </Text>
+          {/* 마지막 수정 + 공개여부 인라인 */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8 }}>
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontFamily: 'Inter_400Regular',
+                fontSize: 11,
+                color: text.muted,
+                lineHeight: 15,
+              }}
+            >
+              {t('lists.detail.lastEdited', {
+                time: formatRelativeTime(list.updated_at),
+                count: list.wine_count,
+              })}
+            </Text>
+
+            <View style={{ width: 2, height: 2, borderRadius: 1, backgroundColor: text.muted, opacity: 0.4 }} />
+
+            {/* 공개/비공개 인디케이터 — 오너는 탭 가능 */}
+            <Pressable
+              onPress={isOwner ? () => setShowVisibility(true) : undefined}
+              style={({ pressed }) => ({ opacity: isOwner && pressed ? 0.6 : 1 })}
+              accessibilityRole={isOwner ? 'button' : 'text'}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                {isPublic
+                  ? <Globe size={10} strokeWidth={1.9} color={text.muted} />
+                  : <Lock size={10} strokeWidth={1.9} color={text.muted} />}
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontFamily: 'Inter_400Regular',
+                    fontSize: 11,
+                    color: text.muted,
+                    lineHeight: 15,
+                  }}
+                >
+                  {isPublic
+                    ? t('lists.detail.visibilityPublic')
+                    : t('lists.detail.visibilityPrivate')}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
 
           {/* Creator row — avatar + name + level + follow stub */}
           <View
@@ -511,72 +566,8 @@ export default function ListDetailScreen() {
         ))}
       </ScrollView>
 
-      {/* Bottom action bar */}
-      {isOwner ? (
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: bg.deepest,
-          }}
-        >
-          {/* Visibility toggle — owner only */}
-          <Pressable
-            onPress={() => setShowVisibility(true)}
-            style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-            accessibilityRole="button"
-          >
-            <View
-              style={{
-                height: 52,
-                paddingHorizontal: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 8,
-                backgroundColor: bg.surface,
-                borderTopWidth: 1,
-                borderTopColor: border.default,
-              }}
-            >
-              {isPublic
-                ? <Globe size={16} strokeWidth={1.9} color={text.muted} />
-                : <Lock size={16} strokeWidth={1.9} color={text.muted} />}
-              <Text
-                allowFontScaling={false}
-                style={{
-                  fontFamily: 'Inter_600SemiBold',
-                  fontSize: 13,
-                  color: text.secondary,
-                }}
-              >
-                {isPublic
-                  ? t('lists.detail.visibilityPublic')
-                  : t('lists.detail.visibilityPrivate')}
-              </Text>
-            </View>
-          </Pressable>
-
-          {/* Edit button */}
-          <View
-            style={{
-              paddingHorizontal: 16,
-              paddingVertical: 12,
-              paddingBottom: 28,
-              borderTopWidth: 0.5,
-              borderTopColor: border.default,
-            }}
-          >
-            <PrimaryButton
-              label={t('lists.detail.edit')}
-              onPress={() => router.push(`/cellar/lists/${id}/edit`)}
-              size="lg"
-              variant="secondary"
-            />
-          </View>
-        </View>
-      ) : (
+      {/* Bottom action bar — 비오너(저장/가져오기)만 */}
+      {!isOwner && (
         <View
           style={{
             position: 'absolute',
