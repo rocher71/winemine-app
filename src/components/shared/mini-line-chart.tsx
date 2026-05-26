@@ -38,7 +38,6 @@ export function MiniLineChart({ data, width, height, color, compact = false }: M
   const firstX = toX(0);
   const firstY = toY(prices[0] ?? minP);
   const lastX = toX(data.length - 1);
-  const lastY = toY(prices[data.length - 1] ?? maxP);
 
   const fillPath = `M${firstX},${firstY} ${data
     .map((d, i) => `L${toX(i)},${toY(d.price)}`)

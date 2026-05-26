@@ -13,7 +13,7 @@
  *   - peakData?: CommunityPeakData prop 추가 — 데이터 있으면 MiniBarChart 표시
  */
 import { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Dimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Users } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -78,7 +78,7 @@ export function CommunityDrinkWindowCard({ expertCount = 0, peakData }: Props) {
         <View style={{ marginVertical: 4 }}>
           <MiniBarChart
             bars={peakData!.histogram}
-            width={300}
+            width={Dimensions.get('window').width - 64}
             height={70}
             peakIndex={7}
             color={brand.gold}
