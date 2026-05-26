@@ -785,7 +785,21 @@
     "tasted": {
       "comingSoon": "마신 와인 탭은 곧 출시 (v0.2.0)",
       "empty": "아직 마신 와인이 없어요",
-      "emptyHint": "와인을 마신 후 셀러에서 기록해보세요"
+      "emptyHint": "와인을 마신 후 셀러에서 기록해보세요",
+      "timesCount": "{{count}}회"
+    },
+    "history": {
+      "title": "음용 기록",
+      "empty": "음용 기록이 없어요",
+      "drinkAgain": "또 마셨어요",
+      "consumedOn": "{{date}} 음용",
+      "noteExists": "노트 있음",
+      "noNote": "노트 없음"
+    },
+    "drinkAgainSheet": {
+      "title": "테이스팅 노트를 작성할까요?",
+      "writeNote": "노트 작성하기",
+      "later": "나중에"
     },
     "meta": {
       "acquiredAt": "구매일",

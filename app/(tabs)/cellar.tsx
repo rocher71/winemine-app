@@ -32,13 +32,14 @@ import { ResultCount } from '@/components/cellar/result-count';
 import { NoResults } from '@/components/cellar/no-results';
 import { AddCta } from '@/components/cellar/add-cta';
 import { CellarCard } from '@/components/cellar/cellar-card';
+import { TastedGroupCard } from '@/components/cellar/tasted-group-card';
 import { EmptyState } from '@/components/shared/empty-state';
 import { PrimaryButton } from '@/components/shared/primary-button';
 import { Toast } from '@/components/shared/toast';
 import {
   useCellarList,
   useCellarSummary,
-  type CellarItemWithWine,
+  useTastedGrouped,
   type CellarSortKey,
 } from '@/hooks/use-cellar';
 import { brand } from '@/lib/design-tokens';
@@ -102,7 +103,7 @@ export default function CellarListScreen() {
   const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
 
   const { items: rawItems, loading, refresh } = useCellarList('cellared');
-  const { items: consumedItems, loading: consumedLoading, refresh: consumedRefresh } = useCellarList('consumed');
+  const { groups: tastedGroups, loading: tastedLoading, refresh: tastedRefresh } = useTastedGrouped();
   const { cellaredCount, consumedCount } = useCellarSummary();
 
   const isFiltered = query.trim().length > 0 || typeFilter !== 'all';
@@ -133,13 +134,8 @@ export default function CellarListScreen() {
   const headerProps = { eyebrow: t('nav.cellar'), title: t('cellar.title') } as const;
 
   // ---- Render: tasted 탭 ----
+  // wine_lwin 단위 그룹 카드 (ux-decisions/cellar-tasted-tab.md Decision 1)
   if (tab === 'tasted') {
-    const consumedSorted = [...consumedItems].sort((a, b) => {
-      const aKey = a.consumed_at ?? a.acquired_at;
-      const bKey = b.consumed_at ?? b.acquired_at;
-      return (bKey ?? '').localeCompare(aKey ?? '');
-    });
-
     const TastedHeader = (
       <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 }}>
         <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
@@ -155,14 +151,14 @@ export default function CellarListScreen() {
           <AppHeader {...headerProps} right={HeaderRight} />
         </Animated.View>
         <FlatList
-          data={consumedLoading ? [] : consumedSorted}
-          keyExtractor={(it) => it.id}
+          data={tastedLoading ? [] : tastedGroups}
+          keyExtractor={(g) => g.lwin}
           numColumns={2}
           columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
-          renderItem={({ item }) => <CellarCard item={item as CellarItemWithWine} />}
+          renderItem={({ item }) => <TastedGroupCard group={item} />}
           ListHeaderComponent={TastedHeader}
           ListEmptyComponent={() =>
-            consumedLoading ? (
+            tastedLoading ? (
               <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 64 }}>
                 <ActivityIndicator color={brand.gold} />
               </View>
@@ -176,7 +172,7 @@ export default function CellarListScreen() {
             flexGrow: 1,
             gap: 12,
           }}
-          refreshControl={<RefreshControl refreshing={consumedLoading} onRefresh={consumedRefresh} tintColor={brand.gold} />}
+          refreshControl={<RefreshControl refreshing={tastedLoading} onRefresh={tastedRefresh} tintColor={brand.gold} />}
           onScroll={handleScroll}
           scrollEventThrottle={16}
         />

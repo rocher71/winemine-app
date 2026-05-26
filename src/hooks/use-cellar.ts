@@ -258,6 +258,192 @@ export function useCellarItem(
   return { item, loading, error, refresh: load };
 }
 
+/**
+ * TastedGroup — tasted 탭에서 wine_lwin 단위로 묶은 consumed cellar_items 집계.
+ * cellar_items는 한 wine_lwin에 여러 row 가능 (같은 와인 N회 음용).
+ */
+export interface TastedGroup {
+  lwin: string;
+  wine: CellarItemWithWine['wine'];
+  /** 소비 횟수 (consumed 상태 cellar_items count) */
+  count: number;
+  /** 가장 최근 consumed_at (없으면 null) */
+  lastConsumedAt: string | null;
+}
+
+export interface UseTastedGroupedResult {
+  groups: TastedGroup[];
+  loading: boolean;
+  refresh: () => Promise<void>;
+}
+
+/**
+ * useTastedGrouped — consumed cellar_items 전부 fetch → wine_lwin 기준 그룹화.
+ * lastConsumedAt 내림차순 정렬. (UX 결정: ux-decisions/cellar-tasted-tab.md Decision 1)
+ */
+export function useTastedGrouped(): UseTastedGroupedResult {
+  const [groups, setGroups] = useState<TastedGroup[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      let rows: CellarItemWithWine[] = [];
+      if (DEMO_MODE) {
+        rows = MOCK_CELLAR_ITEMS.filter((i) => i.status === 'consumed').map((i) => ({
+          ...i,
+          wine: getMockWineByLwin(i.wine_lwin) as CellarItemWithWine['wine'],
+        }));
+      } else {
+        const uid = await getCurrentUserId();
+        if (!uid) {
+          setGroups([]);
+          return;
+        }
+        const { data, error: err } = await supabase
+          .from('cellar_items')
+          .select(
+            '*, wine:wines_localized!inner(lwin, display_name, name_ko, producer_name, country, region, bottle_color, type_canonical, vintage, drink_window_from_year, drink_window_peak_year, drink_window_to_year)',
+          )
+          .eq('user_id', uid)
+          .eq('status', 'consumed')
+          .order('consumed_at', { ascending: false, nullsFirst: false });
+        if (err) throw err;
+        rows = (data ?? []) as unknown as CellarItemWithWine[];
+      }
+
+      // wine_lwin 기준 reduce → TastedGroup
+      const map = new Map<string, TastedGroup>();
+      for (const row of rows) {
+        if (!row.wine?.lwin) continue;
+        const lwin = row.wine.lwin;
+        const existing = map.get(lwin);
+        const consumedAt = row.consumed_at ?? null;
+        if (existing) {
+          existing.count += 1;
+          // lastConsumedAt = max(consumed_at)
+          if (consumedAt && (!existing.lastConsumedAt || consumedAt > existing.lastConsumedAt)) {
+            existing.lastConsumedAt = consumedAt;
+          }
+        } else {
+          map.set(lwin, {
+            lwin,
+            wine: row.wine,
+            count: 1,
+            lastConsumedAt: consumedAt,
+          });
+        }
+      }
+
+      const grouped = Array.from(map.values()).sort((a, b) => {
+        const av = a.lastConsumedAt ?? '';
+        const bv = b.lastConsumedAt ?? '';
+        return bv.localeCompare(av);
+      });
+      setGroups(grouped);
+    } catch (e) {
+      console.warn('[tasted grouped] failed:', e);
+      setGroups([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  return { groups, loading, refresh: load };
+}
+
+/**
+ * useCellarHistory — 특정 lwin의 consumed cellar_items 전부 조회 (consumed_at DESC).
+ * History Page (`/cellar/[lwin]/history`)에서 사용.
+ */
+export function useCellarHistory(lwin: string | null | undefined): UseCellarListResult {
+  const [items, setItems] = useState<CellarItemWithWine[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const load = useCallback(async () => {
+    if (!lwin) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      if (DEMO_MODE) {
+        const filtered = MOCK_CELLAR_ITEMS.filter(
+          (i) => i.status === 'consumed' && i.wine_lwin === lwin,
+        ).map((i) => ({
+          ...i,
+          wine: getMockWineByLwin(i.wine_lwin) as CellarItemWithWine['wine'],
+        }));
+        filtered.sort((a, b) => (b.consumed_at ?? '').localeCompare(a.consumed_at ?? ''));
+        setItems(filtered);
+        return;
+      }
+      const uid = await getCurrentUserId();
+      if (!uid) {
+        setItems([]);
+        return;
+      }
+      const { data, error: err } = await supabase
+        .from('cellar_items')
+        .select(
+          '*, wine:wines_localized!inner(lwin, display_name, name_ko, producer_name, country, region, bottle_color, type_canonical, vintage, drink_window_from_year, drink_window_peak_year, drink_window_to_year)',
+        )
+        .eq('user_id', uid)
+        .eq('status', 'consumed')
+        .eq('wine_lwin', lwin)
+        .order('consumed_at', { ascending: false, nullsFirst: false });
+      if (err) throw err;
+      setItems((data ?? []) as unknown as CellarItemWithWine[]);
+    } catch (e) {
+      setError(e instanceof Error ? e : new Error(String(e)));
+    } finally {
+      setLoading(false);
+    }
+  }, [lwin]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  return { items, loading, error, refresh: load };
+}
+
+/**
+ * insertDrinkAgain — "또 마셨어요" 흐름. 새 consumed cellar_item 삽입.
+ * (UX 결정: ux-decisions/cellar-tasted-tab.md Decision 3)
+ * 반환: 삽입된 cellar_item.id
+ * DEMO_MODE 시 throw (v0.1.0 alpha scope — mock 삽입 미지원).
+ */
+export async function insertDrinkAgain(lwin: string): Promise<{ id: string }> {
+  if (DEMO_MODE) {
+    throw new Error('demo mode');
+  }
+  const uid = await getCurrentUserId();
+  if (!uid) throw new Error('not authenticated');
+  const today = new Date().toISOString().slice(0, 10);
+  const { data, error } = await supabase
+    .from('cellar_items')
+    .insert({
+      user_id: uid,
+      wine_lwin: lwin,
+      status: 'consumed',
+      consumed_at: today,
+      acquired_at: today,
+      quantity: 1,
+    })
+    .select('id')
+    .single();
+  if (error) throw error;
+  return { id: data.id };
+}
+
 export interface UseNotesCountResult {
   count: number;
   loading: boolean;

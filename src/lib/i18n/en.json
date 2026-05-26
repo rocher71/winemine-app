@@ -785,7 +785,21 @@
     "tasted": {
       "comingSoon": "Tasted tab coming soon (v0.2.0)",
       "empty": "No wines tasted yet",
-      "emptyHint": "Mark a wine as consumed in your cellar to see it here"
+      "emptyHint": "Mark a wine as consumed in your cellar to see it here",
+      "timesCount": "{{count}}x"
+    },
+    "history": {
+      "title": "Drink History",
+      "empty": "No drink history",
+      "drinkAgain": "Drink again",
+      "consumedOn": "Drunk on {{date}}",
+      "noteExists": "Note written",
+      "noNote": "No note"
+    },
+    "drinkAgainSheet": {
+      "title": "Write a tasting note?",
+      "writeNote": "Write note",
+      "later": "Later"
     },
     "meta": {
       "acquiredAt": "Acquired",
