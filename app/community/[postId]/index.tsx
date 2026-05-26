@@ -95,7 +95,7 @@ export default function CommunityPostScreen() {
       <LightBackHeader post={post} />
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 90 }}
+        contentContainerStyle={{ paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
       >
         {post.type === 'note' && <NoteVariant post={post} mine={mine} />}
@@ -1613,38 +1613,26 @@ function ComposeFooter({ postId, insetsBottom }: ComposeFooterProps) {
   const { t } = useTranslation();
   const handleComposerPress = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    // §10 A: comments 화면으로 진입 + focus=true query
     router.push(`/community/${postId}/comments?focus=true`);
   };
   const handleSendPress = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    // §10 B: deferredToast (실 입력은 comments 화면)
     Alert.alert(t('app.name'), t('community.compose.deferredToast'));
   };
   return (
     <View
-      pointerEvents="box-none"
       style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 20,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: light.border.default,
+        backgroundColor: light.bg.deepest,
       }}
     >
-      {/* Fade gradient bg (§6-4 — 위 transparent → 아래 70% deepest) */}
-      <LinearGradient
-        colors={[withAlpha(light.bg.deepest, 0), light.bg.deepest]}
-        locations={[0, 0.7]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
+      {/* footer body */}
+      <View
         style={{
           paddingHorizontal: 16,
           paddingTop: 10,
-          // §10 N: paddingBottom 20 + insets.bottom
           paddingBottom: 20 + insetsBottom,
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: light.border.default,
           flexDirection: 'row',
           alignItems: 'center',
           gap: 10,
@@ -1704,7 +1692,7 @@ function ComposeFooter({ postId, insetsBottom }: ComposeFooterProps) {
             <ChevronRight size={16} strokeWidth={2} color={brand.cream} />
           </View>
         </Pressable>
-      </LinearGradient>
+      </View>
     </View>
   );
 }

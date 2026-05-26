@@ -39,10 +39,12 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
-import { ChevronRight, Moon, X } from 'lucide-react-native';
+import { ChevronRight, Lock, X } from 'lucide-react-native';
+
 
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { POST_TYPES, type PostTypeOption } from '@/lib/community/post-types';
+import { useProfile } from '@/hooks/use-profile';
 
 // ────────────────────────────────────────────────────────────────────────────
 // Main screen
@@ -50,6 +52,8 @@ import { POST_TYPES, type PostTypeOption } from '@/lib/community/post-types';
 
 export default function CommunityNewIndexScreen() {
   const insets = useSafeAreaInsets();
+  const { profile } = useProfile();
+  const userLevel = Math.max(1, Math.min(5, profile?.level ?? 1));
 
   return (
     <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
@@ -60,8 +64,7 @@ export default function CommunityNewIndexScreen() {
         showsVerticalScrollIndicator={false}
       >
         <IntroSection />
-        <CardsList />
-        <TonightCta />
+        <CardsList userLevel={userLevel} />
       </ScrollView>
     </View>
   );
@@ -173,7 +176,7 @@ function IntroSection() {
 // CardsList — 5 PostTypeCard map
 // ────────────────────────────────────────────────────────────────────────────
 
-function CardsList() {
+function CardsList({ userLevel }: { userLevel: number }) {
   return (
     <View
       style={{
@@ -184,7 +187,7 @@ function CardsList() {
       }}
     >
       {POST_TYPES.map((opt) => (
-        <PostTypeCard key={opt.id} option={opt} />
+        <PostTypeCard key={opt.id} option={opt} userLevel={userLevel} />
       ))}
     </View>
   );
@@ -196,20 +199,29 @@ function CardsList() {
 
 interface PostTypeCardProps {
   option: PostTypeOption;
+  userLevel: number;
 }
 
-function PostTypeCard({ option }: PostTypeCardProps) {
+function PostTypeCard({ option, userLevel }: PostTypeCardProps) {
   const { t } = useTranslation();
   const Icon = option.icon;
+  const locked = option.levelMin != null && userLevel < option.levelMin;
 
   const handlePress = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);
+    if (locked) {
+      Alert.alert(
+        t('app.name'),
+        t('community.compose.levelRequired', { level: option.levelMin }),
+      );
+      return;
+    }
     if (option.routerKind === 'route') {
       router.push(option.target as never);
     } else {
       Alert.alert(t('app.name'), t(option.target));
     }
-  }, [option, t]);
+  }, [option, locked, t]);
 
   const label = t(option.labelKey);
   const sub = t(option.descKey);
@@ -228,10 +240,11 @@ function PostTypeCard({ option }: PostTypeCardProps) {
           borderRadius: 14,
           backgroundColor: light.bg.surface,
           borderWidth: 1,
-          borderColor: light.border.default,
+          borderColor: locked ? light.border.default : light.border.default,
           flexDirection: 'row',
           alignItems: 'center',
           gap: 14,
+          opacity: locked ? 0.55 : 1,
         }}
       >
         {/* Icon wrap (44×44) */}
@@ -263,7 +276,7 @@ function PostTypeCard({ option }: PostTypeCardProps) {
             >
               {label}
             </Text>
-            {option.badge != null && (
+            {option.badge != null && !locked && (
               <View
                 style={{
                   paddingVertical: 2,
@@ -285,6 +298,32 @@ function PostTypeCard({ option }: PostTypeCardProps) {
                 </Text>
               </View>
             )}
+            {locked && option.levelMin != null && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 3,
+                  paddingVertical: 2,
+                  paddingHorizontal: 7,
+                  borderRadius: 999,
+                  backgroundColor: withAlpha(light.text.muted, 0.1),
+                }}
+              >
+                <Lock size={9} strokeWidth={2} color={light.text.muted} />
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontFamily: 'Freesentation_4Regular',
+                    fontWeight: '600',
+                    fontSize: 9,
+                    color: light.text.muted,
+                  }}
+                >
+                  {`L${option.levelMin}+`}
+                </Text>
+              </View>
+            )}
           </View>
           <Text
             allowFontScaling={false}
@@ -298,75 +337,13 @@ function PostTypeCard({ option }: PostTypeCardProps) {
             {sub}
           </Text>
         </View>
-        <ChevronRight size={16} strokeWidth={1.75} color={light.text.muted} />
+        {locked ? (
+          <Lock size={16} strokeWidth={1.75} color={light.text.muted} />
+        ) : (
+          <ChevronRight size={16} strokeWidth={1.75} color={light.text.muted} />
+        )}
       </View>
     </Pressable>
   );
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// TonightCta — §1-A 마지막 섹션 (3-layer)
-// ────────────────────────────────────────────────────────────────────────────
-
-function TonightCta() {
-  const { t } = useTranslation();
-
-  const handlePress = useCallback(() => {
-    Haptics.selectionAsync().catch(() => undefined);
-    // §10 D2: v0.1.0 = deferredToast (route /community/tonight 미존재)
-    Alert.alert(t('app.name'), t('community.compose.tonightDeferred'));
-  }, [t]);
-
-  const title = t('community.compose.tonightTitle');
-  const sub = t('community.compose.tonightSub');
-
-  return (
-    <Pressable
-      onPress={handlePress}
-      accessibilityRole="button"
-      accessibilityLabel={`${title}. ${sub}`}
-      style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1, marginTop: 24, marginHorizontal: 16 })}
-    >
-      <View
-        style={{
-          paddingVertical: 14,
-          paddingHorizontal: 16,
-          borderRadius: 12,
-          backgroundColor: withAlpha(brand.gold, 0.05),
-          borderWidth: 1,
-          borderColor: light.border.default,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 12,
-        }}
-      >
-        <Moon size={20} strokeWidth={1.75} color={light.border.active} />
-        <View style={{ flex: 1 }}>
-          <Text
-            allowFontScaling={false}
-            style={{
-              fontFamily: 'Freesentation_4Regular',
-              fontWeight: '600',
-              fontSize: 12,
-              color: light.text.primary,
-            }}
-          >
-            {title}
-          </Text>
-          <Text
-            allowFontScaling={false}
-            style={{
-              marginTop: 2,
-              fontFamily: 'Freesentation_4Regular',
-              fontSize: 10,
-              color: light.text.muted,
-            }}
-          >
-            {sub}
-          </Text>
-        </View>
-        <ChevronRight size={16} strokeWidth={1.75} color={light.border.active} />
-      </View>
-    </Pressable>
-  );
-}

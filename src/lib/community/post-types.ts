@@ -59,6 +59,8 @@ export interface PostTypeOption {
   routerKind: PostTypeRouterKind;
   /** routerKind='route' 면 expo-router path. 'deferred' 면 i18n key (Alert.alert body 로 사용). */
   target: string;
+  /** 최소 레벨 (미설정 시 제한 없음). 미달 시 카드 잠금 표시. */
+  levelMin?: number;
 }
 
 export const POST_TYPES: readonly PostTypeOption[] = [
@@ -70,7 +72,7 @@ export const POST_TYPES: readonly PostTypeOption[] = [
     colorLight: postTypeBadgeColorLight.note,
     badge: '+15 XP',
     routerKind: 'route',
-    target: '/notes/new',
+    target: '/community/new/note',
   },
   {
     id: 'question',
@@ -90,6 +92,7 @@ export const POST_TYPES: readonly PostTypeOption[] = [
     badge: '+25 XP',
     routerKind: 'route',
     target: '/community/new/column',
+    levelMin: 4,
   },
   {
     id: 'news',

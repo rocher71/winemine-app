@@ -1354,15 +1354,29 @@
         "question": "Question / Recommendation",
         "column": "Long-form Column",
         "news": "Industry News",
-        "album": "Photo Album"
+        "album": "Other"
       },
       "cardSub": {
         "note": "Pick a note from your collection",
         "question": "\"I wonder about...\" or \"Please recommend...\"",
         "column": "Winery visits, vintage analysis",
         "news": "Releases, events, tastings",
-        "album": "Multiple photos + captions"
-      }
+        "album": "Photos, stories, anything goes"
+      },
+      "levelRequired": "L{{level}}+ only"
+    },
+    "noteShare": {
+      "screenTitle": "Write from a Note",
+      "selectHint": "Select a note to share",
+      "empty": "No tasting notes written yet",
+      "goWrite": "Write your first note",
+      "writeNew": "Write new note",
+      "titlePlaceholder": "Add a title...",
+      "bodyPlaceholder": "Share your thoughts on this note...",
+      "publish": "Publish",
+      "selectedNote": "Attached note",
+      "publishDeferred": "Publish coming soon",
+      "noteRowLabel": "{{wine}} · {{date}}"
     },
     "profile": {
       "deferred": "Profile screen coming soon"

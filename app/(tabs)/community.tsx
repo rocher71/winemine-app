@@ -478,7 +478,7 @@ export default function CommunityScreen() {
       {/* ── FAB (absolute outer View, 3-layer §4-11, §6-7) ── */}
       {/* §4-11 fix: position/right/bottom은 outer View에. Pressable은 opacity-only style fn. */}
       <View
-        style={{ position: 'absolute', right: 18, bottom: 12 + insets.bottom + 57 + 8, zIndex: 10 }}
+        style={{ position: 'absolute', right: 18, bottom: 6 + insets.bottom + 57 + 8, zIndex: 10 }}
         pointerEvents="box-none"
       >
         <Pressable

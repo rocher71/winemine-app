@@ -64,6 +64,7 @@ import {
 
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { useImagePicker } from '@/hooks/use-image-picker';
+import { MOCK_WINES, getMockWineByLwin } from '@/lib/mock/wines';
 
 const TITLE_MAX = 80;
 const COVER_HEIGHT = 140;
@@ -127,7 +128,18 @@ export default function CommunityNewColumnScreen() {
   // Toolbar 핸들러 (§10 J)
   const handleToolbarWine = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.column.wineDeferred'));
+    const wineOptions = MOCK_WINES.slice(0, 6).map((w) => ({
+      text: w.name_ko ?? w.display_name ?? 'Wine',
+      onPress: () => setLinkedWineId(w.lwin ?? null),
+    }));
+    Alert.alert(
+      t('community.column.toolbar.wine'),
+      undefined,
+      [
+        ...wineOptions,
+        { text: t('common.cancel'), style: 'cancel' as const },
+      ],
+    );
   }, [t]);
   const handleToolbarPlace = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);
@@ -282,11 +294,14 @@ export default function CommunityNewColumnScreen() {
         </View>
 
         {/* Wine attach card (linkedWineId 있을 때만) */}
-        {linkedWineId != null && (
+        {linkedWineId != null && (() => {
+          const linkedWine = getMockWineByLwin(linkedWineId);
+          const wineName = linkedWine?.name_ko ?? linkedWine?.display_name ?? linkedWineId;
+          return (
           <Pressable
             onPress={handleWinePress}
             accessibilityRole="button"
-            accessibilityLabel={`${t('community.column.wineAttached', { count: 1 })}. ${t('community.column.tapToWine')}`}
+            accessibilityLabel={wineName}
             style={({ pressed }) => ({
               opacity: pressed ? 0.85 : 1,
               marginTop: 20,
@@ -309,6 +324,7 @@ export default function CommunityNewColumnScreen() {
               <View style={{ flex: 1, minWidth: 0 }}>
                 <Text
                   allowFontScaling={false}
+                  numberOfLines={1}
                   style={{
                     fontFamily: 'Freesentation_4Regular',
                     fontWeight: '600',
@@ -316,7 +332,7 @@ export default function CommunityNewColumnScreen() {
                     color: light.text.primary,
                   }}
                 >
-                  {t('community.column.wineAttached', { count: 1 })}
+                  {wineName}
                 </Text>
                 <Text
                   allowFontScaling={false}
@@ -350,7 +366,8 @@ export default function CommunityNewColumnScreen() {
               </Pressable>
             </View>
           </Pressable>
-        )}
+          );
+        })()}
       </ScrollView>
 
       {/* Bottom toolbar (§1-B absolute footer) */}
