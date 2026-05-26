@@ -44,6 +44,9 @@ shared/types/database.types.ts.bak
 .DS_Store
 *.swp
 
+# --- Playwright MCP (임시 스냅샷·아카이브) ---
+.playwright-mcp/
+
 # --- Test / Coverage ---
 coverage/
 .nyc_output/

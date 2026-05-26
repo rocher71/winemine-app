@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>winemine · 와인 리스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #1a1410; font-family: 'Inter', 'Noto Sans KR', sans-serif; }
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  @keyframes blink { to { opacity: 0; } }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="wm-tasted-shared.jsx"></script>
+<script type="text/babel" src="wm-lists-shared.jsx"></script>
+<script type="text/babel" src="wm-lists-screens.jsx"></script>
+
+<script type="text/babel" data-presets="env,react">
+const W = 410, H = 880;
+
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection
+        id="lists"
+        title="와인 리스트 — 7 화면"
+        subtitle="셀러 리스트 탭 · 공개 리스트 상세 · 생성 플로우 · 커뮤니티 인라인 카드 · Q&A → 리스트 · 공개 / 비공개 전환 모달 · 리스트에서는 일러스트 없이 와인 이름으로만 표시"
+      >
+        <DCArtboard id="s1" label="01 · 셀러 > 리스트 탭" sublabel="3-탭 세그먼트에 리스트 추가 · 카드형 그리드 · 우하단 FAB"
+          width={W} height={H} data-screen-label="01 셀러 리스트 탭">
+          <PhoneSlot><ScreenLists/></PhoneSlot>
+        </DCArtboard>
+
+        <DCArtboard id="s2" label="02 · 공개 리스트 상세" sublabel="작성자 + 레벨 배지 · 와인 행 · 하단 액션바 (저장 / 가져오기)"
+          width={W} height={H} data-screen-label="02 공개 리스트 상세">
+          <PhoneSlot><ScreenListDetail/></PhoneSlot>
+        </DCArtboard>
+
+        <DCArtboard id="s3" label="03 · 새 리스트 만들기" sublabel="제목·설명·공개 토글 + 추가 경로 2개 + 드래그 정렬"
+          width={W} height={H} data-screen-label="03 리스트 생성">
+          <PhoneSlot><ScreenListCreate/></PhoneSlot>
+        </DCArtboard>
+
+        <DCArtboard id="s4" label="04 · 커뮤니티 · 인라인 리스트 카드" sublabel="피드 게시물 본문에 태그된 리스트 미리보기 카드"
+          width={W} height={H} data-screen-label="04 커뮤니티 인라인 리스트">
+          <PhoneSlot><ScreenCommunityListCard/></PhoneSlot>
+        </DCArtboard>
+
+        <DCArtboard id="s5" label="05 · Q&A → 리스트 변환" sublabel="‘가장 많이 추천된 와인’ 하단에 ‘이 결과를 리스트로 저장’ CTA"
+          width={W} height={H} data-screen-label="05 QA to List">
+          <PhoneSlot><ScreenQAtoList/></PhoneSlot>
+        </DCArtboard>
+
+        <DCArtboard id="s6" label="06 · 공개 설정 모달" sublabel="비공개 → 공개 전환 바텀시트 · 골드 글로브 헤로"
+          width={W} height={H} data-screen-label="06 Make Public">
+          <PhoneSlot><ScreenMakePublic/></PhoneSlot>
+        </DCArtboard>
+
+        <DCArtboard id="s7" label="07 · 비공개 전환 경고" sublabel="공개 → 비공개 · 저장한 사람 미리보기 + 효과 안내"
+          width={W} height={H} data-screen-label="07 Make Private Warning">
+          <PhoneSlot><ScreenMakePrivate/></PhoneSlot>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
