@@ -364,6 +364,82 @@ export function useTastedGrouped(): UseTastedGroupedResult {
 }
 
 /**
+ * useCellarItemsByLwin — 특정 lwin의 cellared 상태 아이템 전부 조회 (acquired_at DESC).
+ * 셀러 상세 — 멀티보틀 보관 현황 섹션에서 사용 (Decision 2).
+ */
+export function useCellarItemsByLwin(lwin: string | null | undefined): UseCellarListResult {
+  const [items, setItems] = useState<CellarItemWithWine[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const load = useCallback(async () => {
+    if (!lwin) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      if (DEMO_MODE) {
+        const filtered = MOCK_CELLAR_ITEMS.filter(
+          (i) => i.status === 'cellared' && i.wine_lwin === lwin,
+        ).map((i) => ({
+          ...i,
+          wine: getMockWineByLwin(i.wine_lwin) as CellarItemWithWine['wine'],
+        }));
+        filtered.sort((a, b) => (b.acquired_at ?? '').localeCompare(a.acquired_at ?? ''));
+        setItems(filtered);
+        return;
+      }
+      const uid = await getCurrentUserId();
+      if (!uid) {
+        setItems([]);
+        return;
+      }
+      const { data, error: err } = await supabase
+        .from('cellar_items')
+        .select(
+          '*, wine:wines_localized!inner(lwin, display_name, name_ko, producer_name, country, region, classification, bottle_color, type_canonical, vintage, drink_window_from_year, drink_window_peak_year, drink_window_to_year)',
+        )
+        .eq('user_id', uid)
+        .eq('wine_lwin', lwin)
+        .eq('status', 'cellared')
+        .order('acquired_at', { ascending: false, nullsFirst: false });
+      if (err) throw err;
+      setItems((data ?? []) as unknown as CellarItemWithWine[]);
+    } catch (e) {
+      setError(e instanceof Error ? e : new Error(String(e)));
+    } finally {
+      setLoading(false);
+    }
+  }, [lwin]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  return { items, loading, error, refresh: load };
+}
+
+/**
+ * setCellarStatusBulk — 여러 cellar_items 상태 일괄 변경 (Decision 3: N병 동시 소비).
+ */
+export async function setCellarStatusBulk(
+  ids: string[],
+  next: CellarStatus,
+): Promise<void> {
+  if (ids.length === 0) return;
+  if (DEMO_MODE) throw new Error('demo mode');
+  const payload: { status: CellarStatus; consumed_at: string | null } = {
+    status: next,
+    consumed_at: next === 'consumed' ? new Date().toISOString().slice(0, 10) : null,
+  };
+  const { error } = await supabase.from('cellar_items').update(payload).in('id', ids);
+  if (error) throw error;
+}
+
+/**
  * useCellarHistory — 특정 lwin의 consumed cellar_items 전부 조회 (consumed_at DESC).
  * History Page (`/cellar/[lwin]/history`)에서 사용.
  */
