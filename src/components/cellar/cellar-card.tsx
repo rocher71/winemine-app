@@ -42,9 +42,11 @@ function asTypeCanonical(value: string | null | undefined): TypeCanonical | null
 
 interface Props {
   item: CellarItemWithWine;
+  /** 동일 LWIN 보유 병 수. 2 이상이면 BottleZone 우상단에 배지 표시 */
+  bottleCount?: number;
 }
 
-export function CellarCard({ item }: Props) {
+export function CellarCard({ item, bottleCount = 1 }: Props) {
   const { scheme, bg, border } = useThemeTokens();
   const wine = item.wine;
   if (!wine?.lwin || !wine?.display_name) return null;
@@ -67,9 +69,12 @@ export function CellarCard({ item }: Props) {
 
   const openDetail = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(
-      `/cellar/${encodeURIComponent(wine.lwin ?? '')}?id=${encodeURIComponent(item.id)}` as never,
-    );
+    const lwinEnc = encodeURIComponent(wine.lwin ?? '');
+    // 멀티보틀은 id 없이 이동 → 상세 페이지가 전체 보틀 로드
+    const path = bottleCount > 1
+      ? `/cellar/${lwinEnc}`
+      : `/cellar/${lwinEnc}?id=${encodeURIComponent(item.id)}`;
+    router.push(path as never);
   };
 
   // WMBottle SVG의 라벨에 노출할 producer/label (첫 단어만)
@@ -117,6 +122,27 @@ export function CellarCard({ item }: Props) {
               label={nameShort}
               vintage={vintage ?? undefined}
             />
+            {/* 병 수 배지 — 2병 이상일 때만 */}
+            {bottleCount > 1 ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  backgroundColor: 'rgba(31,18,12,0.62)',
+                  borderRadius: 8,
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                }}
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={{ fontFamily: 'Inter_600SemiBold', fontSize: 10, lineHeight: 13, color: '#F5ECD7' }}
+                >
+                  {`${bottleCount}병`}
+                </Text>
+              </View>
+            ) : null}
           </LinearGradient>
 
           {/* Meta */}

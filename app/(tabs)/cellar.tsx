@@ -50,6 +50,35 @@ const TASTED_SPACER_KEY = '__tasted_spacer__';
 import { brand, withAlpha } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { applySearch, applyTypeFilter, applySort } from '@/lib/cellar-filters';
+import type { CellarItemWithWine } from '@/hooks/use-cellar';
+
+// ─── Cellared list: LWIN당 1카드 + 병 수 태그 ────────────────────────────────
+
+const CELLAR_SPACER_KEY = '__cellar_spacer__';
+
+type CellarGroupedItem = {
+  key: string;
+  item: CellarItemWithWine;
+  count: number;
+};
+
+type CellarListItem = CellarGroupedItem | { key: typeof CELLAR_SPACER_KEY; item: null; count: 0 };
+
+/** 정렬된 flat 아이템 → LWIN 기준 dedup, 대표 아이템(첫 등장 = 정렬 기준 최우선) + count */
+function groupByLwin(sortedItems: CellarItemWithWine[]): CellarGroupedItem[] {
+  const seen = new Map<string, CellarGroupedItem>();
+  for (const item of sortedItems) {
+    const lwin = item.wine?.lwin;
+    if (!lwin) continue;
+    const existing = seen.get(lwin);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      seen.set(lwin, { key: lwin, item, count: 1 });
+    }
+  }
+  return Array.from(seen.values());
+}
 
 const TASTED_SORT_KEYS: readonly TastedSortKey[] = ['recent', 'count', 'vintage', 'region', 'price'] as const;
 
@@ -333,6 +362,15 @@ export default function CellarListScreen() {
     return applySort(filtered, sort, true);
   }, [rawItems, query, typeFilter, sort]);
 
+  const displayGroups = useMemo(() => groupByLwin(displayItems), [displayItems]);
+
+  const displayGroupsWithSpacer = useMemo((): CellarListItem[] => {
+    if (displayGroups.length % 2 !== 0) {
+      return [...displayGroups, { key: CELLAR_SPACER_KEY, item: null, count: 0 }];
+    }
+    return displayGroups;
+  }, [displayGroups]);
+
   const displayTastedGroups = useMemo(() => {
     const filtered = applyTastedTypeFilter(applyTastedSearch(rawTastedGroups, tastedQuery), tastedTypeFilter);
     return applyTastedSort(filtered, tastedSort);
@@ -497,6 +535,7 @@ export default function CellarListScreen() {
           />
         </>
       ) : null}
+
     </View>
   );
 
@@ -539,11 +578,14 @@ export default function CellarListScreen() {
       </Animated.View>
 
       <FlatList
-        data={displayItems}
-        keyExtractor={(it) => it.id}
+        data={loading ? [] : displayGroupsWithSpacer}
+        keyExtractor={(g) => g.key}
         numColumns={2}
         columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
-        renderItem={({ item }) => <CellarCard item={item} />}
+        renderItem={({ item: g }) => {
+          if (g.key === CELLAR_SPACER_KEY || !g.item) return <View style={{ flex: 1 }} />;
+          return <CellarCard item={g.item} bottleCount={g.count} />;
+        }}
         ListHeaderComponent={ListHeader}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={{
