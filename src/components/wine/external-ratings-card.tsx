@@ -14,25 +14,49 @@
  *   - borderRadius: 12
  *   - Info 버튼 + footer row 제거 (compact 형태)
  *   - RatingSourceCell 사용
+ *
+ * V2 업데이트 (wine-detail-v2-tasks.md T5):
+ *   - ratings?: ExternalRatings prop 추가 — 데이터 있으면 실제 점수 표시
  */
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { brand } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { RatingSourceCell } from './rating-source-cell';
+import type { ExternalRatings } from '@/lib/types/wine-detail';
 
 const VIVINO_COLOR = '#E10047';
 const CT_COLOR = '#5b9ce6';
 
-const SOURCES = [
-  { key: 'Vivino',         accentColor: VIVINO_COLOR },
-  { key: 'Wine Searcher',  accentColor: brand.gold },
-  { key: 'CellarTracker',  accentColor: CT_COLOR },
-] as const;
+interface Props {
+  ratings?: ExternalRatings;
+}
 
-export function ExternalRatingsCard() {
+export function ExternalRatingsCard({ ratings }: Props) {
   const { t } = useTranslation();
   const tokens = useThemeTokens();
+
+  const vivinoScore = ratings?.vivino != null ? ratings.vivino.toFixed(1) : '—';
+  const wsScore = ratings?.wineSearcher != null ? ratings.wineSearcher.toString() : '—';
+  const ctScore = ratings?.cellarTracker != null ? ratings.cellarTracker.toFixed(1) : '—';
+
+  const SOURCES = [
+    {
+      key: 'Vivino',
+      score: vivinoScore,
+      accentColor: ratings?.vivino != null ? VIVINO_COLOR : tokens.text.muted,
+    },
+    {
+      key: 'Wine Searcher',
+      score: wsScore,
+      accentColor: ratings?.wineSearcher != null ? brand.gold : tokens.text.muted,
+    },
+    {
+      key: 'CellarTracker',
+      score: ctScore,
+      accentColor: ratings?.cellarTracker != null ? CT_COLOR : tokens.text.muted,
+    },
+  ] as const;
 
   return (
     <View
@@ -65,8 +89,8 @@ export function ExternalRatingsCard() {
           <RatingSourceCell
             key={s.key}
             source={s.key}
-            score="—"
-            accentColor={tokens.text.muted}
+            score={s.score}
+            accentColor={s.accentColor}
           />
         ))}
       </View>
