@@ -1,5 +1,5 @@
 /**
- * CommunityDrinkWindowCard — 커뮤니티 음용 적기 카드 (stub).
+ * CommunityDrinkWindowCard — 커뮤니티 음용 적기 카드.
  *
  * 사양: wine-detail.md §3-9 verbatim.
  *
@@ -8,6 +8,9 @@
  *   - details link → Toast v0.2.0
  *   - BarChart histogram은 v0.2.0 (사양 §8/§9)
  * 기존 community-peak-placeholder.tsx 대체.
+ *
+ * V2 업데이트 (wine-detail-v2-tasks.md T8):
+ *   - peakData?: CommunityPeakData prop 추가 — 데이터 있으면 MiniBarChart 표시
  */
 import { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
@@ -16,13 +19,15 @@ import { ArrowRight, Users } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { brand } from '@/lib/design-tokens';
 import { Toast } from '@/components/shared/toast';
+import { MiniBarChart } from '@/components/shared/mini-bar-chart';
+import type { CommunityPeakData } from '@/lib/types/wine-detail';
 
 interface Props {
-  /** L3+ 전문가 추정 응답 수. v0.1.0은 항상 0 (테이블 부재) */
   expertCount?: number;
+  peakData?: CommunityPeakData;
 }
 
-export function CommunityDrinkWindowCard({ expertCount = 0 }: Props) {
+export function CommunityDrinkWindowCard({ expertCount = 0, peakData }: Props) {
   const { t } = useTranslation();
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -31,6 +36,9 @@ export function CommunityDrinkWindowCard({ expertCount = 0 }: Props) {
     setToastMsg(t('wineDetail.communityPeak.deferredToast'));
     setTimeout(() => setToastMsg(null), 2500);
   };
+
+  const hasData = peakData != null && peakData.histogram.length > 0;
+  const displayCount = peakData?.expertCount ?? expertCount;
 
   return (
     <View className="mx-4 rounded-2xl bg-surface dark:bg-surface border border-border-default p-4">
@@ -49,12 +57,35 @@ export function CommunityDrinkWindowCard({ expertCount = 0 }: Props) {
       </View>
 
       {/* Sub */}
-      <Text className="font-inter text-[12px] text-text-muted dark:text-text-muted mb-3">
-        {t('wineDetail.communityPeak.sub', { count: expertCount })}
-      </Text>
+      {hasData ? (
+        <Text className="font-inter text-[12px] text-text-muted dark:text-text-muted mb-3">
+          <Text style={{ fontFamily: 'Inter_600SemiBold' }}>
+            {t('wineDetail.communityPeak.sub', { count: displayCount })}
+          </Text>
+          {' · '}
+          <Text style={{ fontFamily: 'Inter_600SemiBold' }}>
+            {`중앙값 ${peakData!.median}년`}
+          </Text>
+        </Text>
+      ) : (
+        <Text className="font-inter text-[12px] text-text-muted dark:text-text-muted mb-3">
+          {t('wineDetail.communityPeak.sub', { count: displayCount })}
+        </Text>
+      )}
 
-      {/* Empty fallback (v0.1.0 always empty) */}
-      {expertCount === 0 ? (
+      {/* Chart or empty */}
+      {hasData ? (
+        <View style={{ marginVertical: 4 }}>
+          <MiniBarChart
+            bars={peakData!.histogram}
+            width={300}
+            height={70}
+            peakIndex={7}
+            color={brand.gold}
+            compact
+          />
+        </View>
+      ) : (
         <View
           className="items-center"
           style={{ paddingVertical: 32, paddingHorizontal: 16 }}
@@ -63,7 +94,7 @@ export function CommunityDrinkWindowCard({ expertCount = 0 }: Props) {
             {t('wineDetail.communityPeak.empty')}
           </Text>
         </View>
-      ) : null}
+      )}
 
       {/* Details link */}
       <Pressable
