@@ -1376,7 +1376,9 @@
       "publish": "Publish",
       "selectedNote": "Attached note",
       "publishDeferred": "Publish coming soon",
-      "noteRowLabel": "{{wine}} · {{date}}"
+      "noteRowLabel": "{{wine}} · {{date}}",
+      "photos": "PHOTOS",
+      "addPhoto": "Add photo"
     },
     "profile": {
       "deferred": "Profile screen coming soon"
@@ -1457,11 +1459,15 @@
       }
     },
     "album": {
-      "title": "Photo Album",
+      "title": "Other",
       "publish": "Publish",
       "publishDeferred": "Publishing coming soon",
+      "titlePlaceholder": "Add a title...",
+      "body": "BODY",
+      "bodyPlaceholder": "What's on your mind?",
       "caption": "CAPTION",
       "captionPlaceholder": "A quiet day of cellar organizing. Clearing B-3 and making room for 6 new arrivals.",
+      "photos": "PHOTOS",
       "taggedWines": "TAGGED WINES",
       "addWine": "Add",
       "addWineButton": "Add wine",

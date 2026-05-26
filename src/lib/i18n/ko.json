@@ -1376,7 +1376,9 @@
       "publish": "발행",
       "selectedNote": "첨부된 노트",
       "publishDeferred": "발행 기능 준비 중",
-      "noteRowLabel": "{{wine}} · {{date}}"
+      "noteRowLabel": "{{wine}} · {{date}}",
+      "photos": "사진",
+      "addPhoto": "사진 추가"
     },
     "profile": {
       "deferred": "프로필 화면 준비 중"
@@ -1457,11 +1459,15 @@
       }
     },
     "album": {
-      "title": "사진 앨범",
+      "title": "기타",
       "publish": "게시",
       "publishDeferred": "곧 게시 기능이 추가됩니다",
+      "titlePlaceholder": "제목을 입력해주세요",
+      "body": "본문",
+      "bodyPlaceholder": "어떤 이야기를 나눠볼까요?",
       "caption": "캡션",
       "captionPlaceholder": "소소한 셀러 정리의 하루. B-3 공간을 비우고 새로 들어온 6병 자리 잡기.",
+      "photos": "사진",
       "taggedWines": "태그된 와인",
       "addWine": "추가",
       "addWineButton": "와인 추가",

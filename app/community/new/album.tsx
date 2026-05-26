@@ -89,15 +89,17 @@ export default function CommunityNewAlbumScreen() {
   const { width: screenWidth } = useWindowDimensions();
   const { pickMultiple } = useImagePicker();
 
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
-  const [caption, setCaption] = useState('');
   const [taggedWines, setTaggedWines] = useState<TaggedWine[]>([]);
   const [location, setLocation] = useState<string | null>(null);
 
-  const canPublish = photos.length > 0;
+  const canPublish = title.trim().length > 0;
   const hasDraft =
+    title.trim().length > 0 ||
+    body.trim().length > 0 ||
     photos.length > 0 ||
-    caption.trim().length > 0 ||
     taggedWines.length > 0 ||
     location != null;
 
@@ -199,33 +201,52 @@ export default function CommunityNewAlbumScreen() {
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
-        {/* Photo grid */}
-        <View
-          style={{
-            paddingTop: 16,
-            paddingHorizontal: GRID_PADDING_H,
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            gap: GRID_GAP,
-          }}
-        >
-          {photos.map((photo, i) => (
-            <PhotoSlot
-              key={`${photo.uri}-${i}`}
-              uri={photo.uri}
-              index={i}
-              total={photos.length}
-              size={photoSlotSize}
-              onPress={() => handlePhotoPress(i)}
-            />
-          ))}
-          {photos.length < PHOTO_MAX && (
-            <AddSlot size={photoSlotSize} onPress={handleAddPhotos} />
-          )}
+        {/* Title input */}
+        <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
+          <TextInput
+            value={title}
+            onChangeText={setTitle}
+            placeholder={t('community.album.titlePlaceholder')}
+            placeholderTextColor={light.text.muted}
+            maxLength={80}
+            selectionColor={light.border.active}
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Freesentation_7Bold',
+              fontSize: 22,
+              lineHeight: 28.6,
+              color: light.text.primary,
+              padding: 0,
+            }}
+          />
         </View>
 
-        {/* Caption */}
+        {/* Body input */}
+        <View style={{ paddingTop: 12, paddingHorizontal: 20 }}>
+          <TextInput
+            value={body}
+            onChangeText={setBody}
+            placeholder={t('community.album.bodyPlaceholder')}
+            placeholderTextColor={light.text.muted}
+            multiline
+            textAlignVertical="top"
+            maxLength={CAPTION_MAX}
+            selectionColor={light.border.active}
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Freesentation_4Regular',
+              fontSize: 15,
+              lineHeight: 24,
+              color: light.text.primary,
+              minHeight: 80,
+              padding: 0,
+            }}
+          />
+        </View>
+
+        {/* Photo grid */}
         <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
           <Text
             allowFontScaling={false}
@@ -234,40 +255,31 @@ export default function CommunityNewAlbumScreen() {
               fontSize: 10,
               color: light.border.active,
               letterSpacing: 1.8,
+              marginBottom: 8,
             }}
           >
-            {t('community.album.caption').toUpperCase()}
+            {t('community.album.photos').toUpperCase()}
           </Text>
           <View
             style={{
-              marginTop: 8,
-              paddingVertical: 14,
-              paddingHorizontal: 16,
-              borderRadius: 12,
-              backgroundColor: light.bg.surface,
-              borderWidth: 1,
-              borderColor: light.border.default,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: GRID_GAP,
             }}
           >
-            <TextInput
-              value={caption}
-              onChangeText={setCaption}
-              placeholder={t('community.album.captionPlaceholder')}
-              placeholderTextColor={light.text.muted}
-              multiline
-              textAlignVertical="top"
-              maxLength={CAPTION_MAX}
-              selectionColor={light.border.active}
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Freesentation_4Regular',
-                fontSize: 15,
-                lineHeight: 24,
-                color: light.text.primary,
-                minHeight: 80,
-                padding: 0,
-              }}
-            />
+            {photos.map((photo, i) => (
+              <PhotoSlot
+                key={`${photo.uri}-${i}`}
+                uri={photo.uri}
+                index={i}
+                total={photos.length}
+                size={photoSlotSize}
+                onPress={() => handlePhotoPress(i)}
+              />
+            ))}
+            {photos.length < PHOTO_MAX && (
+              <AddSlot size={photoSlotSize} onPress={handleAddPhotos} />
+            )}
           </View>
         </View>
 
@@ -322,45 +334,43 @@ export default function CommunityNewAlbumScreen() {
           </ScrollView>
         </View>
 
-        {/* Location row */}
-        <Pressable
-          onPress={handleLocationPress}
-          accessibilityRole="button"
-          accessibilityLabel={location ?? t('community.album.addLocation')}
-          style={({ pressed }) => ({
-            opacity: pressed ? 0.85 : 1,
-            marginTop: 18,
-            marginHorizontal: 16,
-          })}
-        >
-          <View
-            style={{
-              paddingVertical: 12,
-              paddingHorizontal: 14,
-              borderRadius: 12,
-              backgroundColor: light.bg.surface,
-              borderWidth: 1,
-              borderColor: light.border.default,
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 10,
-            }}
+        {/* Location row — §4-11: layout props on outer View, Pressable opacity-only */}
+        <View style={{ marginTop: 18, marginHorizontal: 16 }}>
+          <Pressable
+            onPress={handleLocationPress}
+            accessibilityRole="button"
+            accessibilityLabel={location ?? t('community.album.addLocation')}
+            style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
           >
-            <MapPin size={16} strokeWidth={1.75} color={light.border.active} />
-            <Text
-              allowFontScaling={false}
+            <View
               style={{
-                fontFamily: 'Freesentation_4Regular',
-                fontSize: 12,
-                color: location ? light.text.primary : light.text.muted,
+                paddingVertical: 12,
+                paddingHorizontal: 14,
+                borderRadius: 12,
+                backgroundColor: light.bg.surface,
+                borderWidth: 1,
+                borderColor: light.border.default,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 10,
               }}
             >
-              {location ?? t('community.album.addLocation')}
-            </Text>
-            <View style={{ flex: 1 }} />
-            <ChevronRight size={14} strokeWidth={1.75} color={light.text.muted} />
-          </View>
-        </Pressable>
+              <MapPin size={16} strokeWidth={1.75} color={light.border.active} />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'Freesentation_4Regular',
+                  fontSize: 12,
+                  color: location ? light.text.primary : light.text.muted,
+                }}
+              >
+                {location ?? t('community.album.addLocation')}
+              </Text>
+              <View style={{ flex: 1 }} />
+              <ChevronRight size={14} strokeWidth={1.75} color={light.text.muted} />
+            </View>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );

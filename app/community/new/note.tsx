@@ -24,16 +24,22 @@ import {
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
-import { ChevronLeft, ChevronRight, PenLine, X } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, PenLine, Plus, X } from 'lucide-react-native';
 
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { MOCK_TASTING_NOTES } from '@/lib/mock/tasting-notes';
 import { getMockWineByLwin } from '@/lib/mock/wines';
+import { useImagePicker } from '@/hooks/use-image-picker';
+
+const PHOTO_MAX = 9;
+const GRID_GAP = 6;
 
 const TITLE_MAX = 80;
 
@@ -44,10 +50,33 @@ const TITLE_MAX = 80;
 export default function CommunityNewNoteScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { pickMultiple } = useImagePicker();
 
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [photos, setPhotos] = useState<string[]>([]);
+
+  const handleAddPhotos = useCallback(async () => {
+    Haptics.selectionAsync().catch(() => undefined);
+    const remaining = PHOTO_MAX - photos.length;
+    if (remaining <= 0) return;
+    const uris = await pickMultiple(remaining);
+    if (uris.length === 0) return;
+    setPhotos((prev) => [...prev, ...uris]);
+  }, [photos.length, pickMultiple]);
+
+  const handleRemovePhoto = useCallback((index: number) => {
+    Haptics.selectionAsync().catch(() => undefined);
+    Alert.alert(t('community.album.removePhotoTitle'), undefined, [
+      { text: t('community.album.removePhotoCancel'), style: 'cancel' },
+      {
+        text: t('community.album.removePhotoOk'),
+        style: 'destructive',
+        onPress: () => setPhotos((prev) => prev.filter((_, i) => i !== index)),
+      },
+    ]);
+  }, [t]);
 
   const selectedNote = MOCK_TASTING_NOTES.find((n) => n.id === selectedNoteId) ?? null;
   const canPublish = selectedNote != null && title.trim().length > 0;
@@ -172,8 +201,11 @@ export default function CommunityNewNoteScreen() {
           note={selectedNote}
           title={title}
           body={body}
+          photos={photos}
           onTitleChange={setTitle}
           onBodyChange={setBody}
+          onAddPhotos={handleAddPhotos}
+          onRemovePhoto={handleRemovePhoto}
           onDeselectNote={() => setSelectedNoteId(null)}
           insetsBottom={insets.bottom}
         />
@@ -477,8 +509,11 @@ interface ComposeViewProps {
   note: (typeof MOCK_TASTING_NOTES)[number] | null;
   title: string;
   body: string;
+  photos: string[];
   onTitleChange: (v: string) => void;
   onBodyChange: (v: string) => void;
+  onAddPhotos: () => void;
+  onRemovePhoto: (index: number) => void;
   onDeselectNote: () => void;
   insetsBottom: number;
 }
@@ -487,12 +522,17 @@ function ComposeView({
   note,
   title,
   body,
+  photos,
   onTitleChange,
   onBodyChange,
+  onAddPhotos,
+  onRemovePhoto,
   onDeselectNote,
   insetsBottom,
 }: ComposeViewProps) {
   const { t } = useTranslation();
+  const { width: screenWidth } = useWindowDimensions();
+  const photoSlotSize = (screenWidth - 20 * 2 - GRID_GAP * 2) / 3;
 
   if (!note) return null;
 
@@ -570,6 +610,37 @@ function ComposeView({
             padding: 0,
           }}
         />
+      </View>
+
+      {/* Photo grid */}
+      <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
+        <Text
+          allowFontScaling={false}
+          style={{
+            fontFamily: 'Freesentation_4Regular',
+            fontSize: 10,
+            color: light.border.active,
+            letterSpacing: 1.8,
+            marginBottom: 8,
+          }}
+        >
+          {t('community.noteShare.photos').toUpperCase()}
+        </Text>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: GRID_GAP }}>
+          {photos.map((uri, i) => (
+            <NotePhotoSlot
+              key={`${uri}-${i}`}
+              uri={uri}
+              index={i}
+              total={photos.length}
+              size={photoSlotSize}
+              onPress={() => onRemovePhoto(i)}
+            />
+          ))}
+          {photos.length < PHOTO_MAX && (
+            <NoteAddSlot size={photoSlotSize} onPress={onAddPhotos} />
+          )}
+        </View>
       </View>
 
       {/* 노트 embed — 탭하면 노트 상세로 */}
@@ -679,5 +750,117 @@ function ComposeView({
 
       </View>
     </ScrollView>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// NotePhotoSlot — §4-11 3-layer (Image + Index badge, position absolute)
+// ────────────────────────────────────────────────────────────────────────────
+
+interface NotePhotoSlotProps {
+  uri: string;
+  index: number;
+  total: number;
+  size: number;
+  onPress: () => void;
+}
+
+function NotePhotoSlot({ uri, index, total, size, onPress }: NotePhotoSlotProps) {
+  const { t } = useTranslation();
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="imagebutton"
+      accessibilityLabel={t('community.album.photoLabel', { index: index + 1, total })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+    >
+      <View
+        style={{
+          width: size,
+          aspectRatio: 1,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: light.border.default,
+          backgroundColor: light.bg.surface,
+          overflow: 'hidden',
+        }}
+      >
+        <Image
+          source={{ uri }}
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: 10,
+            borderRadius: 4,
+          }}
+          contentFit="cover"
+          transition={150}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            top: 4,
+            left: 4,
+            width: 18,
+            height: 18,
+            borderRadius: 9,
+            backgroundColor: withAlpha(brand.textInk, 0.85),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Freesentation_4Regular',
+              fontWeight: '700',
+              fontSize: 10,
+              color: brand.cream,
+            }}
+          >
+            {String(index + 1)}
+          </Text>
+        </View>
+      </View>
+    </Pressable>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// NoteAddSlot — dashed border + Plus icon
+// ────────────────────────────────────────────────────────────────────────────
+
+interface NoteAddSlotProps {
+  size: number;
+  onPress: () => void;
+}
+
+function NoteAddSlot({ size, onPress }: NoteAddSlotProps) {
+  const { t } = useTranslation();
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={t('community.noteShare.addPhoto')}
+      style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+    >
+      <View
+        style={{
+          width: size,
+          aspectRatio: 1,
+          borderRadius: 8,
+          backgroundColor: light.bg.surface,
+          borderWidth: 1,
+          borderStyle: 'dashed',
+          borderColor: light.border.default,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Plus size={20} strokeWidth={1.5} color={light.text.muted} />
+      </View>
+    </Pressable>
   );
 }
