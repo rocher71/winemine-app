@@ -17,8 +17,11 @@
  *   - bottleColor alpha 21% (0x35) verbatim
  *   - light 모드 분기 (gradient end = bg.bottleShelf — dark=#1a0a1e, light=#FFFFFF) — §4-9
  */
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { ArrowRight } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 import { WMBottle } from '@/components/shared/wm-bottle';
 import { WineNameDisplay } from '@/components/shared/wine-name-display';
 import { ServingTempPill } from '@/components/wine/serving-temp-pill';
@@ -26,6 +29,7 @@ import { getDefaultBottleColor, parseLwinVintage } from '@/lib/lwin';
 import {
   dark,
   light,
+  brand,
   withAlpha,
   wineTypeDot,
   type TypeCanonical,
@@ -176,6 +180,29 @@ export function WineHero({
             {resolvedVintage ? String(resolvedVintage) : ''}
           </Text>
         ) : null}
+
+        {/* 와이너리 스토리 보러가기 — §4-11: outer View = layout, Pressable = hit target only */}
+        <View style={{ alignSelf: 'flex-start', marginTop: 10 }}>
+          <Pressable
+            onPress={() => {
+              Haptics.selectionAsync().catch(() => undefined);
+              router.push(`/wine/${lwin}/story`);
+            }}
+            accessibilityRole="link"
+            accessibilityLabel="와이너리 스토리 보러가기"
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Text
+                allowFontScaling={false}
+                style={{ fontFamily: 'Inter_600SemiBold', fontSize: 12, color: brand.gold }}
+              >
+                와이너리 스토리 보러가기
+              </Text>
+              <ArrowRight size={13} strokeWidth={2} color={brand.gold} />
+            </View>
+          </Pressable>
+        </View>
       </View>
 
     </View>

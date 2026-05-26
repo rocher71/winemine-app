@@ -29,7 +29,6 @@ import { WriteNoteCta } from '@/components/wine/write-note-cta';
 import { WineRatingsAndPriceRow } from '@/components/wine/wine-ratings-price-row';
 import { PriceChartStub } from '@/components/wine/price-chart-stub';
 import { CommunityDrinkWindowCard } from '@/components/wine/community-drink-window-card';
-import { WineStoryCard } from '@/components/wine/wine-story-card';
 import { ReviewList } from '@/components/wine/review-list';
 import { AddToCellarCta } from '@/components/wine/add-to-cellar-cta';
 import { AddToCellarSheet } from '@/components/wine/add-to-cellar-sheet';
@@ -129,16 +128,17 @@ export default function WineDetailScreen() {
         />
 
         {/* 5. PriceChart */}
-        <PriceChartStub priceHistory={MOCK_WINE_DETAIL.priceHistory} />
+        <PriceChartStub
+          priceHistory={MOCK_WINE_DETAIL.priceHistory}
+          lwin={wine.lwin}
+        />
 
         {/* 6. CommunityDrinkWindowCard */}
         <CommunityDrinkWindowCard
           expertCount={MOCK_WINE_DETAIL.communityPeak.expertCount}
           peakData={MOCK_WINE_DETAIL.communityPeak}
+          lwin={wine.lwin}
         />
-
-        {/* 7. WineStoryCard */}
-        <WineStoryCard story={MOCK_WINE_DETAIL.story} lwin={wine.lwin} />
 
         {/* 8. ReviewList (stub — reviews 부재) */}
         <ReviewList />
