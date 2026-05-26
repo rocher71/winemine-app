@@ -21,6 +21,7 @@ export type CellarStatus = 'cellared' | 'consumed';
  * - price: purchase_price_krw 높은 가격 우선
  */
 export type CellarSortKey = 'recent' | 'drinkSoon' | 'vintage' | 'region' | 'storage' | 'price';
+export type TastedSortKey = 'recent' | 'count' | 'vintage' | 'region' | 'price';
 
 export type CellarItemWithWine = CellarItemRow & {
   wine: Pick<
@@ -269,6 +270,8 @@ export interface TastedGroup {
   count: number;
   /** 가장 최근 consumed_at (없으면 null) */
   lastConsumedAt: string | null;
+  /** 구매가 중 최고값 (price 정렬용, 없으면 null) */
+  maxPriceKrw: number | null;
 }
 
 export interface UseTastedGroupedResult {
@@ -319,11 +322,14 @@ export function useTastedGrouped(): UseTastedGroupedResult {
         const lwin = row.wine.lwin;
         const existing = map.get(lwin);
         const consumedAt = row.consumed_at ?? null;
+        const priceKrw = row.purchase_price_krw ?? null;
         if (existing) {
           existing.count += 1;
-          // lastConsumedAt = max(consumed_at)
           if (consumedAt && (!existing.lastConsumedAt || consumedAt > existing.lastConsumedAt)) {
             existing.lastConsumedAt = consumedAt;
+          }
+          if (priceKrw !== null && (existing.maxPriceKrw === null || priceKrw > existing.maxPriceKrw)) {
+            existing.maxPriceKrw = priceKrw;
           }
         } else {
           map.set(lwin, {
@@ -331,6 +337,7 @@ export function useTastedGrouped(): UseTastedGroupedResult {
             wine: row.wine,
             count: 1,
             lastConsumedAt: consumedAt,
+            maxPriceKrw: priceKrw,
           });
         }
       }
@@ -492,4 +499,59 @@ export function useNotesCountForWine(lwin: string | null | undefined): UseNotesC
   }, [load]);
 
   return { count, loading, refresh: load };
+}
+
+type TastingNoteRow = Database['public']['Tables']['tasting_notes']['Row'];
+
+export interface UseNotesForWineResult {
+  notes: TastingNoteRow[];
+  loading: boolean;
+  refresh: () => Promise<void>;
+}
+
+export function useNotesForWine(lwin: string | null | undefined): UseNotesForWineResult {
+  const [notes, setNotes] = useState<TastingNoteRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    if (!lwin) {
+      setNotes([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      if (DEMO_MODE) {
+        const filtered = MOCK_TASTING_NOTES
+          .filter((n) => n.wine_lwin === lwin)
+          .sort((a, b) => (b.tasted_at ?? '').localeCompare(a.tasted_at ?? ''));
+        setNotes(filtered);
+        return;
+      }
+      const uid = await getCurrentUserId();
+      if (!uid) {
+        setNotes([]);
+        return;
+      }
+      const { data, error } = await supabase
+        .from('tasting_notes')
+        .select('*')
+        .eq('user_id', uid)
+        .eq('wine_lwin', lwin)
+        .order('tasted_at', { ascending: false });
+      if (error) throw error;
+      setNotes(data ?? []);
+    } catch (err) {
+      console.warn('[notes for wine] failed:', err);
+      setNotes([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [lwin]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  return { notes, loading, refresh: load };
 }

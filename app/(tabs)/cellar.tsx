@@ -11,14 +11,14 @@
  *     - 빈 셀러: CellarEmptyState (GlassWater illustration + PrimaryButton → /capture)
  *     - 셀러 있음: SearchInput + TypeFilterChips(6) + SortChips(6) + ResultCount + (NoResults | 2-col grid)
  *   [tasted 탭]
- *     - v0.1.0 alpha: placeholder ("v0.2.0 출시 예정") — 사양 §12-1
+ *     - 검색 + 타입필터 + 정렬 (최근/많이마심/빈티지/지역/가격대) + 2-col grid
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, FlatList, ActivityIndicator, RefreshControl, Animated } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, RefreshControl, Animated, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { GlassWater } from 'lucide-react-native';
+import { GlassWater, Check } from 'lucide-react-native';
 import { AppHeader } from '@/components/nav/app-header';
 import { BellButton } from '@/components/nav/bell-button';
 import { LevelChip } from '@/components/shared/level-chip';
@@ -42,24 +42,236 @@ import {
   useTastedGrouped,
   type TastedGroup,
   type CellarSortKey,
+  type TastedSortKey,
 } from '@/hooks/use-cellar';
+import { applyTastedSearch, applyTastedTypeFilter, applyTastedSort } from '@/lib/cellar-filters';
 
 const TASTED_SPACER_KEY = '__tasted_spacer__';
-import { brand } from '@/lib/design-tokens';
+import { brand, withAlpha } from '@/lib/design-tokens';
+import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { applySearch, applyTypeFilter, applySort } from '@/lib/cellar-filters';
 
+const TASTED_SORT_KEYS: readonly TastedSortKey[] = ['recent', 'count', 'vintage', 'region', 'price'] as const;
+
+// ─── TastedCountSortRow ───────────────────────────────────────────────────────
+function TastedCountSortRow({
+  total,
+  shown,
+  isFiltered,
+  sortLabel,
+  onClear,
+  onSort,
+  sortButtonRef,
+}: {
+  total: number;
+  shown: number;
+  isFiltered: boolean;
+  sortLabel: string;
+  onClear: () => void;
+  onSort: () => void;
+  sortButtonRef?: React.RefObject<View | null>;
+}) {
+  const { text, scheme } = useThemeTokens();
+  const goldText = scheme === 'light' ? brand.goldDeep : brand.gold;
+  const countText = isFiltered ? `${total}개 중 ${shown}개` : `${total}개`;
+
+  return (
+    <View
+      style={{
+        paddingHorizontal: 20,
+        paddingBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, lineHeight: 13.2, color: text.muted }}>
+        {countText}
+      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        {isFiltered && shown !== total ? (
+          <Pressable onPress={onClear} hitSlop={6} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
+            <Text allowFontScaling={false} style={{ fontFamily: 'Freesentation_4Regular', fontSize: 11, lineHeight: 13.2, color: goldText }}>
+              필터 초기화
+            </Text>
+          </Pressable>
+        ) : null}
+        {/* Sort button — View ref used for dropdown positioning */}
+        <View ref={sortButtonRef} collapsable={false}>
+          <Pressable onPress={onSort} hitSlop={6} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
+            <Text allowFontScaling={false} style={{ fontFamily: 'Freesentation_4Regular', fontSize: 11, lineHeight: 13.2, color: goldText }}>
+              {`${sortLabel} ↕`}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+// ─── TastedSortDropdown ───────────────────────────────────────────────────────
+function TastedSortDropdown({
+  top,
+  currentSort,
+  onSelect,
+  onDismiss,
+}: {
+  top: number;
+  currentSort: TastedSortKey;
+  onSelect: (key: TastedSortKey) => void;
+  onDismiss: () => void;
+}) {
+  const { t } = useTranslation();
+  const { bg, text, border, scheme } = useThemeTokens();
+  const goldColor = scheme === 'light' ? brand.goldDeep : brand.gold;
+  const cardBg = bg.surface;
+  const borderColor = border.default;
+  const selectedRowBg = withAlpha(brand.gold, 0.07);
+
+  const SORT_LABELS: Record<TastedSortKey, string> = {
+    recent: t('cellar.sort.recent'),
+    count: t('cellar.sort.count'),
+    vintage: t('cellar.sort.vintage'),
+    region: t('cellar.sort.region'),
+    price: t('cellar.sort.price'),
+  };
+
+  return (
+    // Full-screen dismiss layer
+    <Pressable style={StyleSheet.absoluteFillObject} onPress={onDismiss}>
+      {/* Card container — stopPropagation via pointerEvents="box-none" on inner View */}
+      <View
+        style={{ position: 'absolute', right: 16, top }}
+        // Prevent dismiss Pressable from receiving taps that land on the card
+        // by not marking this View as a hit target — children still receive events
+        pointerEvents="box-none"
+      >
+        {/* Dropdown card */}
+        <View
+          style={{
+            width: 232,
+            borderRadius: 18,
+            backgroundColor: cardBg,
+            borderWidth: 1,
+            borderColor,
+            shadowColor: 'rgba(31,18,12,1)',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.24,
+            shadowRadius: 22,
+            elevation: 14,
+          }}
+        >
+          {/* Header */}
+          <View style={{ paddingHorizontal: 18, paddingTop: 14, paddingBottom: 12 }}>
+            <Text
+              allowFontScaling={false}
+              style={{ fontFamily: 'Inter_400Regular', fontSize: 10, color: goldColor, textTransform: 'uppercase', letterSpacing: 1.8, marginBottom: 2 }}
+            >
+              Sort by
+            </Text>
+            <Text
+              allowFontScaling={false}
+              style={{ fontFamily: 'PlayfairDisplay_400Regular', fontSize: 16, fontStyle: 'italic', color: text.primary }}
+            >
+              {t('cellar.sort.label')}
+            </Text>
+          </View>
+
+          {/* Divider */}
+          <View style={{ height: 0.5, backgroundColor: borderColor, marginHorizontal: 0 }} />
+
+          {/* Option rows */}
+          {TASTED_SORT_KEYS.map((key) => {
+            const isSelected = key === currentSort;
+            return (
+              <Pressable
+                key={key}
+                onPress={() => onSelect(key)}
+                style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+                accessibilityRole="menuitem"
+                accessibilityState={{ selected: isSelected }}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 18,
+                    paddingVertical: 10,
+                    backgroundColor: isSelected ? selectedRowBg : 'transparent',
+                  }}
+                >
+                  {/* Selection dot */}
+                  <View
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: 3,
+                      backgroundColor: isSelected ? brand.wineRed : 'transparent',
+                      borderWidth: isSelected ? 0 : 1,
+                      borderColor,
+                      marginRight: 12,
+                    }}
+                  />
+                  {/* Label */}
+                  <Text
+                    allowFontScaling={false}
+                    style={{
+                      flex: 1,
+                      fontFamily: isSelected ? 'Inter_600SemiBold' : 'Inter_400Regular',
+                      fontSize: 14,
+                      color: isSelected ? text.primary : text.muted,
+                    }}
+                  >
+                    {SORT_LABELS[key]}
+                  </Text>
+                  {/* Check icon */}
+                  {isSelected ? <Check size={14} color={goldColor} strokeWidth={2.5} /> : null}
+                </View>
+              </Pressable>
+            );
+          })}
+
+          {/* Bottom padding */}
+          <View style={{ height: 8 }} />
+        </View>
+
+        {/* Caret — rendered after card (higher z-order), matching bg "erases" card top border */}
+        <View
+          style={{
+            position: 'absolute',
+            top: -7,
+            right: 24,
+            width: 14,
+            height: 14,
+            transform: [{ rotate: '45deg' }],
+            backgroundColor: cardBg,
+            borderTopWidth: 1,
+            borderLeftWidth: 1,
+            borderColor,
+          }}
+        />
+      </View>
+    </Pressable>
+  );
+}
+
+// ─── CellarListScreen ─────────────────────────────────────────────────────────
 export default function CellarListScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-
   const [tab, setTab] = useState<CellarTab>('cellar');
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [sort, setSort] = useState<CellarSortKey>('recent');
+  const [tastedQuery, setTastedQuery] = useState('');
+  const [tastedTypeFilter, setTastedTypeFilter] = useState<TypeFilter>('all');
+  const [tastedSort, setTastedSort] = useState<TastedSortKey>('recent');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const [sortDropdownVisible, setSortDropdownVisible] = useState(false);
+  const [sortDropdownTop, setSortDropdownTop] = useState(0);
+  const sortButtonRef = useRef<View>(null);
 
   // ── Scroll-aware header (community 탭 동일 패턴) ───────────────────────────
-  // onLayout으로 실제 높이 측정 — 하드코딩 불일치 방지
   const headerHRef = useRef(insets.top + 80);
   const [headerH, setHeaderH] = useState(insets.top + 80);
   const handleHeaderLayout = useCallback((e: { nativeEvent: { layout: { height: number } } }) => {
@@ -74,6 +286,9 @@ export default function CellarListScreen() {
   const headerVisible = useRef(true);
 
   const handleScroll = (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+    // Close sort dropdown whenever list scrolls
+    if (sortDropdownVisible) setSortDropdownVisible(false);
+
     const currentY = event.nativeEvent.contentOffset.y;
     const diff = currentY - lastScrollY.current;
     const THRESHOLD = 8;
@@ -92,11 +307,12 @@ export default function CellarListScreen() {
     lastScrollY.current = currentY;
   };
 
-  // 탭 전환 시 헤더 복원
+  // 탭 전환 시 헤더 복원 + 드롭다운 닫기
   useEffect(() => {
     headerVisible.current = true;
     headerTranslateY.setValue(0);
     lastScrollY.current = 0;
+    setSortDropdownVisible(false);
   }, [tab]);
   // ──────────────────────────────────────────────────────────────────────────
 
@@ -106,23 +322,46 @@ export default function CellarListScreen() {
   const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
 
   const { items: rawItems, loading, refresh } = useCellarList('cellared');
-  const { groups: tastedGroups, loading: tastedLoading, refresh: tastedRefresh } = useTastedGrouped();
+  const { groups: rawTastedGroups, loading: tastedLoading, refresh: tastedRefresh } = useTastedGrouped();
   const { cellaredCount, consumedCount } = useCellarSummary();
 
   const isFiltered = query.trim().length > 0 || typeFilter !== 'all';
+  const isTastedFiltered = tastedQuery.trim().length > 0 || tastedTypeFilter !== 'all';
 
   const displayItems = useMemo(() => {
     const filtered = applyTypeFilter(applySearch(rawItems, query), typeFilter);
     return applySort(filtered, sort, true);
   }, [rawItems, query, typeFilter, sort]);
 
+  const displayTastedGroups = useMemo(() => {
+    const filtered = applyTastedTypeFilter(applyTastedSearch(rawTastedGroups, tastedQuery), tastedTypeFilter);
+    return applyTastedSort(filtered, tastedSort);
+  }, [rawTastedGroups, tastedQuery, tastedTypeFilter, tastedSort]);
+
   const onClearFilters = useCallback(() => {
     setQuery('');
     setTypeFilter('all');
   }, []);
 
+  const onClearTastedFilters = useCallback(() => {
+    setTastedQuery('');
+    setTastedTypeFilter('all');
+  }, []);
+
+  const openTastedSortDropdown = useCallback(() => {
+    if (sortDropdownVisible) {
+      setSortDropdownVisible(false);
+      return;
+    }
+    if (sortButtonRef.current) {
+      sortButtonRef.current.measure((_x, _y, _w, h, _px, py) => {
+        setSortDropdownTop(py + h + 6);
+        setSortDropdownVisible(true);
+      });
+    }
+  }, [sortDropdownVisible]);
+
   const onAdd = useCallback(() => {
-    // v0.1.0 mock toast (사양 §12-2). BottomSheet add-cellar form은 v0.2.0.
     setToastMsg(t('cellar.addToast'));
     setTimeout(() => setToastMsg(null), 2500);
   }, [t]);
@@ -137,11 +376,32 @@ export default function CellarListScreen() {
   const headerProps = { eyebrow: t('nav.cellar'), title: t('cellar.title') } as const;
 
   // ---- Render: tasted 탭 ----
-  // wine_lwin 단위 그룹 카드 (ux-decisions/cellar-tasted-tab.md Decision 1)
   if (tab === 'tasted') {
+    const hasAnyTasted = rawTastedGroups.length > 0;
+    const gridData = displayTastedGroups.length % 2 !== 0
+      ? [...displayTastedGroups, { lwin: TASTED_SPACER_KEY } as TastedGroup]
+      : displayTastedGroups;
+
     const TastedHeader = (
-      <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 }}>
-        <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
+      <View style={{ paddingTop: 8 }}>
+        <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
+          <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
+        </View>
+        {hasAnyTasted ? (
+          <>
+            <CellarSearchInput query={tastedQuery} onQueryChange={setTastedQuery} />
+            <TypeFilterChips value={tastedTypeFilter} onChange={setTastedTypeFilter} />
+            <TastedCountSortRow
+              total={rawTastedGroups.length}
+              shown={displayTastedGroups.length}
+              isFiltered={isTastedFiltered}
+              sortLabel={t(`cellar.sort.${tastedSort}`)}
+              onClear={onClearTastedFilters}
+              onSort={openTastedSortDropdown}
+              sortButtonRef={sortButtonRef}
+            />
+          </>
+        ) : null}
       </View>
     );
 
@@ -154,7 +414,7 @@ export default function CellarListScreen() {
           <AppHeader {...headerProps} right={HeaderRight} />
         </Animated.View>
         <FlatList
-          data={tastedLoading ? [] : (tastedGroups.length % 2 !== 0 ? [...tastedGroups, { lwin: TASTED_SPACER_KEY } as TastedGroup] : tastedGroups)}
+          data={tastedLoading ? [] : gridData}
           keyExtractor={(g) => g.lwin}
           numColumns={2}
           columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
@@ -166,6 +426,8 @@ export default function CellarListScreen() {
               <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 64 }}>
                 <ActivityIndicator color={brand.gold} />
               </View>
+            ) : isTastedFiltered ? (
+              <NoResults onClear={onClearTastedFilters} />
             ) : (
               <EmptyState title={t('cellar.tasted.empty')} description={t('cellar.tasted.emptyHint')} />
             )
@@ -180,6 +442,19 @@ export default function CellarListScreen() {
           onScroll={handleScroll}
           scrollEventThrottle={16}
         />
+
+        {/* Anchored sort dropdown overlay */}
+        {sortDropdownVisible ? (
+          <TastedSortDropdown
+            top={sortDropdownTop}
+            currentSort={tastedSort}
+            onSelect={(key) => {
+              setTastedSort(key);
+              setSortDropdownVisible(false);
+            }}
+            onDismiss={() => setSortDropdownVisible(false)}
+          />
+        ) : null}
       </View>
     );
   }
@@ -187,10 +462,8 @@ export default function CellarListScreen() {
   // ---- Render: cellar 탭 ----
   const hasAnyItems = rawItems.length > 0;
 
-  // ListHeader: TitleBar + (있을 때) SearchInput + TypeFilterChips + SortChips + ResultCount
   const ListHeader = (
     <View>
-      {/* TitleBar: TabSegment + AddCta */}
       <View
         style={{
           paddingHorizontal: 16,
@@ -227,7 +500,6 @@ export default function CellarListScreen() {
     </View>
   );
 
-  // ListEmptyComponent: loading | empty cellar | NoResults (filter applied + 0)
   const renderEmpty = () => {
     if (loading) {
       return (
@@ -237,7 +509,6 @@ export default function CellarListScreen() {
       );
     }
     if (!hasAnyItems) {
-      // 셀러 자체가 비어있음
       return (
         <View style={{ paddingVertical: 32 }}>
           <EmptyState
@@ -255,7 +526,6 @@ export default function CellarListScreen() {
         </View>
       );
     }
-    // 필터 적용 후 0건
     return <NoResults onClear={onClearFilters} />;
   };
 

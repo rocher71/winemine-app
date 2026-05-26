@@ -4,7 +4,7 @@
  * 화면 로직 없이 `CellarItemWithWine[]` → `CellarItemWithWine[]` 변환만 담당.
  * `app/(tabs)/cellar.tsx` 및 추후 셀러 관련 뷰에서 import해 사용.
  */
-import type { CellarItemWithWine, CellarSortKey } from '@/hooks/use-cellar';
+import type { CellarItemWithWine, CellarSortKey, TastedGroup, TastedSortKey } from '@/hooks/use-cellar';
 import type { TypeFilter } from '@/components/cellar/type-filter-chips';
 import { parseLwinVintage } from '@/lib/lwin';
 import { getDrinkWindow } from '@/lib/drink-window';
@@ -78,6 +78,55 @@ export function applySort(
       });
       break;
     }
+  }
+  return copy;
+}
+
+// ── TastedGroup 전용 필터·정렬 ──────────────────────────────────────
+
+export function applyTastedSearch(groups: TastedGroup[], q: string): TastedGroup[] {
+  if (!q.trim()) return groups;
+  const needle = q.trim().toLowerCase();
+  return groups.filter((g) => {
+    const w = g.wine;
+    if (!w) return false;
+    return (
+      (w.display_name?.toLowerCase().includes(needle) ?? false) ||
+      (w.name_ko?.toLowerCase().includes(needle) ?? false) ||
+      (w.producer_name?.toLowerCase().includes(needle) ?? false) ||
+      (w.region?.toLowerCase().includes(needle) ?? false) ||
+      (w.country?.toLowerCase().includes(needle) ?? false)
+    );
+  });
+}
+
+export function applyTastedTypeFilter(groups: TastedGroup[], tf: TypeFilter): TastedGroup[] {
+  if (tf === 'all') return groups;
+  return groups.filter((g) => g.wine?.type_canonical === tf);
+}
+
+export function applyTastedSort(groups: TastedGroup[], sort: TastedSortKey): TastedGroup[] {
+  const copy = groups.slice();
+  switch (sort) {
+    case 'count':
+      copy.sort((a, b) => b.count - a.count);
+      break;
+    case 'vintage': {
+      const vintageOf = (g: TastedGroup) =>
+        g.wine?.vintage ?? (g.wine?.lwin ? (parseLwinVintage(g.wine.lwin) ?? 0) : 0);
+      copy.sort((a, b) => vintageOf(b) - vintageOf(a));
+      break;
+    }
+    case 'region':
+      copy.sort((a, b) => (a.wine?.region ?? '').localeCompare(b.wine?.region ?? ''));
+      break;
+    case 'price':
+      copy.sort((a, b) => (b.maxPriceKrw ?? 0) - (a.maxPriceKrw ?? 0));
+      break;
+    case 'recent':
+    default:
+      copy.sort((a, b) => (b.lastConsumedAt ?? '').localeCompare(a.lastConsumedAt ?? ''));
+      break;
   }
   return copy;
 }
