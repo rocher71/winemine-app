@@ -23,7 +23,8 @@
     "bookmark": "Bookmark",
     "send": "Send",
     "justNow": "just now",
-    "ok": "OK"
+    "ok": "OK",
+    "bottleUnit": "wines"
   },
   "placeholders": {
     "comingSoon": "Coming in v0.2.0",
@@ -686,7 +687,8 @@
       "cellar": "My cellar",
       "tasted": "Tasted",
       "cellared": "In cellar",
-      "consumed": "Consumed"
+      "consumed": "Consumed",
+      "list": "Lists"
     },
     "filterType": {
       "all": "All",
@@ -851,7 +853,26 @@
       "a11y": {
         "drinkThisHint": "Removes from cellar and opens tasting note",
         "heroLabel": "{{wineName}}, {{producer}}, {{vintage}}"
-      }
+      },
+      "storageSection": "My Storage",
+      "storageBottleCount": "{{count}} btl",
+      "bottleNum": "Bottle {{num}}",
+      "storageShowMore": "Show {{count}} more",
+      "storageCollapse": "Collapse",
+      "notesShowMore": "Show {{count}} more",
+      "notesCollapse": "Collapse"
+    },
+    "cellared": {
+      "groupBottleCount": "{{count}} btl"
+    },
+    "drinkThisSkipConfirm": "How many bottles?",
+    "drinkBottleCountConfirm": "Record {{count}} bottle(s) as consumed?",
+    "priceCompare": {
+      "myPrice": "My purchase price",
+      "communityAvg": "Community avg",
+      "priceDetail": "Price details",
+      "noData": "No market data",
+      "avgMyPrice": "Avg. purchase price"
     }
   },
   "wineDetail": {
@@ -1617,5 +1638,80 @@
     },
     "maxed": "Maxed",
     "progress": "{{current}} / {{next}} XP"
+  },
+  "lists": {
+    "tab": "Lists",
+    "title": "My Lists",
+    "totalCount": "{{count}} lists",
+    "sortRecent": "Recently edited",
+    "sortCreated": "Date created",
+    "sortName": "Name",
+    "sortCount": "Wine count",
+    "fab": "New list",
+    "empty": {
+      "title": "No lists yet",
+      "sub": "Curate wines by topic",
+      "cta": "Create your first list"
+    },
+    "create": {
+      "title": "New list",
+      "submit": "Create",
+      "titlePlaceholder": "List title",
+      "titleHint": "List title · Max 50 chars",
+      "descPlaceholder": "Description (optional)",
+      "descHint": "Description (optional) · Max 200 chars",
+      "winesHeader": "Add wines",
+      "addBySearch": "Search wines",
+      "addFromTasted": "From tasted",
+      "searchSub": "Wine or producer",
+      "success": "List created",
+      "error": "Failed to create list"
+    },
+    "visibility": {
+      "private": "Private",
+      "privateSub": "Only visible to you",
+      "public": "Public",
+      "publicSub": "Visible to everyone"
+    },
+    "detail": {
+      "publicLabel": "Public list",
+      "privateLabel": "My list",
+      "lastEdited": "Last edited {{time}} · {{count}} wines",
+      "follow": "Follow",
+      "save": "Save",
+      "saved": "Saved",
+      "import": "Import to my lists",
+      "edit": "Edit",
+      "importedTitle": "{{title}} (copy)",
+      "importSuccess": "Imported to your lists",
+      "stats": {
+        "likes": "Likes",
+        "comments": "Comments",
+        "saves": "Saved"
+      }
+    },
+    "makePublic": {
+      "title": "Make this list public?",
+      "body": "Others can discover this list in explore. It won't be auto-posted to the feed.",
+      "bullet1": "Visible in list explore and search",
+      "bullet2": "Others can save and copy it",
+      "bullet3": "You can make it private anytime",
+      "confirm": "Make public",
+      "cancel": "Cancel"
+    },
+    "makePrivate": {
+      "title": "Make this list private?",
+      "body": "{{count}} people saved this list. Making it private will hide it from their saved lists.",
+      "saversSub": "Saved within 30 days",
+      "effect1": "Removed from list explore and search",
+      "effect2": "Hidden from savers' saved lists",
+      "effect3": "Your likes and comments are kept",
+      "confirm": "Make private",
+      "cancel": "Cancel"
+    },
+    "qa": {
+      "saveAsList": "Save results as list",
+      "saveAsListSub": "Top {{count}} wines · Saved as draft"
+    }
   }
 }

@@ -23,7 +23,8 @@
     "bookmark": "북마크",
     "send": "보내기",
     "justNow": "방금 전",
-    "ok": "확인"
+    "ok": "확인",
+    "bottleUnit": "병"
   },
   "placeholders": {
     "comingSoon": "v0.2.0 출시 예정",
@@ -686,7 +687,8 @@
       "cellar": "셀러",
       "tasted": "마신 와인",
       "cellared": "보관 중",
-      "consumed": "음용 완료"
+      "consumed": "음용 완료",
+      "list": "리스트"
     },
     "filterType": {
       "all": "전체",
@@ -851,7 +853,26 @@
       "a11y": {
         "drinkThisHint": "셀러에서 제거하고 노트 작성으로 이동합니다",
         "heroLabel": "{{wineName}}, {{producer}}, {{vintage}}"
-      }
+      },
+      "storageSection": "내 보관 현황",
+      "storageBottleCount": "{{count}}병",
+      "bottleNum": "{{num}}번 병",
+      "storageShowMore": "{{count}}병 더 보기",
+      "storageCollapse": "접기",
+      "notesShowMore": "{{count}}개 더 보기",
+      "notesCollapse": "접기"
+    },
+    "cellared": {
+      "groupBottleCount": "{{count}}병"
+    },
+    "drinkThisSkipConfirm": "몇 병을 여셨나요?",
+    "drinkBottleCountConfirm": "{{count}}병을 마셨다고 기록할까요?",
+    "priceCompare": {
+      "myPrice": "내 구매가",
+      "communityAvg": "현재 평균",
+      "priceDetail": "가격 상세",
+      "noData": "시세 정보 없음",
+      "avgMyPrice": "평균 구매가"
     }
   },
   "wineDetail": {
@@ -1617,5 +1638,80 @@
     },
     "maxed": "최고 단계",
     "progress": "{{current}} / {{next}} XP"
+  },
+  "lists": {
+    "tab": "리스트",
+    "title": "내 리스트",
+    "totalCount": "총 {{count}}개의 리스트",
+    "sortRecent": "최근 수정순",
+    "sortCreated": "생성일순",
+    "sortName": "이름순",
+    "sortCount": "와인 수",
+    "fab": "새 리스트",
+    "empty": {
+      "title": "아직 리스트가 없어요",
+      "sub": "주제별로 와인을 큐레이션해보세요",
+      "cta": "첫 리스트 만들기"
+    },
+    "create": {
+      "title": "새 리스트",
+      "submit": "만들기",
+      "titlePlaceholder": "리스트 제목",
+      "titleHint": "리스트 제목 · 50자 이내",
+      "descPlaceholder": "설명을 입력하세요 (선택)",
+      "descHint": "설명 (선택) · 200자 이내",
+      "winesHeader": "와인 추가",
+      "addBySearch": "검색으로 추가",
+      "addFromTasted": "마셔본 목록",
+      "searchSub": "와인·생산자명",
+      "success": "리스트가 만들어졌어요",
+      "error": "리스트를 만들지 못했어요"
+    },
+    "visibility": {
+      "private": "비공개",
+      "privateSub": "나만 볼 수 있어요",
+      "public": "공개",
+      "publicSub": "누구나 볼 수 있어요"
+    },
+    "detail": {
+      "publicLabel": "공개 리스트",
+      "privateLabel": "내 리스트",
+      "lastEdited": "마지막 수정 {{time}} · {{count}}병",
+      "follow": "팔로우",
+      "save": "저장",
+      "saved": "저장됨",
+      "import": "내 리스트로 가져오기",
+      "edit": "편집",
+      "importedTitle": "{{title}} (복사본)",
+      "importSuccess": "내 리스트로 가져왔어요",
+      "stats": {
+        "likes": "좋아요",
+        "comments": "댓글",
+        "saves": "저장됨"
+      }
+    },
+    "makePublic": {
+      "title": "리스트를 공개로 전환할까요?",
+      "body": "공개하면 다른 사용자가 리스트 탐색에서 발견할 수 있습니다. 피드에 자동 게시되지는 않습니다.",
+      "bullet1": "리스트 탐색·검색에 노출됩니다",
+      "bullet2": "다른 사용자가 저장·복제할 수 있어요",
+      "bullet3": "언제든 다시 비공개로 바꿀 수 있어요",
+      "confirm": "공개하기",
+      "cancel": "취소"
+    },
+    "makePrivate": {
+      "title": "비공개로 전환할까요?",
+      "body": "{{count}}명이 이 리스트를 저장했습니다. 비공개로 전환하면 그들의 저장 목록에서 보이지 않게 됩니다.",
+      "saversSub": "지난 30일 안에 저장",
+      "effect1": "리스트 탐색·검색에서 사라집니다",
+      "effect2": "저장한 사람의 목록에서 숨겨집니다",
+      "effect3": "받은 좋아요·댓글은 보존됩니다",
+      "confirm": "비공개로 전환",
+      "cancel": "취소"
+    },
+    "qa": {
+      "saveAsList": "이 결과를 리스트로 저장",
+      "saveAsListSub": "상위 {{count}}병 · 초안으로 생성됩니다"
+    }
   }
 }
