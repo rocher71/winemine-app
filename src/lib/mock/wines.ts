@@ -283,10 +283,10 @@ export const MOCK_WINES: WineLocalizedRow[] = [
 
 const WINE_BY_LWIN = new Map<string, WineLocalizedRow>(MOCK_WINES.map((w) => [w.lwin ?? '', w]));
 
-/** LWIN으로 mock wine 조회. 없으면 null. */
+/** LWIN으로 mock wine 조회. 없으면 Château Margaux fallback (v0.2.0: 실 DB 조회). */
 export function getMockWineByLwin(lwin: string | null | undefined): WineLocalizedRow | null {
   if (!lwin) return null;
-  return WINE_BY_LWIN.get(lwin) ?? null;
+  return WINE_BY_LWIN.get(lwin) ?? WINE_BY_LWIN.get('1011196') ?? null;
 }
 
 /** Fallback LWIN — mock 매핑이 없는 wineId/lwin에 대한 시각 검증용 default. */
