@@ -40,8 +40,11 @@ import {
   useCellarList,
   useCellarSummary,
   useTastedGrouped,
+  type TastedGroup,
   type CellarSortKey,
 } from '@/hooks/use-cellar';
+
+const TASTED_SPACER_KEY = '__tasted_spacer__';
 import { brand } from '@/lib/design-tokens';
 import { applySearch, applyTypeFilter, applySort } from '@/lib/cellar-filters';
 
@@ -151,11 +154,12 @@ export default function CellarListScreen() {
           <AppHeader {...headerProps} right={HeaderRight} />
         </Animated.View>
         <FlatList
-          data={tastedLoading ? [] : tastedGroups}
+          data={tastedLoading ? [] : (tastedGroups.length % 2 !== 0 ? [...tastedGroups, { lwin: TASTED_SPACER_KEY } as TastedGroup] : tastedGroups)}
           keyExtractor={(g) => g.lwin}
           numColumns={2}
           columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
-          renderItem={({ item }) => <TastedGroupCard group={item} />}
+          renderItem={({ item }) =>
+            item.lwin === TASTED_SPACER_KEY ? <View style={{ flex: 1 }} /> : <TastedGroupCard group={item} />}
           ListHeaderComponent={TastedHeader}
           ListEmptyComponent={() =>
             tastedLoading ? (

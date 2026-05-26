@@ -108,6 +108,9 @@ const CONSUMED_SEEDS: (CellarSeed & { consumedAt: string })[] = [
   { id: 'consumed_005', slug: 'pie-barolo-giacomo-conterno', acquiredAt: '2023-08-18', storage: 'cellar', notesKo: null, notesEn: null, purchasePriceKrw: 1_100_000, notifyAtPeak: false, consumedAt: '2025-02-28' },
   { id: 'consumed_006', slug: 'aus-penfolds-grange', acquiredAt: '2022-11-30', storage: 'offsite', notesKo: '호주 출장 후 직구. 예상보다 일찍 오픈.', notesEn: 'Bought directly after a business trip to Australia. Opened earlier than expected.', purchasePriceKrw: 1_350_000, notifyAtPeak: false, consumedAt: '2025-03-12' },
   { id: 'consumed_007', slug: 'nap-screaming-eagle', acquiredAt: '2021-09-07', storage: 'cellar', notesKo: '와인 친구 생일 파티. 잊을 수 없는 밤.', notesEn: "Friend's birthday party. An unforgettable night.", purchasePriceKrw: 2_800_000, notifyAtPeak: false, consumedAt: '2025-04-20' },
+  // Krug 3회 시음 — useTastedGrouped 그루핑 테스트용 (3회 뱃지 확인)
+  { id: 'consumed_008', slug: 'cha-krug-grande-cuvee', acquiredAt: '2023-11-15', storage: 'fridge', notesKo: '생일 축하. 복잡미묘한 효모향.', notesEn: 'Birthday celebration. Complex yeasty aroma.', purchasePriceKrw: 490_000, notifyAtPeak: false, consumedAt: '2025-01-01' },
+  { id: 'consumed_009', slug: 'cha-krug-grande-cuvee', acquiredAt: '2025-02-10', storage: 'fridge', notesKo: '새 빈티지. 여전히 훌륭함.', notesEn: 'New vintage. Still outstanding.', purchasePriceKrw: 510_000, notifyAtPeak: false, consumedAt: '2025-05-10' },
 ];
 
 function toConsumedRow(seed: CellarSeed & { consumedAt: string }): CellarItemRow {
