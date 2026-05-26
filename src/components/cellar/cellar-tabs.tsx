@@ -14,7 +14,7 @@ import * as Haptics from 'expo-haptics';
 import { brand, cellar } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 
-export type CellarTab = 'cellar' | 'tasted';
+export type CellarTab = 'cellar' | 'tasted' | 'list';
 
 interface Props {
   value: CellarTab;
@@ -23,6 +23,8 @@ interface Props {
   cellarCount: number;
   /** 마신 탭 count (consumed 또는 tasting_notes 기반 — v0.1.0은 consumed로 표시) */
   tastedCount: number;
+  /** 리스트 탭 count */
+  listCount: number;
 }
 
 function TabButton({
@@ -81,7 +83,7 @@ function TabButton({
   );
 }
 
-export function CellarTabs({ value, onChange, cellarCount, tastedCount }: Props) {
+export function CellarTabs({ value, onChange, cellarCount, tastedCount, listCount }: Props) {
   const { t } = useTranslation();
   const handle = (next: CellarTab) => {
     if (next === value) return;
@@ -104,6 +106,12 @@ export function CellarTabs({ value, onChange, cellarCount, tastedCount }: Props)
         label={t('cellar.tabs.tasted')}
         count={tastedCount}
         onPress={() => handle('tasted')}
+      />
+      <TabButton
+        active={value === 'list'}
+        label={t('cellar.tabs.list')}
+        count={listCount}
+        onPress={() => handle('list')}
       />
     </View>
   );

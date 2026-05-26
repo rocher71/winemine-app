@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { level as levelColors } from '@/lib/design-tokens';
 
 type Size = 'sm' | 'md';
-type LevelId = 1 | 2 | 3 | 4 | 5;
+export type LevelId = 1 | 2 | 3 | 4 | 5;
 
 interface LevelPillProps {
   level: LevelId;
