@@ -114,14 +114,15 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
 
   const tastedAtDisplay = note.tasted_at?.slice(0, 10) ?? '';
 
-  // Round 8 패턴 (§4-11): Pressable은 hit target만, layout/visual은 inner View.
+  // §4-11 3-layer: outer View = margin, Pressable = hit target, inner View = visual
   return (
+    <View style={{ marginHorizontal: 16 }}>
     <Pressable
       onPress={handleOpen}
       accessibilityRole="link"
       accessibilityLabel={`${t('wineDetail.myNote.label')} ${ratingDisplay}`}
       accessibilityHint={t('wineDetail.myNote.openHint')}
-      style={({ pressed }) => ({ marginHorizontal: 16, opacity: pressed ? 0.92 : 1 })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
     >
       <View
         className="bg-surface dark:bg-surface"
@@ -243,5 +244,6 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
       </View>
       </View>
     </Pressable>
+    </View>
   );
 }
