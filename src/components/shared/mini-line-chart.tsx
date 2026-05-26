@@ -36,9 +36,9 @@ export function MiniLineChart({ data, width, height, color, compact = false }: M
   const points = data.map((d, i) => `${toX(i)},${toY(d.price)}`).join(' ');
 
   const firstX = toX(0);
-  const firstY = toY(prices[0]);
+  const firstY = toY(prices[0] ?? minP);
   const lastX = toX(data.length - 1);
-  const lastY = toY(prices[data.length - 1]);
+  const lastY = toY(prices[data.length - 1] ?? maxP);
 
   const fillPath = `M${firstX},${firstY} ${data
     .map((d, i) => `L${toX(i)},${toY(d.price)}`)
@@ -64,10 +64,10 @@ export function MiniLineChart({ data, width, height, color, compact = false }: M
         strokeLinecap="round"
       />
 
-      {data.map((_, i) => {
+      {data.map((d, i) => {
         const isLast = i === data.length - 1;
         const cx = toX(i);
-        const cy = toY(prices[i]);
+        const cy = toY(d.price);
         if (isLast) {
           return (
             <Circle key={i} cx={cx} cy={cy} r={3.5} fill="#F5ECD7" stroke={color} strokeWidth={1.5} />

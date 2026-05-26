@@ -38,6 +38,7 @@ import { useMyNoteForWine } from '@/hooks/use-my-note-for-wine';
 import { getLocalizedWineName } from '@/lib/lwin';
 import { currentLocale } from '@/lib/i18n';
 import { brand } from '@/lib/design-tokens';
+import { MOCK_WINE_DETAIL } from '@/lib/mock/wine-detail-data';
 
 export default function WineDetailScreen() {
   const { lwin: lwinParam } = useLocalSearchParams<{ lwin: string }>();
@@ -122,16 +123,22 @@ export default function WineDetailScreen() {
         )}
 
         {/* 3+4. ExternalRatingsCard + AveragePricePill 가로 나란히 (50-50) */}
-        <WineRatingsAndPriceRow />
+        <WineRatingsAndPriceRow
+          ratings={MOCK_WINE_DETAIL.externalRatings}
+          priceData={MOCK_WINE_DETAIL.avgPrice}
+        />
 
-        {/* 5. PriceChart (stub — purchases 부재) */}
-        <PriceChartStub />
+        {/* 5. PriceChart */}
+        <PriceChartStub priceHistory={MOCK_WINE_DETAIL.priceHistory} />
 
-        {/* 6. CommunityDrinkWindowCard (stub — community_peak_estimates 부재) */}
-        <CommunityDrinkWindowCard expertCount={0} />
+        {/* 6. CommunityDrinkWindowCard */}
+        <CommunityDrinkWindowCard
+          expertCount={MOCK_WINE_DETAIL.communityPeak.expertCount}
+          peakData={MOCK_WINE_DETAIL.communityPeak}
+        />
 
-        {/* 7. WineStoryCard (stub — wine_stories 부재) */}
-        <WineStoryCard />
+        {/* 7. WineStoryCard */}
+        <WineStoryCard story={MOCK_WINE_DETAIL.story} lwin={wine.lwin} />
 
         {/* 8. ReviewList (stub — reviews 부재) */}
         <ReviewList />
