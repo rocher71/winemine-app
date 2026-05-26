@@ -31,9 +31,14 @@ interface Props {
   onConfirm: () => void | Promise<void>;
   /** loading state — Pressable disable + opacity 0.6 */
   disabled?: boolean;
+  /**
+   * true 시 ConfirmDialog를 생략하고 onConfirm 직접 호출 (N병 BottleCountSheet 흐름).
+   * Decision 3: 멀티보틀 셀러에서 상위가 직접 흐름 제어.
+   */
+  skipConfirm?: boolean;
 }
 
-export function DrinkThisCta({ onConfirm, disabled = false }: Props) {
+export function DrinkThisCta({ onConfirm, disabled = false, skipConfirm = false }: Props) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { scheme } = useThemeTokens();
@@ -44,7 +49,11 @@ export function DrinkThisCta({ onConfirm, disabled = false }: Props) {
   const handlePress = () => {
     if (disabled) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
-    setConfirmOpen(true);
+    if (skipConfirm) {
+      void onConfirm();
+    } else {
+      setConfirmOpen(true);
+    }
   };
 
   const handleConfirm = async () => {
