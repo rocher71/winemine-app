@@ -45,6 +45,8 @@ import {
   type TastedSortKey,
 } from '@/hooks/use-cellar';
 import { applyTastedSearch, applyTastedTypeFilter, applyTastedSort } from '@/lib/cellar-filters';
+import { useMyLists } from '@/hooks/use-wine-lists';
+import { ListTabContent } from '@/components/cellar/list-tab-content';
 
 const TASTED_SPACER_KEY = '__tasted_spacer__';
 import { brand, withAlpha } from '@/lib/design-tokens';
@@ -353,6 +355,8 @@ export default function CellarListScreen() {
   const { items: rawItems, loading, refresh } = useCellarList('cellared');
   const { groups: rawTastedGroups, loading: tastedLoading, refresh: tastedRefresh } = useTastedGrouped();
   const { cellaredCount, consumedCount } = useCellarSummary();
+  const { lists: myLists } = useMyLists();
+  const listCount = myLists.length;
 
   const isFiltered = query.trim().length > 0 || typeFilter !== 'all';
   const isTastedFiltered = tastedQuery.trim().length > 0 || tastedTypeFilter !== 'all';
@@ -413,6 +417,32 @@ export default function CellarListScreen() {
 
   const headerProps = { eyebrow: t('nav.cellar'), title: t('cellar.title') } as const;
 
+  // ---- Render: list 탭 ----
+  if (tab === 'list') {
+    return (
+      <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
+        <Animated.View
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, transform: [{ translateY: headerTranslateY }] }}
+          onLayout={handleHeaderLayout}
+        >
+          <AppHeader {...headerProps} right={HeaderRight} />
+          <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 }}>
+            <CellarTabs
+              value={tab}
+              onChange={setTab}
+              cellarCount={cellaredCount}
+              tastedCount={consumedCount}
+              listCount={listCount}
+            />
+          </View>
+        </Animated.View>
+        <View style={{ flex: 1, paddingTop: headerH }}>
+          <ListTabContent />
+        </View>
+      </View>
+    );
+  }
+
   // ---- Render: tasted 탭 ----
   if (tab === 'tasted') {
     const hasAnyTasted = rawTastedGroups.length > 0;
@@ -423,7 +453,7 @@ export default function CellarListScreen() {
     const TastedHeader = (
       <View style={{ paddingTop: 8 }}>
         <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
-          <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} />
+          <CellarTabs value={tab} onChange={setTab} cellarCount={cellaredCount} tastedCount={consumedCount} listCount={listCount} />
         </View>
         {hasAnyTasted ? (
           <>
@@ -517,6 +547,7 @@ export default function CellarListScreen() {
           onChange={setTab}
           cellarCount={cellaredCount}
           tastedCount={consumedCount}
+          listCount={listCount}
         />
         <View style={{ flex: 1 }} />
         <AddCta onPress={onAdd} />

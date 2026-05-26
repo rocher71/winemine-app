@@ -12,9 +12,11 @@ import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_600SemiBold,
+  Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import {
   PlayfairDisplay_400Regular,
+  PlayfairDisplay_600SemiBold,
   PlayfairDisplay_700Bold,
 } from '@expo-google-fonts/playfair-display';
 import { initI18n, changeLanguage, type AppLocale } from '@/lib/i18n';
@@ -41,7 +43,9 @@ export default function RootLayout() {
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
+    Inter_700Bold,
     PlayfairDisplay_400Regular,
+    PlayfairDisplay_600SemiBold,
     PlayfairDisplay_700Bold,
   });
 
@@ -123,6 +127,9 @@ export default function RootLayout() {
           <Stack.Screen name="settings/experience" />
           <Stack.Screen name="settings/appearance" />
           <Stack.Screen name="cellar/[lwin]" />
+          <Stack.Screen name="cellar/lists/[id]/index" />
+          <Stack.Screen name="cellar/lists/[id]/edit" options={{ presentation: 'modal', headerShown: false }} />
+          <Stack.Screen name="cellar/lists/create" options={{ presentation: 'modal' }} />
           <Stack.Screen name="wine/[lwin]" />
           {/* glossary 그룹 — 자체 _layout.tsx 가 있는 디렉토리 라우트.
            * 단일 등록 가능 (notes/settings 처럼 sub-route 명시 불필요 — _layout 있는 경우). */}
