@@ -157,6 +157,21 @@ export function ListCard({ item, onPress }: Props) {
 
               <View style={{ flex: 1 }} />
 
+              {!!item.creator_name && (
+                <Text
+                  allowFontScaling={false}
+                  numberOfLines={1}
+                  style={{
+                    fontFamily: 'Inter_500Medium',
+                    fontSize: 11,
+                    color: text.muted,
+                    maxWidth: 72,
+                  }}
+                >
+                  {item.creator_name}
+                </Text>
+              )}
+
               {item.save_count > 0 && (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                   <Bookmark size={11} strokeWidth={2} color={isPublic ? brand.wineRed : accentColor} />

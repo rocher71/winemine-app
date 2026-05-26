@@ -34,6 +34,7 @@ export interface WineListStats {
   wine_count: number;
   save_count: number;
   like_count: number;
+  creator_name: string | null;
 }
 
 export interface WineListItemWithWine {

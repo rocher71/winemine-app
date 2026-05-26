@@ -37,6 +37,7 @@ export type MockWineListStats = {
   wine_count: number;
   save_count: number;
   like_count: number;
+  creator_name: string | null;
 };
 
 export type MockWineListSave = {
@@ -122,10 +123,10 @@ export const MOCK_WINE_LIST_ITEMS: MockWineListItem[] = [
 // Stats (VIEW 대용)
 const noAttribution = { source_list_id: null, source_list_title: null, source_author_display: null };
 export const MOCK_LIST_STATS: MockWineListStats[] = [
-  { ...MOCK_MY_LISTS[0]!, ...noAttribution, wine_count: 6, save_count: 24, like_count: 47 },
-  { ...MOCK_MY_LISTS[1]!, ...noAttribution, wine_count: 4, save_count: 0,  like_count: 0  },
-  { ...MOCK_MY_LISTS[2]!, ...noAttribution, wine_count: 5, save_count: 8,  like_count: 15 },
-  { ...MOCK_MY_LISTS[3]!, ...noAttribution, wine_count: 0, save_count: 0,  like_count: 0  },
+  { ...MOCK_MY_LISTS[0]!, ...noAttribution, wine_count: 6, save_count: 24, like_count: 47, creator_name: '나' },
+  { ...MOCK_MY_LISTS[1]!, ...noAttribution, wine_count: 4, save_count: 0,  like_count: 0,  creator_name: '나' },
+  { ...MOCK_MY_LISTS[2]!, ...noAttribution, wine_count: 5, save_count: 8,  like_count: 15, creator_name: '나' },
+  { ...MOCK_MY_LISTS[3]!, ...noAttribution, wine_count: 0, save_count: 0,  like_count: 0,  creator_name: '나' },
 ];
 
 // 커뮤니티 공개 리스트 (타 사용자 소유 — 저장·가져오기 테스트용)
@@ -143,6 +144,7 @@ export const MOCK_PUBLIC_LIST: MockWineListStats = {
   wine_count: 10,
   save_count: 132,
   like_count: 318,
+  creator_name: '함소믈리에',
 };
 
 export const MOCK_PUBLIC_LIST_ITEMS: MockWineListItem[] = [
