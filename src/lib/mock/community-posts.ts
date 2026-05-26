@@ -10,7 +10,7 @@
  * - wineId 는 `wines.ts` mock id 참조 (현 RN 단계에서는 mock wines.ts 부재 — wineId 는 LWIN 미지원, fallback stub 사용)
  */
 
-export type PostType = 'note' | 'question' | 'column' | 'news' | 'album';
+export type PostType = 'note' | 'question' | 'column' | 'news' | 'album' | 'list';
 
 export interface CommReactions {
   glass: number;
@@ -45,6 +45,8 @@ export interface CommPost {
   reactions: CommReactions;
   comments: number;
   photoCount?: number;
+  /** listId — type==='list'일 때 InlineListCard에 연결할 wine_lists.id */
+  listId?: string;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -131,6 +133,17 @@ export const COMM_POSTS: CommPost[] = [
     body: '레몬·헤이즐넛 사이로 부싯돌이 슬쩍. 산도가 펜처럼 또렷한데 미네랄이 길게 따라옴. 아직 6년은 더 좋아질 거예요.',
     reactions: { glass: 89, sparkle: 34, bookmark: 23, drank: 5 },
     comments: 14,
+  },
+  {
+    id: 'p7',
+    type: 'list',
+    userId: 'sommelier',
+    ago: '2일 전',
+    title: '소믈리에 추천 부르고뉴 10선',
+    body: '도멘 루미에, 드 보기에, DRC 빌라주 등. 입문자도 마실 수 있는 부르고뉴 엔트리.',
+    listId: 'list_pub_001',
+    reactions: { glass: 54, sparkle: 21, bookmark: 37, drank: 0 },
+    comments: 9,
   },
 ];
 
