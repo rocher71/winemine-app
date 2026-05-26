@@ -38,6 +38,7 @@ export type MockWineListStats = {
   save_count: number;
   like_count: number;
   creator_name: string | null;
+  tasted_count: number;
 };
 
 export type MockWineListSave = {
@@ -120,15 +121,6 @@ export const MOCK_WINE_LIST_ITEMS: MockWineListItem[] = [
   // 리스트 004 — 이탈리아 스파클링 (0병 — 빈 상태 테스트용)
 ];
 
-// Stats (VIEW 대용)
-const noAttribution = { source_list_id: null, source_list_title: null, source_author_display: null };
-export const MOCK_LIST_STATS: MockWineListStats[] = [
-  { ...MOCK_MY_LISTS[0]!, ...noAttribution, wine_count: 6, save_count: 24, like_count: 47, creator_name: '나' },
-  { ...MOCK_MY_LISTS[1]!, ...noAttribution, wine_count: 4, save_count: 0,  like_count: 0,  creator_name: '나' },
-  { ...MOCK_MY_LISTS[2]!, ...noAttribution, wine_count: 5, save_count: 8,  like_count: 15, creator_name: '나' },
-  { ...MOCK_MY_LISTS[3]!, ...noAttribution, wine_count: 0, save_count: 0,  like_count: 0,  creator_name: '나' },
-];
-
 // 커뮤니티 공개 리스트 (타 사용자 소유 — 저장·가져오기 테스트용)
 export const MOCK_PUBLIC_LIST: MockWineListStats = {
   id: 'list_pub_001',
@@ -145,7 +137,19 @@ export const MOCK_PUBLIC_LIST: MockWineListStats = {
   save_count: 132,
   like_count: 318,
   creator_name: '함소믈리에',
+  tasted_count: 0,
 };
+
+// Stats (VIEW 대용)
+const noAttribution = { source_list_id: null, source_list_title: null, source_author_display: null };
+export const MOCK_LIST_STATS: MockWineListStats[] = [
+  { ...MOCK_MY_LISTS[0]!, ...noAttribution, wine_count: 6, save_count: 24, like_count: 47, creator_name: '나', tasted_count: 2 },
+  { ...MOCK_MY_LISTS[1]!, ...noAttribution, wine_count: 4, save_count: 0,  like_count: 0,  creator_name: '나', tasted_count: 1 },
+  { ...MOCK_MY_LISTS[2]!, ...noAttribution, wine_count: 5, save_count: 8,  like_count: 15, creator_name: '나', tasted_count: 0 },
+  { ...MOCK_MY_LISTS[3]!, ...noAttribution, wine_count: 0, save_count: 0,  like_count: 0,  creator_name: '나', tasted_count: 0 },
+  // 저장한 타인 공개 리스트 — 비오너 뷰 데모용
+  MOCK_PUBLIC_LIST,
+];
 
 export const MOCK_PUBLIC_LIST_ITEMS: MockWineListItem[] = [
   { id: 'pwli_001', list_id: 'list_pub_001', lwin: 1011196, sort_order: 0, note: null, added_at: '2026-05-01T08:00:00Z' },

@@ -1,8 +1,9 @@
 /**
  * /cellar/lists/[id] — 리스트 상세 화면.
- * 공개/비공개 공통. 본인 리스트면 편집·공개전환·삭제 메뉴.
- * 타 사용자 공개 리스트면 저장·가져오기.
- * 디자인 원본: wm-lists-screens.jsx ScreenListDetail.
+ * isOwner true  → 내 리스트 뷰 (progress strip, WINES 헤더, 와인 추가 CTA)
+ * isOwner false → 타인 공개 리스트 뷰 (creator row, stats, 저장/가져오기 CTA)
+ *
+ * 공개/비공개 인라인 칩 + 헤더 연필 버튼은 현재 상태 유지.
  */
 import { useState, useCallback } from 'react';
 import {
@@ -25,13 +26,17 @@ import {
   Layers,
   Globe,
   Lock,
+  Heart,
+  MessageSquare,
+  Bookmark,
+  Plus,
+  GripVertical,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
-import { brand } from '@/lib/design-tokens';
+import { brand, withAlpha } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { WineListItemRow } from '@/components/shared/wine-list-item-row';
 import { VisibilitySheet } from '@/components/cellar/visibility-sheet';
-import { PrimaryButton } from '@/components/shared/primary-button';
 import { Toast } from '@/components/shared/toast';
 import { CommUserAvatar } from '@/components/community/comm-user-avatar';
 import { LevelPill, type LevelId } from '@/components/shared/level-pill';
@@ -42,15 +47,6 @@ import {
   useToggleVisibility,
   useDeleteList,
 } from '@/hooks/use-wine-lists';
-import { useTranslation as useT } from 'react-i18next';
-
-// 작성자 정보 — v0.1.0은 실제 user lookup 미연결 (RLS·anonymous_display 미노출 §4-5).
-// DEMO_MODE / mock 표시용 고정 작성자 (실제 프로필 연동은 v0.2.0).
-const MOCK_CREATOR = {
-  name: '함소믈리에',
-  initial: '함',
-  level: 5 as LevelId,
-};
 
 function formatRelativeTime(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
@@ -65,10 +61,15 @@ function formatRelativeTime(iso: string): string {
   return new Date(iso).toLocaleDateString();
 }
 
+function formatCreatedAt(iso: string): string {
+  const d = new Date(iso);
+  return `${d.getFullYear()}년 ${d.getMonth() + 1}월`;
+}
+
 export default function ListDetailScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { bg, text, border } = useThemeTokens();
+  const { bg, text, border, scheme } = useThemeTokens();
 
   const { list, wines, isSaved: initialSaved, isOwner, isLoading, error, refetch } =
     useListDetail(id ?? '');
@@ -91,12 +92,17 @@ export default function ListDetailScreen() {
     await refetch();
   }, [list, toggle, refetch]);
 
+  const showToast = useCallback((msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 2500);
+  }, []);
+
   const handleImport = useCallback(async () => {
     if (!list) return;
     const importedTitle = t('lists.detail.importedTitle', { title: list.title });
     await importList(list.id, importedTitle);
-    setToastMsg(t('lists.detail.importSuccess'));
-  }, [list, importList, t]);
+    showToast(t('lists.detail.importSuccess'));
+  }, [list, importList, t, showToast]);
 
   const handleMore = useCallback(() => {
     if (!isOwner || !list) return;
@@ -112,19 +118,16 @@ export default function ListDetailScreen() {
           onPress: () => setShowVisibility(true),
         },
         {
-          text: t('common.delete', { defaultValue: '삭제' }),
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => {
             Alert.alert(
-              t('common.confirmDelete', { defaultValue: '삭제할까요?' }),
+              t('common.confirmDelete'),
               list.title,
               [
+                { text: t('common.cancel'), style: 'cancel' },
                 {
-                  text: t('common.cancel', { defaultValue: '취소' }),
-                  style: 'cancel',
-                },
-                {
-                  text: t('common.delete', { defaultValue: '삭제' }),
+                  text: t('common.delete'),
                   style: 'destructive',
                   onPress: async () => {
                     await deleteList(list.id);
@@ -135,7 +138,7 @@ export default function ListDetailScreen() {
             );
           },
         },
-        { text: t('common.cancel', { defaultValue: '취소' }), style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
       ],
     );
   }, [isOwner, list, t, deleteList]);
@@ -151,20 +154,9 @@ export default function ListDetailScreen() {
   if (!list) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: bg.deepest }}>
-        {/* Back */}
         <View style={{ paddingHorizontal: 16, paddingVertical: 6 }}>
-          <Pressable
-            onPress={() => router.back()}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-            hitSlop={8}
-          >
-            <View
-              style={{
-                width: 38, height: 38, borderRadius: 19,
-                backgroundColor: bg.surface,
-                alignItems: 'center', justifyContent: 'center',
-              }}
-            >
+          <Pressable onPress={() => router.back()} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })} hitSlop={8}>
+            <View style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: bg.surface, alignItems: 'center', justifyContent: 'center' }}>
               <ChevronLeft size={20} strokeWidth={2.2} color={text.primary} />
             </View>
           </Pressable>
@@ -182,286 +174,150 @@ export default function ListDetailScreen() {
   }
 
   const isPublic = list.visibility === 'public';
+  const tastedCount = list.tasted_count ?? 0;
+  const progressPct = list.wine_count > 0 ? (tastedCount / list.wine_count) * 100 : 0;
+  const creatorInitial = list.creator_name?.[0]?.toUpperCase() ?? '?';
+
+  // ─── Icon button helper ───────────────────────────────────────────
+  const IconBtn = ({ onPress, children }: { onPress: () => void; children: React.ReactNode }) => (
+    <View>
+      <Pressable onPress={onPress} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })} hitSlop={8} accessibilityRole="button">
+        <View style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: bg.surface, alignItems: 'center', justifyContent: 'center' }}>
+          {children}
+        </View>
+      </Pressable>
+    </View>
+  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: bg.deepest }}>
-      {/* Top bar */}
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 16,
-          paddingVertical: 6,
-          gap: 6,
-        }}
-      >
-        {/* Back */}
-        <View>
-          <Pressable
-            onPress={() => router.back()}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-            hitSlop={8}
-            accessibilityRole="button"
-          >
-            <View
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 19,
-                backgroundColor: bg.surface,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <ChevronLeft size={20} strokeWidth={2.2} color={text.primary} />
-            </View>
-          </Pressable>
-        </View>
+
+      {/* ── Top bar ─────────────────────────────────────────────────── */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 6, gap: 6 }}>
+        <IconBtn onPress={() => router.back()}>
+          <ChevronLeft size={20} strokeWidth={2.2} color={text.primary} />
+        </IconBtn>
 
         <View style={{ flex: 1 }} />
 
-        {/* Share — 피드에 공유하기 (공개 리스트만) */}
+        {/* Share — 공개 리스트만 */}
         {isPublic && (
-        <View>
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
-              Alert.alert(
-                t('lists.detail.shareToFeed'),
-                list.title,
-                [
-                  {
-                    text: t('lists.detail.shareToFeed'),
-                    onPress: () => {
-                      router.push({
-                        pathname: '/community/new/index',
-                        params: { listId: list.id, listTitle: list.title },
-                      });
-                    },
-                  },
-                  { text: t('common.cancel'), style: 'cancel' },
-                ],
-              );
-            }}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-            hitSlop={8}
-            accessibilityRole="button"
-          >
-            <View
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 19,
-                backgroundColor: bg.surface,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Share2 size={17} strokeWidth={1.9} color={text.secondary} />
-            </View>
-          </Pressable>
-        </View>
+          <IconBtn onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+            Alert.alert(
+              t('lists.detail.shareToFeed'), list.title,
+              [
+                { text: t('lists.detail.shareToFeed'), onPress: () => router.push({ pathname: '/community/new/index', params: { listId: list.id, listTitle: list.title } }) },
+                { text: t('common.cancel'), style: 'cancel' },
+              ],
+            );
+          }}>
+            <Share2 size={17} strokeWidth={1.9} color={text.secondary} />
+          </IconBtn>
         )}
 
-        {/* Pencil — 편집 바로가기 (owner only) */}
+        {/* Pencil — 편집 (owner only, 현재 상태 유지) */}
         {isOwner && (
-          <View>
-            <Pressable
-              onPress={() => router.push(`/cellar/lists/${id}/edit`)}
-              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-              hitSlop={8}
-              accessibilityRole="button"
-            >
-              <View
-                style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 19,
-                  backgroundColor: bg.surface,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Pencil size={16} strokeWidth={1.9} color={text.secondary} />
-              </View>
-            </Pressable>
-          </View>
+          <IconBtn onPress={() => router.push(`/cellar/lists/${id}/edit`)}>
+            <Pencil size={16} strokeWidth={1.9} color={text.secondary} />
+          </IconBtn>
         )}
 
         {/* More (owner only) */}
         {isOwner && (
-          <View>
-            <Pressable
-              onPress={handleMore}
-              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-              hitSlop={8}
-              accessibilityRole="button"
-            >
-              <View
-                style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 19,
-                  backgroundColor: bg.surface,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <MoreHorizontal size={17} strokeWidth={1.9} color={text.secondary} />
-              </View>
-            </Pressable>
-          </View>
+          <IconBtn onPress={handleMore}>
+            <MoreHorizontal size={17} strokeWidth={1.9} color={text.secondary} />
+          </IconBtn>
         )}
       </View>
 
-      {/* Scrollable content */}
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 120 }}
-        showsVerticalScrollIndicator={false}
-      >
+      {/* ── Scrollable body ─────────────────────────────────────────── */}
+      <ScrollView contentContainerStyle={{ paddingBottom: 130 }} showsVerticalScrollIndicator={false}>
+
         {/* Hero section */}
         <View style={{ paddingHorizontal: 24, paddingTop: 4, paddingBottom: 20 }}>
-          {/* eyebrow */}
+
+          {/* Eyebrow */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Layers size={12} strokeWidth={2} color={brand.goldSoft} />
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Inter_700Bold',
-                fontSize: 10,
-                color: brand.goldSoft,
-                letterSpacing: 2.2,
-                textTransform: 'uppercase',
-              }}
-            >
-              {isPublic ? t('lists.detail.publicLabel') : t('lists.detail.privateLabel')}
+            <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 10, color: brand.goldSoft, letterSpacing: 2.2, textTransform: 'uppercase' }}>
+              {isOwner ? t('lists.detail.privateLabel') : t('lists.detail.publicLabel')}
             </Text>
           </View>
 
           {/* Title */}
           <Text
             allowFontScaling={false}
-            style={{
-              fontFamily: 'PlayfairDisplay_600SemiBold',
-              fontStyle: 'italic',
-              fontSize: 32,
-              color: text.primary,
-              letterSpacing: -0.6,
-              lineHeight: 38,
-              marginTop: 10,
-            }}
+            style={{ fontFamily: 'PlayfairDisplay_600SemiBold', fontStyle: 'italic', fontSize: 32, color: text.primary, letterSpacing: -0.6, lineHeight: 38, marginTop: 10 }}
           >
             {list.title}
           </Text>
 
-          {/* 마지막 수정 + 공개여부 인라인 */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8 }}>
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Inter_400Regular',
-                fontSize: 11,
-                color: text.muted,
-                lineHeight: 15,
-              }}
-            >
-              {t('lists.detail.lastEdited', {
-                time: formatRelativeTime(list.updated_at),
-                count: list.wine_count,
-              })}
-            </Text>
-
-            <View style={{ width: 2, height: 2, borderRadius: 1, backgroundColor: text.muted, opacity: 0.4 }} />
-
-            {/* 공개/비공개 인디케이터 — 오너는 탭 가능 */}
-            <Pressable
-              onPress={isOwner ? () => setShowVisibility(true) : undefined}
-              style={({ pressed }) => ({ opacity: isOwner && pressed ? 0.6 : 1 })}
-              accessibilityRole={isOwner ? 'button' : 'text'}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-                {isPublic
-                  ? <Globe size={10} strokeWidth={1.9} color={text.muted} />
-                  : <Lock size={10} strokeWidth={1.9} color={text.muted} />}
-                <Text
-                  allowFontScaling={false}
-                  style={{
-                    fontFamily: 'Inter_400Regular',
-                    fontSize: 11,
-                    color: text.muted,
-                    lineHeight: 15,
-                  }}
-                >
-                  {isPublic
-                    ? t('lists.detail.visibilityPublic')
-                    : t('lists.detail.visibilityPrivate')}
-                </Text>
-              </View>
-            </Pressable>
-          </View>
-
-          {/* Creator row — avatar + name + level + follow stub */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 10,
-              marginTop: 14,
-            }}
-          >
-            <CommUserAvatar
-              levelId={MOCK_CREATOR.level}
-              initial={MOCK_CREATOR.initial}
-              size={36}
-            />
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Inter_700Bold',
-                fontSize: 14,
-                color: text.primary,
-                letterSpacing: -0.1,
-              }}
-            >
-              {MOCK_CREATOR.name}
-            </Text>
-            <LevelPill level={MOCK_CREATOR.level} size="sm" />
-
-            <View style={{ flex: 1 }} />
-
-            {/* Follow stub */}
-            <Pressable
-              onPress={() => undefined}
-              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-              accessibilityRole="button"
-              hitSlop={6}
-            >
-              <View
-                style={{
-                  height: 30,
-                  paddingHorizontal: 14,
-                  borderRadius: 999,
-                  borderWidth: 1,
-                  borderColor: brand.wineRed,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+          {/* ── OWNER META ROW ── */}
+          {isOwner && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted }}>
+                <Text style={{ fontFamily: 'Inter_700Bold', color: text.primary }}>{list.wine_count}</Text>
+                {' '}{t('common.bottleUnit')}
+              </Text>
+              <View style={{ width: 2, height: 2, borderRadius: 1, backgroundColor: text.muted, opacity: 0.4 }} />
+              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted }}>
+                {t('lists.detail.createdAt', { date: formatCreatedAt(list.created_at) })}
+              </Text>
+              <View style={{ width: 2, height: 2, borderRadius: 1, backgroundColor: text.muted, opacity: 0.4 }} />
+              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted }}>
+                {formatRelativeTime(list.updated_at)} {t('common.edit', { defaultValue: '수정' })}
+              </Text>
+              <View style={{ width: 2, height: 2, borderRadius: 1, backgroundColor: text.muted, opacity: 0.4 }} />
+              {/* 공개/비공개 인라인 칩 — 현재 상태 유지 */}
+              <Pressable
+                onPress={() => setShowVisibility(true)}
+                style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+                accessibilityRole="button"
               >
-                <Text
-                  allowFontScaling={false}
-                  style={{
-                    fontFamily: 'Inter_700Bold',
-                    fontSize: 12,
-                    color: brand.wineRed,
-                  }}
-                >
-                  {t('lists.detail.follow')}
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                  {isPublic
+                    ? <Globe size={10} strokeWidth={1.9} color={text.muted} />
+                    : <Lock size={10} strokeWidth={1.9} color={text.muted} />}
+                  <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted }}>
+                    {isPublic ? t('lists.detail.visibilityPublic') : t('lists.detail.visibilityPrivate')}
+                  </Text>
+                </View>
+              </Pressable>
+            </View>
+          )}
+
+          {/* ── NON-OWNER CREATOR ROW ── */}
+          {!isOwner && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 14 }}>
+              <CommUserAvatar levelId={5 as LevelId} initial={creatorInitial} size={36} />
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 13, color: text.primary, letterSpacing: -0.1 }}>
+                    {list.creator_name ?? '—'}
+                  </Text>
+                  <LevelPill level={5 as LevelId} size="sm" />
+                </View>
+                <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted, marginTop: 1 }}>
+                  {t('lists.detail.lastEdited', { time: formatRelativeTime(list.updated_at), count: list.wine_count })}
                 </Text>
               </View>
-            </Pressable>
-          </View>
+              <Pressable
+                onPress={() => undefined}
+                style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+                accessibilityRole="button"
+                hitSlop={6}
+              >
+                <View style={{ height: 30, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: brand.wineRed, alignItems: 'center', justifyContent: 'center' }}>
+                  <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 12, color: brand.wineRed }}>
+                    {t('lists.detail.follow')}
+                  </Text>
+                </View>
+              </Pressable>
+            </View>
+          )}
 
-          {/* Description — blockquote */}
+          {/* Description — blockquote with gold left border */}
           {!!list.description && (
             <Text
               allowFontScaling={false}
@@ -474,35 +330,64 @@ export default function ListDetailScreen() {
                 fontSize: 13,
                 color: text.secondary,
                 lineHeight: 19.5,
-                marginTop: 10,
+                marginTop: 14,
               }}
             >
               {list.description}
             </Text>
           )}
 
-            {/* Attribution — 가져온 리스트일 때만 표시 */}
+          {/* Attribution */}
           {!!list.source_list_title && !!list.source_author_display && (
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Inter_400Regular',
-                fontSize: 11,
-                color: text.muted,
-                marginTop: 6,
-                lineHeight: 16,
-              }}
-            >
+            <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted, marginTop: 6, lineHeight: 16 }}>
               {t('lists.detail.attribution', { author: list.source_author_display })}
             </Text>
           )}
 
-        {/* Engagement stats — 3 column row (public only) */}
-          {isPublic && (
+          {/* ── OWNER PROGRESS STRIP ── */}
+          {isOwner && list.wine_count > 0 && (
+            <View
+              style={{
+                marginTop: 16,
+                padding: 14,
+                borderRadius: 14,
+                backgroundColor: bg.surface,
+                borderWidth: 1,
+                borderColor: border.default,
+              }}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
+                <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 22, color: text.primary, letterSpacing: -0.5 }}>
+                  {tastedCount}
+                  <Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 14, color: text.muted }}>
+                    {` / ${list.wine_count}`}
+                  </Text>
+                </Text>
+                <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted }}>
+                  {t('lists.detail.tasted')}
+                </Text>
+              </View>
+              {/* Progress bar */}
+              <View style={{ marginTop: 10, height: 6, borderRadius: 999, backgroundColor: bg.deep, overflow: 'hidden' }}>
+                <View
+                  style={{
+                    position: 'absolute',
+                    left: 0, top: 0, bottom: 0,
+                    width: `${progressPct}%`,
+                    borderRadius: 999,
+                    backgroundColor: brand.goldSoft,
+                  }}
+                />
+              </View>
+            </View>
+          )}
+
+          {/* ── NON-OWNER STATS ROW ── */}
+          {!isOwner && isPublic && (
             <View
               style={{
                 flexDirection: 'row',
-                marginTop: 14,
+                marginTop: 16,
                 borderTopWidth: StyleSheet.hairlineWidth,
                 borderTopColor: border.default,
                 borderBottomWidth: StyleSheet.hairlineWidth,
@@ -510,40 +395,28 @@ export default function ListDetailScreen() {
               }}
             >
               {[
-                { key: 'likes', label: t('lists.detail.statLikes'), count: list.like_count ?? 0 },
-                { key: 'comments', label: t('lists.detail.statComments'), count: 0 },
-                { key: 'saves', label: t('lists.detail.statSaves'), count: list.save_count ?? 0 },
-              ].map(({ key, label, count }, i) => (
+                { icon: <Heart size={12} strokeWidth={2} color={brand.goldSoft} />, count: list.like_count ?? 0, label: t('lists.detail.statLikes') },
+                { icon: <MessageSquare size={12} strokeWidth={2} color={brand.goldSoft} />, count: 0, label: t('lists.detail.statComments') },
+                { icon: <Bookmark size={12} strokeWidth={2} color={brand.goldSoft} />, count: list.save_count ?? 0, label: t('lists.detail.statSaves') },
+              ].map(({ icon, count, label }, i) => (
                 <View
-                  key={key}
+                  key={label}
                   style={{
                     flex: 1,
                     alignItems: 'center',
                     paddingVertical: 12,
                     borderLeftWidth: i === 0 ? 0 : StyleSheet.hairlineWidth,
                     borderLeftColor: border.default,
+                    gap: 3,
                   }}
                 >
-                  <Text
-                    allowFontScaling={false}
-                    style={{
-                      fontFamily: 'Freesentation_7Bold',
-                      fontSize: 18,
-                      color: text.primary,
-                      letterSpacing: -0.4,
-                    }}
-                  >
-                    {count}
-                  </Text>
-                  <Text
-                    allowFontScaling={false}
-                    style={{
-                      fontFamily: 'Inter_400Regular',
-                      fontSize: 11,
-                      color: text.muted,
-                      marginTop: 2,
-                    }}
-                  >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                    {icon}
+                    <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 16, color: text.primary, letterSpacing: -0.4 }}>
+                      {count}
+                    </Text>
+                  </View>
+                  <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted }}>
                     {label}
                   </Text>
                 </View>
@@ -552,10 +425,43 @@ export default function ListDetailScreen() {
           )}
         </View>
 
-        {/* Divider */}
-        <View style={{ height: 1, backgroundColor: border.default, marginHorizontal: 20 }} />
+        {/* ── WINES SECTION HEADER ── */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'baseline',
+            paddingHorizontal: 24,
+            paddingBottom: 8,
+            gap: 8,
+          }}
+        >
+          <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 10, color: brand.goldSoft, letterSpacing: 1.8, textTransform: 'uppercase' }}>
+            {t('lists.detail.winesSection')}
+          </Text>
+          <Text allowFontScaling={false} style={{ fontFamily: 'Inter_600SemiBold', fontSize: 13, color: text.primary }}>
+            {t('common.bottleUnit', { defaultValue: '병' })} {list.wine_count}
+          </Text>
+          <View style={{ flex: 1 }} />
+          {isOwner && (
+            <Pressable
+              onPress={() => undefined}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              hitSlop={6}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <GripVertical size={11} strokeWidth={1.8} color={text.secondary} />
+                <Text allowFontScaling={false} style={{ fontFamily: 'Inter_600SemiBold', fontSize: 11, color: text.secondary }}>
+                  {t('lists.detail.reorder')}
+                </Text>
+              </View>
+            </Pressable>
+          )}
+        </View>
 
-        {/* Wine list */}
+        {/* Divider */}
+        <View style={{ height: 1, backgroundColor: border.default, marginHorizontal: 0 }} />
+
+        {/* Wine rows */}
         {wines.map((item, i) => (
           <WineListItemRow
             key={item.id}
@@ -566,44 +472,96 @@ export default function ListDetailScreen() {
         ))}
       </ScrollView>
 
-      {/* Bottom action bar — 비오너(저장/가져오기)만 */}
+      {/* ── BOTTOM ACTION BAR ─────────────────────────────────────── */}
+
+      {/* Owner: 와인 추가 (v0.3.0 예정) */}
+      {isOwner && (
+        <View
+          style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            paddingHorizontal: 16, paddingVertical: 12, paddingBottom: 28,
+            backgroundColor: bg.deepest,
+            borderTopWidth: 0.5, borderTopColor: border.default,
+          }}
+        >
+          <Pressable
+            onPress={() => showToast(t('placeholders.comingSoon'))}
+            style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
+            accessibilityRole="button"
+          >
+            <View
+              style={{
+                height: 52, borderRadius: 14,
+                backgroundColor: brand.wineRed,
+                flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+                shadowColor: brand.wineRed,
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.35, shadowRadius: 14, elevation: 6,
+              }}
+            >
+              <Plus size={16} strokeWidth={2.4} color={brand.cream} />
+              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 14, color: brand.cream, letterSpacing: -0.1 }}>
+                {t('lists.detail.addWine')}
+              </Text>
+            </View>
+          </Pressable>
+        </View>
+      )}
+
+      {/* Non-owner: 저장 + 가져오기 */}
       {!isOwner && (
         <View
           style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            paddingHorizontal: 16,
-            paddingVertical: 12,
-            paddingBottom: 28,
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            paddingHorizontal: 16, paddingVertical: 12, paddingBottom: 28,
             backgroundColor: bg.deepest,
-            borderTopWidth: 0.5,
-            borderTopColor: border.default,
-            flexDirection: 'row',
-            gap: 10,
+            borderTopWidth: 0.5, borderTopColor: border.default,
+            flexDirection: 'row', gap: 10,
           }}
         >
-          {/* Save/Saved toggle */}
-          <View style={{ flex: 1 }}>
-            <PrimaryButton
-              label={isSaved ? t('lists.detail.saved') : t('lists.detail.save')}
-              onPress={isSaved ? unsave : save}
-              size="lg"
-              variant={isSaved ? 'secondary' : 'primary'}
-              loading={savingLoading}
-            />
-          </View>
-          {/* Import to my lists */}
-          <View style={{ flex: 1 }}>
-            <PrimaryButton
-              label={t('lists.detail.import')}
-              onPress={handleImport}
-              size="lg"
-              variant="ghost"
-              loading={importLoading}
-            />
-          </View>
+          {/* Save / Saved toggle */}
+          <Pressable
+            onPress={isSaved ? unsave : save}
+            style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.85 : 1 })}
+            accessibilityRole="button"
+            disabled={savingLoading}
+          >
+            <View
+              style={{
+                height: 52, borderRadius: 14,
+                backgroundColor: bg.surface,
+                borderWidth: 1, borderColor: isSaved ? brand.wineRed : border.default,
+                flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+              }}
+            >
+              <Bookmark size={16} strokeWidth={2} color={isSaved ? brand.wineRed : text.primary} fill={isSaved ? brand.wineRed : 'none'} />
+              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 13.5, color: isSaved ? brand.wineRed : text.primary, letterSpacing: -0.1 }}>
+                {isSaved ? t('lists.detail.saved') : t('lists.detail.save')}
+              </Text>
+            </View>
+          </Pressable>
+          {/* Import */}
+          <Pressable
+            onPress={handleImport}
+            style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.88 : 1 })}
+            accessibilityRole="button"
+            disabled={importLoading}
+          >
+            <View
+              style={{
+                height: 52, borderRadius: 14,
+                backgroundColor: brand.wineRed,
+                flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+                shadowColor: brand.wineRed,
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.35, shadowRadius: 14, elevation: 6,
+              }}
+            >
+              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 13.5, color: brand.cream, letterSpacing: -0.1 }}>
+                {t('lists.detail.import')}
+              </Text>
+            </View>
+          </Pressable>
         </View>
       )}
 
@@ -619,7 +577,7 @@ export default function ListDetailScreen() {
 
       {/* Toast */}
       {!!toastMsg && (
-        <View style={{ position: 'absolute', bottom: 100, left: 16, right: 16 }}>
+        <View style={{ position: 'absolute', bottom: 100, left: 16, right: 16 }} pointerEvents="none">
           <Toast message={toastMsg} />
         </View>
       )}

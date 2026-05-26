@@ -1700,6 +1700,11 @@
       "statSaves": "저장",
       "visibilityPublic": "공개",
       "visibilityPrivate": "비공개",
+      "winesSection": "WINES",
+      "reorder": "순서 편집",
+      "tasted": "마신 와인",
+      "addWine": "와인 추가",
+      "createdAt": "{{date}} 시작",
       "stats": {
         "likes": "좋아요",
         "comments": "댓글",

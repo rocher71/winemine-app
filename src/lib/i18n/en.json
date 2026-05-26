@@ -1700,6 +1700,11 @@
       "statSaves": "Saves",
       "visibilityPublic": "Public",
       "visibilityPrivate": "Private",
+      "winesSection": "WINES",
+      "reorder": "Reorder",
+      "tasted": "tasted",
+      "addWine": "Add wine",
+      "createdAt": "started {{date}}",
       "stats": {
         "likes": "Likes",
         "comments": "Comments",
