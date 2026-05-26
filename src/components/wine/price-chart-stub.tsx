@@ -1,5 +1,5 @@
 /**
- * PriceChartStub — 가격 추이 카드 (compact variant).
+ * PriceChartStub — 가격 추이 카드.
  *
  * 사양: wine-detail.md §3-8 verbatim.
  *
@@ -8,19 +8,34 @@
  *   - chart container: empty state "아직 등록된 가격이 없어요" / "No purchases yet"
  *   - details link → Toast "v0.2.0에 출시 예정" (사양 §12 Q9)
  * v0.2.0에서 victory-native LineChart + purchases supabase query 채움.
+ *
+ * V2 업데이트 (wine-detail-v2-tasks.md T7):
+ *   - priceHistory?: PricePoint[] prop 추가 — 데이터 있으면 MiniLineChart 표시
  */
 import { useState } from 'react';
-import { View, Text, Pressable, useColorScheme } from 'react-native';
+import { View, Text, Pressable, useColorScheme, Dimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { brand } from '@/lib/design-tokens';
 import { Toast } from '@/components/shared/toast';
+import { MiniLineChart } from '@/components/shared/mini-line-chart';
+import type { PricePoint } from '@/lib/types/wine-detail';
 
 type Range = '3M' | '1Y' | 'ALL';
 const RANGES: Range[] = ['3M', '1Y', 'ALL'];
 
-export function PriceChartStub() {
+interface Props {
+  priceHistory?: PricePoint[];
+}
+
+function filterByRange(data: PricePoint[], range: Range): PricePoint[] {
+  if (range === 'ALL') return data;
+  if (range === '1Y') return data.slice(-12);
+  return data.slice(-3);
+}
+
+export function PriceChartStub({ priceHistory }: Props) {
   const { t } = useTranslation();
   const scheme = useColorScheme();
   const [range, setRange] = useState<Range>('1Y');
@@ -36,6 +51,10 @@ export function PriceChartStub() {
     setToastMsg(t('wineDetail.priceChart.deferredToast'));
     setTimeout(() => setToastMsg(null), 2500);
   };
+
+  const filtered = priceHistory ? filterByRange(priceHistory, range) : [];
+  const hasData = filtered.length > 0;
+  const chartWidth = Dimensions.get('window').width - 64;
 
   return (
     <View className="mx-4 rounded-2xl bg-surface dark:bg-surface border border-border-default p-4">
@@ -80,16 +99,28 @@ export function PriceChartStub() {
         </View>
       </View>
 
-      {/* Chart container — empty placeholder */}
-      <View
-        className="items-center justify-center"
-        style={{ height: 200 }}
-        accessibilityRole="text"
-      >
-        <Text className="font-inter text-[12px] text-text-muted dark:text-text-muted">
-          {t('wineDetail.priceChart.empty')}
-        </Text>
-      </View>
+      {/* Chart */}
+      {hasData ? (
+        <View style={{ alignItems: 'center' }}>
+          <MiniLineChart
+            data={filtered}
+            width={chartWidth}
+            height={120}
+            color={brand.gold}
+            compact={false}
+          />
+        </View>
+      ) : (
+        <View
+          className="items-center justify-center"
+          style={{ height: 120 }}
+          accessibilityRole="text"
+        >
+          <Text className="font-inter text-[12px] text-text-muted dark:text-text-muted">
+            {t('wineDetail.priceChart.empty')}
+          </Text>
+        </View>
+      )}
 
       {/* Details link */}
       <Pressable
