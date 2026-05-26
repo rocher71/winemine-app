@@ -44,18 +44,21 @@ export function ListTabContent() {
   const [sortDropdownVisible, setSortDropdownVisible] = useState(false);
   const [sortDropdownTop, setSortDropdownTop] = useState(0);
   const sortButtonRef = useRef<View>(null);
+  // Root view ref — needed to convert pageY (screen-absolute) to root-relative coords,
+  // because SortDropdown's position:absolute is relative to this view, not the screen.
+  const rootRef = useRef<View>(null);
 
   const openSortDropdown = useCallback(() => {
     if (sortDropdownVisible) {
       setSortDropdownVisible(false);
       return;
     }
-    if (sortButtonRef.current) {
-      sortButtonRef.current.measure((_x, _y, _w, h, _px, py) => {
-        setSortDropdownTop(py + h + 6);
+    sortButtonRef.current?.measure((_x, _y, _w, h, _px, py) => {
+      rootRef.current?.measure((_rx, _ry, _rw, _rh, _rpx, rpy) => {
+        setSortDropdownTop(py + h + 6 - rpy);
         setSortDropdownVisible(true);
       });
-    }
+    });
   }, [sortDropdownVisible]);
 
   // Visibility sheet state
@@ -80,7 +83,7 @@ export function ListTabContent() {
   const sortOptions = LIST_SORT_KEYS.map((k) => ({ key: k, label: t(SORT_I18N[k]) }));
 
   return (
-    <View style={{flex: 1}}>
+    <View ref={rootRef} style={{flex: 1}} collapsable={false}>
       {/* Count + sort trigger row */}
       {!isLoading && (
         <View
