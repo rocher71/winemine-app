@@ -36,6 +36,10 @@ type TastingNoteRow = Database['public']['Tables']['tasting_notes']['Row'];
 interface Props {
   note: TastingNoteRow;
   wineLwin: string;
+  /** 전체 노트 수 — 1 이상일 때 헤더에 "N개 전체 보기 →" 표시 */
+  noteCount?: number;
+  /** "전체 보기 →" 탭 핸들러 — noteCount > 1일 때만 사용 */
+  onViewAll?: () => void;
 }
 
 const DIM_KEYS = ['sweetness', 'acidity', 'body', 'tannin'] as const;
@@ -83,7 +87,7 @@ function shortWsetValue(t: (k: string) => string, raw: string | null): string {
   return raw;
 }
 
-export function MyTastingNoteCard({ note, wineLwin }: Props) {
+export function MyTastingNoteCard({ note, wineLwin: _wineLwin, noteCount, onViewAll }: Props) {
   const router = useRouter();
   const { t } = useTranslation();
   const scheme = useColorScheme();
@@ -96,13 +100,6 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
   const handleOpen = () => {
     Haptics.selectionAsync().catch(() => undefined);
     router.push(`/notes/${note.id}`);
-  };
-
-  const handleEdit = () => {
-    Haptics.selectionAsync().catch(() => undefined);
-    router.push(
-      `/notes/new/write?wine_lwin=${encodeURIComponent(wineLwin)}&edit=1&noteId=${encodeURIComponent(note.id)}`,
-    );
   };
 
   const ratingDisplay =
@@ -144,26 +141,47 @@ export function MyTastingNoteCard({ note, wineLwin }: Props) {
             style={{ fontFamily: 'Freesentation_4Regular', fontSize: 12, textTransform: 'uppercase', color: brand.gold, letterSpacing: 0.72 }}
           >
             {t('wineDetail.myNote.label')}
+            {noteCount && noteCount > 0 ? (
+              <Text style={{ color: brand.gold }}>{`  ${noteCount}개`}</Text>
+            ) : null}
           </Text>
         </View>
-        <Pressable
-          onPress={handleEdit}
-          accessibilityRole="button"
-          accessibilityLabel={t('wineDetail.myNote.edit')}
-          hitSlop={8}
-          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Pencil size={11} color={brand.cream} />
-            <Text
-              allowFontScaling={false}
-              className="text-text-secondary dark:text-text-secondary"
-              style={{ fontFamily: 'Freesentation_4Regular', fontSize: 11 }}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          {onViewAll && noteCount && noteCount > 1 ? (
+            <Pressable
+              onPress={onViewAll}
+              accessibilityRole="link"
+              accessibilityLabel={t('wineDetail.myNote.viewAll')}
+              hitSlop={8}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             >
-              {t('wineDetail.myNote.edit')}
-            </Text>
-          </View>
-        </Pressable>
+              <Text
+                allowFontScaling={false}
+                style={{ fontFamily: 'Freesentation_4Regular', fontSize: 11, color: brand.gold }}
+              >
+                {t('wineDetail.myNote.viewAll')}
+              </Text>
+            </Pressable>
+          ) : null}
+          <Pressable
+            onPress={handleOpen}
+            accessibilityRole="button"
+            accessibilityLabel={t('wineDetail.myNote.edit')}
+            hitSlop={8}
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Pencil size={11} color={brand.cream} />
+              <Text
+                allowFontScaling={false}
+                className="text-text-secondary dark:text-text-secondary"
+                style={{ fontFamily: 'Freesentation_4Regular', fontSize: 11 }}
+              >
+                {t('wineDetail.myNote.edit')}
+              </Text>
+            </View>
+          </Pressable>
+        </View>
       </View>
 
       {/* Meta row */}

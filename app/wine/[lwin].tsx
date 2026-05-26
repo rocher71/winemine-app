@@ -25,7 +25,6 @@ import { Toast } from '@/components/shared/toast';
 import { WineHero } from '@/components/wine/wine-hero';
 import { FavoriteToggle } from '@/components/wine/favorite-toggle';
 import { MyTastingNoteCard } from '@/components/wine/my-tasting-note-card';
-import { WriteNoteCta } from '@/components/wine/write-note-cta';
 import { WineRatingsAndPriceRow } from '@/components/wine/wine-ratings-price-row';
 import { PriceChartStub } from '@/components/wine/price-chart-stub';
 import { CommunityDrinkWindowCard } from '@/components/wine/community-drink-window-card';
@@ -33,7 +32,7 @@ import { ReviewList } from '@/components/wine/review-list';
 import { AddToCellarCta } from '@/components/wine/add-to-cellar-cta';
 import { AddToCellarSheet } from '@/components/wine/add-to-cellar-sheet';
 import { useWine } from '@/hooks/use-wine';
-import { useMyNoteForWine } from '@/hooks/use-my-note-for-wine';
+import { useNotesForWine } from '@/hooks/use-cellar';
 import { getLocalizedWineName } from '@/lib/lwin';
 import { currentLocale } from '@/lib/i18n';
 import { brand } from '@/lib/design-tokens';
@@ -44,7 +43,7 @@ export default function WineDetailScreen() {
   const lwin = typeof lwinParam === 'string' ? lwinParam : null;
   const { t } = useTranslation();
   const { wine, loading } = useWine(lwin);
-  const { note: myNote } = useMyNoteForWine(lwin);
+  const { notes } = useNotesForWine(lwin);
   const [showCellarSheet, setShowCellarSheet] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -114,12 +113,15 @@ export default function WineDetailScreen() {
           country={wine.country}
         />
 
-        {/* 2. MyTastingNoteCard (있을 때) / WriteNoteCta (없을 때) */}
-        {myNote ? (
-          <MyTastingNoteCard note={myNote} wineLwin={wine.lwin} />
-        ) : (
-          <WriteNoteCta wineLwin={wine.lwin} />
-        )}
+        {/* 2. MyTastingNoteCard (노트 있을 때만, 없으면 섹션 전체 숨김) */}
+        {notes.length > 0 && notes[0] ? (
+          <MyTastingNoteCard
+            note={notes[0]}
+            wineLwin={wine.lwin ?? ''}
+            noteCount={notes.length}
+            onViewAll={() => router.push(`/cellar/${encodeURIComponent(wine.lwin ?? '')}/history`)}
+          />
+        ) : null}
 
         {/* 3+4. ExternalRatingsCard + AveragePricePill 가로 나란히 (50-50) */}
         <WineRatingsAndPriceRow

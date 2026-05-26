@@ -716,6 +716,7 @@
       "peakInYears": "+{{n}} years to peak",
       "fromTo": "{{from}} – {{to}}",
       "empty": "Drink window unavailable",
+      "whenDrunk": "When drunk: {{status}}",
       "a11y": {
         "currentYear": "Current year {{year}}",
         "peak": "Peak in {{year}}",
@@ -765,7 +766,8 @@
       "vintage": "Vintage",
       "region": "Region",
       "storage": "Storage",
-      "price": "Price"
+      "price": "Price",
+      "count": "Most drunk"
     },
     "empty": {
       "title": "Your cellar is empty",
@@ -895,7 +897,8 @@
     },
     "myNote": {
       "label": "My note",
-      "edit": "Edit",
+      "edit": "View",
+      "viewAll": "View all →",
       "openHint": "Tap to view note",
       "mode": {
         "expert": "Expert",

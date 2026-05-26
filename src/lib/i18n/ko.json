@@ -716,6 +716,7 @@
       "peakInYears": "절정까지 +{{n}}년",
       "fromTo": "{{from}}년 ~ {{to}}년",
       "empty": "음용 적기 정보 없음",
+      "whenDrunk": "마셨을 때: {{status}}",
       "a11y": {
         "currentYear": "현재 {{year}}년",
         "peak": "절정 — {{year}}년",
@@ -765,7 +766,8 @@
       "vintage": "빈티지",
       "region": "지역",
       "storage": "보관 위치",
-      "price": "가격대"
+      "price": "가격대",
+      "count": "많이 마심"
     },
     "empty": {
       "title": "셀러가 비어있어요",
@@ -895,7 +897,8 @@
     },
     "myNote": {
       "label": "내 노트",
-      "edit": "수정",
+      "edit": "보기",
+      "viewAll": "전체 보기 →",
       "openHint": "탭하여 상세 보기",
       "mode": {
         "expert": "전문가",
