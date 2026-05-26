@@ -2,7 +2,7 @@
  * ListTabContent — 셀러 탭 > 리스트 탭 전체 콘텐츠.
  * 내 리스트 목록 + FAB + VisibilitySheet.
  */
-import {useCallback, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {View, Text, ScrollView, Pressable} from 'react-native';
 import {Plus, List as ListIcon} from 'lucide-react-native';
 import {useRouter} from 'expo-router';
@@ -13,7 +13,7 @@ import {brand, light} from '@/lib/design-tokens';
 import {useThemeTokens} from '@/lib/use-theme-tokens';
 import {EmptyState} from '@/components/shared/empty-state';
 import {ListCard} from '@/components/cellar/list-card';
-import {ListSortChips} from '@/components/cellar/list-sort-chips';
+import {SortDropdown} from '@/components/cellar/sort-dropdown';
 import {VisibilitySheet} from '@/components/cellar/visibility-sheet';
 import {
   useMyLists,
@@ -22,13 +22,41 @@ import {
   type WineListStats,
 } from '@/hooks/use-wine-lists';
 
+const LIST_SORT_KEYS: readonly ListSortKey[] = ['recent', 'created', 'name', 'count'] as const;
+
+const SORT_I18N: Record<ListSortKey, string> = {
+  recent:  'lists.sortRecent',
+  created: 'lists.sortCreated',
+  name:    'lists.sortName',
+  count:   'lists.sortCount',
+};
+
 export function ListTabContent() {
   const {t} = useTranslation();
   const router = useRouter();
-  const {bg, text, scheme} = useThemeTokens();
+  const {text, scheme} = useThemeTokens();
+  const goldText = scheme === 'light' ? brand.goldDeep : brand.gold;
 
   const [sort, setSort] = useState<ListSortKey>('recent');
   const {lists, isLoading, refetch} = useMyLists(sort);
+
+  // Sort dropdown state
+  const [sortDropdownVisible, setSortDropdownVisible] = useState(false);
+  const [sortDropdownTop, setSortDropdownTop] = useState(0);
+  const sortButtonRef = useRef<View>(null);
+
+  const openSortDropdown = useCallback(() => {
+    if (sortDropdownVisible) {
+      setSortDropdownVisible(false);
+      return;
+    }
+    if (sortButtonRef.current) {
+      sortButtonRef.current.measure((_x, _y, _w, h, _px, py) => {
+        setSortDropdownTop(py + h + 6);
+        setSortDropdownVisible(true);
+      });
+    }
+  }, [sortDropdownVisible]);
 
   // Visibility sheet state
   const [visibilityTarget, setVisibilityTarget] = useState<WineListStats | null>(null);
@@ -49,10 +77,43 @@ export function ListTabContent() {
     await refetch();
   }, [visibilityTarget, toggle, refetch]);
 
+  const sortOptions = LIST_SORT_KEYS.map((k) => ({ key: k, label: t(SORT_I18N[k]) }));
+
   return (
     <View style={{flex: 1}}>
-      {/* Sort chips */}
-      <ListSortChips value={sort} onChange={setSort} />
+      {/* Count + sort trigger row */}
+      {!isLoading && (
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingBottom: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text
+            allowFontScaling={false}
+            style={{fontFamily: 'Inter_400Regular', fontSize: 11, lineHeight: 13.2, color: text.muted}}
+          >
+            {`${lists.length}개`}
+          </Text>
+          <View ref={sortButtonRef} collapsable={false}>
+            <Pressable
+              onPress={openSortDropdown}
+              hitSlop={6}
+              style={({pressed}) => ({opacity: pressed ? 0.7 : 1})}
+            >
+              <Text
+                allowFontScaling={false}
+                style={{fontFamily: 'Freesentation_4Regular', fontSize: 11, lineHeight: 13.2, color: goldText}}
+              >
+                {`${t(SORT_I18N[sort])} ↕`}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
 
       {/* List or empty state */}
       {!isLoading && lists.length === 0 ? (
@@ -63,8 +124,9 @@ export function ListTabContent() {
         />
       ) : (
         <ScrollView
-          contentContainerStyle={{padding: 16, paddingBottom: 100, gap: 10}}
+          contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 100, gap: 10}}
           showsVerticalScrollIndicator={false}
+          onScrollBeginDrag={() => setSortDropdownVisible(false)}
         >
           {lists.map((item) => (
             <View key={item.id}>
@@ -132,6 +194,21 @@ export function ListTabContent() {
           </View>
         </Pressable>
       </View>
+
+      {/* Sort dropdown overlay */}
+      {sortDropdownVisible ? (
+        <SortDropdown
+          options={sortOptions}
+          currentKey={sort}
+          top={sortDropdownTop}
+          title={t('cellar.sort.label')}
+          onSelect={(key) => {
+            setSort(key as ListSortKey);
+            setSortDropdownVisible(false);
+          }}
+          onDismiss={() => setSortDropdownVisible(false)}
+        />
+      ) : null}
 
       {/* Visibility confirmation sheet */}
       <VisibilitySheet

@@ -14,11 +14,11 @@
  *     - 검색 + 타입필터 + 정렬 (최근/많이마심/빈티지/지역/가격대) + 2-col grid
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, RefreshControl, Animated, Pressable, StyleSheet } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, RefreshControl, Animated, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { GlassWater, Check } from 'lucide-react-native';
+import { GlassWater } from 'lucide-react-native';
 import { AppHeader } from '@/components/nav/app-header';
 import { BellButton } from '@/components/nav/bell-button';
 import { LevelChip } from '@/components/shared/level-chip';
@@ -47,9 +47,10 @@ import {
 import { applyTastedSearch, applyTastedTypeFilter, applyTastedSort } from '@/lib/cellar-filters';
 import { useMyLists } from '@/hooks/use-wine-lists';
 import { ListTabContent } from '@/components/cellar/list-tab-content';
+import { SortDropdown } from '@/components/cellar/sort-dropdown';
 
 const TASTED_SPACER_KEY = '__tasted_spacer__';
-import { brand, withAlpha } from '@/lib/design-tokens';
+import { brand } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { applySearch, applyTypeFilter, applySort } from '@/lib/cellar-filters';
 import type { CellarItemWithWine } from '@/hooks/use-cellar';
@@ -137,152 +138,6 @@ function TastedCountSortRow({
         </View>
       </View>
     </View>
-  );
-}
-
-// ─── TastedSortDropdown ───────────────────────────────────────────────────────
-function TastedSortDropdown({
-  top,
-  currentSort,
-  onSelect,
-  onDismiss,
-}: {
-  top: number;
-  currentSort: TastedSortKey;
-  onSelect: (key: TastedSortKey) => void;
-  onDismiss: () => void;
-}) {
-  const { t } = useTranslation();
-  const { bg, text, border, scheme } = useThemeTokens();
-  const goldColor = scheme === 'light' ? brand.goldDeep : brand.gold;
-  const cardBg = bg.surface;
-  const borderColor = border.default;
-  const selectedRowBg = withAlpha(brand.gold, 0.07);
-
-  const SORT_LABELS: Record<TastedSortKey, string> = {
-    recent: t('cellar.sort.recent'),
-    count: t('cellar.sort.count'),
-    vintage: t('cellar.sort.vintage'),
-    region: t('cellar.sort.region'),
-    price: t('cellar.sort.price'),
-  };
-
-  return (
-    // Full-screen dismiss layer
-    <Pressable style={StyleSheet.absoluteFillObject} onPress={onDismiss}>
-      {/* Card container — stopPropagation via pointerEvents="box-none" on inner View */}
-      <View
-        style={{ position: 'absolute', right: 16, top }}
-        // Prevent dismiss Pressable from receiving taps that land on the card
-        // by not marking this View as a hit target — children still receive events
-        pointerEvents="box-none"
-      >
-        {/* Dropdown card */}
-        <View
-          style={{
-            width: 232,
-            borderRadius: 18,
-            backgroundColor: cardBg,
-            borderWidth: 1,
-            borderColor,
-            shadowColor: 'rgba(31,18,12,1)',
-            shadowOffset: { width: 0, height: 10 },
-            shadowOpacity: 0.24,
-            shadowRadius: 22,
-            elevation: 14,
-          }}
-        >
-          {/* Header */}
-          <View style={{ paddingHorizontal: 18, paddingTop: 14, paddingBottom: 12 }}>
-            <Text
-              allowFontScaling={false}
-              style={{ fontFamily: 'Inter_400Regular', fontSize: 10, color: goldColor, textTransform: 'uppercase', letterSpacing: 1.8, marginBottom: 2 }}
-            >
-              Sort by
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={{ fontFamily: 'PlayfairDisplay_400Regular', fontSize: 16, fontStyle: 'italic', color: text.primary }}
-            >
-              {t('cellar.sort.label')}
-            </Text>
-          </View>
-
-          {/* Divider */}
-          <View style={{ height: 0.5, backgroundColor: borderColor, marginHorizontal: 0 }} />
-
-          {/* Option rows */}
-          {TASTED_SORT_KEYS.map((key) => {
-            const isSelected = key === currentSort;
-            return (
-              <Pressable
-                key={key}
-                onPress={() => onSelect(key)}
-                style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
-                accessibilityRole="menuitem"
-                accessibilityState={{ selected: isSelected }}
-              >
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingHorizontal: 18,
-                    paddingVertical: 10,
-                    backgroundColor: isSelected ? selectedRowBg : 'transparent',
-                  }}
-                >
-                  {/* Selection dot */}
-                  <View
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: 3,
-                      backgroundColor: isSelected ? brand.wineRed : 'transparent',
-                      borderWidth: isSelected ? 0 : 1,
-                      borderColor,
-                      marginRight: 12,
-                    }}
-                  />
-                  {/* Label */}
-                  <Text
-                    allowFontScaling={false}
-                    style={{
-                      flex: 1,
-                      fontFamily: isSelected ? 'Inter_600SemiBold' : 'Inter_400Regular',
-                      fontSize: 14,
-                      color: isSelected ? text.primary : text.muted,
-                    }}
-                  >
-                    {SORT_LABELS[key]}
-                  </Text>
-                  {/* Check icon */}
-                  {isSelected ? <Check size={14} color={goldColor} strokeWidth={2.5} /> : null}
-                </View>
-              </Pressable>
-            );
-          })}
-
-          {/* Bottom padding */}
-          <View style={{ height: 8 }} />
-        </View>
-
-        {/* Caret — rendered after card (higher z-order), matching bg "erases" card top border */}
-        <View
-          style={{
-            position: 'absolute',
-            top: -7,
-            right: 24,
-            width: 14,
-            height: 14,
-            transform: [{ rotate: '45deg' }],
-            backgroundColor: cardBg,
-            borderTopWidth: 1,
-            borderLeftWidth: 1,
-            borderColor,
-          }}
-        />
-      </View>
-    </Pressable>
   );
 }
 
@@ -513,11 +368,13 @@ export default function CellarListScreen() {
 
         {/* Anchored sort dropdown overlay */}
         {sortDropdownVisible ? (
-          <TastedSortDropdown
+          <SortDropdown
+            options={TASTED_SORT_KEYS.map((k) => ({ key: k, label: t(`cellar.sort.${k}`) }))}
+            currentKey={tastedSort}
             top={sortDropdownTop}
-            currentSort={tastedSort}
+            title={t('cellar.sort.label')}
             onSelect={(key) => {
-              setTastedSort(key);
+              setTastedSort(key as TastedSortKey);
               setSortDropdownVisible(false);
             }}
             onDismiss={() => setSortDropdownVisible(false)}
