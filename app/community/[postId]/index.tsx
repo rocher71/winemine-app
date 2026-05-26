@@ -54,10 +54,9 @@ import {
   ChevronRight,
   Info,
   Share2,
-  Wine as WineIcon,
 } from 'lucide-react-native';
 import Svg, { Defs, Pattern, Rect, Stop, LinearGradient as SvgLinearGradient } from 'react-native-svg';
-import { brand, light, postTypeBadgeColorLight, withAlpha, communityPost } from '@/lib/design-tokens';
+import { brand, light, postTypeBadgeColorLight, withAlpha, communityPost, type TypeCanonical } from '@/lib/design-tokens';
 import { getCommunityPost, getCommunityPosts, getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
 import { MOCK_WINES } from '@/lib/mock/wines';
 import { getCommentsByPost, localizedBody, type CommComment } from '@/lib/mock/community-comments';
@@ -66,6 +65,8 @@ import { PostTypeBadge } from '@/components/community/post-type-badge';
 import { ReactionBar } from '@/components/community/reaction-bar';
 import { CommentRow } from '@/components/community/comment-row';
 import { CommFeedRow } from '@/components/community/comm-feed-card';
+import { WineEmbedCard } from '@/components/community/wine-embed-card';
+import { WMBottle } from '@/components/shared/wm-bottle';
 
 // ────────────────────────────────────────────────────────────────────────────
 // Main screen
@@ -330,84 +331,6 @@ function UserRow({ userId, ago }: UserRowProps) {
         </Text>
       </View>
     </View>
-  );
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// Shared: WineEmbedCard stub (§10 H — 인라인 간소 카드)
-// ────────────────────────────────────────────────────────────────────────────
-
-interface WineEmbedStubProps {
-  /** post.wineId — RN mock 의 LWIN 또는 keyscreen slug 일 수 있음 (현재 string identifier). */
-  wineId?: string;
-}
-
-function WineEmbedStub({ wineId }: WineEmbedStubProps) {
-  const { t } = useTranslation();
-  // mock wines.ts 에는 LWIN 기반. wineId 가 LWIN 매핑된 wine 이면 display, 아니면 fallback.
-  const wine = wineId ? MOCK_WINES.find((w) => w.lwin === wineId) : undefined;
-  const displayName = wine?.name_ko ?? wine?.display_name ?? wineId ?? 'Wine';
-  const subtitle = wine?.classification ?? wine?.region ?? null;
-
-  const handlePress = () => {
-    Haptics.selectionAsync().catch(() => undefined);
-    if (wine?.lwin) {
-      router.push(`/wine/${wine.lwin}`);
-    }
-  };
-
-  return (
-    <Pressable
-      onPress={handlePress}
-      accessibilityRole="button"
-      accessibilityLabel={displayName}
-      style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1, marginTop: 10 })}
-    >
-      <View
-        style={{
-          paddingVertical: 12,
-          paddingHorizontal: 14,
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: light.border.default,
-          backgroundColor: withAlpha(brand.wineRed, 0.04),
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 12,
-        }}
-      >
-        <WineIcon size={20} strokeWidth={1.75} color={brand.wineRed} />
-        <View style={{ flex: 1, minWidth: 0 }}>
-          <Text
-            allowFontScaling={false}
-            numberOfLines={2}
-            style={{
-              fontFamily: 'Freesentation_4Regular',
-              fontSize: 13,
-              color: light.text.primary,
-              lineHeight: 16.9,
-            }}
-          >
-            {displayName}
-          </Text>
-          {subtitle && (
-            <Text
-              allowFontScaling={false}
-              numberOfLines={1}
-              style={{
-                fontFamily: 'Freesentation_4Regular',
-                fontSize: 10,
-                color: light.text.muted,
-                marginTop: 2,
-              }}
-            >
-              {subtitle}
-            </Text>
-          )}
-        </View>
-        <ChevronRight size={14} strokeWidth={1.75} color={light.text.muted} />
-      </View>
-    </Pressable>
   );
 }
 
@@ -714,8 +637,8 @@ function NoteVariant({ post, mine }: VariantProps) {
         >
           {post.body}
         </Text>
-        {/* WineEmbedCard stub */}
-        {post.wineId && <WineEmbedStub wineId={post.wineId} />}
+        {/* WineEmbedCard (Wave A — bottle + 이 와인 + nameKo + producer·vintage). 슬러그 미해결 시 null. */}
+        {post.wineId && <WineEmbedCard wineId={post.wineId} />}
         {/* Expert annotation */}
         <View
           style={{
@@ -800,8 +723,9 @@ function ColumnVariant({ post, mine }: VariantProps) {
   const allPosts = getCommunityPosts();
   const relatedPosts = [allPosts[5], allPosts[3]].filter(Boolean) as CommPost[];
 
-  // §10 L: column WineEmbed = post.wineId field (p3는 wineId 부재이므로 stub generic — wineId='1011268' Egon Müller Riesling 같은 white burgundy fallback)
-  const columnWineId = post.wineId ?? '1011268';
+  // §10 L: column WineEmbed = post.wineId field. p3 는 wineId 부재 → 칼럼 주제(부르고뉴 화이트)에
+  // 부합하는 resolvable 슬러그 fallback (getWineEmbed 가 해결 가능한 키여야 카드가 렌더됨).
+  const columnWineId = post.wineId ?? 'bgy-puligny-montrachet';
 
   if (!user) return null;
 
@@ -993,8 +917,8 @@ function ColumnVariant({ post, mine }: VariantProps) {
         >
           {t('community.post.column.p3.body2')}
         </Text>
-        {/* WineEmbedCard stub */}
-        <WineEmbedStub wineId={columnWineId} />
+        {/* WineEmbedCard (Wave A — standard embed). 슬러그 미해결 시 null. */}
+        <WineEmbedCard wineId={columnWineId} />
         {/* ReactionBar */}
         <View style={{ marginTop: 14 }}>
           <ReactionBar
@@ -1209,16 +1133,15 @@ function QuestionVariant({ post, mine }: VariantProps) {
                       {`${i + 1}`}
                     </Text>
                   </View>
-                  {/* Bottle silhouette */}
-                  <View
-                    style={{
-                      width: 18,
-                      height: 60,
-                      borderRadius: 3,
-                      backgroundColor: w.bottle_color ?? brand.wineRed,
-                      flexShrink: 0,
-                    }}
-                  />
+                  {/* Bottle silhouette — WMBottle (Wave A 매핑: width 18 → 실루엣 전용, 라벨 텍스트 없음) */}
+                  <View style={{ flexShrink: 0 }}>
+                    <WMBottle
+                      width={18}
+                      height={60}
+                      bottleColor={w.bottle_color ?? brand.wineRed}
+                      type={(w.type_canonical as TypeCanonical | null) ?? null}
+                    />
+                  </View>
                   {/* Wine info wrap */}
                   <View style={{ flex: 1, minWidth: 0 }}>
                     <Text

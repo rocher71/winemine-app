@@ -48,17 +48,26 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import { PenLine } from 'lucide-react-native';
+import { PenLine, TrendingUp, Flame, ChevronUp, Wine as WineIcon, MessageSquare } from 'lucide-react-native';
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { AppHeader } from '@/components/nav/app-header';
 import { BellButton } from '@/components/nav/bell-button';
 import { LevelChip } from '@/components/shared/level-chip';
-import { CommFeedCard, CommFeedRow } from '@/components/community/comm-feed-card';
-import { getCommunityPosts, type CommPost, type PostType } from '@/lib/mock/community-posts';
+import { CommFeedCard } from '@/components/community/comm-feed-card';
+import { PostTypeBadge } from '@/components/community/post-type-badge';
+import {
+  getCommunityPosts,
+  getCommunityUser,
+  getTrendingKeywords,
+  getTrendingRankedPosts,
+  type CommPost,
+  type PostType,
+  type TrendingKeyword,
+} from '@/lib/mock/community-posts';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useProfile } from '@/hooks/use-profile';
 
-type TabId = 'all' | 'following';
+type TabId = 'all' | 'following' | 'trending';
 type TypeFilterId = 'all' | PostType;
 
 const TYPE_FILTERS: TypeFilterId[] = ['all', 'note', 'question', 'column', 'news', 'album'];
@@ -123,6 +132,13 @@ export default function CommunityScreen() {
     [posts, typeFilter],
   );
 
+  // trending 탭 — Wave A mock (이번 주 키워드 + 순위 리스트).
+  const trendingKeywords: TrendingKeyword[] = useMemo(() => getTrendingKeywords(), []);
+  const rankedPosts: CommPost[] = useMemo(
+    () => getTrendingRankedPosts().filter((p): p is CommPost => Boolean(p)),
+    [],
+  );
+
   // ── Handlers ───────────────────────────────────────────────────────────────
 
   const handleTabPress = (id: TabId) => {
@@ -163,7 +179,13 @@ export default function CommunityScreen() {
       >
         <AppHeader
           eyebrow={t('community.title')}
-          title={tab === 'following' ? t('community.pageTitle') : t('community.allTitle')}
+          title={
+            tab === 'following'
+              ? t('community.pageTitle')
+              : tab === 'trending'
+                ? t('community.trending.title')
+                : t('community.allTitle')
+          }
           right={
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
               <BellButton unreadCount={unreadCount} />
@@ -192,7 +214,7 @@ export default function CommunityScreen() {
             borderBottomColor: light.border.default,
           }}
         >
-          {(['all', 'following'] as TabId[]).map((id) => {
+          {(['all', 'following', 'trending'] as TabId[]).map((id) => {
             const active = tab === id;
             return (
               <Pressable
@@ -319,17 +341,23 @@ export default function CommunityScreen() {
               })}
             </ScrollView>
 
-            {/* Feed Row list */}
+            {/* Feed Card list — '팔로잉' 탭과 동일한 CommFeedCard 디자인 사용 */}
             <View
               style={{
                 paddingTop: 6,
                 paddingHorizontal: 16,
                 flexDirection: 'column',
+                gap: 10,
               }}
             >
               {filteredPosts.length > 0 ? (
                 filteredPosts.map((p) => (
-                  <CommFeedRow key={p.id} post={p} onPress={handlePostPress} />
+                  <CommFeedCard
+                    key={p.id}
+                    post={p}
+                    mine={p.id === 'p1' ? 'glass' : null}
+                    onPress={handlePostPress}
+                  />
                 ))
               ) : (
                 // §10 H: EmptyState defensive (typeFilter mock 모두 ≥1 row — 발화 X).
@@ -338,6 +366,107 @@ export default function CommunityScreen() {
                   hint={t('community.empty.filterHint')}
                 />
               )}
+            </View>
+          </>
+        ) : null}
+
+        {/* ── tab === 'trending' ── (GAP-REPORT §C — 이번 주 키워드 + 순위 리스트) */}
+        {tab === 'trending' ? (
+          <>
+            {/* 이번 주 키워드 card */}
+            <View
+              style={{
+                marginTop: 12,
+                marginHorizontal: 16,
+                marginBottom: 0,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                borderRadius: 14,
+                backgroundColor: light.bg.surface,
+                borderWidth: 1,
+                borderColor: light.border.default,
+              }}
+            >
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'Freesentation_6SemiBold',
+                  fontSize: 10,
+                  color: light.border.active,
+                  letterSpacing: 1.4, // 0.14em @ 10px
+                  textTransform: 'uppercase',
+                  marginBottom: 10,
+                }}
+              >
+                {t('community.trending.keywordsLabel')}
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                {trendingKeywords.map((kw) => {
+                  const tint = trendingTintTokens(kw.tint);
+                  return (
+                    <View
+                      key={kw.id}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 6,
+                        paddingVertical: 6,
+                        paddingHorizontal: 11,
+                        borderRadius: 999, // pill — size 가변 허용
+                        backgroundColor: tint.bg,
+                        borderWidth: 1,
+                        borderColor: tint.border,
+                      }}
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        style={{
+                          fontFamily: 'Freesentation_6SemiBold',
+                          fontSize: 11,
+                          color: tint.text,
+                        }}
+                      >
+                        {`#${t(`community.trending.keywords.${kw.id}`)}`}
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={{
+                          fontFamily: 'Freesentation_4Regular',
+                          fontSize: 10,
+                          color: tint.text,
+                          opacity: 0.7,
+                        }}
+                      >
+                        {kw.count}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+
+            {/* 순위 eyebrow */}
+            <Text
+              allowFontScaling={false}
+              style={{
+                paddingTop: 14,
+                paddingHorizontal: 20,
+                paddingBottom: 4,
+                fontFamily: 'Freesentation_6SemiBold',
+                fontSize: 10,
+                color: light.border.active,
+                letterSpacing: 1.8, // 0.18em @ 10px
+                textTransform: 'uppercase',
+              }}
+            >
+              {t('community.trending.rankLabel')}
+            </Text>
+
+            {/* Ranked list */}
+            <View style={{ paddingHorizontal: 16, flexDirection: 'column', gap: 8 }}>
+              {rankedPosts.map((p, i) => (
+                <TrendingRankRow key={p.id} post={p} index={i} onPress={handlePostPress} />
+              ))}
             </View>
           </>
         ) : null}
@@ -430,5 +559,166 @@ function EmptyState({ title, hint }: EmptyStateProps) {
         {hint}
       </Text>
     </View>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Trending — tint → 토큰 매핑 (Wave A 핸드오프 규칙, 하드코딩 hex 금지).
+//   gold/wine → light.border.active (라이트 point color 규칙: red→gold)
+//   primary   → light.text.primary
+//   neutral   → bg light.bg.deep / border light.border.default / text light.text.secondary
+//   colored chip: bg withAlpha(tint, 0.1), border withAlpha(tint, 0.4), text tint
+// ────────────────────────────────────────────────────────────────────────────
+
+function trendingTintTokens(tint: TrendingKeyword['tint']): {
+  bg: string;
+  border: string;
+  text: string;
+} {
+  if (tint === 'neutral') {
+    return {
+      bg: light.bg.deep,
+      border: light.border.default,
+      text: light.text.secondary,
+    };
+  }
+  const tintColor = tint === 'primary' ? light.text.primary : light.border.active;
+  return {
+    bg: withAlpha(tintColor, 0.1),
+    border: withAlpha(tintColor, 0.4),
+    text: tintColor,
+  };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// TrendingRankRow — 순위 리스트 한 줄 (GAP-REPORT §C).
+//   §4-11: outer Pressable opacity-only + inner visual View (3-layer 안전 패턴).
+// ────────────────────────────────────────────────────────────────────────────
+
+interface TrendingRankRowProps {
+  post: CommPost;
+  index: number;
+  onPress: (postId: string) => void;
+}
+
+function TrendingRankRow({ post, index, onPress }: TrendingRankRowProps) {
+  const author = getCommunityUser(post.userId);
+  const top = index < 3;
+  const rankColor = top ? light.border.active : light.text.muted;
+
+  const TrendIcon = index === 0 ? TrendingUp : index === 1 ? Flame : ChevronUp;
+
+  const handlePress = () => {
+    Haptics.selectionAsync().catch(() => undefined);
+    onPress(post.id);
+  };
+
+  return (
+    <Pressable
+      onPress={handlePress}
+      accessibilityRole="button"
+      accessibilityLabel={post.title}
+      style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+    >
+      <View
+        style={{
+          padding: 14,
+          borderRadius: 12,
+          backgroundColor: light.bg.surface,
+          borderWidth: 1,
+          borderColor: light.border.default,
+          flexDirection: 'row',
+          gap: 12,
+          alignItems: 'flex-start',
+        }}
+      >
+        {/* Rank column */}
+        <View style={{ width: 28, alignItems: 'center' }}>
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Freesentation_7Bold',
+              fontSize: 22,
+              lineHeight: 22, // 1.0
+              color: rankColor,
+              textAlign: 'center',
+            }}
+          >
+            {index + 1}
+          </Text>
+          <View style={{ marginTop: 4 }}>
+            <TrendIcon size={11} strokeWidth={2} color={rankColor} />
+          </View>
+        </View>
+
+        {/* Body column */}
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <View style={{ flexDirection: 'row' }}>
+            <PostTypeBadge type={post.type} />
+          </View>
+          <Text
+            allowFontScaling={false}
+            numberOfLines={2}
+            style={{
+              marginTop: 6,
+              fontFamily: 'Freesentation_6SemiBold',
+              fontSize: 13,
+              lineHeight: 17,
+              color: light.text.primary,
+            }}
+          >
+            {post.title}
+          </Text>
+          {/* Meta row */}
+          <View
+            style={{
+              marginTop: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+            }}
+          >
+            {author ? (
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'Freesentation_4Regular',
+                  fontSize: 10,
+                  color: light.text.muted,
+                }}
+              >
+                {author.name}
+              </Text>
+            ) : null}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+              <WineIcon size={10} strokeWidth={1.75} color={light.border.active} />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'Freesentation_4Regular',
+                  fontSize: 10,
+                  color: light.text.muted,
+                }}
+              >
+                {post.reactions.glass}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+              <MessageSquare size={10} strokeWidth={1.75} color={light.text.muted} />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'Freesentation_4Regular',
+                  fontSize: 10,
+                  color: light.text.muted,
+                }}
+              >
+                {post.comments}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </Pressable>
   );
 }

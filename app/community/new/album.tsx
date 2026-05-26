@@ -58,6 +58,7 @@ import { ChevronLeft, ChevronRight, MapPin, Plus, X } from 'lucide-react-native'
 
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { useImagePicker } from '@/hooks/use-image-picker';
+import { WMBottle } from '@/components/shared/wm-bottle';
 
 const CAPTION_MAX = 500;
 const PHOTO_MAX = 9;
@@ -625,15 +626,11 @@ function WineChip({ wine, onPress, onRemove }: WineChipProps) {
           flexShrink: 0,
         }}
       >
-        <View
-          style={{
-            width: 18,
-            height: 60,
-            borderRadius: 3,
-            backgroundColor: wine.bottleColor,
-            flexShrink: 0,
-          }}
-        />
+        {/* §J — design tagged-wine chip은 WMBottle silhouette (colored rect 아님).
+            width 18에서 라벨 텍스트 없이 실루엣만 렌더 (matches design small bottle). */}
+        <View style={{ flexShrink: 0 }}>
+          <WMBottle width={18} height={60} bottleColor={wine.bottleColor} />
+        </View>
         <Text
           allowFontScaling={false}
           style={{

@@ -1217,7 +1217,25 @@
     "allTitle": "All Stories",
     "tabs": {
       "following": "Following",
-      "all": "All"
+      "all": "All",
+      "trending": "Trending"
+    },
+    "trending": {
+      "eyebrow": "Community · This week",
+      "title": "Most-raised glasses",
+      "keywordsLabel": "This week's keywords",
+      "rankLabel": "Ranking (last 7 days)",
+      "keywords": {
+        "k1": "Burgundy 2022 Vintage",
+        "k2": "Les Rugiens",
+        "k3": "Decanting Time",
+        "k4": "Wedding Wines",
+        "k5": "Spring Drinking Window",
+        "k6": "Natural Wine"
+      }
+    },
+    "wineEmbed": {
+      "eyebrow": "This wine"
     },
     "typeFilter": {
       "all": "All"

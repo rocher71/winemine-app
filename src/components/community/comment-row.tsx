@@ -11,6 +11,8 @@
  * **light-only mode** (§0-2): dark variant 생략.
  * **DEVIATION §6-2**: keyscreen cream Name → light.text.primary (cream invisible on white).
  * **DEVIATION §6-5**: keyscreen gold Expert color → light.border.active (deep gold AA pass).
+ * **community 핸드오프 정렬 (Wave A)**: LevelPill 라벨 `L{n}` → t(`level.L${n}`) (ko/en 레벨 이름).
+ *   inline pill 구조 (user-color alpha bg/border) 유지 — className LevelPill 컴포넌트로 교체 안 함.
  */
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -125,7 +127,7 @@ export function CommentRow({
               letterSpacing: 0.36,
             }}
           >
-            L{user.level}
+            {t(`level.L${user.level}`)}
           </Text>
 
           {expert ? (

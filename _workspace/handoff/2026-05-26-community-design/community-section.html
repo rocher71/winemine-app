@@ -1,0 +1,43 @@
+
+      {/* ────────────────────────────────────────────────── */}
+      <DCSection id="community" title="08 · 커뮤니티 (Community)" subtitle="단일 타임라인 + 3탭 · 5가지 포스트 타입 · 와인글래스 리액션 · 오늘 밤 마시는 사람들 지도">
+        <DCArtboard id="comm-feed-following" label="A · 피드 (팔로잉)" sublabel="매거진 풍 카드 + 오늘 밤 티저 + 시그니처 FAB" width={W} height={H}>
+          <PhoneSlot><CommunityFeedFollowing/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-feed-all" label="B · 피드 (전체)" sublabel="덴스 리스트 + 타입 필터 칩" width={W} height={H}>
+          <PhoneSlot><CommunityFeedAll/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-feed-trending" label="C · 피드 (트렌딩)" sublabel="이번 주 키워드 + 순위 리스트" width={W} height={H}>
+          <PhoneSlot><CommunityFeedTrending/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-post-note" label="D · 포스트 상세 · 시음 노트" sublabel="와인 임베드 + 전문가 각주 + 나도 마셔봤어요" width={W} height={H}>
+          <PhoneSlot><PostDetailNote/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-post-column" label="E · 포스트 상세 · 칼럼" sublabel="매거진 풍 커버 + 풀쿼트 + 인라인 와인" width={W} height={H}>
+          <PhoneSlot><PostDetailColumn/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-post-question" label="F · 포스트 상세 · 질문" sublabel="태그 칩 + 가장 많이 추천된 와인 + 답변 리스트" width={W} height={H}>
+          <PhoneSlot><PostDetailQuestion/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-post-album" label="G · 포스트 상세 · 사진 앨범" sublabel="히어로 + 4썸네일 + 더보기" width={W} height={H}>
+          <PhoneSlot><PostDetailAlbum/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-composer-pick" label="H · 작성 — 타입 선택" sublabel="5종 타입 카드 + 오늘 밤 점 찍기 진입" width={W} height={H}>
+          <PhoneSlot><ComposerPicker/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-composer-column" label="I · 작성 — 칼럼" sublabel="커버 슬롯 + 가라몬드 에디터 + 하단 포맷 툴바" width={W} height={H}>
+          <PhoneSlot><ComposerColumn/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-composer-album" label="J · 작성 — 사진 앨범" sublabel="6장 그리드 + 캡션 + 와인 태그 + 장소" width={W} height={H}>
+          <PhoneSlot><ComposerAlbum/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-comments" label="L · 댓글 풀뷰" sublabel="도움 순 · 최신 순 + 답글 1단계" width={W} height={H}>
+          <PhoneSlot><CommentsFullScreen/></PhoneSlot>
+        </DCArtboard>
+        <DCArtboard id="comm-discover" label="M · 팔로우 추천" sublabel="취향 일치도 % + 공통 와인" width={W} height={H}>
+          <PhoneSlot><DiscoverUsersScreen/></PhoneSlot>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ────────────────────────────────────────────────── */}
+      <DCSection id="onboarding" title="09 · 온보딩 (/onboarding)" subtitle="첫 실행 4단계 — Welcome / Language / Experience / Done">

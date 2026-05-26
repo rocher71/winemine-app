@@ -153,3 +153,85 @@ export function getCommunityUser(id: string): CommUser | undefined {
 export function getCommunityPost(id: string): CommPost | undefined {
   return COMM_POSTS.find((p) => p.id === id);
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// Wine embeds — note 타입 포스트의 wineId 슬러그 → 표시용 와인 메타.
+//
+// 데이터 caveat (GAP-REPORT §Data caveat): 포스트 wineId 는 슬러그(`bgy-pommard` 등)라
+// MOCK_WINES.lwin (숫자) 과 매칭되지 않는다. WineEmbedCard 가 bottle + nameKo + producer·vintage
+// 를 표시하려면 슬러그 → 와인 메타 매핑이 필요 — mock-only (v0.2.0 supabase 대체).
+//
+// bottleColor / type 은 wm-bottle.tsx 의 TypeCanonical / bottleColorDefault 와 정합.
+//   - p1 = 레 루지엥 / Pommard (red)
+//   - p6 = 레 퓌셀 / Puligny-Montrachet (white)
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface WineEmbed {
+  nameKo: string;
+  producer: string;
+  vintage: number;
+  /** wm-bottle.tsx WMBottle bottleColor 와 정합 (hex). */
+  bottleColor: string;
+  /** wm-bottle.tsx TypeCanonical 과 정합. */
+  type: 'red' | 'white' | 'rose' | 'sparkling' | 'fortified' | 'dessert';
+}
+
+// v0.2.0 supabase 대체 (community_posts join wines_localized)
+const WINE_EMBEDS: Record<string, WineEmbed> = {
+  'bgy-pommard': {
+    nameKo: '레 루지엥',
+    producer: '도멘 드 쿠르셀',
+    vintage: 2019,
+    bottleColor: '#5b1424', // bottleColorDefault.red
+    type: 'red',
+  },
+  'bgy-puligny-montrachet': {
+    nameKo: '레 퓌셀',
+    producer: '도멘 르플레브',
+    vintage: 2018,
+    bottleColor: '#d9c277', // bottleColorDefault.white
+    type: 'white',
+  },
+};
+
+export function getWineEmbed(wineId?: string): WineEmbed | null {
+  if (!wineId) return null;
+  return WINE_EMBEDS[wineId] ?? null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Trending — 이번 주 키워드 + 순위 리스트 (트렌딩 탭).
+//
+// tint 는 SEMANTIC 토큰 이름 ('gold'|'wine'|'primary'|'neutral') — hex 금지.
+// UI 레이어에서 light.* / brand.* 토큰으로 매핑 (라이트 모드 point color 규칙: red→gold).
+// v0.2.0 supabase 대체 (community_trending_keywords / ranked posts aggregate).
+// ────────────────────────────────────────────────────────────────────────────
+
+export type TrendingTint = 'gold' | 'wine' | 'primary' | 'neutral';
+
+export interface TrendingKeyword {
+  /** i18n 키 suffix — community.trending.keywords.{id} */
+  id: string;
+  count: number;
+  tint: TrendingTint;
+}
+
+const TRENDING_KEYWORDS: TrendingKeyword[] = [
+  { id: 'k1', count: 142, tint: 'gold' },    // 부르고뉴 22빈티지
+  { id: 'k2', count: 89, tint: 'wine' },     // 레 루지엥
+  { id: 'k3', count: 67, tint: 'primary' },  // 디캔팅 시간
+  { id: 'k4', count: 54, tint: 'neutral' },  // 결혼식 와인
+  { id: 'k5', count: 41, tint: 'neutral' },  // 봄 음용 적기
+  { id: 'k6', count: 33, tint: 'neutral' },  // 내츄럴
+];
+
+export function getTrendingKeywords(): TrendingKeyword[] {
+  return TRENDING_KEYWORDS;
+}
+
+export function getTrendingRankedPosts(): CommPost[] {
+  // 디자인 순서: COMM_POSTS[2], [5], [0], [4]
+  return [COMM_POSTS[2], COMM_POSTS[5], COMM_POSTS[0], COMM_POSTS[4]].filter(
+    (p): p is CommPost => Boolean(p),
+  );
+}

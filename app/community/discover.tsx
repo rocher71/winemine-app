@@ -10,6 +10,7 @@
  *   D: Follow / Name Pressable = deferredToast (Alert.alert).
  *   F: LightBackHeader inline.
  *   G: Level pill text color 일괄 light.text.secondary (L1~L5 대비 통일, bg/border만 user.color alpha).
+ *      라벨은 ko/en 레벨 이름 t(`level.L${n}`) (Wave A 핸드오프 정렬 — `L{n}` 숫자 텍스트 대체).
  *   J: BottomNav 미노출.
  *   N: paddingBottom = 40 + insets.bottom.
  *
@@ -212,7 +213,7 @@ function UserCard({ row, isFollowing }: UserCardProps) {
                 color: light.text.secondary,
               }}
             >
-              {`L${user.level}`}
+              {t(`level.L${user.level}`)}
             </Text>
           </View>
         </View>

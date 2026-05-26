@@ -11,15 +11,19 @@
  *
  * **DEVIATION §6-2**: keyscreen cream Name/Title → light.text.primary (cream invisible on white).
  * **DEVIATION §6-3**: keyscreen webkit-line-clamp → numberOfLines (RN 표준).
- * **DEVIATION §6-4**: keyscreen `margin: '0 16px 6px'` → parent 분리. 본 컴포넌트는 marginBottom:6 만 (horizontal X).
+ * **DEVIATION §6-4**: keyscreen `margin: '0 16px 6px'` → parent 분리. CommFeedRow 는 own horizontal padding.
  * **DEVIATION §6-5**: keyscreen `var(--color-gold)` glass icon → light.border.active (#B89438 AA pass).
- * **DEVIATION §10 I**: WineEmbedCard 사양 skip (v0.1.0 단독 사용처 없음) — note 타입 wineId 있어도 stub Text.
+ * **community 핸드오프 정렬 (Wave A)**:
+ *   - WineEmbedCard 적용 — note 타입 wineId 있으면 full bottle 카드 (기존 §10 I stub 텍스트 제거).
+ *   - CommFeedRow 리스타일 — bordered card → borderless hairline list row (GAP-REPORT §B).
+ *     row 가 own horizontal padding 소유 (parent paddingHorizontal 제거 필요 — Wave B).
+ *   - LevelPill 라벨 — `L{n}` 텍스트 → t(`level.L${n}`) (ko/en 레벨 이름). inline pill 구조 유지.
  * **light-only mode** (§0-2): dark variant 생략.
  *
  * §4-11 3-layer Pressable: outer Pressable (hit + opacity) + inner View (visual + layout) + 자식.
  * More button: 2-layer (nested Pressable RN 자식 우선 — §6-7).
  */
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -28,6 +32,7 @@ import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { CommUserAvatar } from './comm-user-avatar';
 import { PostTypeBadge } from './post-type-badge';
 import { ReactionBar } from './reaction-bar';
+import { WineEmbedCard } from './wine-embed-card';
 import { getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
 
 interface CommFeedCardProps {
@@ -143,7 +148,7 @@ export function CommFeedCard({
                   fontWeight: '600',
                 }}
               >
-                L{user.level}
+                {t(`level.L${user.level}`)}
               </Text>
             </View>
 
@@ -213,31 +218,8 @@ export function CommFeedCard({
           </Text>
         ) : null}
 
-        {/* WineEmbedCard stub — §10 I: v0.1.0 사양 skip, 단순 hint text fallback */}
-        {post.type === 'note' && post.wineId ? (
-          <View
-            style={{
-              marginTop: 10,
-              paddingVertical: 8,
-              paddingHorizontal: 10,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: light.border.default,
-              backgroundColor: withAlpha(brand.wineRed, 0.04),
-            }}
-          >
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Freesentation_4Regular',
-                fontSize: 11,
-                color: light.text.muted,
-              }}
-            >
-              {post.wineId}
-            </Text>
-          </View>
-        ) : null}
+        {/* WineEmbedCard — note 타입 wineId resolve 성공 시 full bottle 카드 (실패 시 null) */}
+        {post.type === 'note' ? <WineEmbedCard wineId={post.wineId} /> : null}
 
         {/* ReactionBar */}
         <ReactionBar
@@ -283,12 +265,11 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
     >
       <View
         style={{
-          padding: 12,
-          marginBottom: 6,
-          borderRadius: 12,
-          backgroundColor: light.bg.surface,
-          borderWidth: 1,
-          borderColor: light.border.default,
+          paddingVertical: 12,
+          paddingHorizontal: 16,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          borderBottomColor: light.border.default,
+          flexDirection: 'column',
           gap: 8,
         }}
       >
@@ -309,8 +290,8 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
           <Text
             allowFontScaling={false}
             style={{
-              fontFamily: 'Freesentation_5Medium',
-              fontSize: 13,
+              fontFamily: 'Freesentation_6SemiBold',
+              fontSize: 11,
               color: light.text.primary,
             }}
           >
@@ -335,8 +316,8 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
           allowFontScaling={false}
           style={{
             fontFamily: 'Freesentation_6SemiBold',
-            fontSize: 17,
-            lineHeight: 22.1,
+            fontSize: 14,
+            lineHeight: 18.2,
             color: light.text.primary,
           }}
         >
@@ -350,8 +331,8 @@ export function CommFeedRow({ post, onPress }: CommFeedRowProps) {
             numberOfLines={2}
             style={{
               fontFamily: 'Freesentation_4Regular',
-              fontSize: 13.5,
-              lineHeight: 20.25,
+              fontSize: 11.5,
+              lineHeight: 17.8,
               color: light.text.secondary,
             }}
           >

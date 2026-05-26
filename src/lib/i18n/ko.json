@@ -1217,7 +1217,25 @@
     "allTitle": "모든 잔의 이야기",
     "tabs": {
       "following": "팔로잉",
-      "all": "전체"
+      "all": "전체",
+      "trending": "트렌딩"
+    },
+    "trending": {
+      "eyebrow": "커뮤니티 · 이번 주",
+      "title": "가장 많이 든 잔들",
+      "keywordsLabel": "이번 주 키워드",
+      "rankLabel": "순위 (지난 7일)",
+      "keywords": {
+        "k1": "부르고뉴 22빈티지",
+        "k2": "레 루지엥",
+        "k3": "디캔팅 시간",
+        "k4": "결혼식 와인",
+        "k5": "봄 음용 적기",
+        "k6": "내츄럴"
+      }
+    },
+    "wineEmbed": {
+      "eyebrow": "이 와인"
     },
     "typeFilter": {
       "all": "전체"
