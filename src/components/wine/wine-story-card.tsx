@@ -113,10 +113,11 @@ export function WineStoryCard({ story, lwin }: Props) {
         <Text
           allowFontScaling={false}
           style={{
-            fontFamily: 'PlayfairDisplay_400Regular_Italic',
+            fontFamily: 'PlayfairDisplay_400Regular',
             fontSize: 12,
             lineHeight: 12 * 1.55,
             color: tokens.text.muted,
+            fontStyle: 'italic',
           }}
         >
           {`"${story.quote}"`}
