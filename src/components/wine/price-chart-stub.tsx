@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { View, Text, Pressable, useColorScheme, Dimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react-native';
+import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { brand } from '@/lib/design-tokens';
 import { Toast } from '@/components/shared/toast';
@@ -27,6 +28,7 @@ const RANGES: Range[] = ['3M', '1Y', 'ALL'];
 
 interface Props {
   priceHistory?: PricePoint[];
+  lwin?: string;
 }
 
 function filterByRange(data: PricePoint[], range: Range): PricePoint[] {
@@ -35,7 +37,7 @@ function filterByRange(data: PricePoint[], range: Range): PricePoint[] {
   return data.slice(-3);
 }
 
-export function PriceChartStub({ priceHistory }: Props) {
+export function PriceChartStub({ priceHistory, lwin }: Props) {
   const { t } = useTranslation();
   const scheme = useColorScheme();
   const [range, setRange] = useState<Range>('1Y');
@@ -48,8 +50,12 @@ export function PriceChartStub({ priceHistory }: Props) {
 
   const handleDetails = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    setToastMsg(t('wineDetail.priceChart.deferredToast'));
-    setTimeout(() => setToastMsg(null), 2500);
+    if (lwin) {
+      router.push(`/wine/${lwin}/prices`);
+    } else {
+      setToastMsg(t('wineDetail.priceChart.deferredToast'));
+      setTimeout(() => setToastMsg(null), 2500);
+    }
   };
 
   const filtered = priceHistory ? filterByRange(priceHistory, range) : [];
