@@ -58,8 +58,10 @@ import {
 import Svg, { Defs, Pattern, Rect, Stop, LinearGradient as SvgLinearGradient } from 'react-native-svg';
 import { brand, light, postTypeBadgeColorLight, withAlpha, communityPost, type TypeCanonical } from '@/lib/design-tokens';
 import { getCommunityPost, getCommunityPosts, getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
-import { MOCK_WINES } from '@/lib/mock/wines';
+import { MOCK_WINES, getMockWineByLwin } from '@/lib/mock/wines';
 import { getCommentsByPost, localizedBody, type CommComment } from '@/lib/mock/community-comments';
+import { MOCK_LIST_STATS, MOCK_WINE_LIST_ITEMS, MOCK_PUBLIC_LIST_ITEMS } from '@/lib/mock/wine-lists';
+import { useImportList } from '@/hooks/use-wine-lists';
 import { CommUserAvatar } from '@/components/community/comm-user-avatar';
 import { PostTypeBadge } from '@/components/community/post-type-badge';
 import { ReactionBar } from '@/components/community/reaction-bar';
@@ -68,6 +70,8 @@ import { CommFeedRow } from '@/components/community/comm-feed-card';
 import { WineEmbedCard } from '@/components/community/wine-embed-card';
 import { WMBottle } from '@/components/shared/wm-bottle';
 import { SaveAsListCta } from '@/components/community/save-as-list-cta';
+import { InlineListCard, type InlineListData } from '@/components/community/inline-list-card';
+import { type LevelId } from '@/components/shared/level-pill';
 
 // ────────────────────────────────────────────────────────────────────────────
 // Main screen
@@ -104,6 +108,7 @@ export default function CommunityPostScreen() {
         {post.type === 'question' && <QuestionVariant post={post} mine={mine} />}
         {post.type === 'album' && <AlbumVariant post={post} mine={mine} />}
         {post.type === 'news' && <NewsVariant post={post} mine={mine} />}
+        {post.type === 'list' && <ListVariant post={post} mine={mine} />}
       </ScrollView>
       {post.type !== 'column' && <ComposeFooter postId={post.id} insetsBottom={insets.bottom} />}
     </View>
@@ -1614,6 +1619,151 @@ function NewsVariant({ post, mine }: VariantProps) {
           />
         ))}
       </View>
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Variant 1-G: list
+// ────────────────────────────────────────────────────────────────────────────
+
+function buildInlineListData(listId: string): InlineListData | null {
+  const stat = MOCK_LIST_STATS.find((l) => l.id === listId);
+  if (!stat) return null;
+  const allItems = [...MOCK_WINE_LIST_ITEMS, ...MOCK_PUBLIC_LIST_ITEMS];
+  const preview = allItems
+    .filter((i) => i.list_id === listId)
+    .slice(0, 3)
+    .map((item) => {
+      const w = getMockWineByLwin(String(item.lwin));
+      if (!w) return null;
+      return {
+        lwin: item.lwin,
+        display_name: w.display_name ?? null,
+        name_ko: w.name_ko ?? null,
+        producer_name: w.producer_name ?? null,
+        vintage: w.vintage ?? null,
+      };
+    })
+    .filter((w): w is NonNullable<typeof w> => w !== null);
+  return {
+    id: stat.id,
+    title: stat.title,
+    wineCount: stat.wine_count,
+    saveCount: stat.save_count,
+    authorName: stat.creator_name ?? '—',
+    authorInitial: stat.creator_name?.[0]?.toUpperCase() ?? '?',
+    authorLevel: 5 as LevelId,
+    previewWines: preview,
+  };
+}
+
+function ListVariant({ post, mine }: VariantProps) {
+  const { t } = useTranslation();
+  const { importList, isLoading: importLoading } = useImportList();
+
+  const handleComment = () => {
+    Haptics.selectionAsync().catch(() => undefined);
+    router.push(`/community/${post.id}/comments`);
+  };
+
+  const handleImport = async () => {
+    if (!post.listId) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+    await importList(post.listId, t('lists.detail.importedTitle', { title: post.title }));
+    Alert.alert(t('app.name'), t('lists.detail.importSuccess'));
+  };
+
+  const inlineList = post.listId ? buildInlineListData(post.listId) : null;
+
+  return (
+    <>
+      <View style={{ paddingHorizontal: 20, paddingTop: 14 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <PostTypeBadge type={post.type} />
+        </View>
+        <UserRow userId={post.userId} ago={post.ago} />
+
+        {/* Description body */}
+        {!!post.body && (
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Freesentation_4Regular',
+              fontSize: 13.5,
+              lineHeight: 23.625,
+              color: light.text.secondary,
+              fontStyle: 'italic',
+              marginTop: 14,
+            }}
+          >
+            {post.body}
+          </Text>
+        )}
+
+        {/* Embedded list card — tappable, goes to cellar list detail */}
+        {inlineList && (
+          <InlineListCard
+            list={inlineList}
+            onPress={() => {
+              Haptics.selectionAsync().catch(() => undefined);
+              router.push(`/cellar/lists/${post.listId}`);
+            }}
+          />
+        )}
+
+        {/* 내 리스트로 가져오기 */}
+        {!!post.listId && (
+          <View style={{ marginTop: 10 }}>
+            <Pressable
+              onPress={handleImport}
+              disabled={importLoading}
+              style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
+              accessibilityRole="button"
+            >
+              <View
+                style={{
+                  height: 48,
+                  borderRadius: 12,
+                  backgroundColor: brand.wineRed,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  shadowColor: brand.wineRed,
+                  shadowOffset: { width: 0, height: 6 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 10,
+                  elevation: 4,
+                }}
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontFamily: 'Freesentation_4Regular',
+                    fontWeight: '700',
+                    fontSize: 14,
+                    color: brand.cream,
+                  }}
+                >
+                  {t('lists.detail.import')}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
+        )}
+
+        {/* ReactionBar */}
+        <View style={{ marginTop: 14 }}>
+          <ReactionBar
+            reactions={post.reactions}
+            comments={post.comments}
+            mine={mine}
+            onComment={handleComment}
+          />
+        </View>
+      </View>
+
+      {/* Comments — same as other variants */}
+      <CommentsPreview postId={post.id} totalCount={post.comments} titleVariant="comments" />
     </>
   );
 }
