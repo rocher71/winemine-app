@@ -7,15 +7,19 @@
  * §4-11 Pressable 3-layer 패턴 — 모든 카드 컴포넌트에서 준수.
  */
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { Search } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
 
 import { light, dark, brand, ivory, gradients } from '@/lib/design-tokens';
+import { AppHeader } from '@/components/nav/app-header';
+import { BellButton } from '@/components/nav/bell-button';
+import { LevelChip } from '@/components/shared/level-chip';
+import { useNotifications } from '@/hooks/use-notifications';
+import { useProfile } from '@/hooks/use-profile';
 import { useLessons } from '@/hooks/use-knowledge';
 import { useRegions } from '@/hooks/use-knowledge';
 import { useWineries } from '@/hooks/use-knowledge';
@@ -47,6 +51,18 @@ export default function KnowledgeScreen() {
     ? { colors: gradients.pageBg.dark.colors as string[], start: { x: 0, y: 0 }, end: { x: 0.26, y: 1 } }
     : { colors: [ivory.bg.page1, ivory.bg.page2] as string[], start: { x: 0, y: 0 }, end: { x: 0.26, y: 1 } };
 
+  const { unreadCount } = useNotifications();
+  const { profile } = useProfile();
+  const displayInitial = (profile?.anonymous_display ?? '?')[0]?.toUpperCase() ?? '?';
+  const levelId = Math.max(1, Math.min(5, profile?.level ?? 1)) as 1|2|3|4|5;
+
+  const HeaderRight = (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <BellButton unreadCount={unreadCount} />
+      <LevelChip levelId={levelId} initial={displayInitial} />
+    </View>
+  );
+
   const [activeTab, setActiveTab] = useState<KnowledgeTab>('lesson');
 
   const { todayLesson, previousLessons, streak } = useLessons();
@@ -76,53 +92,7 @@ export default function KnowledgeScreen() {
     >
     <SafeAreaView edges={['top']} style={{ flex: 1 }}>
       {/* Header */}
-      <View
-        style={{
-          paddingHorizontal: 20,
-          paddingTop: 8,
-          paddingBottom: 14,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 10,
-          borderBottomWidth: 0.5,
-          borderBottomColor: isDark ? tokens.border.default : ivory.border,
-          backgroundColor: pageBg,
-        }}
-      >
-        <Text
-          style={{
-            flex: 1,
-            fontFamily: 'PlayfairDisplay_400Regular',
-            fontSize: 24,
-            color: tokens.text.primary,
-            letterSpacing: -0.24,
-          }}
-        >
-          {t('nav.knowledge')}
-        </Text>
-
-        {/* Search button — 3-layer */}
-        <View>
-          <Pressable
-            onPress={() => {}}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-            accessibilityRole="button"
-            accessibilityLabel={t('nav.knowledge')}
-          >
-            <View
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 19,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Search size={22} strokeWidth={1.5} color={tokens.text.secondary} />
-            </View>
-          </Pressable>
-        </View>
-      </View>
+      <AppHeader eyebrow={t('nav.knowledge')} title={t('knowledge.title')} right={HeaderRight} />
 
       {/* Tab bar */}
       <KnowledgeTabBar active={activeTab} onChange={setActiveTab} />

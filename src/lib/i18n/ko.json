@@ -1716,6 +1716,7 @@
     }
   },
   "knowledge": {
+    "title": "지식 탐구",
     "tabs": {
       "lesson": "레슨",
       "region": "지역",
