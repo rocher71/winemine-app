@@ -163,14 +163,8 @@ export default function CommunityScreen() {
     router.push('/community/new' as never);
   };
 
-  // §10 I: Card/Row → /community/[postId]. list 타입은 /cellar/lists/[listId]로 직라우팅.
   const handlePostPress = (postId: string) => {
-    const post = posts.find((p) => p.id === postId);
-    if (post?.type === 'list' && post.listId) {
-      router.push(`/cellar/lists/${post.listId}` as never);
-    } else {
-      router.push(`/community/${postId}` as never);
-    }
+    router.push(`/community/${postId}` as never);
   };
 
   // ── Render ─────────────────────────────────────────────────────────────────
