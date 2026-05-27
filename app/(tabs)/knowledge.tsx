@@ -105,7 +105,7 @@ export default function KnowledgeScreen() {
         {/* ── LESSON TAB ── */}
         {activeTab === 'lesson' && (
           <>
-            <StreakBar streak={streak} />
+            <StreakBar streak={streak} onHistoryPress={() => router.push('/knowledge/lesson/history' as never)} />
             <TodayLessonCard lesson={todayLesson} onPress={navToLesson} />
 
             {/* Previous lessons */}
