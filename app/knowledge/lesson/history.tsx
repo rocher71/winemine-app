@@ -121,6 +121,8 @@ export default function LessonHistoryScreen() {
   const cardBg = ivory.bg.surface;
   const cardBorder = ivory.border;
 
+  const isCurrentMonth = viewYear === todayDate.getFullYear() && viewMonth === todayDate.getMonth();
+
   function navMonth(delta: number) {
     let m = viewMonth + delta;
     let y = viewYear;
@@ -128,6 +130,11 @@ export default function LessonHistoryScreen() {
     if (m > 11) { m = 0; y += 1; }
     setViewMonth(m);
     setViewYear(y);
+  }
+
+  function goToToday() {
+    setViewYear(todayDate.getFullYear());
+    setViewMonth(todayDate.getMonth());
   }
 
   return (
@@ -302,6 +309,39 @@ export default function LessonHistoryScreen() {
             >
               {calTitle}
             </Text>
+
+            {/* 오늘 버튼 — 현재 달 보고 있으면 dimmed */}
+            <View style={{ opacity: isCurrentMonth ? 0.3 : 1 }}>
+              <Pressable
+                onPress={goToToday}
+                disabled={isCurrentMonth}
+                style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.6 : 1 })}
+                accessibilityRole="button"
+                accessibilityLabel={locale === 'ko' ? '오늘로 이동' : 'Go to today'}
+              >
+                <View
+                  style={{
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    borderColor: goldColor,
+                    marginRight: 4,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: 'Freesentation_6SemiBold',
+                      fontSize: 11,
+                      color: goldColor,
+                      letterSpacing: 0.3,
+                    }}
+                  >
+                    {locale === 'ko' ? '오늘' : 'Today'}
+                  </Text>
+                </View>
+              </Pressable>
+            </View>
 
             <View>
               <Pressable
