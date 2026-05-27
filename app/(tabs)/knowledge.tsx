@@ -8,7 +8,6 @@
  */
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
@@ -90,7 +89,7 @@ export default function KnowledgeScreen() {
       end={pageGradient.end}
       style={{ flex: 1 }}
     >
-    <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {/* Header */}
       <AppHeader eyebrow={t('nav.knowledge')} title={t('knowledge.title')} right={HeaderRight} />
 
@@ -178,7 +177,7 @@ export default function KnowledgeScreen() {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
     </LinearGradient>
   );
 }
