@@ -34,13 +34,18 @@
  *   - SVG `<defs><pattern>` (Column hero vine / Album bottles) → react-native-svg verbatim (§6-16).
  *   - LinearGradient 3 (Also-tried CTA / Column hero / Album main photo) + Composer fade.
  */
+import { useRef, useState } from 'react';
 import { Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -54,6 +59,7 @@ import {
   ChevronRight,
   Info,
   Share2,
+  X,
 } from 'lucide-react-native';
 import Svg, { Defs, Pattern, Rect, Stop, LinearGradient as SvgLinearGradient } from 'react-native-svg';
 import { brand, light, postTypeBadgeColorLight, withAlpha, communityPost, type TypeCanonical } from '@/lib/design-tokens';
@@ -79,8 +85,14 @@ import { type LevelId } from '@/components/shared/level-pill';
 
 export default function CommunityPostScreen() {
   const { postId } = useLocalSearchParams<{ postId: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
+  const scrollRef = useRef<ScrollView>(null);
+  const [draft, setDraft] = useState('');
+  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [localComments, setLocalComments] = useState<CommComment[]>(() =>
+    postId ? getCommentsByPost(postId) : []
+  );
 
   const post = postId ? getCommunityPost(postId) : undefined;
 
@@ -91,26 +103,86 @@ export default function CommunityPostScreen() {
   const user = getCommunityUser(post.userId);
   if (!user) return <NotFoundView />;
 
-  // §2-C mine prop hardcoded (keyscreen verbatim)
   const mine: ReactionId | null =
     post.id === 'p1' ? 'glass' : post.id === 'p3' ? 'bookmark' : null;
+
+  const handleSubmit = () => {
+    const body = draft.trim();
+    if (!body) return;
+    const next: CommComment = {
+      id: `local-${Date.now()}`,
+      postId: post.id,
+      userId: 'suyeon',
+      ago: t('common.justNow'),
+      body: { ko: body, en: body },
+      reactions: 0,
+      isReply: replyTo !== null,
+      isExpert: false,
+    };
+    setLocalComments((prev) => [...prev, next]);
+    setDraft('');
+    setReplyTo(null);
+    Keyboard.dismiss();
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
+  };
+
+  const handleScrollToCompose = () => {
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 150);
+  };
+
+  const handleReply = (userId: string) => {
+    setReplyTo(userId);
+    handleScrollToCompose();
+  };
+
+  const handleCancelReply = () => {
+    setReplyTo(null);
+  };
+
+  const showCompose = post.type !== 'column';
+  const titleVariant: 'comments' | 'answers' = post.type === 'question' ? 'answers' : 'comments';
 
   return (
     <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
       <LightBackHeader post={post} />
-      <ScrollView
+      <KeyboardAvoidingView
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {post.type === 'note' && <NoteVariant post={post} mine={mine} />}
-        {post.type === 'column' && <ColumnVariant post={post} mine={mine} />}
-        {post.type === 'question' && <QuestionVariant post={post} mine={mine} />}
-        {post.type === 'album' && <AlbumVariant post={post} mine={mine} />}
-        {post.type === 'news' && <NewsVariant post={post} mine={mine} />}
-        {post.type === 'list' && <ListVariant post={post} mine={mine} />}
-      </ScrollView>
-      {post.type !== 'column' && <ComposeFooter postId={post.id} insetsBottom={insets.bottom} />}
+        <ScrollView
+          ref={scrollRef}
+          style={{ flex: 1 }}
+          contentContainerStyle={{ paddingBottom: insets.bottom }}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {post.type === 'note' && <NoteVariant post={post} mine={mine} onComment={handleScrollToCompose} />}
+          {post.type === 'column' && <ColumnVariant post={post} mine={mine} onComment={handleScrollToCompose} />}
+          {post.type === 'question' && <QuestionVariant post={post} mine={mine} onComment={handleScrollToCompose} />}
+          {post.type === 'album' && <AlbumVariant post={post} mine={mine} onComment={handleScrollToCompose} />}
+          {post.type === 'news' && <NewsVariant post={post} mine={mine} onComment={handleScrollToCompose} />}
+          {post.type === 'list' && <ListVariant post={post} mine={mine} onComment={handleScrollToCompose} />}
+          {showCompose && (
+            <CommentsSection
+              comments={localComments}
+              titleVariant={titleVariant}
+              i18nLang={i18n.language}
+              onReply={handleReply}
+            />
+          )}
+          {showCompose && (
+            <InlineCompose
+              draft={draft}
+              onChangeText={setDraft}
+              onSubmit={handleSubmit}
+              onFocus={handleScrollToCompose}
+              replyTo={replyTo}
+              onCancelReply={handleCancelReply}
+            />
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -438,32 +510,18 @@ function AlsoTriedCta() {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Shared: Comments preview (note variant — 3개 CommentRow + See all link)
+// Shared: Comments section (all comments inline — no separate screen navigation)
 // ────────────────────────────────────────────────────────────────────────────
 
-interface CommentsPreviewProps {
-  postId: string;
-  totalCount: number;
-  /** 'comments' (note/album/news) | 'answers' (question) — §1-D vs §1-B title 분기 */
+interface CommentsSectionProps {
+  comments: CommComment[];
   titleVariant?: 'comments' | 'answers';
-  /** 상위 N개만 표시 (default 3) */
-  limit?: number;
+  i18nLang: string;
+  onReply?: (userId: string) => void;
 }
 
-function CommentsPreview({
-  postId,
-  totalCount,
-  titleVariant = 'comments',
-  limit = 3,
-}: CommentsPreviewProps) {
-  const { t, i18n } = useTranslation();
-  const allComments = getCommentsByPost(postId);
-  const previewComments = allComments.slice(0, limit);
-
-  const handleSeeAll = () => {
-    Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${postId}/comments`);
-  };
+function CommentsSection({ comments, titleVariant = 'comments', i18nLang, onReply }: CommentsSectionProps) {
+  const { t } = useTranslation();
 
   return (
     <View>
@@ -495,51 +553,39 @@ function CommentsPreview({
             color: light.text.muted,
           }}
         >
-          {totalCount}
+          {comments.length}
         </Text>
+        {titleVariant === 'answers' && (
+          <>
+            <View style={{ flex: 1 }} />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontFamily: 'Freesentation_4Regular',
+                fontWeight: '600',
+                fontSize: 11,
+                color: light.border.active,
+              }}
+            >
+              {`${t('community.post.mostHelpful')} ↓`}
+            </Text>
+          </>
+        )}
       </View>
-      {/* Comments list */}
+      {/* Comments list — depth-1: onReply only passed to top-level comments */}
       <View style={{ paddingTop: 8, paddingHorizontal: 20 }}>
-        {previewComments.map((c) => (
+        {comments.map((c) => (
           <CommentRow
             key={c.id}
             userId={c.userId}
             ago={c.ago}
-            text={localizedBody(c, i18n.language)}
+            text={localizedBody(c, i18nLang)}
             reactions={c.reactions}
             isReply={c.isReply}
             expert={c.isExpert}
+            onReply={c.isReply ? undefined : onReply}
           />
         ))}
-      </View>
-      {/* See all link */}
-      <View
-        style={{
-          paddingTop: 12,
-          paddingHorizontal: 20,
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-        }}
-      >
-        <Pressable
-          onPress={handleSeeAll}
-          accessibilityRole="link"
-          accessibilityLabel={t('community.post.seeAllComments', { count: totalCount })}
-          hitSlop={6}
-          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-        >
-          <Text
-            allowFontScaling={false}
-            style={{
-              fontFamily: 'Freesentation_4Regular',
-              fontWeight: '600',
-              fontSize: 11,
-              color: light.border.active,
-            }}
-          >
-            {t('community.post.seeAllComments', { count: totalCount })}
-          </Text>
-        </Pressable>
       </View>
     </View>
   );
@@ -552,13 +598,14 @@ function CommentsPreview({
 interface VariantProps {
   post: CommPost;
   mine: ReactionId | null;
+  onComment?: () => void;
 }
 
-function NoteVariant({ post, mine }: VariantProps) {
+function NoteVariant({ post, mine, onComment }: VariantProps) {
   const { t } = useTranslation();
   const handleComment = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${post.id}/comments`);
+    onComment?.();
   };
   // §10 E: post.id 별 expert annotation 본문 i18n 키 분기
   const expertBodyKey =
@@ -703,8 +750,6 @@ function NoteVariant({ post, mine }: VariantProps) {
       </View>
       {/* Also-tried CTA */}
       <AlsoTriedCta />
-      {/* Comments preview */}
-      <CommentsPreview postId={post.id} totalCount={post.comments} titleVariant="comments" />
     </>
   );
 }
@@ -713,7 +758,7 @@ function NoteVariant({ post, mine }: VariantProps) {
 // Variant 1-C: column
 // ────────────────────────────────────────────────────────────────────────────
 
-function ColumnVariant({ post, mine }: VariantProps) {
+function ColumnVariant({ post, mine, onComment }: VariantProps) {
   const { t } = useTranslation();
   const user = getCommunityUser(post.userId);
   const handleNamePress = () => {
@@ -722,7 +767,7 @@ function ColumnVariant({ post, mine }: VariantProps) {
   };
   const handleComment = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${post.id}/comments`);
+    onComment?.();
   };
 
   // §6-22 Related allPosts indexes 5, 3
@@ -970,11 +1015,11 @@ function ColumnVariant({ post, mine }: VariantProps) {
 // Variant 1-D: question
 // ────────────────────────────────────────────────────────────────────────────
 
-function QuestionVariant({ post, mine }: VariantProps) {
+function QuestionVariant({ post, mine, onComment }: VariantProps) {
   const { t } = useTranslation();
   const handleComment = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${post.id}/comments`);
+    onComment?.();
   };
 
   // §10 M: hardcoded ko 5 tags (keyscreen verbatim §6-24 (a))
@@ -983,11 +1028,6 @@ function QuestionVariant({ post, mine }: VariantProps) {
   // §6-25 Top recommendations: MOCK_WINES.slice(2, 5)
   const recoWines = MOCK_WINES.slice(2, 5);
   const recoCounts = [8, 6, 4];
-
-  // §2-A: comments preview 데이터
-  const allComments = getCommentsByPost(post.id);
-  const previewComments = allComments.slice(0, 3);
-  const { i18n } = useTranslation();
 
   return (
     <>
@@ -1199,64 +1239,6 @@ function QuestionVariant({ post, mine }: VariantProps) {
         />
       </View>
 
-      {/* Answers header */}
-      <View
-        style={{
-          paddingTop: 20,
-          paddingHorizontal: 20,
-          flexDirection: 'row',
-          alignItems: 'baseline',
-          gap: 8,
-        }}
-      >
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 16,
-            color: light.text.primary,
-          }}
-        >
-          {t('community.post.answers')}
-        </Text>
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 11,
-            color: light.text.muted,
-          }}
-        >
-          {post.comments}
-        </Text>
-        <View style={{ flex: 1 }} />
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontWeight: '600',
-            fontSize: 11,
-            color: light.border.active,
-          }}
-        >
-          {`${t('community.post.mostHelpful')} ↓`}
-        </Text>
-      </View>
-
-      {/* Answers list — keyscreen verbatim 3개 */}
-      <View style={{ paddingTop: 6, paddingHorizontal: 20, paddingBottom: 30 }}>
-        {previewComments.map((c) => (
-          <CommentRow
-            key={c.id}
-            userId={c.userId}
-            ago={c.ago}
-            text={localizedBody(c, i18n.language)}
-            reactions={c.reactions}
-            isReply={c.isReply}
-            expert={c.isExpert}
-          />
-        ))}
-      </View>
     </>
   );
 }
@@ -1265,12 +1247,12 @@ function QuestionVariant({ post, mine }: VariantProps) {
 // Variant 1-E: album
 // ────────────────────────────────────────────────────────────────────────────
 
-function AlbumVariant({ post, mine }: VariantProps) {
-  const { t, i18n } = useTranslation();
+function AlbumVariant({ post, mine, onComment }: VariantProps) {
+  const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
   const handleComment = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${post.id}/comments`);
+    onComment?.();
   };
 
   // §6-31: Thumb 4열 — width = (screenWidth - paddingHorizontal*2 - gap*3) / 4
@@ -1283,8 +1265,6 @@ function AlbumVariant({ post, mine }: VariantProps) {
 
   // mock wines for thumb bottle silhouette (i=2~5 → MOCK_WINES index 2~5)
   const thumbWines = MOCK_WINES.slice(2, 6);
-
-  const previewComments = getCommentsByPost(post.id).slice(0, 2);
 
   return (
     <>
@@ -1474,34 +1454,6 @@ function AlbumVariant({ post, mine }: VariantProps) {
         />
       </View>
 
-      {/* Comments header */}
-      <View style={{ paddingTop: 18, paddingHorizontal: 20, paddingBottom: 6 }}>
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 15,
-            color: light.text.primary,
-          }}
-        >
-          {t('community.post.commentsCount', { count: post.comments })}
-        </Text>
-      </View>
-
-      {/* Comments preview list (2개) */}
-      <View style={{ paddingHorizontal: 20, paddingBottom: 30 }}>
-        {previewComments.map((c) => (
-          <CommentRow
-            key={c.id}
-            userId={c.userId}
-            ago={c.ago}
-            text={localizedBody(c, i18n.language)}
-            reactions={c.reactions}
-            isReply={c.isReply}
-            expert={c.isExpert}
-          />
-        ))}
-      </View>
     </>
   );
 }
@@ -1557,13 +1509,12 @@ function UserRowInline({ userId, ago }: UserRowProps) {
 // Variant 1-F: news
 // ────────────────────────────────────────────────────────────────────────────
 
-function NewsVariant({ post, mine }: VariantProps) {
-  const { t, i18n } = useTranslation();
+function NewsVariant({ post, mine, onComment }: VariantProps) {
+  const { t } = useTranslation();
   const handleComment = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${post.id}/comments`);
+    onComment?.();
   };
-  const previewComments = getCommentsByPost(post.id).slice(0, 2);
   return (
     <>
       <View style={{ paddingHorizontal: 20, paddingTop: 14 }}>
@@ -1605,20 +1556,6 @@ function NewsVariant({ post, mine }: VariantProps) {
           />
         </View>
       </View>
-      {/* Comments list (2개 keyscreen verbatim) */}
-      <View style={{ paddingTop: 20, paddingHorizontal: 20, paddingBottom: 30 }}>
-        {previewComments.map((c) => (
-          <CommentRow
-            key={c.id}
-            userId={c.userId}
-            ago={c.ago}
-            text={localizedBody(c, i18n.language)}
-            reactions={c.reactions}
-            isReply={c.isReply}
-            expert={c.isExpert}
-          />
-        ))}
-      </View>
     </>
   );
 }
@@ -1658,13 +1595,13 @@ function buildInlineListData(listId: string): InlineListData | null {
   };
 }
 
-function ListVariant({ post, mine }: VariantProps) {
+function ListVariant({ post, mine, onComment }: VariantProps) {
   const { t } = useTranslation();
   const { importList, isLoading: importLoading } = useImportList();
 
   const handleComment = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${post.id}/comments`);
+    onComment?.();
   };
 
   const handleImport = async () => {
@@ -1762,59 +1699,71 @@ function ListVariant({ post, mine }: VariantProps) {
         </View>
       </View>
 
-      {/* Comments — same as other variants */}
-      <CommentsPreview postId={post.id} totalCount={post.comments} titleVariant="comments" />
     </>
   );
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Compose footer (§1-A — column 외 4 variants 공통)
+// Inline compose (at bottom of scroll — §4-11 rule 3.5: flex on View not Pressable)
 // ────────────────────────────────────────────────────────────────────────────
 
-interface ComposeFooterProps {
-  postId: string;
-  insetsBottom: number;
+interface InlineComposeProps {
+  draft: string;
+  onChangeText: (text: string) => void;
+  onSubmit: () => void;
+  onFocus: () => void;
+  replyTo?: string | null;
+  onCancelReply?: () => void;
 }
 
-function ComposeFooter({ postId, insetsBottom }: ComposeFooterProps) {
+function InlineCompose({ draft, onChangeText, onSubmit, onFocus, replyTo, onCancelReply }: InlineComposeProps) {
   const { t } = useTranslation();
-  const handleComposerPress = () => {
-    Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/community/${postId}/comments?focus=true`);
-  };
-  const handleSendPress = () => {
-    Haptics.selectionAsync().catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.compose.deferredToast'));
-  };
+  const replyUser = replyTo ? getCommunityUser(replyTo) : undefined;
+  const placeholder = replyUser
+    ? t('community.comments.replyPlaceholder', { name: replyUser.name })
+    : t('community.addComment');
+
   return (
-    <View
-      style={{
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: light.border.default,
-        backgroundColor: light.bg.deepest,
-      }}
-    >
-      {/* footer body */}
-      <View
-        style={{
-          paddingHorizontal: 16,
-          paddingTop: 10,
-          paddingBottom: 20 + insetsBottom,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 10,
-        }}
-      >
-        <CommUserAvatar levelId={4} initial={'이'} size={32} asLink={false} />
-        {/* Composer pill — read-only display, onPress → comments?focus=true */}
-        <Pressable
-          onPress={handleComposerPress}
-          accessibilityRole="button"
-          accessibilityLabel={t('community.addComment')}
-          accessibilityHint={t('community.compose.hint')}
-          style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.85 : 1 })}
+    <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: 24 }}>
+      {/* Reply indicator — shown only when replying to someone */}
+      {replyUser && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+            paddingBottom: 8,
+          }}
         >
+          <Text
+            allowFontScaling={false}
+            style={{
+              flex: 1,
+              fontFamily: 'Freesentation_4Regular',
+              fontSize: 11,
+              color: light.text.muted,
+            }}
+          >
+            {t('community.comments.replyingTo', { name: replyUser.name })}
+          </Text>
+          <Pressable
+            onPress={onCancelReply}
+            accessibilityRole="button"
+            accessibilityLabel={t('community.comments.cancelReply')}
+            hitSlop={6}
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+          >
+            <View style={{ width: 24, height: 24, alignItems: 'center', justifyContent: 'center' }}>
+              <X size={14} strokeWidth={2} color={light.text.muted} />
+            </View>
+          </Pressable>
+        </View>
+      )}
+      {/* Input row */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <CommUserAvatar levelId={4} initial={'이'} size={32} asLink={false} />
+        {/* outer View for flex — §4-11 rule 3.5: flex on View, not Pressable */}
+        <View style={{ flex: 1 }}>
           <View
             style={{
               height: 38,
@@ -1827,32 +1776,42 @@ function ComposeFooter({ postId, insetsBottom }: ComposeFooterProps) {
               paddingHorizontal: 14,
             }}
           >
-            <Text
-              allowFontScaling={false}
+            <TextInput
+              value={draft}
+              onChangeText={onChangeText}
+              placeholder={placeholder}
+              placeholderTextColor={light.text.muted}
+              onFocus={onFocus}
+              returnKeyType="send"
+              onSubmitEditing={onSubmit}
+              multiline={false}
               style={{
+                flex: 1,
                 fontFamily: 'Freesentation_4Regular',
                 fontSize: 12,
-                color: light.text.muted,
+                color: light.text.primary,
+                padding: 0,
               }}
-            >
-              {t('community.addComment')}
-            </Text>
+            />
           </View>
-        </Pressable>
-        {/* Send button (§6-7: size/2 = 19 명시 — 원형) */}
+        </View>
         <Pressable
-          onPress={handleSendPress}
+          onPress={onSubmit}
+          disabled={draft.trim().length === 0}
           accessibilityRole="button"
           accessibilityLabel={t('common.send')}
+          accessibilityState={{ disabled: draft.trim().length === 0 }}
           hitSlop={4}
-          style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+          style={({ pressed }) => ({
+            opacity: draft.trim().length === 0 ? 0.4 : pressed ? 0.85 : 1,
+          })}
         >
           <View
             style={{
               width: 38,
               height: 38,
               borderRadius: 19,
-              backgroundColor: brand.wineRed,
+              backgroundColor: draft.trim().length > 0 ? brand.wineRed : withAlpha(brand.wineRed, 0.4),
               alignItems: 'center',
               justifyContent: 'center',
             }}
