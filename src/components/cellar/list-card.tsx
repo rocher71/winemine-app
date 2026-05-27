@@ -155,22 +155,27 @@ export function ListCard({ item, onPress }: Props) {
                 {timeAgo(item.updated_at)}
               </Text>
 
-              <View style={{ flex: 1 }} />
-
               {!!item.creator_name && (
-                <Text
-                  allowFontScaling={false}
-                  numberOfLines={1}
-                  style={{
-                    fontFamily: 'Inter_500Medium',
-                    fontSize: 11,
-                    color: text.muted,
-                    maxWidth: 72,
-                  }}
-                >
-                  {item.creator_name}
-                </Text>
+                <>
+                  <View
+                    style={{ width: 2, height: 2, borderRadius: 1, backgroundColor: border.default }}
+                  />
+                  <Text
+                    allowFontScaling={false}
+                    numberOfLines={1}
+                    style={{
+                      fontFamily: 'Inter_500Medium',
+                      fontSize: 11,
+                      color: text.muted,
+                      maxWidth: 72,
+                    }}
+                  >
+                    {item.creator_name}
+                  </Text>
+                </>
               )}
+
+              <View style={{ flex: 1 }} />
 
               {item.save_count > 0 && (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
