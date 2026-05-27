@@ -7,7 +7,7 @@
  * §4-11 Pressable 3-layer 패턴 — 모든 카드 컴포넌트에서 준수.
  */
 import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
