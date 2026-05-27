@@ -42,7 +42,6 @@ import { CommUserAvatar } from '@/components/community/comm-user-avatar';
 import { LevelPill, type LevelId } from '@/components/shared/level-pill';
 import {
   useListDetail,
-  useSaveList,
   useImportList,
   useToggleVisibility,
   useDeleteList,
@@ -71,13 +70,9 @@ export default function ListDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { bg, text, border, scheme } = useThemeTokens();
 
-  const { list, wines, isSaved: initialSaved, isOwner, isLoading, error, refetch } =
+  const { list, wines, isOwner, isLoading, error, refetch } =
     useListDetail(id ?? '');
 
-  const { isSaved, save, unsave, isLoading: savingLoading } = useSaveList(
-    id ?? '',
-    initialSaved,
-  );
   const { importList, isLoading: importLoading } = useImportList();
   const { toggle, isLoading: toggling } = useToggleVisibility();
   const { deleteList } = useDeleteList();
@@ -174,8 +169,6 @@ export default function ListDetailScreen() {
   }
 
   const isPublic = list.visibility === 'public';
-  const tastedCount = list.tasted_count ?? 0;
-  const progressPct = list.wine_count > 0 ? (tastedCount / list.wine_count) * 100 : 0;
   const creatorInitial = list.creator_name?.[0]?.toUpperCase() ?? '?';
 
   // ─── Icon button helper ───────────────────────────────────────────
@@ -302,18 +295,6 @@ export default function ListDetailScreen() {
                   {t('lists.detail.lastEdited', { time: formatRelativeTime(list.updated_at), count: list.wine_count })}
                 </Text>
               </View>
-              <Pressable
-                onPress={() => undefined}
-                style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-                accessibilityRole="button"
-                hitSlop={6}
-              >
-                <View style={{ height: 30, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: brand.wineRed, alignItems: 'center', justifyContent: 'center' }}>
-                  <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 12, color: brand.wineRed }}>
-                    {t('lists.detail.follow')}
-                  </Text>
-                </View>
-              </Pressable>
             </View>
           )}
 
@@ -344,43 +325,6 @@ export default function ListDetailScreen() {
             </Text>
           )}
 
-          {/* ── OWNER PROGRESS STRIP ── */}
-          {isOwner && list.wine_count > 0 && (
-            <View
-              style={{
-                marginTop: 16,
-                padding: 14,
-                borderRadius: 14,
-                backgroundColor: bg.surface,
-                borderWidth: 1,
-                borderColor: border.default,
-              }}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
-                <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 22, color: text.primary, letterSpacing: -0.5 }}>
-                  {tastedCount}
-                  <Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 14, color: text.muted }}>
-                    {` / ${list.wine_count}`}
-                  </Text>
-                </Text>
-                <Text allowFontScaling={false} style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: text.muted }}>
-                  {t('lists.detail.tasted')}
-                </Text>
-              </View>
-              {/* Progress bar */}
-              <View style={{ marginTop: 10, height: 6, borderRadius: 999, backgroundColor: bg.deep, overflow: 'hidden' }}>
-                <View
-                  style={{
-                    position: 'absolute',
-                    left: 0, top: 0, bottom: 0,
-                    width: `${progressPct}%`,
-                    borderRadius: 999,
-                    backgroundColor: brand.goldSoft,
-                  }}
-                />
-              </View>
-            </View>
-          )}
 
           {/* ── NON-OWNER STATS ROW ── */}
           {!isOwner && isPublic && (
@@ -444,7 +388,7 @@ export default function ListDetailScreen() {
           <View style={{ flex: 1 }} />
           {isOwner && (
             <Pressable
-              onPress={() => undefined}
+              onPress={() => showToast(t('placeholders.comingSoon'))}
               style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
               hitSlop={6}
             >
@@ -508,7 +452,7 @@ export default function ListDetailScreen() {
         </View>
       )}
 
-      {/* Non-owner: 저장 + 가져오기 */}
+      {/* Non-owner: 가져오기 */}
       {!isOwner && (
         <View
           style={{
@@ -516,34 +460,11 @@ export default function ListDetailScreen() {
             paddingHorizontal: 16, paddingVertical: 12, paddingBottom: 28,
             backgroundColor: bg.deepest,
             borderTopWidth: 0.5, borderTopColor: border.default,
-            flexDirection: 'row', gap: 10,
           }}
         >
-          {/* Save / Saved toggle */}
-          <Pressable
-            onPress={isSaved ? unsave : save}
-            style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.85 : 1 })}
-            accessibilityRole="button"
-            disabled={savingLoading}
-          >
-            <View
-              style={{
-                height: 52, borderRadius: 14,
-                backgroundColor: bg.surface,
-                borderWidth: 1, borderColor: isSaved ? brand.wineRed : border.default,
-                flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
-              }}
-            >
-              <Bookmark size={16} strokeWidth={2} color={isSaved ? brand.wineRed : text.primary} fill={isSaved ? brand.wineRed : 'none'} />
-              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 13.5, color: isSaved ? brand.wineRed : text.primary, letterSpacing: -0.1 }}>
-                {isSaved ? t('lists.detail.saved') : t('lists.detail.save')}
-              </Text>
-            </View>
-          </Pressable>
-          {/* Import */}
           <Pressable
             onPress={handleImport}
-            style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.88 : 1 })}
+            style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
             accessibilityRole="button"
             disabled={importLoading}
           >
@@ -557,7 +478,7 @@ export default function ListDetailScreen() {
                 shadowOpacity: 0.35, shadowRadius: 14, elevation: 6,
               }}
             >
-              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 13.5, color: brand.cream, letterSpacing: -0.1 }}>
+              <Text allowFontScaling={false} style={{ fontFamily: 'Inter_700Bold', fontSize: 14, color: brand.cream, letterSpacing: -0.1 }}>
                 {t('lists.detail.import')}
               </Text>
             </View>
