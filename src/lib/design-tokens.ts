@@ -20,6 +20,30 @@ export const brand = {
   black: '#000000',
   white: '#FFFFFF',
   textInk: '#2a1a14',
+  // knowledge 탭 전용 wash (knowledge-c-light.jsx KTL.goldWash / KTL.wineWash verbatim).
+  // 테마 무관 brand wash — lesson card inset·compare bg(gold), category badge bg(wine).
+  goldWash: '#F2E5BD',
+  wineWash: '#F1D9DC',
+} as const;
+
+// ---- Knowledge 탭 전용 Ivory 팔레트 (KTL verbatim, 전역 light.* 불변) ----
+//
+// knowledge-c-light.jsx KTL 토큰 → ivory.* 독립 네임스페이스.
+// 기존 light.bg.surface('#FFFFFF') · light.border.default('#E0D2BC') · light.text.*를
+// 덮지 않고 별도 네임스페이스로 격리 → 다른 화면 회귀 없음.
+// 사용 규칙: knowledge 탭 컴포넌트·화면에서만 import. 전역 컴포넌트는 light.* 유지.
+export const ivory = {
+  bg: {
+    page1:   '#F4EBD9',   // KTL.pageBg1 — 탭 최외곽 배경 상단
+    page2:   '#EFE3CC',   // KTL.pageBg2 — 탭 최외곽 배경 하단
+    surface: '#FAF3E3',   // KTL.surface — 카드 face bg (warm cream)
+  },
+  border:    '#D8C5A0',   // KTL.border — 카드·구분선 테두리
+  text: {
+    secondary: '#5A3D2E', // KTL.textSecond — 서브헤드·라벨
+    muted:     '#8B7560', // KTL.textMuted — 설명·부연 텍스트
+    dim:       '#A89580', // KTL.textDim — 메타·힌트
+  },
 } as const;
 
 // Badge tier 색 — keyscreen profile-me 배지 패턴 (bronze/silver/gold/platinum).
@@ -38,6 +62,10 @@ export const dark = {
     surface: '#3D2A4A',
     sunken: 'rgba(0,0,0,0.28)',
     bottleShelf: '#1a0a1e',
+    // knowledge 탭 — raised card(compare/callout 내부) + input/progress track.
+    // light는 keyscreen verbatim(#FCF7EB/#EAE0C9). dark는 surface 위/아래 음영으로 dual 정의.
+    surfaceUp: '#48324F',
+    inset: '#2A1C36',
   },
   text: {
     primary: '#F8F4ED',
@@ -70,6 +98,9 @@ export const light = {
     surface: '#FFFFFF',
     sunken: 'rgba(42,26,20,0.06)',
     bottleShelf: '#FFFFFF',
+    // knowledge 탭 — keyscreen knowledge-c-light.jsx KTL.surfaceUp / KTL.inset verbatim.
+    surfaceUp: '#FCF7EB',
+    inset: '#EAE0C9',
   },
   text: {
     primary: '#2A1A14',
@@ -595,6 +626,26 @@ export const gradients = {
     dark:  { colors: ['#3D2A4A', 'rgba(139, 26, 42, 0.18)'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
     light: { colors: ['#FFFFFF', 'rgba(139, 26, 42, 0.18)'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
   },
+  // knowledge/StreakBar progress fill — 90deg (left→right)
+  knowledgeStreakFill: {
+    colors: ['#D4B85C', '#C9A84C', '#A07F2E'] as readonly string[],
+    start: { x: 0, y: 0.5 },
+    end:   { x: 1, y: 0.5 },
+  },
+  // knowledge/TodayLessonCard top accent — 90deg gold→goldDeep 60%→wineRed
+  knowledgeTodayAccent: {
+    colors: ['#C9A84C', '#A07F2E', '#8B1A2A'] as readonly string[],
+    locations: [0, 0.6, 1] as readonly number[],
+    start: { x: 0, y: 0.5 },
+    end:   { x: 1, y: 0.5 },
+  },
+  // knowledge/FlameBadge — 135deg goldSoft→gold
+  knowledgeFlame: {
+    colors: ['#D4B85C', '#C9A84C'] as readonly string[],
+    start: { x: 0, y: 0 },
+    end:   { x: 1, y: 1 },
+  },
+
   // home/AppHeader LevelChip avatar — 135deg, level → level+99
   levelChip: {
     L1: { colors: ['#9B8B7A', '#9B8B7A99'] as readonly string[], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },

@@ -1,5 +1,5 @@
 /**
- * (tabs) layout — 5 Tabs (home / map / capture(FAB) / cellar / community)
+ * (tabs) layout — 5 Tabs (home / knowledge / capture(FAB) / cellar / community)
  *
  * 출처: _workspace/design-specs/bottom-nav.md §1-2, §1-4.
  *
@@ -31,7 +31,7 @@ export default function TabsLayout() {
       tabBar={(p) => <BottomNav {...p} />}
     >
       <Tabs.Screen name="index"     options={{ title: t('nav.home') }} />
-      <Tabs.Screen name="map"       options={{ title: t('nav.map') }} />
+      <Tabs.Screen name="knowledge" options={{ title: t('nav.knowledge') }} />
       <Tabs.Screen name="capture"   options={{ title: t('nav.capture') }} />
       <Tabs.Screen name="cellar"    options={{ title: t('nav.cellar') }} />
       <Tabs.Screen name="community" options={{ title: t('nav.community') }} />

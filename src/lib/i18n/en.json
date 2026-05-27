@@ -36,6 +36,7 @@
   "nav": {
     "home": "Home",
     "map": "Map",
+    "knowledge": "Knowledge",
     "capture": "Capture",
     "cellar": "Cellar",
     "community": "Community",
@@ -1737,6 +1738,109 @@
     "qa": {
       "saveAsList": "Save results as list",
       "saveAsListSub": "Top {{count}} wines · Saved as draft"
+    }
+  },
+  "knowledge": {
+    "title": "Explore",
+    "tabs": {
+      "lesson": "Lessons",
+      "region": "Regions",
+      "winery": "Wineries",
+      "vintage": "Vintages"
+    },
+    "lesson": {
+      "todayLabel": "Today's Lesson",
+      "prevLabel": "Previous Lessons",
+      "streakLabel": "Learning Streak",
+      "streakUnit": "days in a row",
+      "completeBtn": "Mark Today Complete",
+      "doneTitle": "Another glass,\nfilled today",
+      "doneBackBtn": "Back to Home",
+      "shareBtn": "Share",
+      "historyTitle": "Learning History",
+      "nextLesson": "Tomorrow's Lesson",
+      "categoryLabel": "Category Breakdown",
+      "badgesLabel": "Earned Badges",
+      "calendarLabel": "{{month}} {{year}}",
+      "dayLabel": "Day {{day}}",
+      "doneEyebrow": "Lesson Complete",
+      "doneStreakLabel": "Day Streak",
+      "doneNextLabel": "Tomorrow's Lesson",
+      "doneStatWeek": "This Week",
+      "doneStatAvg": "Avg. Time",
+      "doneStatTotal": "Total",
+      "historyStreakLabel": "Current Streak",
+      "historyBestLabel": "Best Streak",
+      "historyTotalLabel": "Total Lessons",
+      "historyLegendDone": "Done",
+      "historyLegendToday": "Today",
+      "historyLegendNone": "Missed",
+      "historyBtn": "View History"
+    },
+    "region": {
+      "hint": "Select a country to drill down into regions and appellations.",
+      "subRegions": "Key Regions",
+      "subzones": "Sub-zones",
+      "tierSystem": "Classification",
+      "styleProfile": "Style Profile",
+      "grandCrus": "Grand Crus",
+      "producers": "Key Domaines"
+    },
+    "done": {
+      "eyebrow": "Day {{day}} · Completed",
+      "title": "One more pour,\ncomplete",
+      "body": "Your wine knowledge just grew a little richer. Keep the streak going tomorrow.",
+      "streakProgress": "Streak Progress",
+      "nextReward": "Next Reward",
+      "next": "Tomorrow's Lesson",
+      "share": "Share",
+      "home": "Back to Home"
+    },
+    "history": {
+      "title": "Learning Log",
+      "categoryDist": "Category Distribution",
+      "badges": "Badges",
+      "empty": "No learning history yet",
+      "stat": {
+        "current": "Current Streak",
+        "longest": "Longest Streak",
+        "total": "Total"
+      }
+    },
+    "winery": {
+      "philosophy": "Philosophy",
+      "grandCrus": "Grand Cru Holdings",
+      "lineupBtn": "View full lineup ({{count}})",
+      "lineupTitle": "Lineup",
+      "lineupFilterAll": "All",
+      "lineupFilterRed": "Red",
+      "lineupFilterWhite": "White",
+      "lineupVintage": "Vintage",
+      "lineupEmpty": "No wines found",
+      "grandCrusSection": "Grand Crus"
+    },
+    "vintage": {
+      "climateTimeline": "Climate Timeline",
+      "styleFeatures": "Style Features",
+      "pairing": "Food Pairing",
+      "related": "Other Vintages from the Region",
+      "climate": "Growing Season",
+      "styleProfile": "Style Profile",
+      "drinkWindow": "Drinking Window",
+      "topWines": "Top Wines",
+      "oneLiners": "Vintage Notes",
+      "compareIntro": "Comparing two strong Bordeaux vintages on the same axes.",
+      "keyDiff": "Key Differences",
+      "styleOverlay": "Style Overlay",
+      "empty": "Coming soon",
+      "drinkStart": "Start",
+      "peak": "Peak",
+      "drinkEnd": "End",
+      "tipLabel": "Sommelier Tip",
+      "filterLeft": "Left Bank",
+      "filterRight": "Right Bank",
+      "filterWhite": "Dry White",
+      "verdict": "Verdict"
     }
   }
 }

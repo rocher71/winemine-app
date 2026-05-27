@@ -5,7 +5,7 @@
  *
  * 구조 (verbatim §2):
  *   - 컨테이너: LinearGradient(bottomNavFade) 절대 fill + borderTop 0.5px + paddingBottom 28+insets
- *   - 5 슬롯 (flex-1): home / map / FAB(capture) / cellar / community
+ *   - 5 슬롯 (flex-1): home / knowledge / FAB(capture) / cellar / community
  *   - capture 슬롯은 NavTab 대신 52×52 floating FAB (marginTop -24, gradient + gold border + shadow)
  *   - active indicator bar 제거 (D2) — color + fontWeight로만 표현
  *   - capture 라우트 진입 시 BottomNav 자체 렌더 X (HIDE_BOTTOM_NAV_ROUTES)
@@ -22,7 +22,7 @@
 import { View, Pressable, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Home, Globe, Camera, Wine, Users, type LucideIcon } from 'lucide-react-native';
+import { Home, BookOpen, Camera, Wine, Users, type LucideIcon } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
@@ -31,7 +31,7 @@ import { useThemeTokens } from '@/lib/use-theme-tokens';
 
 const ICONS: Record<string, LucideIcon> = {
   index: Home,
-  map: Globe,
+  knowledge: BookOpen,
   capture: Camera,
   cellar: Wine,
   community: Users,
