@@ -69,7 +69,7 @@ export function AppHeader({eyebrow, title, right}: AppHeaderProps) {
         {right ?? null}
       </View>
       {/* border 아래 3px 간격 — marginBottom은 absolute container에서 무시됨, spacer로 대신 */}
-      <View style={{height: 3, backgroundColor: tokens.bg.deepest}} />
+      <View style={{height: 3, backgroundColor: 'transparent'}} />
     </View>
   );
 }
