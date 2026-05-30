@@ -425,8 +425,8 @@ function EntryRow({ entry }: { entry: TonightEntry }) {
 
   const handleProfilePress = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.profile.deferred'));
-  }, [t]);
+    router.push(`/profile/${entry.userId}`);
+  }, [entry.userId]);
 
   const handleToastPress = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);

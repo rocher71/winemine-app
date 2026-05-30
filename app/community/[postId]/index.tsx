@@ -368,13 +368,12 @@ function UserRow({ userId, ago }: UserRowProps) {
   const { t } = useTranslation();
   if (!user) return null;
   const handleNamePress = () => {
-    // §10 D: profile route 미존재 → deferredToast
     Haptics.selectionAsync().catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.profile.deferred'));
+    router.push(`/profile/${userId}`);
   };
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 12 }}>
-      <CommUserAvatar levelId={user.level} initial={user.initial} size={36} asLink={false} />
+      <CommUserAvatar levelId={user.level} initial={user.initial} size={36} userId={userId} asLink />
       <View style={{ flex: 1, minWidth: 0 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Pressable
@@ -763,7 +762,7 @@ function ColumnVariant({ post, mine, onComment }: VariantProps) {
   const user = getCommunityUser(post.userId);
   const handleNamePress = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.profile.deferred'));
+    router.push(`/profile/${post.userId}`);
   };
   const handleComment = () => {
     Haptics.selectionAsync().catch(() => undefined);
@@ -859,7 +858,7 @@ function ColumnVariant({ post, mine, onComment }: VariantProps) {
           gap: 10,
         }}
       >
-        <CommUserAvatar levelId={user.level} initial={user.initial} size={36} asLink={false} />
+        <CommUserAvatar levelId={user.level} initial={user.initial} size={36} userId={post.userId} asLink />
         <View style={{ flex: 1 }}>
           <Pressable
             onPress={handleNamePress}
@@ -1465,11 +1464,11 @@ function UserRowInline({ userId, ago }: UserRowProps) {
   if (!user) return null;
   const handleNamePress = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.profile.deferred'));
+    router.push(`/profile/${userId}`);
   };
   return (
     <>
-      <CommUserAvatar levelId={user.level} initial={user.initial} size={36} asLink={false} />
+      <CommUserAvatar levelId={user.level} initial={user.initial} size={36} userId={userId} asLink />
       <View style={{ flex: 1, minWidth: 0 }}>
         <Pressable
           onPress={handleNamePress}

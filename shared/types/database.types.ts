@@ -112,48 +112,105 @@ export type Database = {
         }
         Relationships: []
       }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           anonymous_display: string
+          bio: string | null
           created_at: string | null
           email: string | null
           experience: string
+          follower_count: number
+          following_count: number
+          handle: string | null
           id: string
           is_upgraded: boolean
           language: string
           level: number
           linked_providers: string[]
           mode: string
+          public_countries_count: number
+          public_notes_count: number
+          public_regions_count: number
+          public_wines_count: number
           theme: string
           updated_at: string | null
           xp: number
         }
         Insert: {
           anonymous_display: string
+          bio?: string | null
           created_at?: string | null
           email?: string | null
           experience?: string
+          follower_count?: number
+          following_count?: number
+          handle?: string | null
           id: string
           is_upgraded?: boolean
           language?: string
           level?: number
           linked_providers?: string[]
           mode?: string
+          public_countries_count?: number
+          public_notes_count?: number
+          public_regions_count?: number
+          public_wines_count?: number
           theme?: string
           updated_at?: string | null
           xp?: number
         }
         Update: {
           anonymous_display?: string
+          bio?: string | null
           created_at?: string | null
           email?: string | null
           experience?: string
+          follower_count?: number
+          following_count?: number
+          handle?: string | null
           id?: string
           is_upgraded?: boolean
           language?: string
           level?: number
           linked_providers?: string[]
           mode?: string
+          public_countries_count?: number
+          public_notes_count?: number
+          public_regions_count?: number
+          public_wines_count?: number
           theme?: string
           updated_at?: string | null
           xp?: number

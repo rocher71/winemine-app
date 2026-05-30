@@ -17,6 +17,7 @@ import { DEMO_MODE } from '@/lib/demo-mode';
 import { MOCK_CELLAR_ITEMS } from '@/lib/mock/cellar';
 import { MOCK_TASTING_NOTES } from '@/lib/mock/tasting-notes';
 import { getMockWineByLwin } from '@/lib/mock/wines';
+import { FAVORITES } from '@/lib/mock/favorites';
 
 export interface ProfileStats {
   /** distinct wine_lwin 수 (마신 와인) */
@@ -27,8 +28,10 @@ export interface ProfileStats {
   regionsExplored: number;
   /** tasting_notes row 수 */
   notesCount: number;
-  /** cellar_items row 수 (참고용 — UI 미노출 §6 #12) */
+  /** cellar_items row 수 */
   cellarCount: number;
+  /** wine_favorites row 수 — v0.1.0 DEMO_MODE mock / prod 0 (테이블 미존재) */
+  favoritesCount: number;
 }
 
 const EMPTY: ProfileStats = {
@@ -37,6 +40,7 @@ const EMPTY: ProfileStats = {
   regionsExplored: 0,
   notesCount: 0,
   cellarCount: 0,
+  favoritesCount: 0,
 };
 
 export interface UseProfileStatsResult {
@@ -71,6 +75,7 @@ export function useProfileStats(): UseProfileStatsResult {
           regionsExplored: regions.size,
           notesCount: MOCK_TASTING_NOTES.length,
           cellarCount: MOCK_CELLAR_ITEMS.length,
+          favoritesCount: FAVORITES.length,
         });
         return;
       }
@@ -114,6 +119,7 @@ export function useProfileStats(): UseProfileStatsResult {
         regionsExplored: regions.size,
         notesCount: notesRows?.length ?? 0,
         cellarCount: cellarCount ?? 0,
+        favoritesCount: 0, // wine_favorites 테이블 v0.2.0 마이그레이션 예정
       });
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));

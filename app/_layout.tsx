@@ -158,6 +158,8 @@ export default function RootLayout() {
           {/* P3 화면 — favorites, profile, notifications */}
           <Stack.Screen name="favorites/index" />
           <Stack.Screen name="profile/index" />
+          <Stack.Screen name="profile/[userId]/index" />
+          <Stack.Screen name="profile/followers" />
           <Stack.Screen name="notifications/index" />
           {/* wine 서브 라우트 — story, prices, community-peak */}
           <Stack.Screen name="wine/[lwin]/story" />

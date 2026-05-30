@@ -21,9 +21,11 @@ import { Pressable, Text, View } from 'react-native';
 import { Award, ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
-import { brand, level as levelColors, light } from '@/lib/design-tokens';
+import { brand, light } from '@/lib/design-tokens';
 import { LevelProgressBar } from './level-progress-bar';
 import { BadgeDots, type BadgeRef } from './badge-dots';
+import { FollowCountRow } from './follow-count-row';
+import { levelPillStyle } from './level-pill-style';
 
 interface Props {
   anonymousDisplay: string;
@@ -34,6 +36,14 @@ interface Props {
   badges?: readonly BadgeRef[];
   /** Ranking detail 진입. v0.1.0 §10 G 보류 → 부모가 Toast 등으로 처리. */
   onPressRankingDetail?: () => void;
+  /** 팔로워 수. undefined 시 FollowCountRow 미렌더 (§CH-6 D1). */
+  followerCount?: number;
+  /** 팔로잉 수. undefined 시 FollowCountRow 미렌더. */
+  followingCount?: number;
+  /** 팔로워 셀 탭 (FollowCountRow tappable=true). */
+  onPressFollowers?: () => void;
+  /** 팔로잉 셀 탭. */
+  onPressFollowing?: () => void;
 }
 
 /** months since ISO date string → keyscreen monthsSince() verbatim. */
@@ -53,29 +63,6 @@ function avatarInitial(anonymous: string): string {
   return first ? first.toUpperCase() : '?';
 }
 
-/** LevelPill 색 — keyscreen level-pill.tsx levelStyle verbatim (light 모드 적용).
- *  하드코딩 hex 회피 — 모든 색은 brand.* / level.* 토큰 직접 참조 (§4-9). */
-function levelPillStyle(level: 1 | 2 | 3 | 4 | 5): { bg: string; fg: string } {
-  switch (level) {
-    case 1:
-      // keyscreen #F5F0E8 = brand.cream
-      return { bg: brand.cream, fg: brand.deepestDark };
-    case 2:
-      // keyscreen #D4B85C = brand.goldSoft
-      return { bg: brand.goldSoft, fg: brand.deepestDark };
-    case 3:
-      // keyscreen #C9A84C = brand.gold
-      return { bg: brand.gold, fg: brand.deepestDark };
-    case 4:
-      // keyscreen #8B1A2A = brand.wineRed
-      return { bg: brand.wineRed, fg: brand.cream };
-    case 5:
-      // L5는 LinearGradient를 사용해야 하나, 작은 inline pill 안은 단색 fallback이 자연.
-      // level.L5 = #A02030 (brand.wineRedHover와 동일).
-      return { bg: levelColors.L5, fg: brand.cream };
-  }
-}
-
 export function ProfileHero({
   anonymousDisplay,
   levelId,
@@ -83,6 +70,10 @@ export function ProfileHero({
   joinedAt,
   badges = [],
   onPressRankingDetail,
+  followerCount,
+  followingCount,
+  onPressFollowers,
+  onPressFollowing,
 }: Props) {
   const { t } = useTranslation();
 
@@ -208,6 +199,18 @@ export function ProfileHero({
 
       {/* LevelProgressBar — 별도 컴포넌트 */}
       <LevelProgressBar xp={xp} />
+
+      {/* FollowCountRow — §CH-2. follower/following 둘 다 정의 시에만 렌더 (§CH-6 D1).
+          §CH-D2: outer card gap 14 이미 적용 → marginTop 제거 (borderTop+paddingTop 만). */}
+      {followerCount != null && followingCount != null ? (
+        <FollowCountRow
+          followerCount={followerCount}
+          followingCount={followingCount}
+          tappable
+          onPressFollowers={onPressFollowers}
+          onPressFollowing={onPressFollowing}
+        />
+      ) : null}
 
       {/* RankingDetailLink — §4-11 3-layer Pressable */}
       <Pressable

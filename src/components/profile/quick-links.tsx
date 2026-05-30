@@ -23,6 +23,7 @@ import {
   Award,
   Bell,
   ChevronRight,
+  Image as ImageIcon,
   LogOut,
   Settings as SettingsIcon,
   Star,
@@ -32,7 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { brand, light } from '@/lib/design-tokens';
 
 interface Item {
-  key: 'favorites' | 'badges' | 'notifications' | 'settings' | 'signOut';
+  key: 'favorites' | 'badges' | 'photos' | 'notifications' | 'settings' | 'signOut';
   icon: ReactNode;
   labelKey: string;
   onPress: () => void;
@@ -41,6 +42,7 @@ interface Item {
 interface Props {
   onFavorites: () => void;
   onBadges: () => void;
+  onPhotos: () => void;
   onNotifications: () => void;
   onSettings: () => void;
   onSignOut: () => void;
@@ -49,6 +51,7 @@ interface Props {
 export function QuickLinks({
   onFavorites,
   onBadges,
+  onPhotos,
   onNotifications,
   onSettings,
   onSignOut,
@@ -74,6 +77,12 @@ export function QuickLinks({
       icon: <Award size={18} color={brand.gold} />,
       labelKey: 'profile.links.badges',
       onPress: handlePress(onBadges),
+    },
+    {
+      key: 'photos',
+      icon: <ImageIcon size={18} color={brand.gold} />,
+      labelKey: 'profile.links.photos',
+      onPress: handlePress(onPhotos),
     },
     {
       key: 'notifications',

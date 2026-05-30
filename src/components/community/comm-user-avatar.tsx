@@ -82,14 +82,13 @@ export function CommUserAvatar({
     return <View>{visual}</View>;
   }
 
-  // asLink=true: v0.1.0 `/profile/{userId}` 미존재 → onPress no-op (toast 는 caller 책임)
+  // asLink=true: `/profile/{userId}` 로 라우팅.
   // §4-11 패턴: Pressable hit + opacity, inner LinearGradient 가 visual 분리.
   return (
     <Pressable
       onPress={() => {
         if (userId) {
-          // v0.2.0 활성: router.push(`/profile/${userId}`)
-          // v0.1.0 현재는 미존재 — no-op (호출처에서 Toast 표시 권장)
+          router.push(`/profile/${userId}` as never);
         }
       }}
       style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}

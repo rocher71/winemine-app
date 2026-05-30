@@ -16,6 +16,7 @@
  */
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Wine } from 'lucide-react-native';
 import { brand, light, withAlpha } from '@/lib/design-tokens';
@@ -50,7 +51,8 @@ export function CommentRow({
   const avatarSize = isReply ? 24 : 30;
 
   const handleNamePress = () => {
-    // §10 B: profile route v0.1.0 미존재 — no-op (caller가 Toast로 처리 옵션)
+    Haptics.selectionAsync().catch(() => undefined);
+    router.push(`/profile/${userId}` as never);
   };
 
   const handleReply = () => {

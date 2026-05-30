@@ -63,6 +63,7 @@ import { brand, light } from '@/lib/design-tokens';
 import { signOut } from '@/lib/auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useProfileStats } from '@/hooks/use-profile-stats';
+import { useFollowCounts } from '@/hooks/use-follow-counts';
 import { ProfileHero } from '@/components/profile/profile-hero';
 import { StatGrid } from '@/components/profile/stat-grid';
 import { QuickLinks } from '@/components/profile/quick-links';
@@ -96,6 +97,11 @@ export default function ProfileScreen() {
     error: statsError,
     refresh: refreshStats,
   } = useProfileStats();
+  const {
+    followerCount,
+    followingCount,
+    refresh: refreshFollowCounts,
+  } = useFollowCounts();
 
   const [refreshing, setRefreshing] = useState(false);
   const [signOutVisible, setSignOutVisible] = useState(false);
@@ -113,11 +119,29 @@ export default function ProfileScreen() {
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await Promise.all([refreshProfile(), refreshStats()]);
+      await Promise.all([
+        refreshProfile(),
+        refreshStats(),
+        refreshFollowCounts(),
+      ]);
     } finally {
       setRefreshing(false);
     }
-  }, [refreshProfile, refreshStats]);
+  }, [refreshProfile, refreshStats, refreshFollowCounts]);
+
+  // FollowCountRow — §CH-3 라우팅
+  const handlePressFollowers = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
+      () => undefined,
+    );
+    router.push('/profile/followers?tab=followers');
+  }, []);
+  const handlePressFollowing = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
+      () => undefined,
+    );
+    router.push('/profile/followers?tab=following');
+  }, []);
 
   // §10 G: ranking 라우트 v0.2.0 보류.
   const handlePressRankingDetail = useCallback(() => {
@@ -129,6 +153,9 @@ export default function ProfileScreen() {
     router.push('/favorites');
   }, []);
   const handleBadges = useCallback(() => {
+    showToast(t('profile.comingSoonToast'));
+  }, [showToast, t]);
+  const handlePhotos = useCallback(() => {
     showToast(t('profile.comingSoonToast'));
   }, [showToast, t]);
   const handleNotifications = useCallback(() => {
@@ -228,16 +255,23 @@ export default function ProfileScreen() {
           xp={profile.xp}
           joinedAt={profile.created_at}
           onPressRankingDetail={handlePressRankingDetail}
+          followerCount={followerCount}
+          followingCount={followingCount}
+          onPressFollowers={handlePressFollowers}
+          onPressFollowing={handlePressFollowing}
         />
         <StatGrid
           winesTasted={stats.winesTasted}
           countriesExplored={stats.countriesExplored}
           regionsExplored={stats.regionsExplored}
           notesCount={stats.notesCount}
+          cellarCount={stats.cellarCount}
+          favoritesCount={stats.favoritesCount}
         />
         <QuickLinks
           onFavorites={handleFavorites}
           onBadges={handleBadges}
+          onPhotos={handlePhotos}
           onNotifications={handleNotifications}
           onSettings={handleSettings}
           onSignOut={handleSignOutTrigger}

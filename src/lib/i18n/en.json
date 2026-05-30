@@ -1593,11 +1593,14 @@
       "tasted": "Wines tasted",
       "countries": "Countries",
       "regions": "Regions",
-      "notes": "Notes"
+      "notes": "Notes",
+      "cellar": "Cellar",
+      "favorites": "Favorites"
     },
     "links": {
       "favorites": "Favorites",
       "badges": "Badges",
+      "photos": "Label photos",
       "notifications": "Notifications",
       "settings": "Settings",
       "signOut": "Sign out"
@@ -1618,10 +1621,72 @@
       "title": "Couldn't load profile",
       "body": "Try again in a moment"
     },
+    "followers": "Followers",
+    "following": "Following",
+    "other": {
+      "follow": "Follow",
+      "following": "Following",
+      "joined": "Joined {{date}}",
+      "tasteCompatibility": "Taste match",
+      "compatibilitySummary": "Strong overlap in {{topRegion}}",
+      "sharedWines": "{{count}} shared wines",
+      "sharedRegions": "{{count}} shared regions",
+      "sortRecent": "Recent",
+      "sortRating": "Top rated",
+      "notFound": "User not found",
+      "mutual": "Mutual",
+      "moreOptions": "More",
+      "stat": {
+        "wines": "Wines",
+        "countries": "Countries",
+        "notes": "Notes"
+      },
+      "empty": {
+        "wines": "No public tasting records yet"
+      },
+      "notFoundScreen": {
+        "title": "User not found",
+        "desc": "This account may be deleted or private"
+      },
+      "error": {
+        "title": "Could not load profile"
+      }
+    },
     "a11y": {
       "level": "Level {{level}}",
       "stat": "{{value}} {{label}}",
-      "progress": "{{name}}, {{current}} of {{next}} XP"
+      "progress": "{{name}}, {{current}} of {{next}} XP",
+      "followers": "{{count}} followers",
+      "following": "{{count}} following",
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "more": "More options",
+      "compatibility": "Taste match {{score}} percent"
+    }
+  },
+  "followList": {
+    "follow": "Follow",
+    "following": "Following",
+    "mutual": "Mutual",
+    "tabs": {
+      "followers": "Followers",
+      "following": "Following"
+    },
+    "empty": {
+      "followers": {
+        "title": "No followers yet"
+      },
+      "following": {
+        "title": "Not following anyone yet"
+      },
+      "desc": "Meet other wine lovers in the community"
+    },
+    "error": {
+      "title": "Could not load list"
+    },
+    "a11y": {
+      "follow": "Follow",
+      "unfollow": "Unfollow"
     }
   },
   "levels": {

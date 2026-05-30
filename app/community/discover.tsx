@@ -145,8 +145,8 @@ function UserCard({ row, isFollowing }: UserCardProps) {
 
   const handleNamePress = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.profile.deferred'));
-  }, [t]);
+    router.push(`/profile/${row.userId}`);
+  }, [row.userId]);
 
   const handleFollowPress = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);

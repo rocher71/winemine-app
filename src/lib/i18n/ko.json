@@ -1593,11 +1593,14 @@
       "tasted": "마신 와인",
       "countries": "방문 국가",
       "regions": "탐험 지역",
-      "notes": "노트 수"
+      "notes": "노트 수",
+      "cellar": "셀러",
+      "favorites": "즐겨찾기"
     },
     "links": {
       "favorites": "즐겨찾기",
       "badges": "뱃지",
+      "photos": "라벨 사진",
       "notifications": "알림",
       "settings": "설정",
       "signOut": "로그아웃"
@@ -1618,10 +1621,72 @@
       "title": "데이터를 불러올 수 없습니다",
       "body": "잠시 후 다시 시도해주세요"
     },
+    "followers": "팔로워",
+    "following": "팔로잉",
+    "other": {
+      "follow": "팔로우",
+      "following": "팔로잉",
+      "joined": "{{date}} 가입",
+      "tasteCompatibility": "취향 일치도",
+      "compatibilitySummary": "{{topRegion}}에서 강한 공통점",
+      "sharedWines": "공유 와인 {{count}}종",
+      "sharedRegions": "공유 지역 {{count}}곳",
+      "sortRecent": "최근 시음",
+      "sortRating": "높은 평점",
+      "notFound": "사용자를 찾을 수 없습니다",
+      "mutual": "맞팔",
+      "moreOptions": "더보기",
+      "stat": {
+        "wines": "와인",
+        "countries": "국가",
+        "notes": "노트"
+      },
+      "empty": {
+        "wines": "아직 공개된 시음 기록이 없어요"
+      },
+      "notFoundScreen": {
+        "title": "사용자를 찾을 수 없습니다",
+        "desc": "삭제되었거나 비공개 계정일 수 있어요"
+      },
+      "error": {
+        "title": "프로필을 불러올 수 없습니다"
+      }
+    },
     "a11y": {
       "level": "레벨 {{level}}",
       "stat": "{{value}} {{label}}",
-      "progress": "{{name}}, {{current}}/{{next}} XP"
+      "progress": "{{name}}, {{current}}/{{next}} XP",
+      "followers": "팔로워 {{count}}명",
+      "following": "팔로잉 {{count}}명",
+      "follow": "팔로우하기",
+      "unfollow": "팔로우 취소하기",
+      "more": "더보기 메뉴",
+      "compatibility": "취향 일치도 {{score}}점"
+    }
+  },
+  "followList": {
+    "follow": "팔로우",
+    "following": "팔로잉",
+    "mutual": "맞팔",
+    "tabs": {
+      "followers": "팔로워",
+      "following": "팔로잉"
+    },
+    "empty": {
+      "followers": {
+        "title": "아직 팔로워가 없어요"
+      },
+      "following": {
+        "title": "아직 팔로우한 사람이 없어요"
+      },
+      "desc": "커뮤니티에서 다른 와인 애호가를 만나보세요"
+    },
+    "error": {
+      "title": "목록을 불러올 수 없습니다"
+    },
+    "a11y": {
+      "follow": "팔로우하기",
+      "unfollow": "팔로우 취소하기"
     }
   },
   "levels": {
