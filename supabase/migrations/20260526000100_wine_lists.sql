@@ -50,7 +50,8 @@ CREATE TRIGGER trg_wine_lists_updated_at
 CREATE TABLE wine_list_items (
   id         uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   list_id    uuid        NOT NULL REFERENCES wine_lists(id) ON DELETE CASCADE,
-  lwin       bigint      NOT NULL REFERENCES wines(lwin),
+  -- wines.lwin 은 text (00000000000000_local_stub / wine_metadata 참조) — FK 타입 일치 필수.
+  lwin       text        NOT NULL REFERENCES wines(lwin),
   sort_order integer     NOT NULL DEFAULT 0,
   note       text,
   added_at   timestamptz NOT NULL DEFAULT now(),
