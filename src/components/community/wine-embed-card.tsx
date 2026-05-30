@@ -23,9 +23,55 @@ import { View, Text, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pin, ChevronRight } from 'lucide-react-native';
-import { light, withAlpha } from '@/lib/design-tokens';
+import { brand, light, withAlpha, type TypeCanonical } from '@/lib/design-tokens';
 import { WMBottle } from '@/components/shared/wm-bottle';
 import { getWineEmbed } from '@/lib/mock/community-posts';
+import { getMockWineByLwin } from '@/lib/mock/wines';
+
+/** WineEmbedCard 가 렌더에 쓰는 정규화된 와인 표시 데이터. */
+interface ResolvedWine {
+  nameKo: string;
+  producer: string;
+  vintage: string;
+  bottleColor: string;
+  type: TypeCanonical | null;
+  lwin: string;
+}
+
+/**
+ * wineId 를 표시용 와인으로 해석.
+ *   1) getWineEmbed(슬러그) — 기존 커뮤니티 임베드 슬러그(WINE_EMBEDS).
+ *   2) getMockWineByLwin(실 LWIN) — 발행 노트 등 실 LWIN 첨부 (요구: 댓글/발행 와인 카드).
+ */
+function resolveWine(wineId?: string): ResolvedWine | null {
+  if (!wineId) return null;
+
+  const embed = getWineEmbed(wineId);
+  if (embed) {
+    return {
+      nameKo: embed.nameKo,
+      producer: embed.producer,
+      vintage: String(embed.vintage),
+      bottleColor: embed.bottleColor,
+      type: (embed.type as TypeCanonical | null) ?? null,
+      lwin: embed.lwin,
+    };
+  }
+
+  const row = getMockWineByLwin(wineId);
+  if (row) {
+    return {
+      nameKo: row.name_ko ?? row.display_name ?? 'Wine',
+      producer: row.producer_name ?? '',
+      vintage: row.vintage != null ? String(row.vintage) : '',
+      bottleColor: row.bottle_color ?? brand.wineRed,
+      type: (row.type_canonical as TypeCanonical | null) ?? null,
+      lwin: row.lwin ?? '',
+    };
+  }
+
+  return null;
+}
 
 interface WineEmbedCardProps {
   wineId?: string;
@@ -41,8 +87,10 @@ interface WineEmbedCardProps {
 
 export function WineEmbedCard({ wineId, mini = false, onPress, linkToWine = false }: WineEmbedCardProps) {
   const { t } = useTranslation();
-  const wine = getWineEmbed(wineId);
+  const wine = resolveWine(wineId);
   if (!wine) return null;
+
+  const sub = [wine.producer, wine.vintage].filter(Boolean).join(' · ');
 
   // onPress 미지정 + linkToWine 시 resolved 와인의 lwin 으로 와인 상세 라우팅 (커뮤니티 임베드 → /wine/[lwin]).
   const handlePress =
@@ -105,18 +153,20 @@ export function WineEmbedCard({ wineId, mini = false, onPress, linkToWine = fals
           {wine.nameKo}
         </Text>
 
-        <Text
-          allowFontScaling={false}
-          numberOfLines={1}
-          style={{
-            marginTop: 1,
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 10,
-            color: light.text.muted,
-          }}
-        >
-          {`${wine.producer} · ${wine.vintage}`}
-        </Text>
+        {!!sub && (
+          <Text
+            allowFontScaling={false}
+            numberOfLines={1}
+            style={{
+              marginTop: 1,
+              fontFamily: 'Freesentation_4Regular',
+              fontSize: 10,
+              color: light.text.muted,
+            }}
+          >
+            {sub}
+          </Text>
+        )}
       </View>
 
       <ChevronRight size={14} strokeWidth={1.75} color={light.border.active} />
