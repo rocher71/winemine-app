@@ -47,8 +47,10 @@ export function useFollowCounts(userId?: string): UseFollowCountsResult {
         setFollowingCount(undefined);
         return;
       }
+      // profiles_public VIEW: 카운트는 공개 컬럼. base profiles 는 owner-only RLS
+      // 라서 타 사용자 카운트는 뷰로만 읽힘 (§4-6).
       const { data, error: err } = await supabase
-        .from('profiles')
+        .from('profiles_public')
         .select('follower_count, following_count')
         .eq('id', target)
         .maybeSingle();

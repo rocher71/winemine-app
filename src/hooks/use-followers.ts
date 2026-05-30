@@ -1,8 +1,11 @@
 /**
  * useFollowers — follow-list §5-1 신규 hook.
  *
- * tab='followers': supabase.from('follows').select('follower_id, profiles!follower_id(*)').eq('following_id', userId)
- * tab='following': supabase.from('follows').select('following_id, profiles!following_id(*)').eq('follower_id', userId)
+ * follows 에서 대상 id 집합을 구한 뒤, 프로필 정보는 public.profiles_public
+ * VIEW(안전 컬럼만)에서 .in('id', ids) 로 조회한다. base profiles 는 owner-only
+ * RLS 라서 `profiles!follower_id(*)` embed 는 본인 행만 반환(깨짐) — 또한 (*) 는
+ * 민감 컬럼까지 끌어온다. 뷰 조회로 두 문제(접근/과다노출)를 동시에 해소
+ * (§4-5 anonymization, §4-6 RLS).
  *
  * 각 항목 isMutual: 반대 방향(상대도 나를 팔로우)인지 — followers ∩ following 교차.
  * 각 항목 isFollowing: 내가 그 사람을 팔로우 중인지 (following set).
@@ -92,29 +95,26 @@ export function useFollowers(
         (myFollowers ?? []).map((r) => r.follower_id),
       );
 
-      let rows: { profileJoin: ProfileJoin | null }[] = [];
-      if (tab === 'followers') {
+      // tab 에 따라 표시 대상 id 집합 선택 (위에서 이미 조회한 set 재사용).
+      //   followers: 나를 팔로우하는 사람 = followerSet
+      //   following: 내가 팔로우하는 사람 = followingSet
+      const ids = Array.from(tab === 'followers' ? followerSet : followingSet);
+
+      const profilesById = new Map<string, ProfileJoin>();
+      if (ids.length > 0) {
         const { data, error: err } = await supabase
-          .from('follows')
-          .select('follower_id, profiles:profiles!follower_id(*)')
-          .eq('following_id', target);
+          .from('profiles_public')
+          .select('id, anonymous_display, handle, bio, level')
+          .in('id', ids);
         if (err) throw err;
-        rows = (data ?? []).map((r) => ({
-          profileJoin: (r as { profiles: ProfileJoin | null }).profiles,
-        }));
-      } else {
-        const { data, error: err } = await supabase
-          .from('follows')
-          .select('following_id, profiles:profiles!following_id(*)')
-          .eq('follower_id', target);
-        if (err) throw err;
-        rows = (data ?? []).map((r) => ({
-          profileJoin: (r as { profiles: ProfileJoin | null }).profiles,
-        }));
+        for (const p of data ?? []) {
+          if (p.id) profilesById.set(p.id, p as ProfileJoin);
+        }
       }
 
       const list: FollowUser[] = [];
-      for (const { profileJoin: p } of rows) {
+      for (const id of ids) {
+        const p = profilesById.get(id);
         if (!p) continue;
         list.push({
           userId: p.id,

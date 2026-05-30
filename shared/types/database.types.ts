@@ -462,6 +462,23 @@ export type Database = {
       }
     }
     Views: {
+      profiles_public: {
+        Row: {
+          anonymous_display: string
+          bio: string | null
+          created_at: string | null
+          follower_count: number
+          following_count: number
+          handle: string | null
+          id: string
+          level: number
+          public_countries_count: number
+          public_notes_count: number
+          public_regions_count: number
+          public_wines_count: number
+        }
+        Relationships: []
+      }
       wines_localized: {
         Row: {
           bottle_color: string | null

@@ -19,14 +19,18 @@ alter table public.profiles add column if not exists public_countries_count int 
 alter table public.profiles add column if not exists public_regions_count int not null default 0 check (public_regions_count >= 0);
 alter table public.profiles add column if not exists public_notes_count int not null default 0 check (public_notes_count >= 0);
 
--- ── RLS: allow cross-user profile read ────────────────────────────────────
--- Replace owner-only SELECT with authenticated-any SELECT so other users can
--- render a public profile screen. Row level only; column-level masking of
--- email / linked_providers is deferred to v0.2.0 (v0.1.0 trusts client to
--- only render anonymous_display + public columns).
-drop policy if exists "profiles_select_own" on public.profiles;
+-- ── RLS: profiles stay owner-only for full-row reads ──────────────────────
+-- CRITICAL (§4-5 anonymization, §4-6 RLS): the base table keeps owner-only
+-- SELECT so email / linked_providers / preference columns are NEVER reachable
+-- cross-user via a direct PostgREST column query (e.g. select=email). RLS is
+-- row-level only and cannot column-mask, so cross-user profile rendering is
+-- served by the public.profiles_public VIEW (safe columns only), created in
+-- 20260527000100_follows.sql once follower_count / following_count exist.
+-- A prior revision shipped `using (auth.uid() is not null)` here, which let any
+-- authenticated user dump every user's email — removed.
 drop policy if exists "profiles_select_any_authenticated" on public.profiles;
-create policy "profiles_select_any_authenticated" on public.profiles for select using (auth.uid() is not null);
+drop policy if exists "profiles_select_own" on public.profiles;
+create policy "profiles_select_own" on public.profiles for select using (id = auth.uid());
 
 -- update / insert policies stay as defined in 20260519000000_profiles.sql
 -- (profiles_update_own: id = auth.uid(); insert via security definer trigger only).

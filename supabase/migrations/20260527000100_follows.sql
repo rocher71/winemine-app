@@ -54,3 +54,36 @@ drop trigger if exists on_follow_change on public.follows;
 create trigger on_follow_change
   after insert or delete on public.follows
   for each row execute function public.update_follow_counts();
+
+-- ── public profile projection (safe columns only) ─────────────────────────
+-- Cross-user reads (other-user profile screen, follower/following lists) go
+-- through this view, NOT the base table. profiles keeps owner-only RLS, so
+-- email / linked_providers / mode / experience / language / theme / is_upgraded
+-- are never exposed to other users.
+--
+-- security_invoker = false (definer) is intentional and the opposite of
+-- wines_localized: here the view must bypass the owner-only RLS on profiles to
+-- return other users' rows, but it can ONLY ever return the non-sensitive
+-- columns enumerated below — sensitive columns are structurally unreachable
+-- through it. This is the canonical "public projection" pattern for a table
+-- that is otherwise owner-private.
+drop view if exists public.profiles_public;
+create view public.profiles_public
+with (security_invoker = false) as
+select
+  id,
+  anonymous_display,
+  handle,
+  bio,
+  level,
+  public_wines_count,
+  public_countries_count,
+  public_regions_count,
+  public_notes_count,
+  follower_count,
+  following_count,
+  created_at
+from public.profiles;
+
+-- authenticated only (anonymous sign-in still yields the authenticated role).
+grant select on public.profiles_public to authenticated;
