@@ -1421,7 +1421,13 @@
       "publishDeferred": "Publish coming soon",
       "noteRowLabel": "{{wine}} · {{date}}",
       "photos": "PHOTOS",
-      "addPhoto": "Add photo"
+      "addPhoto": "Add photo",
+      "publishSuccess": "Published",
+      "publishError": "Failed to publish. Please try again.",
+      "nicknameTitle": "Set a nickname",
+      "nicknameDesc": "This name shows on your community posts and comments.",
+      "nicknamePlaceholder": "Nickname (2-20 chars)",
+      "nicknameSave": "Save & publish"
     },
     "profile": {
       "deferred": "Profile screen coming soon"

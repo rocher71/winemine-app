@@ -38,6 +38,7 @@ import { useRef, useState, type ReactNode } from 'react';
 import { Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -61,7 +62,8 @@ import {
 } from 'lucide-react-native';
 import Svg, { Defs, Pattern, Rect, Stop, LinearGradient as SvgLinearGradient } from 'react-native-svg';
 import { brand, light, postTypeBadgeColorLight, withAlpha, communityPost, type TypeCanonical } from '@/lib/design-tokens';
-import { getCommunityPost, getCommunityPosts, getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
+import { getCommunityPosts, getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
+import { useCommunityPost } from '@/hooks/use-community-posts';
 import { MOCK_WINES, getMockWineByLwin } from '@/lib/mock/wines';
 import { getCommentsByPost, groupCommentThreads, localizedBody, type CommComment } from '@/lib/mock/community-comments';
 import { MOCK_LIST_STATS, MOCK_WINE_LIST_ITEMS, MOCK_PUBLIC_LIST_ITEMS } from '@/lib/mock/wine-lists';
@@ -100,10 +102,11 @@ export default function CommunityPostScreen() {
     postId ? getCommentsByPost(postId) : []
   );
 
-  const post = postId ? getCommunityPost(postId) : undefined;
+  // mock → 발행 스토어 → supabase 순으로 단건 해석 (발행 글도 상세 진입 가능).
+  const { post, loading: postLoading } = useCommunityPost(postId);
 
   if (!post) {
-    return <NotFoundView />;
+    return <NotFoundView loading={postLoading} />;
   }
 
   const user = getCommunityUser(post.userId);
@@ -362,7 +365,7 @@ function LightBackHeader({ post }: { post: CommPost }) {
 // Not Found View (§1-G)
 // ────────────────────────────────────────────────────────────────────────────
 
-function NotFoundView() {
+function NotFoundView({ loading = false }: { loading?: boolean }) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   return (
@@ -408,16 +411,20 @@ function NotFoundView() {
         </Text>
       </View>
       <View style={{ paddingVertical: 32, alignItems: 'center' }}>
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 14,
-            color: light.text.muted,
-          }}
-        >
-          {t('community.post.notFound')}
-        </Text>
+        {loading ? (
+          <ActivityIndicator color={light.text.muted} />
+        ) : (
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: 'Freesentation_4Regular',
+              fontSize: 14,
+              color: light.text.muted,
+            }}
+          >
+            {t('community.post.notFound')}
+          </Text>
+        )}
       </View>
     </View>
   );

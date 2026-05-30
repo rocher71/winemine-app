@@ -37,6 +37,9 @@ import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { MOCK_TASTING_NOTES } from '@/lib/mock/tasting-notes';
 import { getMockWineByLwin } from '@/lib/mock/wines';
 import { useImagePicker } from '@/hooks/use-image-picker';
+import { useCreatePost } from '@/hooks/use-community-posts';
+import { getCachedNickname, loadNickname, saveNickname } from '@/lib/community/nickname';
+import { NicknamePrompt } from '@/components/community/nickname-prompt';
 
 const PHOTO_MAX = 9;
 const GRID_GAP = 6;
@@ -56,6 +59,8 @@ export default function CommunityNewNoteScreen() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [photos, setPhotos] = useState<string[]>([]);
+  const [nicknamePromptVisible, setNicknamePromptVisible] = useState(false);
+  const { create, isLoading: publishing } = useCreatePost();
 
   const handleAddPhotos = useCallback(async () => {
     Haptics.selectionAsync().catch(() => undefined);
@@ -96,13 +101,46 @@ export default function CommunityNewNoteScreen() {
     router.back();
   }, [selectedNoteId]);
 
-  const handlePublish = useCallback(() => {
-    if (!canPublish) return;
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
-    Alert.alert(t('app.name'), t('community.noteShare.publishDeferred'), [
-      { text: t('common.ok'), onPress: () => router.back() },
-    ]);
-  }, [canPublish, t]);
+  // 실제 발행 — 닉네임 확보된 상태에서 호출.
+  const doPublish = useCallback(async () => {
+    if (!selectedNote || title.trim().length === 0) return;
+    try {
+      await create({
+        title: title.trim(),
+        body: body.trim(),
+        wineLwin: selectedNote.wine_lwin ?? null,
+        rating: selectedNote.rating ?? null,
+        photoCount: photos.length,
+        agoLabel: t('common.justNow'),
+      });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+      // 발행 글이 피드 최상단에 보이도록 커뮤니티 탭으로 이동.
+      router.replace('/(tabs)/community');
+    } catch {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => undefined);
+      Alert.alert(t('app.name'), t('community.noteShare.publishError'));
+    }
+  }, [selectedNote, title, body, photos.length, create, t]);
+
+  const handlePublish = useCallback(async () => {
+    if (!canPublish || publishing) return;
+    // 첫 발행: 닉네임 미설정 시 prompt 먼저.
+    const nick = getCachedNickname() ?? (await loadNickname());
+    if (!nick) {
+      setNicknamePromptVisible(true);
+      return;
+    }
+    await doPublish();
+  }, [canPublish, publishing, doPublish]);
+
+  const handleNicknameSubmit = useCallback(
+    async (nickname: string) => {
+      await saveNickname(nickname);
+      setNicknamePromptVisible(false);
+      await doPublish();
+    },
+    [doPublish]
+  );
 
   const handleGoWrite = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);
@@ -210,6 +248,14 @@ export default function CommunityNewNoteScreen() {
           insetsBottom={insets.bottom}
         />
       )}
+
+      {/* 첫 발행 닉네임 설정 */}
+      <NicknamePrompt
+        visible={nicknamePromptVisible}
+        onClose={() => setNicknamePromptVisible(false)}
+        onSubmit={handleNicknameSubmit}
+        submitting={publishing}
+      />
     </View>
   );
 }

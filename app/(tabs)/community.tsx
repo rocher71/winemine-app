@@ -44,7 +44,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {View, Text, ScrollView, Pressable, StyleSheet, Animated} from 'react-native';
 import {useRef} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRouter} from 'expo-router';
+import {useRouter, useFocusEffect} from 'expo-router';
 import {useTranslation} from 'react-i18next';
 import {LinearGradient} from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
@@ -55,8 +55,8 @@ import {BellButton} from '@/components/nav/bell-button';
 import {LevelChip} from '@/components/shared/level-chip';
 import {CommFeedCard} from '@/components/community/comm-feed-card';
 import {PostTypeBadge} from '@/components/community/post-type-badge';
+import {useCommunityFeed} from '@/hooks/use-community-posts';
 import {
-  getCommunityPosts,
   getCommunityUser,
   getTrendingKeywords,
   getTrendingRankedPosts,
@@ -123,8 +123,9 @@ export default function CommunityScreen() {
   const [tab, setTab] = useState<TabId>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilterId>('all');
 
-  // Posts mock — community-posts.ts verbatim.
-  const posts: CommPost[] = useMemo(() => getCommunityPosts(), []);
+  // 발행/실제 글을 mock 위에 prepend (useCommunityFeed). 화면 진입마다 refresh.
+  const { posts, refresh: refreshFeed } = useCommunityFeed();
+  useFocusEffect(useCallback(() => { refreshFeed(); }, [refreshFeed]));
 
   // §10 E: following 탭 keyscreen verbatim 순서 [posts[0], posts[2], posts[1]].
   const followingPosts: CommPost[] = useMemo(

@@ -159,8 +159,52 @@ export function getCommunityPosts(): CommPost[] {
   return COMM_POSTS;
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Dynamic user registry — 실/발행 작성자(auth.uid() 또는 DEMO_USER_ID)를 런타임에 등록.
+// 커뮤니티 UI 전역이 getCommunityUser(id) 로 작성자를 해석하므로, 발행 훅이 현재 회원의
+// CommUser 를 여기에 등록하면 피드·상세·댓글 어디서든 닉네임/레벨이 정상 표시된다.
+// (mock COMM_USERS 는 그대로 유지 — 데모 콘텐츠 보존.)
+// ────────────────────────────────────────────────────────────────────────────
+const dynamicUsers = new Map<string, CommUser>();
+
+/** 레벨 → identity color (COMM_USERS 패턴과 동일 계열). */
+const LEVEL_COLOR: Record<number, string> = {
+  1: '#b8b8c0',
+  2: '#b8b8c0',
+  3: '#b8b8c0',
+  4: '#C9A84C',
+  5: '#8B1A2A',
+};
+
+/** 레벨 → ko levelLabel (커뮤니티 mock 라벨 계열). */
+const LEVEL_LABEL: Record<number, string> = {
+  1: '입문자',
+  2: '애호가',
+  3: '코노시어',
+  4: '소믈리에',
+  5: '마스터',
+};
+
+/** 닉네임 + 레벨로 CommUser 구성 후 registry 에 등록. */
+export function registerCommunityUser(input: {
+  id: string;
+  name: string;
+  level: 1 | 2 | 3 | 4 | 5;
+}): CommUser {
+  const user: CommUser = {
+    id: input.id,
+    name: input.name,
+    level: input.level,
+    levelLabel: LEVEL_LABEL[input.level] ?? '',
+    color: LEVEL_COLOR[input.level] ?? '#b8b8c0',
+    initial: input.name.trim().charAt(0) || '?',
+  };
+  dynamicUsers.set(user.id, user);
+  return user;
+}
+
 export function getCommunityUser(id: string): CommUser | undefined {
-  return COMM_USERS.find((u) => u.id === id);
+  return COMM_USERS.find((u) => u.id === id) ?? dynamicUsers.get(id);
 }
 
 export function getCommunityPost(id: string): CommPost | undefined {

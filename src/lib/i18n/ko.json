@@ -1421,7 +1421,13 @@
       "publishDeferred": "발행 기능 준비 중",
       "noteRowLabel": "{{wine}} · {{date}}",
       "photos": "사진",
-      "addPhoto": "사진 추가"
+      "addPhoto": "사진 추가",
+      "publishSuccess": "발행되었어요",
+      "publishError": "발행에 실패했어요. 다시 시도해주세요.",
+      "nicknameTitle": "닉네임 설정",
+      "nicknameDesc": "커뮤니티에 표시될 이름이에요. 글과 댓글에 이 이름이 보여요.",
+      "nicknamePlaceholder": "닉네임 (2~20자)",
+      "nicknameSave": "저장하고 발행"
     },
     "profile": {
       "deferred": "프로필 화면 준비 중"

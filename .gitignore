@@ -66,3 +66,5 @@ _workspace/*
 
 expo-env.d.ts
 # @end expo-cli
+# Claude Code worktrees (isolated copies — never commit)
+.claude/worktrees/
