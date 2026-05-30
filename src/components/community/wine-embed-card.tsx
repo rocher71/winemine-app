@@ -20,6 +20,7 @@
  *   onPress 없으면 plain View (hit target 불필요).
  */
 import { View, Text, Pressable } from 'react-native';
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pin, ChevronRight } from 'lucide-react-native';
 import { light, withAlpha } from '@/lib/design-tokens';
@@ -30,12 +31,22 @@ interface WineEmbedCardProps {
   wineId?: string;
   mini?: boolean;
   onPress?: () => void;
+  /**
+   * true 시 onPress 미지정이면 resolved 와인의 lwin 으로 /wine/[lwin] 자동 라우팅.
+   * 포스트 상세(전체 카드가 별도 Pressable 아닌 곳)에서만 켠다 — 피드 카드(outer Pressable)는
+   * 중첩 Pressable 충돌·기존 동작 변경 방지 위해 기본 false 유지.
+   */
+  linkToWine?: boolean;
 }
 
-export function WineEmbedCard({ wineId, mini = false, onPress }: WineEmbedCardProps) {
+export function WineEmbedCard({ wineId, mini = false, onPress, linkToWine = false }: WineEmbedCardProps) {
   const { t } = useTranslation();
   const wine = getWineEmbed(wineId);
   if (!wine) return null;
+
+  // onPress 미지정 + linkToWine 시 resolved 와인의 lwin 으로 와인 상세 라우팅 (커뮤니티 임베드 → /wine/[lwin]).
+  const handlePress =
+    onPress ?? (linkToWine && wine.lwin ? () => router.push(`/wine/${encodeURIComponent(wine.lwin)}`) : undefined);
 
   const bottleW = mini ? 22 : 28;
   const bottleH = mini ? 74 : 94;
@@ -112,11 +123,11 @@ export function WineEmbedCard({ wineId, mini = false, onPress }: WineEmbedCardPr
     </View>
   );
 
-  if (!onPress) return visual;
+  if (!handlePress) return visual;
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       accessibilityRole="button"
       accessibilityLabel={`${t('community.wineEmbed.eyebrow')} · ${wine.nameKo}`}
       style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}

@@ -691,7 +691,7 @@ function NoteVariant({ post, mine, onComment }: VariantProps) {
           {post.body}
         </Text>
         {/* WineEmbedCard (Wave A — bottle + 이 와인 + nameKo + producer·vintage). 슬러그 미해결 시 null. */}
-        {post.wineId && <WineEmbedCard wineId={post.wineId} />}
+        {post.wineId && <WineEmbedCard wineId={post.wineId} linkToWine />}
         {/* Expert annotation */}
         <View
           style={{
@@ -969,7 +969,7 @@ function ColumnVariant({ post, mine, onComment }: VariantProps) {
           {t('community.post.column.p3.body2')}
         </Text>
         {/* WineEmbedCard (Wave A — standard embed). 슬러그 미해결 시 null. */}
-        <WineEmbedCard wineId={columnWineId} />
+        <WineEmbedCard wineId={columnWineId} linkToWine />
         {/* ReactionBar */}
         <View style={{ marginTop: 14 }}>
           <ReactionBar

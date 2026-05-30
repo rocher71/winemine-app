@@ -187,6 +187,8 @@ export interface WineEmbed {
   bottleColor: string;
   /** wm-bottle.tsx TypeCanonical 과 정합. */
   type: 'red' | 'white' | 'rose' | 'sparkling' | 'fortified' | 'dessert';
+  /** mock/wines.ts MOCK_WINES.lwin 과 정합 — 카드 탭 시 /wine/[lwin] 라우팅 대상. */
+  lwin: string;
 }
 
 // v0.2.0 supabase 대체 (community_posts join wines_localized)
@@ -197,6 +199,7 @@ const WINE_EMBEDS: Record<string, WineEmbed> = {
     vintage: 2019,
     bottleColor: '#5b1424', // bottleColorDefault.red
     type: 'red',
+    lwin: '1011318',
   },
   'bgy-puligny-montrachet': {
     nameKo: '레 퓌셀',
@@ -204,6 +207,7 @@ const WINE_EMBEDS: Record<string, WineEmbed> = {
     vintage: 2018,
     bottleColor: '#d9c277', // bottleColorDefault.white
     type: 'white',
+    lwin: '1011323',
   },
 };
 
