@@ -34,7 +34,7 @@
  *   - SVG `<defs><pattern>` (Column hero vine / Album bottles) → react-native-svg verbatim (§6-16).
  *   - LinearGradient 3 (Also-tried CTA / Column hero / Album main photo) + Composer fade.
  */
-import { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -45,7 +45,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -59,19 +58,20 @@ import {
   ChevronRight,
   Info,
   Share2,
-  X,
 } from 'lucide-react-native';
 import Svg, { Defs, Pattern, Rect, Stop, LinearGradient as SvgLinearGradient } from 'react-native-svg';
 import { brand, light, postTypeBadgeColorLight, withAlpha, communityPost, type TypeCanonical } from '@/lib/design-tokens';
 import { getCommunityPost, getCommunityPosts, getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
 import { MOCK_WINES, getMockWineByLwin } from '@/lib/mock/wines';
-import { getCommentsByPost, localizedBody, type CommComment } from '@/lib/mock/community-comments';
+import { getCommentsByPost, groupCommentThreads, localizedBody, type CommComment } from '@/lib/mock/community-comments';
 import { MOCK_LIST_STATS, MOCK_WINE_LIST_ITEMS, MOCK_PUBLIC_LIST_ITEMS } from '@/lib/mock/wine-lists';
 import { useImportList } from '@/hooks/use-wine-lists';
 import { CommUserAvatar } from '@/components/community/comm-user-avatar';
 import { PostTypeBadge } from '@/components/community/post-type-badge';
 import { ReactionBar } from '@/components/community/reaction-bar';
 import { CommentRow } from '@/components/community/comment-row';
+import { CommentComposer } from '@/components/community/comment-composer';
+import { WinePickerSheet } from '@/components/community/wine-picker-sheet';
 import { CommFeedRow } from '@/components/community/comm-feed-card';
 import { WineEmbedCard } from '@/components/community/wine-embed-card';
 import { WMBottle } from '@/components/shared/wm-bottle';
@@ -89,7 +89,13 @@ export default function CommunityPostScreen() {
   const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
   const [draft, setDraft] = useState('');
-  const [replyTo, setReplyTo] = useState<string | null>(null);
+  // 요구1/3: 답글 대상 — 어떤 댓글에(commentId), 어느 thread 아래(parentId), 누구에게(userId).
+  const [replyTarget, setReplyTarget] = useState<
+    { commentId: string; parentId: string; userId: string } | null
+  >(null);
+  // 요구4: 작성 중 첨부된 와인 LWIN (top-level/답글 공유).
+  const [pendingWine, setPendingWine] = useState<string | null>(null);
+  const [winePickerOpen, setWinePickerOpen] = useState(false);
   const [localComments, setLocalComments] = useState<CommComment[]>(() =>
     postId ? getCommentsByPost(postId) : []
   );
@@ -106,9 +112,16 @@ export default function CommunityPostScreen() {
   const mine: ReactionId | null =
     post.id === 'p1' ? 'glass' : post.id === 'p3' ? 'bookmark' : null;
 
+  const resetComposer = () => {
+    setDraft('');
+    setPendingWine(null);
+    setReplyTarget(null);
+  };
+
   const handleSubmit = () => {
     const body = draft.trim();
-    if (!body) return;
+    // 요구4: 본문이 비어도 와인만 첨부한 댓글은 허용.
+    if (!body && !pendingWine) return;
     const next: CommComment = {
       id: `local-${Date.now()}`,
       postId: post.id,
@@ -116,12 +129,14 @@ export default function CommunityPostScreen() {
       ago: t('common.justNow'),
       body: { ko: body, en: body },
       reactions: 0,
-      isReply: replyTo !== null,
+      isReply: replyTarget !== null, // 요구3: 1 depth 유지
+      parentId: replyTarget?.parentId,
+      replyToUserId: replyTarget?.userId, // 요구2: 멘션 태그
+      wineLwin: pendingWine ?? undefined, // 요구4
       isExpert: false,
     };
     setLocalComments((prev) => [...prev, next]);
-    setDraft('');
-    setReplyTo(null);
+    resetComposer();
     Keyboard.dismiss();
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
@@ -131,14 +146,36 @@ export default function CommunityPostScreen() {
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 150);
   };
 
-  const handleReply = (userId: string) => {
-    setReplyTo(userId);
-    handleScrollToCompose();
+  // 요구1/3: 답글 — parentId 는 top-level 댓글 id (답글에 답글이면 그 부모 = depth 1 고정).
+  const handleReply = (comment: CommComment) => {
+    setReplyTarget({
+      commentId: comment.id,
+      parentId: comment.parentId ?? comment.id,
+      userId: comment.userId,
+    });
+    setDraft('');
+    setPendingWine(null);
   };
 
   const handleCancelReply = () => {
-    setReplyTo(null);
+    resetComposer();
   };
+
+  // 요구2: 멘션/이름 탭 → 해당 유저 프로필. (/profile/[userId] 라우트는 병행 작업물)
+  const handleMentionPress = (userId: string) => {
+    Haptics.selectionAsync().catch(() => undefined);
+    router.push(`/profile/${userId}`);
+  };
+
+  // 요구4: 와인 picker
+  const handleSelectWine = (lwin: string) => {
+    setPendingWine(lwin);
+    setWinePickerOpen(false);
+  };
+
+  const replyMentionName = replyTarget
+    ? getCommunityUser(replyTarget.userId)?.name ?? null
+    : null;
 
   const showCompose = post.type !== 'column';
   const titleVariant: 'comments' | 'answers' = post.type === 'question' ? 'answers' : 'comments';
@@ -169,20 +206,52 @@ export default function CommunityPostScreen() {
               titleVariant={titleVariant}
               i18nLang={i18n.language}
               onReply={handleReply}
+              onMentionPress={handleMentionPress}
+              activeReplyParentId={replyTarget?.parentId ?? null}
+              inlineComposer={
+                replyTarget ? (
+                  <View style={{ paddingTop: 8, paddingBottom: 4 }}>
+                    <CommentComposer
+                      value={draft}
+                      onChangeText={setDraft}
+                      onSubmit={handleSubmit}
+                      mentionName={replyMentionName}
+                      onCancelMention={handleCancelReply}
+                      pendingWineLwin={pendingWine}
+                      onTagWine={() => setWinePickerOpen(true)}
+                      onRemoveWine={() => setPendingWine(null)}
+                      placeholder={t('community.comments.replyPlaceholder')}
+                      autoFocus
+                    />
+                  </View>
+                ) : null
+              }
             />
           )}
-          {showCompose && (
-            <InlineCompose
-              draft={draft}
-              onChangeText={setDraft}
-              onSubmit={handleSubmit}
-              onFocus={handleScrollToCompose}
-              replyTo={replyTo}
-              onCancelReply={handleCancelReply}
-            />
+          {/* 요구1: 답글 중에는 하단 입력창 숨김 — 인라인 입력창이 대체. */}
+          {showCompose && !replyTarget && (
+            <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: 24 }}>
+              <CommentComposer
+                value={draft}
+                onChangeText={setDraft}
+                onSubmit={handleSubmit}
+                onFocus={handleScrollToCompose}
+                pendingWineLwin={pendingWine}
+                onTagWine={() => setWinePickerOpen(true)}
+                onRemoveWine={() => setPendingWine(null)}
+                placeholder={t('community.addComment')}
+              />
+            </View>
           )}
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* 요구4: 와인 태그 picker */}
+      <WinePickerSheet
+        visible={winePickerOpen}
+        onClose={() => setWinePickerOpen(false)}
+        onSelect={handleSelectWine}
+      />
     </View>
   );
 }
@@ -516,11 +585,26 @@ interface CommentsSectionProps {
   comments: CommComment[];
   titleVariant?: 'comments' | 'answers';
   i18nLang: string;
-  onReply?: (userId: string) => void;
+  onReply?: (comment: CommComment) => void;
+  onMentionPress?: (userId: string) => void;
+  /** 인라인 답글 입력창을 띄울 thread 의 top-level 댓글 id (요구1). */
+  activeReplyParentId?: string | null;
+  /** activeReplyParentId thread 바로 아래에 렌더할 입력창 노드. */
+  inlineComposer?: ReactNode;
 }
 
-function CommentsSection({ comments, titleVariant = 'comments', i18nLang, onReply }: CommentsSectionProps) {
+function CommentsSection({
+  comments,
+  titleVariant = 'comments',
+  i18nLang,
+  onReply,
+  onMentionPress,
+  activeReplyParentId,
+  inlineComposer,
+}: CommentsSectionProps) {
   const { t } = useTranslation();
+  // 요구3: 평탄 배열을 1 depth thread(부모 + 답글) 로 그룹핑.
+  const threads = groupCommentThreads(comments);
 
   return (
     <View>
@@ -571,19 +655,28 @@ function CommentsSection({ comments, titleVariant = 'comments', i18nLang, onRepl
           </>
         )}
       </View>
-      {/* Comments list — depth-1: onReply only passed to top-level comments */}
+      {/* Comments list — thread 단위 렌더, 답글은 1 depth 들여쓰기 (요구3) */}
       <View style={{ paddingTop: 8, paddingHorizontal: 20 }}>
-        {comments.map((c) => (
-          <CommentRow
-            key={c.id}
-            userId={c.userId}
-            ago={c.ago}
-            text={localizedBody(c, i18nLang)}
-            reactions={c.reactions}
-            isReply={c.isReply}
-            expert={c.isExpert}
-            onReply={c.isReply ? undefined : onReply}
-          />
+        {threads.map((thread) => (
+          <View key={thread.root.id}>
+            <CommentRow
+              comment={thread.root}
+              text={localizedBody(thread.root, i18nLang)}
+              onReply={onReply}
+              onMentionPress={onMentionPress}
+            />
+            {thread.replies.map((reply) => (
+              <CommentRow
+                key={reply.id}
+                comment={reply}
+                text={localizedBody(reply, i18nLang)}
+                onReply={onReply}
+                onMentionPress={onMentionPress}
+              />
+            ))}
+            {/* 요구1: 답글 대상 thread 바로 하단에 입력창 */}
+            {activeReplyParentId === thread.root.id && inlineComposer}
+          </View>
         ))}
       </View>
     </View>
@@ -1699,126 +1792,5 @@ function ListVariant({ post, mine, onComment }: VariantProps) {
       </View>
 
     </>
-  );
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// Inline compose (at bottom of scroll — §4-11 rule 3.5: flex on View not Pressable)
-// ────────────────────────────────────────────────────────────────────────────
-
-interface InlineComposeProps {
-  draft: string;
-  onChangeText: (text: string) => void;
-  onSubmit: () => void;
-  onFocus: () => void;
-  replyTo?: string | null;
-  onCancelReply?: () => void;
-}
-
-function InlineCompose({ draft, onChangeText, onSubmit, onFocus, replyTo, onCancelReply }: InlineComposeProps) {
-  const { t } = useTranslation();
-  const replyUser = replyTo ? getCommunityUser(replyTo) : undefined;
-  const placeholder = replyUser
-    ? t('community.comments.replyPlaceholder', { name: replyUser.name })
-    : t('community.addComment');
-
-  return (
-    <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: 24 }}>
-      {/* Reply indicator — shown only when replying to someone */}
-      {replyUser && (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 8,
-            paddingBottom: 8,
-          }}
-        >
-          <Text
-            allowFontScaling={false}
-            style={{
-              flex: 1,
-              fontFamily: 'Freesentation_4Regular',
-              fontSize: 11,
-              color: light.text.muted,
-            }}
-          >
-            {t('community.comments.replyingTo', { name: replyUser.name })}
-          </Text>
-          <Pressable
-            onPress={onCancelReply}
-            accessibilityRole="button"
-            accessibilityLabel={t('community.comments.cancelReply')}
-            hitSlop={6}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-          >
-            <View style={{ width: 24, height: 24, alignItems: 'center', justifyContent: 'center' }}>
-              <X size={14} strokeWidth={2} color={light.text.muted} />
-            </View>
-          </Pressable>
-        </View>
-      )}
-      {/* Input row */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <CommUserAvatar levelId={4} initial={'이'} size={32} asLink={false} />
-        {/* outer View for flex — §4-11 rule 3.5: flex on View, not Pressable */}
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              height: 38,
-              borderRadius: 19,
-              backgroundColor: light.bg.surface,
-              borderWidth: 1,
-              borderColor: light.border.default,
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingHorizontal: 14,
-            }}
-          >
-            <TextInput
-              value={draft}
-              onChangeText={onChangeText}
-              placeholder={placeholder}
-              placeholderTextColor={light.text.muted}
-              onFocus={onFocus}
-              returnKeyType="send"
-              onSubmitEditing={onSubmit}
-              multiline={false}
-              style={{
-                flex: 1,
-                fontFamily: 'Freesentation_4Regular',
-                fontSize: 12,
-                color: light.text.primary,
-                padding: 0,
-              }}
-            />
-          </View>
-        </View>
-        <Pressable
-          onPress={onSubmit}
-          disabled={draft.trim().length === 0}
-          accessibilityRole="button"
-          accessibilityLabel={t('common.send')}
-          accessibilityState={{ disabled: draft.trim().length === 0 }}
-          hitSlop={4}
-          style={({ pressed }) => ({
-            opacity: draft.trim().length === 0 ? 0.4 : pressed ? 0.85 : 1,
-          })}
-        >
-          <View
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 19,
-              backgroundColor: draft.trim().length > 0 ? brand.wineRed : withAlpha(brand.wineRed, 0.4),
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <ChevronRight size={16} strokeWidth={2} color={brand.cream} />
-          </View>
-        </Pressable>
-      </View>
-    </View>
   );
 }

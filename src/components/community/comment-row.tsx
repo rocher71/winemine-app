@@ -1,68 +1,65 @@
 /**
  * CommentRow — 커뮤니티 포스트 상세 화면의 댓글 행.
  *
- * 사양: community-components.md §1-3 verbatim.
+ * 사양: community-components.md §1-3 verbatim (+ 댓글 개선 요구 2/3/4).
  *   - flexDirection row, gap 10, paddingVertical 10
- *   - paddingLeft: isReply ? 36 : 0 (들여쓰기)
+ *   - paddingLeft: isReply ? 36 : 0 (들여쓰기, 1 depth 유지 — 요구3)
  *   - borderBottom: StyleSheet.hairlineWidth (§6-11 0.5px 대체)
  *   - Avatar size: isReply ? 24 : 30 (asLink=false, nested 안전 §6-8)
  *   - Name + level pill + (optional) expert badge + body + footer (ago / reply / spacer / reaction)
  *
+ * 요구2: body 앞에 파란 `@닉네임` 멘션 태그 (tappable → 프로필 이동).
+ * 요구3: 답글에도 '답글' 버튼 노출 (onReply 를 모든 행에 전달).
+ * 요구4: comment.wineLwin 있을 시 CommentWineCard 첨부.
+ *
  * **light-only mode** (§0-2): dark variant 생략.
  * **DEVIATION §6-2**: keyscreen cream Name → light.text.primary (cream invisible on white).
  * **DEVIATION §6-5**: keyscreen gold Expert color → light.border.active (deep gold AA pass).
- * **community 핸드오프 정렬 (Wave A)**: LevelPill 라벨 `L{n}` → t(`level.L${n}`) (ko/en 레벨 이름).
- *   inline pill 구조 (user-color alpha bg/border) 유지 — className LevelPill 컴포넌트로 교체 안 함.
  */
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Wine } from 'lucide-react-native';
-import { brand, light, withAlpha } from '@/lib/design-tokens';
+import { brand, communityPost, light, withAlpha } from '@/lib/design-tokens';
 import { CommUserAvatar } from './comm-user-avatar';
+import { CommentWineCard } from './comment-wine-card';
 import { getCommunityUser } from '@/lib/mock/community-posts';
+import type { CommComment } from '@/lib/mock/community-comments';
 
 interface CommentRowProps {
-  userId: string;
-  ago: string;
+  comment: CommComment;
+  /** localized 본문 — caller 가 localizedBody(comment, lang) 로 계산. */
   text: string;
-  reactions?: number;
-  isReply?: boolean;
-  expert?: boolean;
-  onReply?: (userId: string) => void;
-  onReact?: (userId: string) => void;
+  onReply?: (comment: CommComment) => void;
+  onReact?: (commentId: string) => void;
+  /** 멘션(`@닉네임`) 태프 시 프로필 이동 (요구2). */
+  onMentionPress?: (userId: string) => void;
 }
 
-export function CommentRow({
-  userId,
-  ago,
-  text,
-  reactions = 0,
-  isReply = false,
-  expert = false,
-  onReply,
-  onReact,
-}: CommentRowProps) {
+export function CommentRow({ comment, text, onReply, onReact, onMentionPress }: CommentRowProps) {
   const { t } = useTranslation();
-  const user = getCommunityUser(userId);
+  const user = getCommunityUser(comment.userId);
   if (!user) return null;
 
+  const isReply = comment.isReply || !!comment.parentId;
+  const expert = comment.isExpert ?? false;
+  const reactions = comment.reactions ?? 0;
+  const mentionUser = comment.replyToUserId ? getCommunityUser(comment.replyToUserId) : undefined;
   const avatarSize = isReply ? 24 : 30;
 
   const handleNamePress = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    router.push(`/profile/${userId}` as never);
+    onMentionPress?.(comment.userId);
   };
 
   const handleReply = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    onReply?.(userId);
+    onReply?.(comment);
   };
 
   const handleReact = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    onReact?.(userId);
+    onReact?.(comment.id);
   };
 
   return (
@@ -80,20 +77,13 @@ export function CommentRow({
         levelId={user.level}
         initial={user.initial}
         size={avatarSize}
-        userId={userId}
+        userId={comment.userId}
         asLink
       />
 
       <View style={{ flex: 1, minWidth: 0 }}>
         {/* Name + level + expert badge row */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 6,
-            marginBottom: 2,
-          }}
-        >
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 }}>
           <Pressable
             onPress={handleNamePress}
             accessibilityRole="button"
@@ -155,7 +145,7 @@ export function CommentRow({
           ) : null}
         </View>
 
-        {/* Body */}
+        {/* Body (+ 멘션 파란 태그 prefix — 요구2) */}
         <Text
           allowFontScaling={false}
           style={{
@@ -165,18 +155,30 @@ export function CommentRow({
             color: light.text.secondary,
           }}
         >
+          {mentionUser && (
+            <Text
+              onPress={() => {
+                Haptics.selectionAsync().catch(() => undefined);
+                onMentionPress?.(mentionUser.id);
+              }}
+              accessibilityRole="link"
+              accessibilityLabel={t('community.comment.mentionLabel', { name: mentionUser.name })}
+              style={{
+                fontFamily: 'Freesentation_6SemiBold',
+                color: communityPost.mentionBlue,
+              }}
+            >
+              {`@${mentionUser.name} `}
+            </Text>
+          )}
           {text}
         </Text>
 
+        {/* 첨부 와인 카드 (요구4) */}
+        {comment.wineLwin && <CommentWineCard lwin={comment.wineLwin} />}
+
         {/* Footer */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 12,
-            marginTop: 6,
-          }}
-        >
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 6 }}>
           <Text
             allowFontScaling={false}
             style={{
@@ -185,47 +187,40 @@ export function CommentRow({
               color: light.text.muted,
             }}
           >
-            {ago}
+            {comment.ago}
           </Text>
 
-          <Pressable
-            onPress={handleReply}
-            accessibilityRole="button"
-            accessibilityLabel={t('community.comment.replyLabel', { name: user.name })}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-            hitSlop={4}
-          >
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'Freesentation_4Regular',
-                fontSize: 10,
-                color: light.text.muted,
-              }}
+          {onReply && (
+            <Pressable
+              onPress={handleReply}
+              accessibilityRole="button"
+              accessibilityLabel={t('community.comment.replyLabel', { name: user.name })}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              hitSlop={4}
             >
-              {t('community.comment.reply')}
-            </Text>
-          </Pressable>
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'Freesentation_4Regular',
+                  fontSize: 10,
+                  color: light.text.muted,
+                }}
+              >
+                {t('community.comment.reply')}
+              </Text>
+            </Pressable>
+          )}
 
           <View style={{ flex: 1 }} />
 
           <Pressable
             onPress={handleReact}
             accessibilityRole="button"
-            accessibilityLabel={t('community.comment.reactLabel', {
-              name: user.name,
-              count: reactions,
-            })}
+            accessibilityLabel={t('community.comment.reactLabel', { name: user.name, count: reactions })}
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             hitSlop={4}
           >
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 3,
-              }}
-            >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
               <Wine size={11} strokeWidth={1.75} color={light.text.muted} />
               <Text
                 allowFontScaling={false}

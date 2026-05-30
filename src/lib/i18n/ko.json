@@ -1364,7 +1364,8 @@
       "reply": "답글",
       "profileLabel": "{{name}} 프로필",
       "replyLabel": "{{name}}에게 답글",
-      "reactLabel": "{{name}}의 댓글에 잔 들기 ({{count}})"
+      "reactLabel": "{{name}}의 댓글에 잔 들기 ({{count}})",
+      "mentionLabel": "{{name}} 프로필로 이동"
     },
     "reaction": {
       "glass": "잔 들기",
@@ -1463,13 +1464,18 @@
       "sortRecent": "최신 순",
       "expertsOnly": "전문가만",
       "composePlaceholder": "답글 남기기...",
-      "replyPlaceholder": "@{{name}}에게 답글",
+      "replyPlaceholder": "답글을 입력하세요...",
       "replyingTo": "@{{name}}에게 답글 작성 중",
       "cancelReply": "답글 취소",
       "composeLabel": "댓글 입력",
       "sortHint": "정렬 방식 변경",
       "expertsHint": "전문가 댓글만 표시",
-      "empty": "아직 댓글이 없어요"
+      "empty": "아직 댓글이 없어요",
+      "tagWine": "와인 태그",
+      "removeWine": "첨부한 와인 제거",
+      "winePickerTitle": "와인 태그하기",
+      "winePickerSearch": "와인 이름 검색",
+      "winePickerEmpty": "검색 결과가 없어요"
     },
     "column": {
       "title": "긴 글 작성",

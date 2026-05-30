@@ -1364,7 +1364,8 @@
       "reply": "Reply",
       "profileLabel": "Profile of {{name}}",
       "replyLabel": "Reply to {{name}}",
-      "reactLabel": "Toast {{name}}'s comment ({{count}})"
+      "reactLabel": "Toast {{name}}'s comment ({{count}})",
+      "mentionLabel": "Go to {{name}}'s profile"
     },
     "reaction": {
       "glass": "Toast",
@@ -1463,13 +1464,18 @@
       "sortRecent": "Most recent",
       "expertsOnly": "Experts only",
       "composePlaceholder": "Leave a reply...",
-      "replyPlaceholder": "Reply to @{{name}}",
+      "replyPlaceholder": "Write a reply...",
       "replyingTo": "Replying to @{{name}}",
       "cancelReply": "Cancel reply",
       "composeLabel": "Comment input",
       "sortHint": "Change sort order",
       "expertsHint": "Show experts only",
-      "empty": "No comments yet"
+      "empty": "No comments yet",
+      "tagWine": "Tag wine",
+      "removeWine": "Remove attached wine",
+      "winePickerTitle": "Tag a wine",
+      "winePickerSearch": "Search wine name",
+      "winePickerEmpty": "No matching wines"
     },
     "column": {
       "title": "Write Column",

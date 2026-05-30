@@ -28,6 +28,23 @@ export interface CommComment {
   reactions: number;
   /** 답글 여부 — true 시 paddingLeft 36 들여쓰기 (CommentRow §1-3). */
   isReply?: boolean;
+  /**
+   * 답글이 속한 top-level 댓글의 id (1 depth thread 그룹핑용).
+   * - undefined: top-level 댓글.
+   * - 값 존재: 해당 top-level 댓글 아래에 묶여 렌더되는 답글.
+   * 답글에 대한 답글도 동일 parentId 를 가져 depth 가 1 로 유지된다 (요구3).
+   */
+  parentId?: string;
+  /**
+   * 멘션 대상 user id — 답글이 누구에게 향하는지 (본문 앞 `@닉네임` 파란 태그로 표시).
+   * v0.2.0: supabase comment mentions 테이블.
+   */
+  replyToUserId?: string;
+  /**
+   * 첨부 와인의 LWIN — 있을 시 CommentRow 가 CommentWineCard 를 렌더 (요구4).
+   * MOCK_WINES.lwin 참조 (getMockWineByLwin). v0.2.0: comment_wine 첨부 테이블.
+   */
+  wineLwin?: string;
   /** 전문가 배지 — sommelier user 만 true (mock). v0.2.0 user.is_expert column. */
   isExpert?: boolean;
 }
@@ -97,6 +114,8 @@ export const COMM_COMMENTS: CommComment[] = [
     },
     reactions: 11,
     isReply: true,
+    parentId: 'c-p2-1',
+    replyToUserId: 'sommelier',
   },
   {
     id: 'c-p2-3',
@@ -109,6 +128,8 @@ export const COMM_COMMENTS: CommComment[] = [
     },
     reactions: 2,
     isReply: true,
+    parentId: 'c-p2-1',
+    replyToUserId: 'jiwon',
   },
   {
     id: 'c-p2-4',
@@ -221,4 +242,44 @@ export function getCommentsByPost(postId: string): CommComment[] {
 export function localizedBody(comment: CommComment, locale: string): string {
   if (locale === 'en') return comment.body.en;
   return comment.body.ko;
+}
+
+/** top-level 댓글 + 그에 속한 답글 묶음 (1 depth thread). */
+export interface CommThread {
+  /** top-level 댓글. */
+  root: CommComment;
+  /** root 에 속한 답글들 (등록 순서). */
+  replies: CommComment[];
+}
+
+/**
+ * 평탄한 댓글 배열을 1 depth thread 묶음으로 그룹핑.
+ * - parentId 가 없는 댓글 = top-level(root).
+ * - parentId 가 있는 댓글 = 해당 root 의 replies.
+ * - 고아 답글(부모 미발견)은 top-level 로 승격(데이터 방어).
+ * root/replies 모두 입력 배열의 등록 순서를 보존한다.
+ */
+export function groupCommentThreads(comments: CommComment[]): CommThread[] {
+  const rootOrder: string[] = [];
+  const threadMap = new Map<string, CommThread>();
+
+  // 1패스: root 등록 (parentId 없는 것).
+  for (const c of comments) {
+    if (!c.parentId) {
+      rootOrder.push(c.id);
+      threadMap.set(c.id, { root: c, replies: [] });
+    }
+  }
+  // 2패스: 답글 배치 (부모 미발견 시 root 승격).
+  for (const c of comments) {
+    if (!c.parentId) continue;
+    const thread = threadMap.get(c.parentId);
+    if (thread) {
+      thread.replies.push(c);
+    } else {
+      rootOrder.push(c.id);
+      threadMap.set(c.id, { root: c, replies: [] });
+    }
+  }
+  return rootOrder.map((id) => threadMap.get(id)!).filter(Boolean);
 }

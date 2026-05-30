@@ -254,14 +254,10 @@ export default function CommunityPostCommentsScreen() {
               {visibleComments.map((c) => (
                 <CommentRow
                   key={c.id}
-                  userId={c.userId}
-                  ago={c.ago}
+                  comment={c}
                   text={localizedBody(c, i18n.language)}
-                  reactions={c.reactions}
-                  isReply={c.isReply}
-                  expert={c.isExpert}
-                  onReply={handleReply}
-                  onReact={handleReact}
+                  onReply={(cm) => handleReply(cm.userId)}
+                  onReact={(id) => handleReact(id)}
                 />
               ))}
             </View>

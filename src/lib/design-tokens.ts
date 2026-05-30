@@ -217,6 +217,9 @@ export const communityTonightMap = {
 // design-spec community-post.md §1-C (column variant) + §1-E (album variant) 내부 SVG pattern 색.
 // 의도된 hex 패턴 인장이라 light 모드에서도 변함 없음 (SVG color shading).
 export const communityPost = {
+  // 댓글 멘션 `@닉네임` 파란 태그 색 (요구2). light 모드 단일값 — white(#FFF) 위 AA 통과(4.7:1).
+  // postTypeBadgeColor.news(#5B9CE6)보다 어둡게 잡아 본문/입력창 텍스트 대비 확보.
+  mentionBlue: '#2F6FB5',
   // Column / Question variant cover hero gradient 시작색 (wine-red 디퍼)
   heroDeepStart: '#5A1A28',
   // Album thumb SVG bottle pattern 4색 (vine-like decorative)
