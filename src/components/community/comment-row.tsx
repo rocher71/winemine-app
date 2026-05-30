@@ -80,7 +80,8 @@ export function CommentRow({
         levelId={user.level}
         initial={user.initial}
         size={avatarSize}
-        asLink={false}
+        userId={userId}
+        asLink
       />
 
       <View style={{ flex: 1, minWidth: 0 }}>
