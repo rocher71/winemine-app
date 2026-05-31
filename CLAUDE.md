@@ -237,6 +237,40 @@ grep -rn "borderRadius: 9999\|radius.full" src/components/nav src/components/sha
 
 ---
 
+### 4-13. **브랜치 / 워크트리 워크플로우 (필수 — 모든 작업에 무조건 적용)**
+
+`main`, `dev` 브랜치에서 **직접 작업 금지**. 모든 코드 작업은 `dev`에서 분기한 워크트리에서 수행하고, 완료 후 `dev`에 머지해 사용자가 UI를 확인한다.
+
+**브랜치 역할**:
+| 브랜치 | 역할 | 직접 커밋 |
+|---|---|---|
+| `main` | 안정 릴리즈 라인 | 금지 |
+| `dev` | 통합 + UI 확인 라인 | 금지 (머지로만 반영) |
+| `<feature-worktree>` | 실제 작업 | 여기서만 커밋 |
+
+**작업 절차 (반드시 이 순서)**:
+1. **작업 시작 전 워크트리 생성** — `dev` 기준으로 새 워크트리/브랜치를 `.claude/worktrees/<task-name>` 경로에 만든다.
+   ```bash
+   git worktree add .claude/worktrees/<task-name> -b <task-name> dev
+   ```
+   (이 하네스에서는 EnterWorktree 툴 사용 가능 — base는 항상 `dev`)
+2. **워크트리 안에서만** 코드 수정·커밋.
+3. **작업 완료 후 `dev`에 머지** — 사용자가 UI를 확인한다.
+   ```bash
+   git switch dev && git merge --no-ff <task-name>
+   ```
+4. 사용자 UI 확인·승인 전까지 `dev` → `main` 머지 **금지** (사용자가 명시 요청 시에만).
+5. 머지 완료·확인 후 워크트리 정리: `git worktree remove .claude/worktrees/<task-name>`.
+
+**금지**:
+- `main` 또는 `dev`를 체크아웃한 상태에서 파일 수정·커밋
+- 워크트리를 `dev`가 아닌 `main` 기준으로 생성
+- 사용자 UI 확인 없이 `dev` → `main` 머지
+
+**예외**: 이 워크플로우 자체(CLAUDE.md 규칙) 같은 메타 작업은 사용자 지시에 따라 직접 처리 가능. 단 코드/화면 작업은 예외 없이 워크트리 경유.
+
+---
+
 ## 5. AI(Claude Code) 협업 지침
 
 ### 할 일
@@ -249,8 +283,10 @@ grep -rn "borderRadius: 9999\|radius.full" src/components/nav src/components/sha
 - **테마 변경 시 양쪽 모드 검증** (§4-9)
 - **변환 사전 누적 의무** — 새 web-only primitive fix 시 `docs/NEXT_TO_RN_TRANSLATION.md` §8a 항목 추가 (§4-10)
 - **시각 게이트 의무** — 화면 완성 시 keyscreen-shot + RN dark/light 스크린샷 모두 `_workspace/{keyscreen-shots,rn-shots}/`에 두고 design-reviewer 멀티모달 비교 통과
+- **워크트리 워크플로우 의무** — 모든 코드 작업은 `dev` 기준 워크트리에서 → 완료 후 `dev` 머지 (§4-13)
 
 ### 하면 안 되는 것
+- **`main`/`dev`에서 직접 작업·커밋** (§4-13 — 반드시 워크트리 경유)
 - `specs/` 또는 `../winemine-keyscreen/` 수정
 - 정책 임의 변경 (XP·익명화 등은 specs/domain/policies/)
 - `SUPABASE_SERVICE_ROLE_KEY`를 RN 코드에 import
