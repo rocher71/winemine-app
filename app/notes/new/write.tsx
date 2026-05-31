@@ -52,10 +52,7 @@ import { useProfile } from '@/hooks/use-profile';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
 import { brand } from '@/lib/design-tokens';
-import {
-  BUILTIN_BEGINNER_ID,
-  BUILTIN_EXPERT_ID,
-} from '@/lib/notes/builtin-templates';
+import { BUILTIN_EXPERT_ID } from '@/lib/notes/builtin-templates';
 import type { Database } from '@shared/types/database.types';
 
 type NoteInsert = Database['public']['Tables']['tasting_notes']['Insert'];
@@ -159,7 +156,11 @@ export default function NoteWriteScreen() {
   const { wine, loading: wineLoading } = useWine(wineLwin);
   const { profile, loading: profileLoading } = useProfile();
 
-  const [mode, setMode] = useState<NoteMode>('beginner');
+  // mode 초기화 — templateId는 라우트 파라미터로 동기 확정 가능 → 첫 렌더부터 올바른 모드.
+  // (이전엔 'beginner'로 시작 후 effect에서 보정 → expert 진입 시 1~2초 입문자 깜빡임 발생)
+  const [mode, setMode] = useState<NoteMode>(() =>
+    templateIdParam === BUILTIN_EXPERT_ID ? 'expert' : 'beginner',
+  );
   const [rating, setRating] = useState(0);
   const [tastedAt] = useState(todayIso());
   const [beginnerFields, setBeginnerFields] = useState<BeginnerFields>(defaultBeginnerFields());
@@ -170,21 +171,15 @@ export default function NoteWriteScreen() {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ tone: 'success' | 'error'; message: string } | null>(null);
 
-  // mode 초기화 — templateId 우선, 다음 profile.experience.
+  // templateId가 없을 때만 profile.experience로 보정. templateId 있으면 이미 초기값에서 확정됨.
+  // 사용자가 직접 토글(touched)했으면 보정하지 않음.
   useEffect(() => {
+    if (templateIdParam) return;
     if (profileLoading) return;
-    if (templateIdParam === BUILTIN_EXPERT_ID) {
-      setMode('expert');
-      return;
-    }
-    if (templateIdParam === BUILTIN_BEGINNER_ID) {
-      setMode('beginner');
-      return;
-    }
+    if (touched) return;
     const exp = profile?.experience;
     if (exp === 'expert' || exp === 'beginner') setMode(exp);
-    // mount + templateIdParam/profile.experience 변경 시만 — touched flag와 무관.
-  }, [templateIdParam, profile?.experience, profileLoading]);
+  }, [templateIdParam, profile?.experience, profileLoading, touched]);
 
   const flashToast = useCallback((tone: 'success' | 'error', message: string) => {
     setToast({ tone, message });
