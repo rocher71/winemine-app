@@ -12,7 +12,7 @@
  *
  * Row: Pressable wrapper + inner View (Round 8 패턴, §4-11).
  */
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, Pressable, ScrollView, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -149,6 +149,21 @@ export default function SettingsIndexScreen() {
       ? t('settings.values.expert')
       : t('settings.values.beginner');
 
+  // 문의·신고 — mailto. 메일 앱 없으면 무음 실패 방지 위해 canOpenURL 체크.
+  const openSupportMail = async () => {
+    const email = t('moderation.contact.email');
+    const subject = encodeURIComponent(t('moderation.contact.mailSubject'));
+    const url = `mailto:${email}?subject=${subject}`;
+    try {
+      const can = await Linking.canOpenURL(url);
+      if (can) {
+        await Linking.openURL(url);
+      }
+    } catch {
+      // mailto 실패 — 행 hint 에 이미 주소 노출되어 있어 사용자가 수동 복사 가능.
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: tokens.bg.deepest }}>
       <BackHeader title={t('settings.title')} />
@@ -178,6 +193,21 @@ export default function SettingsIndexScreen() {
               label={t('settings.experiencePage.title')}
               value={expValue}
               onPress={() => router.push('/settings/experience' as never)}
+            />
+          </View>
+        </View>
+
+        <View>
+          <SectionLabel>{t('moderation.settings.sectionSafety')}</SectionLabel>
+          <View style={{ gap: 8 }}>
+            <SettingsRow
+              label={t('moderation.settings.blockedRow')}
+              onPress={() => router.push('/settings/blocked' as never)}
+            />
+            <SettingsRow
+              label={t('moderation.contact.row')}
+              hint={t('moderation.contact.notice')}
+              onPress={() => void openSupportMail()}
             />
           </View>
         </View>

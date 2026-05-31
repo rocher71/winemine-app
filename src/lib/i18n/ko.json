@@ -1982,5 +1982,68 @@
       "filterWhite": "드라이 화이트",
       "verdict": "총평"
     }
+  },
+  "moderation": {
+    "reason": {
+      "spam": "스팸·광고",
+      "harassment": "괴롭힘·혐오",
+      "sexual": "음란·선정성",
+      "misinfo": "허위 정보",
+      "impersonation": "사칭·도용",
+      "other": "기타"
+    },
+    "report": {
+      "title": "신고하기",
+      "subtitle": "신고 사유를 선택해 주세요",
+      "detailLabel": "상세 내용 (필수)",
+      "detailPlaceholder": "신고 사유를 자세히 적어 주세요",
+      "duplicateNotice": "이미 신고한 콘텐츠입니다",
+      "submit": "신고 제출",
+      "success": "신고가 접수되었습니다"
+    },
+    "block": {
+      "confirmTitle": "{{name}} 님을 차단할까요?",
+      "confirmBody": "차단하면 서로의 콘텐츠가 보이지 않으며, 기존 팔로우도 해제됩니다.",
+      "bulletHidden": "서로의 게시물·댓글·노트가 보이지 않습니다",
+      "bulletFollow": "기존 팔로우가 양쪽 모두 해제됩니다",
+      "action": "차단",
+      "success": "{{name}} 님을 차단했습니다",
+      "undoTitle": "{{name}} 님을 차단 해제할까요?",
+      "undoBody": "차단을 해제하면 다시 서로의 콘텐츠를 볼 수 있습니다. 팔로우는 자동 복구되지 않습니다.",
+      "undo": "차단 해제",
+      "undoSuccess": "{{name}} 님을 차단 해제했습니다"
+    },
+    "blocked": {
+      "title": "차단 목록",
+      "empty": "차단한 사용자가 없습니다",
+      "emptyDesc": "차단한 사용자가 여기에 표시됩니다",
+      "unblock": "차단 해제",
+      "error": "차단 목록을 불러오지 못했습니다"
+    },
+    "menu": {
+      "report": "신고",
+      "block": "차단",
+      "unblock": "차단 해제",
+      "edit": "수정",
+      "delete": "삭제",
+      "a11yTrigger": "더보기",
+      "deleteConfirmTitle": "삭제할까요?",
+      "deleteConfirmBody": "삭제한 내용은 복구할 수 없습니다."
+    },
+    "contact": {
+      "row": "문의·신고",
+      "email": "support@winemine.site",
+      "notice": "support@winemine.site",
+      "mailSubject": "winemine 문의·신고",
+      "mailFailed": "메일 앱을 열 수 없습니다. support@winemine.site 로 문의해 주세요"
+    },
+    "settings": {
+      "sectionSafety": "안전 및 지원",
+      "blockedRow": "차단 목록"
+    },
+    "comment": {
+      "removedTombstone": "신고로 인해 삭제된 댓글입니다"
+    },
+    "error": "처리하지 못했습니다. 잠시 후 다시 시도해 주세요"
   }
 }

@@ -43,6 +43,13 @@ import { SlimStatRow } from '@/components/profile/slim-stat-row';
 import { TasteCompatibility } from '@/components/profile/taste-compatibility';
 import { WineRowCompact } from '@/components/profile/wine-row-compact';
 import { Toast } from '@/components/shared/toast';
+import { useBlocks } from '@/hooks/use-blocks';
+import {
+  ContentActionMenu,
+  type MenuAction,
+} from '@/components/moderation/content-action-menu';
+import { ReportSheet } from '@/components/moderation/report-sheet';
+import { BlockConfirmSheet } from '@/components/moderation/block-confirm-sheet';
 
 type Level = 1 | 2 | 3 | 4 | 5;
 type SortBy = 'recent' | 'rating';
@@ -95,6 +102,14 @@ export default function OtherUserProfileScreen() {
     refresh: refreshFollow,
   } = useFollowStatus(userId);
 
+  // moderation (M3) — 타인 프로필 신고 + 차단/해제.
+  const { isBlocked, toggle: toggleBlock } = useBlocks();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [blockOpen, setBlockOpen] = useState(false);
+  const [blocking, setBlocking] = useState(false);
+  const blocked = userId ? isBlocked(userId) : false;
+
   // §10 I 본인 프로필 redirect
   useEffect(() => {
     let cancelled = false;
@@ -135,8 +150,33 @@ export default function OtherUserProfileScreen() {
   }, [toggleFollow]);
 
   const handleMore = useCallback(() => {
-    showToast(t('profile.comingSoonToast'));
-  }, [showToast, t]);
+    setMenuOpen(true);
+  }, []);
+
+  const menuActions: MenuAction[] = useMemo(
+    () => [
+      { kind: 'report', onPress: () => setReportOpen(true) },
+      { kind: blocked ? 'unblock' : 'block', onPress: () => setBlockOpen(true) },
+    ],
+    [blocked],
+  );
+
+  const handleConfirmBlock = useCallback(async () => {
+    if (!userId) return;
+    setBlocking(true);
+    const result = await toggleBlock(userId);
+    setBlocking(false);
+    setBlockOpen(false);
+    if (result === 'blocked') {
+      // 차단 직후 프로필 콘텐츠는 RLS 로 사라짐 → 피드/목록으로 복귀 (entry-points 사양 §1-5).
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+      router.back();
+    } else if (result === 'unblocked') {
+      showToast(t('moderation.block.undoSuccess', { name: profile?.anonymous_display ?? '' }));
+    } else {
+      showToast(t('moderation.error'));
+    }
+  }, [userId, toggleBlock, showToast, t, profile?.anonymous_display]);
 
   const handleSortRecent = useCallback(() => {
     Haptics.selectionAsync().catch(() => undefined);
@@ -328,6 +368,30 @@ export default function OtherUserProfileScreen() {
           <Toast message={toast.message} tone="info" />
         </View>
       ) : null}
+
+      {/* moderation (M3) — 프로필 신고 + 차단/해제 */}
+      <ContentActionMenu
+        open={menuOpen}
+        actions={menuActions}
+        onClose={() => setMenuOpen(false)}
+      />
+      <ReportSheet
+        open={reportOpen}
+        targetType="profile"
+        targetId={userId ?? ''}
+        onClose={() => setReportOpen(false)}
+        onSubmitted={() => showToast(t('moderation.report.success'))}
+      />
+      <BlockConfirmSheet
+        open={blockOpen}
+        mode={blocked ? 'unblock' : 'block'}
+        anonymousDisplay={profile.anonymous_display}
+        isLoading={blocking}
+        onClose={() => {
+          if (!blocking) setBlockOpen(false);
+        }}
+        onConfirm={() => void handleConfirmBlock()}
+      />
     </View>
   );
 }

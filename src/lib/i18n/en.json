@@ -1982,5 +1982,68 @@
       "filterWhite": "Dry White",
       "verdict": "Verdict"
     }
+  },
+  "moderation": {
+    "reason": {
+      "spam": "Spam or advertising",
+      "harassment": "Harassment or hate",
+      "sexual": "Sexual content",
+      "misinfo": "Misinformation",
+      "impersonation": "Impersonation",
+      "other": "Other"
+    },
+    "report": {
+      "title": "Report",
+      "subtitle": "Select a reason for reporting",
+      "detailLabel": "Details (required)",
+      "detailPlaceholder": "Describe the reason in detail",
+      "duplicateNotice": "You have already reported this",
+      "submit": "Submit report",
+      "success": "Your report has been submitted"
+    },
+    "block": {
+      "confirmTitle": "Block {{name}}?",
+      "confirmBody": "Blocking hides each other's content, and existing follows are removed.",
+      "bulletHidden": "You won't see each other's posts, comments, or notes",
+      "bulletFollow": "Existing follows are removed on both sides",
+      "action": "Block",
+      "success": "Blocked {{name}}",
+      "undoTitle": "Unblock {{name}}?",
+      "undoBody": "Unblocking lets you see each other's content again. Follows are not restored automatically.",
+      "undo": "Unblock",
+      "undoSuccess": "Unblocked {{name}}"
+    },
+    "blocked": {
+      "title": "Blocked users",
+      "empty": "No blocked users",
+      "emptyDesc": "Users you block will appear here",
+      "unblock": "Unblock",
+      "error": "Could not load blocked users"
+    },
+    "menu": {
+      "report": "Report",
+      "block": "Block",
+      "unblock": "Unblock",
+      "edit": "Edit",
+      "delete": "Delete",
+      "a11yTrigger": "More options",
+      "deleteConfirmTitle": "Delete this?",
+      "deleteConfirmBody": "Deleted content cannot be recovered."
+    },
+    "contact": {
+      "row": "Contact & Report",
+      "email": "support@winemine.site",
+      "notice": "support@winemine.site",
+      "mailSubject": "winemine inquiry / report",
+      "mailFailed": "Could not open the mail app. Please contact support@winemine.site"
+    },
+    "settings": {
+      "sectionSafety": "Safety & Support",
+      "blockedRow": "Blocked users"
+    },
+    "comment": {
+      "removedTombstone": "This comment was removed due to reports"
+    },
+    "error": "Something went wrong. Please try again later"
   }
 }

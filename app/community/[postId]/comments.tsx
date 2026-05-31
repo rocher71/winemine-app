@@ -46,11 +46,37 @@ import * as Haptics from 'expo-haptics';
 import { ChevronLeft, ChevronRight, MessageSquare, X } from 'lucide-react-native';
 import { brand, light, withAlpha } from '@/lib/design-tokens';
 import { getCommunityPost, getCommunityUser } from '@/lib/mock/community-posts';
-import { getCommentsByPost, localizedBody, type CommComment } from '@/lib/mock/community-comments';
+import {
+  getCommentsByPost,
+  localizedBody,
+  type CommComment,
+} from '@/lib/mock/community-comments';
+import {
+  fetchCommentsByPost,
+  insertComment,
+  deleteComment,
+  type CommentEntry,
+} from '@/lib/community/comments';
 import { CommUserAvatar } from '@/components/community/comm-user-avatar';
-import { CommentRow } from '@/components/community/comment-row';
+import { CommentRow, type CommentModerationStatus } from '@/components/community/comment-row';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { getCurrentUserId } from '@/lib/auth';
+import {
+  ContentActionMenu,
+  type MenuAction,
+} from '@/components/moderation/content-action-menu';
+import { ReportSheet } from '@/components/moderation/report-sheet';
+import { ConfirmDialog } from '@/components/shared/confirm-dialog';
+import { Toast } from '@/components/shared/toast';
 
 type SortMode = 'helpful' | 'recent';
+
+/** 화면 내부 댓글 상태 — mock CommComment + moderation status + 작성자 UUID. */
+interface ScreenComment {
+  comment: CommComment;
+  status: CommentModerationStatus;
+  authorId: string;
+}
 
 export default function CommunityPostCommentsScreen() {
   const { postId, focus } = useLocalSearchParams<{ postId: string; focus?: string }>();
@@ -60,22 +86,55 @@ export default function CommunityPostCommentsScreen() {
   const post = postId ? getCommunityPost(postId) : undefined;
   const user = post ? getCommunityUser(post.userId) : undefined;
 
-  // §6-7 / §10 A: comments mock module
-  const initialComments = useMemo(
-    () => (postId ? getCommentsByPost(postId) : []),
-    [postId]
-  );
-
-  // §2-B states
-  const [comments, setComments] = useState<CommComment[]>(initialComments);
+  // §2-B states — 실 comments 테이블 연동 (M3). DEMO_MODE 면 mock fallback(디자인 리뷰용).
+  const [comments, setComments] = useState<ScreenComment[]>([]);
   const [draft, setDraft] = useState('');
   const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('helpful');
   const [expertsOnly, setExpertsOnly] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   // mock reactions toggle — v0.1.0 영속 X
   const [, setReactions] = useState<Record<string, boolean>>({});
 
+  // moderation state (M3)
+  const [menuComment, setMenuComment] = useState<ScreenComment | null>(null);
+  const [reportComment, setReportComment] = useState<ScreenComment | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ScreenComment | null>(null);
+  const [toast, setToast] = useState<{ message: string; tone: 'success' | 'error'; key: number } | null>(null);
+
   const composerRef = useRef<TextInput>(null);
+
+  const showToast = (message: string, tone: 'success' | 'error' = 'success') => {
+    const key = Date.now();
+    setToast({ message, tone, key });
+    setTimeout(() => setToast((prev) => (prev && prev.key === key ? null : prev)), 2500);
+  };
+
+  // 실 comments 로드 (+ 현재 유저 id 로 owner 분기).
+  const reload = async () => {
+    if (!postId) return;
+    if (DEMO_MODE) {
+      const mock = getCommentsByPost(postId);
+      setComments(
+        mock.map((c) => ({ comment: c, status: 'visible' as CommentModerationStatus, authorId: c.userId })),
+      );
+      return;
+    }
+    try {
+      const entries: CommentEntry[] = await fetchCommentsByPost(postId);
+      setComments(entries.map((e) => ({ comment: e.comment, status: e.status, authorId: e.authorId })));
+    } catch {
+      setComments([]);
+    }
+  };
+
+  useEffect(() => {
+    void reload();
+    void (async () => setCurrentUserId(await getCurrentUserId()))();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]);
 
   // autoFocus when focus=true query (§4-2)
   useEffect(() => {
@@ -88,12 +147,11 @@ export default function CommunityPostCommentsScreen() {
   // §2-C visibleComments
   const visibleComments = useMemo(() => {
     let result = [...comments];
-    if (expertsOnly) result = result.filter((c) => c.isExpert === true);
+    if (expertsOnly) result = result.filter((c) => c.comment.isExpert === true);
     if (sortMode === 'recent') {
-      // v0.1.0 mock: 단순 reverse (실 timestamp 없음)
       result = [...result].reverse();
     } else {
-      result = [...result].sort((a, b) => b.reactions - a.reactions);
+      result = [...result].sort((a, b) => b.comment.reactions - a.comment.reactions);
     }
     return result;
   }, [comments, expertsOnly, sortMode]);
@@ -105,29 +163,56 @@ export default function CommunityPostCommentsScreen() {
   // Handlers (§5-A/B/C)
   // ────────────────────────────────────────────────────────────────────────
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const body = draft.trim();
-    if (body.length === 0) return; // §10 H
-    const next: CommComment = {
-      id: `local-${Date.now()}`,
-      postId: post?.id ?? '',
-      userId: 'suyeon', // mock current user
-      ago: t('common.justNow'),
-      body: { ko: body, en: body }, // mock locale unaware
-      reactions: 0,
-      isReply: replyTo !== null,
-      isExpert: false,
-    };
-    setComments((prev) => [...prev, next]);
+    if (body.length === 0 || submitting) return; // §10 H
+    if (DEMO_MODE) {
+      const next: CommComment = {
+        id: `local-${Date.now()}`,
+        postId: post?.id ?? '',
+        userId: 'suyeon',
+        ago: t('common.justNow'),
+        body: { ko: body, en: body },
+        reactions: 0,
+        isReply: replyTo !== null,
+        isExpert: false,
+      };
+      setComments((prev) => [...prev, { comment: next, status: 'visible', authorId: next.userId }]);
+      setDraft('');
+      setReplyTo(null);
+      setReplyToCommentId(null);
+      setSortMode('recent');
+      Keyboard.dismiss();
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+      return;
+    }
+
+    const uid = currentUserId ?? (await getCurrentUserId());
+    if (!uid || !postId) return;
+    setSubmitting(true);
+    const created = await insertComment({
+      postId,
+      authorId: uid,
+      body,
+      parentId: replyToCommentId,
+    });
+    setSubmitting(false);
+    if (!created) {
+      showToast(t('moderation.error'), 'error');
+      return;
+    }
     setDraft('');
     setReplyTo(null);
-    setSortMode('recent'); // §10 I: 자기 댓글 즉시 보이도록 recent 전환
+    setReplyToCommentId(null);
+    setSortMode('recent'); // §10 I
     Keyboard.dismiss();
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+    await reload();
   };
 
-  const handleReply = (targetUserId: string) => {
-    setReplyTo(targetUserId);
+  const handleReply = (target: CommComment) => {
+    setReplyTo(target.userId);
+    setReplyToCommentId(target.parentId ?? target.id); // 답글은 1 depth — root 에 묶음
     Haptics.selectionAsync().catch(() => undefined);
     composerRef.current?.focus();
   };
@@ -139,7 +224,38 @@ export default function CommunityPostCommentsScreen() {
 
   const handleCancelReply = () => {
     setReplyTo(null);
+    setReplyToCommentId(null);
     Haptics.selectionAsync().catch(() => undefined);
+  };
+
+  // moderation (M3) — owner=본인 댓글이면 삭제, 타인이면 신고.
+  const handleMore = (sc: ScreenComment) => {
+    setMenuComment(sc);
+  };
+
+  const menuActions: MenuAction[] = useMemo(() => {
+    if (!menuComment) return [];
+    const isOwner = !!currentUserId && menuComment.authorId === currentUserId;
+    if (isOwner) {
+      return [{ kind: 'delete', onPress: () => setDeleteTarget(menuComment) }];
+    }
+    return [{ kind: 'report', onPress: () => setReportComment(menuComment) }];
+  }, [menuComment, currentUserId]);
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    const target = deleteTarget;
+    setDeleteTarget(null);
+    if (DEMO_MODE) {
+      setComments((prev) => prev.filter((c) => c.comment.id !== target.comment.id));
+      return;
+    }
+    const ok = await deleteComment(target.comment.id);
+    if (ok) {
+      await reload();
+    } else {
+      showToast(t('moderation.error'), 'error');
+    }
   };
 
   // §4-3 reply mode placeholder
@@ -251,13 +367,15 @@ export default function CommunityPostCommentsScreen() {
           {/* Comments list */}
           {visibleComments.length > 0 ? (
             <View style={{ paddingHorizontal: 20, paddingBottom: 30 }}>
-              {visibleComments.map((c) => (
+              {visibleComments.map((sc) => (
                 <CommentRow
-                  key={c.id}
-                  comment={c}
-                  text={localizedBody(c, i18n.language)}
-                  onReply={(cm) => handleReply(cm.userId)}
+                  key={sc.comment.id}
+                  comment={sc.comment}
+                  text={localizedBody(sc.comment, i18n.language)}
+                  status={sc.status}
+                  onReply={(cm) => handleReply(cm)}
                   onReact={(id) => handleReact(id)}
+                  onMore={() => handleMore(sc)}
                 />
               ))}
             </View>
@@ -370,7 +488,7 @@ export default function CommunityPostCommentsScreen() {
                 placeholderTextColor={light.text.muted}
                 accessibilityLabel={t('community.comments.composeLabel')}
                 returnKeyType="send"
-                onSubmitEditing={handleSubmit}
+                onSubmitEditing={() => void handleSubmit()}
                 multiline={false}
                 style={{
                   flex: 1,
@@ -383,11 +501,11 @@ export default function CommunityPostCommentsScreen() {
             </View>
             {/* Send button (size/2 = 19) */}
             <Pressable
-              onPress={handleSubmit}
+              onPress={() => void handleSubmit()}
               accessibilityRole="button"
               accessibilityLabel={t('common.send')}
-              accessibilityState={{ disabled: draft.trim().length === 0 }}
-              disabled={draft.trim().length === 0}
+              accessibilityState={{ disabled: draft.trim().length === 0 || submitting }}
+              disabled={draft.trim().length === 0 || submitting}
               hitSlop={4}
               style={({ pressed }) => ({
                 opacity:
@@ -413,6 +531,40 @@ export default function CommunityPostCommentsScreen() {
           </View>
         </View>
       </KeyboardAvoidingView>
+
+      {/* moderation (M3) — 메뉴 → 신고/삭제 흐름 */}
+      <ContentActionMenu
+        open={menuComment !== null}
+        actions={menuActions}
+        onClose={() => setMenuComment(null)}
+      />
+      <ReportSheet
+        open={reportComment !== null}
+        targetType="comment"
+        targetId={reportComment?.comment.id ?? ''}
+        onClose={() => setReportComment(null)}
+        onSubmitted={() => showToast(t('moderation.report.success'), 'success')}
+      />
+      <ConfirmDialog
+        visible={deleteTarget !== null}
+        title={t('moderation.menu.deleteConfirmTitle')}
+        description={t('moderation.menu.deleteConfirmBody')}
+        confirmLabel={t('moderation.menu.delete')}
+        cancelLabel={t('common.cancel')}
+        destructive
+        onConfirm={() => void handleConfirmDelete()}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* Toast */}
+      {!!toast && (
+        <View
+          style={{ position: 'absolute', bottom: 120, left: 16, right: 16 }}
+          pointerEvents="none"
+        >
+          <Toast message={toast.message} tone={toast.tone} />
+        </View>
+      )}
     </View>
   );
 }
