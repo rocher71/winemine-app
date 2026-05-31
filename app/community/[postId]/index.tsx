@@ -594,17 +594,20 @@ function AlsoTriedCta() {
 function PostPhotos({ photos }: { photos: string[] }) {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
-  if (photos.length === 0) return null;
+
+  // 보안: 각 값을 안전 URL 로 변환하고 빈 문자열(형식 위반 — 외부 URL 등)은 렌더에서 제외.
+  const urls = photos.map(communityPhotoUrl).filter((u) => u.length > 0);
+  if (urls.length === 0) return null;
 
   const gap = 6;
   const paddingH = 20;
 
   // 1장: 단일 와이드. 2+장: 3열 정사각 grid.
-  if (photos.length === 1) {
+  if (urls.length === 1) {
     return (
       <View style={{ marginTop: 14 }}>
         <Image
-          source={{ uri: communityPhotoUrl(photos[0]!) }}
+          source={{ uri: urls[0]! }}
           style={{
             width: '100%',
             aspectRatio: 4 / 3,
@@ -625,10 +628,10 @@ function PostPhotos({ photos }: { photos: string[] }) {
   const cell = (screenWidth - paddingH * 2 - gap * 2) / 3;
   return (
     <View style={{ marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap }}>
-      {photos.map((p, i) => (
+      {urls.map((uri, i) => (
         <Image
-          key={`${p}-${i}`}
-          source={{ uri: communityPhotoUrl(p) }}
+          key={`${uri}-${i}`}
+          source={{ uri }}
           style={{
             width: cell,
             aspectRatio: 1,
@@ -640,7 +643,7 @@ function PostPhotos({ photos }: { photos: string[] }) {
           contentFit="cover"
           transition={150}
           accessibilityRole="image"
-          accessibilityLabel={t('community.album.photoLabel', { index: i + 1, total: photos.length })}
+          accessibilityLabel={t('community.album.photoLabel', { index: i + 1, total: urls.length })}
         />
       ))}
     </View>

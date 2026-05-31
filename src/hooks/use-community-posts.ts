@@ -30,7 +30,7 @@ import {
   subscribePublished,
 } from '@/lib/community/published-store';
 import { getCachedNickname, loadNickname } from '@/lib/community/nickname';
-import { uploadCommunityPhotos } from '@/lib/community/upload-photos';
+import { uploadCommunityPhotos, isCommunityPhotoPath } from '@/lib/community/upload-photos';
 
 // community_posts 는 generated types 재생성 전이라 any 캐스트 (use-wine-lists 패턴 동일).
 const db = supabase as any;
@@ -57,8 +57,9 @@ function relativeAgoKo(iso: string): string {
 function rowToPost(row: any, author: { nickname: string; level: LevelId }, ago: string): CommPost {
   registerCommunityUser({ id: row.author_id, name: author.nickname, level: author.level });
   // photos jsonb: string[] (storage path) 기대. 구버전 row(컬럼 미존재)면 [] 로 안전 처리.
+  // 보안: DB 값은 community-photos 버킷 path 형식만 통과(임의 외부 URL/`data:` 차단 — 트래킹 픽셀).
   const photos: string[] = Array.isArray(row.photos)
-    ? row.photos.filter((p: unknown): p is string => typeof p === 'string')
+    ? row.photos.filter((p: unknown): p is string => typeof p === 'string' && isCommunityPhotoPath(p))
     : [];
   return {
     id: row.id,

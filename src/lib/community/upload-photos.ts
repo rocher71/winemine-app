@@ -12,8 +12,22 @@
 import { supabase } from '@/lib/supabase';
 import { getCurrentUserId } from '@/lib/auth';
 import { shortId } from '@/lib/id';
+import { DEMO_MODE } from '@/lib/demo-mode';
 
 const BUCKET = 'community-photos';
+
+/**
+ * 유효한 community-photos 버킷 path 형태: "<uuid>/<filename>.<ext>".
+ *   - <uuid>: 작성자 폴더(storage RLS 와 동일 규칙). 36자 hex+hyphen.
+ *   - <ext>: jpg/jpeg/png/webp.
+ * DB 에서 읽은 값은 반드시 이 형태여야 렌더한다 — 임의 외부 URL(트래킹 픽셀)·`data:` 주입 차단.
+ */
+const PHOTO_PATH_RE = /^[0-9a-f-]{36}\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i;
+
+/** DB 유래 사진 값이 안전한 버킷 path 인지 검증 (외부 URL/경로 탈출 거부). */
+export function isCommunityPhotoPath(value: string): boolean {
+  return PHOTO_PATH_RE.test(value);
+}
 
 /** RN file:// URI → ArrayBuffer (capture.tsx 동일 패턴). */
 async function uriToArrayBuffer(uri: string): Promise<ArrayBuffer> {
@@ -55,12 +69,19 @@ export async function uploadCommunityPhotos(uris: string[]): Promise<string[]> {
 }
 
 /**
- * storage path 또는 이미 절대 URL/로컬 URI 를 expo-image source 로 쓸 수 있는 문자열로 변환.
- *   - http(s):// 또는 file:///ph:// → 그대로 (실모드 업로드 전 optimistic, DEMO 로컬 미리보기)
- *   - 그 외 → community-photos public URL 로 변환 (DB 에 저장된 path)
+ * 사진 값을 expo-image source 로 쓸 수 있는 문자열로 변환.
+ *
+ * 보안(2026-05-31 보안 리뷰): 외부 URL(`http(s):`)·`data:` 패스스루 제거.
+ *   - DEMO 모드 한정으로만 기기 로컬 미리보기 스킴(file:/ph:/content:)을 그대로 통과
+ *     (DEMO 는 Supabase 미접근 — DB 유래 untrusted 값이 없음).
+ *   - 실모드 값은 전부 DB/업로드 유래이므로 community-photos 버킷 path 로만 신뢰.
+ *     형식 위반(임의 URL 등)은 빈 문자열 반환 → <Image> 가 아무것도 fetch 안 함(트래킹 픽셀 차단).
+ *   설령 악성 'https://evil.com/x.jpg' 가 들어와도 getPublicUrl 은 우리 supabase 도메인
+ *   하위 경로로 만들 뿐 외부로 요청하지 않는다(여기선 형식 검증으로 그 전에 차단).
  */
 export function communityPhotoUrl(pathOrUrl: string): string {
-  if (/^(https?:|file:|ph:|content:|data:)/.test(pathOrUrl)) return pathOrUrl;
+  if (DEMO_MODE && /^(file:|ph:|content:)/.test(pathOrUrl)) return pathOrUrl;
+  if (!isCommunityPhotoPath(pathOrUrl)) return '';
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(pathOrUrl);
   return data.publicUrl;
 }
