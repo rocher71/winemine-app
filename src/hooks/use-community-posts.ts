@@ -30,6 +30,7 @@ import {
   subscribePublished,
 } from '@/lib/community/published-store';
 import { getCachedNickname, loadNickname } from '@/lib/community/nickname';
+import { uploadCommunityPhotos } from '@/lib/community/upload-photos';
 
 // community_posts 는 generated types 재생성 전이라 any 캐스트 (use-wine-lists 패턴 동일).
 const db = supabase as any;
@@ -55,6 +56,10 @@ function relativeAgoKo(iso: string): string {
 /** community_posts row + 작성자(nickname/level) → CommPost. 작성자를 user registry 에 등록. */
 function rowToPost(row: any, author: { nickname: string; level: LevelId }, ago: string): CommPost {
   registerCommunityUser({ id: row.author_id, name: author.nickname, level: author.level });
+  // photos jsonb: string[] (storage path) 기대. 구버전 row(컬럼 미존재)면 [] 로 안전 처리.
+  const photos: string[] = Array.isArray(row.photos)
+    ? row.photos.filter((p: unknown): p is string => typeof p === 'string')
+    : [];
   return {
     id: row.id,
     type: row.type ?? 'note',
@@ -66,7 +71,8 @@ function rowToPost(row: any, author: { nickname: string; level: LevelId }, ago: 
     body: row.body ?? '',
     reactions: EMPTY_REACTIONS,
     comments: 0,
-    photoCount: row.photo_count || undefined,
+    photoCount: row.photo_count || photos.length || undefined,
+    photos: photos.length > 0 ? photos : undefined,
     listId: row.list_id ?? undefined,
   };
 }
@@ -159,7 +165,8 @@ export interface CreatePostInput {
   body: string;
   wineLwin?: string | null;
   rating?: number | null;
-  photoCount?: number;
+  /** 작성 화면에서 고른 로컬 사진 URI 들 (file://). 실모드는 업로드 후 path 저장, DEMO 는 그대로 미리보기. */
+  photoUris?: string[];
   /** caller(t 보유)가 넘긴 '방금 전' 문구. */
   agoLabel: string;
 }
@@ -195,10 +202,17 @@ export function useCreatePost() {
       }
       registerCommunityUser({ id: userId, name: nickname, level });
 
+      const localUris = input.photoUris ?? [];
+
       let id: string;
+      // photos: 실모드는 업로드 후 storage path, DEMO 는 로컬 URI 그대로(미리보기 용).
+      let photos: string[];
       if (DEMO_MODE) {
         id = `local-${Date.now()}`;
+        photos = localUris;
       } else {
+        // 발행 전 사진 업로드 → path 배열. 부분 실패는 성공분만 저장.
+        photos = await uploadCommunityPhotos(localUris);
         const { data, error } = await db
           .from('community_posts')
           .insert({
@@ -208,7 +222,8 @@ export function useCreatePost() {
             body: input.body,
             wine_lwin: input.wineLwin ?? null,
             rating: input.rating ?? null,
-            photo_count: input.photoCount ?? 0,
+            photo_count: photos.length,
+            photos,
             visibility: 'public',
           })
           .select('id')
@@ -228,7 +243,8 @@ export function useCreatePost() {
         body: input.body,
         reactions: { glass: 0, sparkle: 0, bookmark: 0, drank: 0 },
         comments: 0,
-        photoCount: input.photoCount || undefined,
+        photoCount: photos.length || undefined,
+        photos: photos.length > 0 ? photos : undefined,
       };
       addPublishedPost(post);
       return id;

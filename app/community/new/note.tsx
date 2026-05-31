@@ -110,7 +110,7 @@ export default function CommunityNewNoteScreen() {
         body: body.trim(),
         wineLwin: selectedNote.wine_lwin ?? null,
         rating: selectedNote.rating ?? null,
-        photoCount: photos.length,
+        photoUris: photos,
         agoLabel: t('common.justNow'),
       });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);

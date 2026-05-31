@@ -51,6 +51,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import {
@@ -62,6 +63,7 @@ import {
 } from 'lucide-react-native';
 import Svg, { Defs, Pattern, Rect, Stop, LinearGradient as SvgLinearGradient } from 'react-native-svg';
 import { brand, light, postTypeBadgeColorLight, withAlpha, communityPost, type TypeCanonical } from '@/lib/design-tokens';
+import { communityPhotoUrl } from '@/lib/community/upload-photos';
 import { getCommunityPosts, getCommunityUser, type CommPost, type ReactionId } from '@/lib/mock/community-posts';
 import { useCommunityPost } from '@/hooks/use-community-posts';
 import { MOCK_WINES, getMockWineByLwin } from '@/lib/mock/wines';
@@ -585,6 +587,67 @@ function AlsoTriedCta() {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// Shared: PostPhotos — 발행 글 첨부 사진 (1장: 큰 4/3, 2+장: 3열 grid)
+// community-photos storage path → communityPhotoUrl() public URL. file:// 는 그대로.
+// ────────────────────────────────────────────────────────────────────────────
+
+function PostPhotos({ photos }: { photos: string[] }) {
+  const { t } = useTranslation();
+  const { width: screenWidth } = useWindowDimensions();
+  if (photos.length === 0) return null;
+
+  const gap = 6;
+  const paddingH = 20;
+
+  // 1장: 단일 와이드. 2+장: 3열 정사각 grid.
+  if (photos.length === 1) {
+    return (
+      <View style={{ marginTop: 14 }}>
+        <Image
+          source={{ uri: communityPhotoUrl(photos[0]!) }}
+          style={{
+            width: '100%',
+            aspectRatio: 4 / 3,
+            borderRadius: 14,
+            borderWidth: 1,
+            borderColor: light.border.default,
+            backgroundColor: light.bg.surface,
+          }}
+          contentFit="cover"
+          transition={150}
+          accessibilityRole="image"
+          accessibilityLabel={t('community.album.photoLabel', { index: 1, total: 1 })}
+        />
+      </View>
+    );
+  }
+
+  const cell = (screenWidth - paddingH * 2 - gap * 2) / 3;
+  return (
+    <View style={{ marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap }}>
+      {photos.map((p, i) => (
+        <Image
+          key={`${p}-${i}`}
+          source={{ uri: communityPhotoUrl(p) }}
+          style={{
+            width: cell,
+            aspectRatio: 1,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: light.border.default,
+            backgroundColor: light.bg.surface,
+          }}
+          contentFit="cover"
+          transition={150}
+          accessibilityRole="image"
+          accessibilityLabel={t('community.album.photoLabel', { index: i + 1, total: photos.length })}
+        />
+      ))}
+    </View>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // Shared: Comments section (all comments inline — no separate screen navigation)
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -789,6 +852,8 @@ function NoteVariant({ post, mine, onComment }: VariantProps) {
         >
           {post.body}
         </Text>
+        {/* 첨부 사진 (발행 시 업로드된 community-photos). 없으면 렌더 안 함. */}
+        {post.photos && post.photos.length > 0 && <PostPhotos photos={post.photos} />}
         {/* WineEmbedCard (Wave A — bottle + 이 와인 + nameKo + producer·vintage). 슬러그 미해결 시 null. */}
         {post.wineId && <WineEmbedCard wineId={post.wineId} linkToWine />}
         {/* Expert annotation */}

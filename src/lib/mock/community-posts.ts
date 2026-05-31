@@ -45,6 +45,8 @@ export interface CommPost {
   reactions: CommReactions;
   comments: number;
   photoCount?: number;
+  /** photos — community-photos storage path 배열(또는 발행 직후 로컬 file:// URI). 렌더 시 communityPhotoUrl() 변환 */
+  photos?: string[];
   /** listId — type==='list'일 때 InlineListCard에 연결할 wine_lists.id */
   listId?: string;
 }
