@@ -10,7 +10,7 @@
  *   - 하단 "이 와인 보기" CTA 제거 (NoteWineHeaderLink가 대체)
  *   - 카드 vertical gap 통일 (mt-4 = 16) / ScrollView paddingBottom 40 / DateChip uppercase 제거 / radius 14
  */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -33,6 +33,14 @@ import { NoteMemoCard } from '@/components/notes/note-memo-card';
 import { useNote, deleteNote } from '@/hooks/use-notes';
 import { useProfile } from '@/hooks/use-profile';
 import { brand } from '@/lib/design-tokens';
+import { getCurrentUserId } from '@/lib/auth';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import {
+  ContentActionMenu,
+  ActionMenuTrigger,
+  type MenuAction,
+} from '@/components/moderation/content-action-menu';
+import { ReportSheet } from '@/components/moderation/report-sheet';
 import {
   BUILTIN_BEGINNER_ID,
   BUILTIN_EXPERT_ID,
@@ -65,6 +73,17 @@ export default function NoteDetailScreen() {
   const { profile } = useProfile();
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<{ tone: 'success' | 'error'; message: string } | null>(null);
+
+  // moderation (M3) — 타인 공유 노트면 신고. 본인 노트는 기존 Edit/Delete 유지.
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  useEffect(() => {
+    if (DEMO_MODE) return;
+    void (async () => setCurrentUserId(await getCurrentUserId()))();
+  }, []);
+  // RLS 상 v0.1.0 note 조회는 본인만 → 기본 owner. 교차 조회 대비 user_id 비교.
+  const isOwner = !note?.user_id || !currentUserId || note.user_id === currentUserId;
 
   const flashToast = useCallback((tone: 'success' | 'error', message: string) => {
     setToast({ tone, message });
@@ -113,6 +132,17 @@ export default function NoteDetailScreen() {
 
   const headerRight = useMemo(() => {
     if (!note?.wine?.lwin) return undefined;
+    // 타인 노트 — 신고 트리거만 (ContentActionMenu).
+    if (!isOwner) {
+      return (
+        <ActionMenuTrigger
+          variant="vertical"
+          onPress={() => setMenuOpen(true)}
+          accessibilityLabel={t('moderation.menu.a11yTrigger')}
+        />
+      );
+    }
+    // 본인 노트 — 기존 Edit/Delete.
     return (
       <View className="flex-row items-center">
         <Pressable
@@ -137,7 +167,7 @@ export default function NoteDetailScreen() {
         </Pressable>
       </View>
     );
-  }, [note?.wine?.lwin, onEdit, onDelete, busy, t]);
+  }, [note?.wine?.lwin, isOwner, onEdit, onDelete, busy, t]);
 
   if (loading) {
     return (
@@ -268,6 +298,24 @@ export default function NoteDetailScreen() {
           <Toast message={toast.message} tone={toast.tone} />
         </View>
       ) : null}
+
+      {/* moderation (M3) — 타인 노트 신고 흐름 */}
+      <ContentActionMenu
+        open={menuOpen}
+        actions={
+          isOwner
+            ? []
+            : ([{ kind: 'report', onPress: () => setReportOpen(true) }] as MenuAction[])
+        }
+        onClose={() => setMenuOpen(false)}
+      />
+      <ReportSheet
+        open={reportOpen}
+        targetType="note"
+        targetId={noteId ?? ''}
+        onClose={() => setReportOpen(false)}
+        onSubmitted={() => flashToast('success', t('moderation.report.success'))}
+      />
     </View>
   );
 }

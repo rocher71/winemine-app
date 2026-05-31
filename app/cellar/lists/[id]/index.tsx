@@ -46,6 +46,12 @@ import {
   useToggleVisibility,
   useDeleteList,
 } from '@/hooks/use-wine-lists';
+import {
+  ContentActionMenu,
+  ActionMenuTrigger,
+  type MenuAction,
+} from '@/components/moderation/content-action-menu';
+import { ReportSheet } from '@/components/moderation/report-sheet';
 
 function formatRelativeTime(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
@@ -79,6 +85,10 @@ export default function ListDetailScreen() {
 
   const [showVisibility, setShowVisibility] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  // moderation (M3) — 타인 공개 리스트 신고. 본인 리스트는 기존 액션 유지(신고 미노출).
+  const [reportMenuOpen, setReportMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const handleVisibilityConfirm = useCallback(async () => {
     if (!list) return;
@@ -221,6 +231,15 @@ export default function ListDetailScreen() {
           <IconBtn onPress={handleMore}>
             <MoreHorizontal size={17} strokeWidth={1.9} color={text.secondary} />
           </IconBtn>
+        )}
+
+        {/* Report (타인 리스트만 — M3) */}
+        {!isOwner && (
+          <ActionMenuTrigger
+            variant="horizontal"
+            onPress={() => setReportMenuOpen(true)}
+            accessibilityLabel={t('moderation.menu.a11yTrigger')}
+          />
         )}
       </View>
 
@@ -494,6 +513,24 @@ export default function ListDetailScreen() {
         isLoading={toggling}
         onClose={() => setShowVisibility(false)}
         onConfirm={handleVisibilityConfirm}
+      />
+
+      {/* moderation (M3) — 타인 리스트 신고 흐름 */}
+      <ContentActionMenu
+        open={reportMenuOpen}
+        actions={
+          isOwner
+            ? []
+            : ([{ kind: 'report', onPress: () => setReportOpen(true) }] as MenuAction[])
+        }
+        onClose={() => setReportMenuOpen(false)}
+      />
+      <ReportSheet
+        open={reportOpen}
+        targetType="list"
+        targetId={list.id}
+        onClose={() => setReportOpen(false)}
+        onSubmitted={() => showToast(t('moderation.report.success'))}
       />
 
       {/* Toast */}

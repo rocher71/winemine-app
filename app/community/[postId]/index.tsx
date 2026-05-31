@@ -34,7 +34,7 @@
  *   - SVG `<defs><pattern>` (Column hero vine / Album bottles) → react-native-svg verbatim (§6-16).
  *   - LinearGradient 3 (Also-tried CTA / Column hero / Album main photo) + Composer fade.
  */
-import { useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -82,6 +82,15 @@ import { WMBottle } from '@/components/shared/wm-bottle';
 import { SaveAsListCta } from '@/components/community/save-as-list-cta';
 import { InlineListCard, type InlineListData } from '@/components/community/inline-list-card';
 import { type LevelId } from '@/components/shared/level-pill';
+import { DEMO_MODE } from '@/lib/demo-mode';
+import { getCurrentUserId } from '@/lib/auth';
+import {
+  ContentActionMenu,
+  ActionMenuTrigger,
+  type MenuAction,
+} from '@/components/moderation/content-action-menu';
+import { ReportSheet } from '@/components/moderation/report-sheet';
+import { Toast } from '@/components/shared/toast';
 
 // ────────────────────────────────────────────────────────────────────────────
 // Main screen
@@ -103,6 +112,17 @@ export default function CommunityPostScreen() {
   const [localComments, setLocalComments] = useState<CommComment[]>(() =>
     postId ? getCommentsByPost(postId) : []
   );
+
+  // moderation (M3) — 포스트 신고/(본인이면 추후 편집·삭제). 현재 owner 분기는 신고 노출만.
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [modToast, setModToast] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (DEMO_MODE) return;
+    void (async () => setCurrentUserId(await getCurrentUserId()))();
+  }, []);
 
   // mock → 발행 스토어 → supabase 순으로 단건 해석 (발행 글도 상세 진입 가능).
   const { post, loading: postLoading } = useCommunityPost(postId);
@@ -185,9 +205,23 @@ export default function CommunityPostScreen() {
   const showCompose = post.type !== 'column';
   const titleVariant: 'comments' | 'answers' = post.type === 'question' ? 'answers' : 'comments';
 
+  // moderation: 타인 포스트면 신고. 본인 포스트는 편집/삭제 경로 부재(v0.1.0) → 메뉴 미노출.
+  const isOwner = !!currentUserId && post.userId === currentUserId;
+  const menuActions: MenuAction[] = useMemo(
+    () => (isOwner ? [] : [{ kind: 'report', onPress: () => setReportOpen(true) }]),
+    [isOwner],
+  );
+  const showModToast = (msg: string) => {
+    setModToast(msg);
+    setTimeout(() => setModToast((prev) => (prev === msg ? null : prev)), 2500);
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: light.bg.deepest }}>
-      <LightBackHeader post={post} />
+      <LightBackHeader
+        post={post}
+        onMore={menuActions.length > 0 ? () => setMenuOpen(true) : undefined}
+      />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -257,6 +291,28 @@ export default function CommunityPostScreen() {
         onClose={() => setWinePickerOpen(false)}
         onSelect={handleSelectWine}
       />
+
+      {/* moderation (M3) — 포스트 신고 흐름 */}
+      <ContentActionMenu
+        open={menuOpen}
+        actions={menuActions}
+        onClose={() => setMenuOpen(false)}
+      />
+      <ReportSheet
+        open={reportOpen}
+        targetType="post"
+        targetId={post.id}
+        onClose={() => setReportOpen(false)}
+        onSubmitted={() => showModToast(t('moderation.report.success'))}
+      />
+      {!!modToast && (
+        <View
+          style={{ position: 'absolute', bottom: insets.bottom + 24, left: 16, right: 16 }}
+          pointerEvents="none"
+        >
+          <Toast message={modToast} tone="success" />
+        </View>
+      )}
     </View>
   );
 }
@@ -265,7 +321,7 @@ export default function CommunityPostScreen() {
 // LightBackHeader (inline — §6-1 favorites/wine-story 동일 패턴)
 // ────────────────────────────────────────────────────────────────────────────
 
-function LightBackHeader({ post }: { post: CommPost }) {
+function LightBackHeader({ post, onMore }: { post: CommPost; onMore?: () => void }) {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 
@@ -358,6 +414,13 @@ function LightBackHeader({ post }: { post: CommPost }) {
             <Share2 size={18} strokeWidth={1.75} color={light.text.secondary} />
           </View>
         </Pressable>
+        {onMore && (
+          <ActionMenuTrigger
+            variant="vertical"
+            onPress={onMore}
+            accessibilityLabel={t('moderation.menu.a11yTrigger')}
+          />
+        )}
       </View>
     </View>
   );
