@@ -40,11 +40,12 @@ import {
   defaultBeginnerFields,
   type BeginnerFields,
 } from '@/components/notes/beginner-form';
+import { ExpertJourneyForm } from '@/components/notes/tasting-journey-write/expert-journey-form';
 import {
-  ExpertForm,
-  defaultExpertFields,
-  type ExpertFields,
-} from '@/components/notes/expert-form';
+  defaultExpertJourneyFields,
+  toExpertFieldsBlob,
+  type ExpertJourneyFields,
+} from '@/components/notes/tasting-journey-write/write-types';
 import { SavePill } from '@/components/notes/save-pill';
 import { useWine } from '@/hooks/use-wine';
 import { useProfile } from '@/hooks/use-profile';
@@ -96,49 +97,10 @@ const BeginnerInputSchema = z.object({
   shareToCommunity: z.boolean().optional(),
 });
 
-// ---- New canonical Expert shape (keyscreen-aligned 7-step) ----
-const ExpertVariantSchema = z.enum(['white', 'red', 'sparkling', 'blind']);
-const ReadinessSchema = z.enum(['tooYoung', 'drink', 'pastPeak']);
-const FinishSchema = z.enum(['short', 'medium', 'long']);
-const AromaTagSchema = z.enum([
-  'berry',
-  'citrus',
-  'stoneFruit',
-  'floral',
-  'spice',
-  'sweet',
-  'earth',
-  'yeast',
-]);
-const WSETNumSchema = z.number().int().min(1).max(5);
-
-const ExpertPalateSchema = z.object({
-  sweetness: WSETNumSchema,
-  acidity: WSETNumSchema,
-  body: WSETNumSchema,
-  alcohol: WSETNumSchema,
-  flavor_intensity: WSETNumSchema,
-  tannin: WSETNumSchema.optional(),
-  bubble: WSETNumSchema.optional(),
-});
-
-const ExpertInputSchema = z.object({
-  variant: ExpertVariantSchema,
-  blind: z.boolean(),
-  aroma_intensity: WSETNumSchema,
-  aromas: z.array(AromaTagSchema),
-  palate: ExpertPalateSchema,
-  finish: FinishSchema,
-  quality: WSETNumSchema,
-  readiness: ReadinessSchema,
-  estimated_price_krw: z.number().int().min(0).nullable(),
-  would_buy_again: z.boolean(),
-  memo: z.string().max(5000),
-  priceCapture: z
-    .object({ enabled: z.boolean(), krw: z.number().int().min(0).nullable() })
-    .optional(),
-  shareToCommunity: z.boolean().optional(),
-});
+// ---- Expert (Tasting Journey 리치) — jsonb passthrough ----
+// 리치 shape는 write-types.toExpertFieldsBlob() 가 보장(리치 키 + legacy 호환 키 + v:2).
+// 여기서는 jsonb 객체 형태만 검증하고 통째로 저장한다.
+const ExpertBlobSchema = z.record(z.string(), z.unknown());
 
 const NoteInputSchema = z.object({
   wine_lwin: z.string().regex(LWIN_REGEX),
@@ -152,7 +114,7 @@ const NoteInputSchema = z.object({
     .enum(['cellar', 'restaurant', 'shop', 'gift', 'tasting_event', 'other'])
     .optional(),
   beginner_fields: BeginnerInputSchema.optional(),
-  expert_fields: ExpertInputSchema.optional(),
+  expert_fields: ExpertBlobSchema.optional(),
   photo_url: z.string().optional(),
 });
 
@@ -199,9 +161,11 @@ export default function NoteWriteScreen() {
 
   const [mode, setMode] = useState<NoteMode>('beginner');
   const [rating, setRating] = useState(0);
-  const [tastedAt, setTastedAt] = useState(todayIso());
+  const [tastedAt] = useState(todayIso());
   const [beginnerFields, setBeginnerFields] = useState<BeginnerFields>(defaultBeginnerFields());
-  const [expertFields, setExpertFields] = useState<ExpertFields>(defaultExpertFields());
+  const [expertFields, setExpertFields] = useState<ExpertJourneyFields>(
+    defaultExpertJourneyFields(),
+  );
   const [touched, setTouched] = useState(false);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ tone: 'success' | 'error'; message: string } | null>(null);
@@ -233,15 +197,11 @@ export default function NoteWriteScreen() {
     setRating(v);
     markTouched();
   };
-  const onTastedAtChange = (v: string) => {
-    setTastedAt(v);
-    markTouched();
-  };
   const onBeginnerChange = (f: BeginnerFields) => {
     setBeginnerFields(f);
     markTouched();
   };
-  const onExpertChange = (f: ExpertFields) => {
+  const onExpertChange = (f: ExpertJourneyFields) => {
     setExpertFields(f);
     markTouched();
   };
@@ -282,7 +242,7 @@ export default function NoteWriteScreen() {
       tasted_at: tastedAt,
       source: effectiveSource ?? undefined,
       beginner_fields: mode === 'beginner' ? beginnerFields : undefined,
-      expert_fields: mode === 'expert' ? expertFields : undefined,
+      expert_fields: mode === 'expert' ? toExpertFieldsBlob(expertFields) : undefined,
       photo_url: photoUrl ?? undefined,
     };
     const parsed = NoteInputSchema.safeParse(input);
@@ -409,12 +369,10 @@ export default function NoteWriteScreen() {
                 onFieldsChange={onBeginnerChange}
               />
             ) : (
-              <ExpertForm
+              <ExpertJourneyForm
                 wine={wine}
                 rating={rating}
                 onRatingChange={onRatingChange}
-                tastedAt={tastedAt}
-                onTastedAtChange={onTastedAtChange}
                 fields={expertFields}
                 onFieldsChange={onExpertChange}
               />
