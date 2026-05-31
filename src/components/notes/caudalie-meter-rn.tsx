@@ -203,7 +203,7 @@ export function CaudalieMeterRn({ caudalies, onChange }: Props) {
                 paddingVertical: 10,
                 paddingHorizontal: 20,
                 borderRadius: 9999,
-                backgroundColor: brand.wineRed,
+                backgroundColor: brand.gold,
               }}
             >
               <Text
@@ -212,7 +212,7 @@ export function CaudalieMeterRn({ caudalies, onChange }: Props) {
                   fontFamily: 'Inter_600SemiBold',
                   fontSize: 13,
                   lineHeight: 15.6,
-                  color: brand.cream,
+                  color: brand.deepestDark,
                 }}
               >
                 {t('notes.expert.caudalieStart')}

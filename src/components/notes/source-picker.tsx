@@ -153,12 +153,12 @@ function NewWineCard({ onPress, title, sub, a11yHint }: NewWineCardProps) {
           backgroundColor: surfaceBg,
           borderRadius: 14,
           borderWidth: 1,
-          borderColor: brand.wineRed,
+          borderColor: brand.gold,
           padding: 18,
           gap: 6,
         }}
       >
-        <Camera size={28} strokeWidth={1.5} color={brand.wineRed} />
+        <Camera size={28} strokeWidth={1.5} color={brand.gold} />
         <Text
           className="font-inter-semibold text-text-primary dark:text-text-primary"
           style={{ fontSize: 16, lineHeight: 19.2 }}

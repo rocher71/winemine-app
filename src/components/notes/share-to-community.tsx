@@ -61,7 +61,7 @@ export function ShareToCommunity({ value, onChange }: Props) {
         <Switch
           value={value}
           onValueChange={onChange}
-          trackColor={{ true: brand.wineRed, false: textDisabled }}
+          trackColor={{ true: brand.gold, false: textDisabled }}
           thumbColor={brand.cream}
           accessibilityLabel={t('notes.writeForm.shareLabel')}
         />

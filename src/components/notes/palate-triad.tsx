@@ -88,9 +88,9 @@ export function PalateTriad({ value, onChange, dims = DEFAULT_DIMS }: Props) {
                         alignItems: 'center',
                         paddingVertical: 8,
                         borderRadius: 8,
-                        backgroundColor: active ? brand.wineRed : surfaceBg,
+                        backgroundColor: active ? brand.gold : surfaceBg,
                         borderWidth: 1,
-                        borderColor: active ? brand.wineRed : borderDefault,
+                        borderColor: active ? brand.gold : borderDefault,
                       }}
                     >
                     <Text
@@ -99,7 +99,7 @@ export function PalateTriad({ value, onChange, dims = DEFAULT_DIMS }: Props) {
                         fontFamily: 'Freesentation_4Regular',
                         fontSize: 12,
                         lineHeight: 14.4,
-                        color: active ? brand.cream : idleText,
+                        color: active ? brand.deepestDark : idleText,
                       }}
                     >
                       {levelLabel}

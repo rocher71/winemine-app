@@ -191,14 +191,14 @@ export function AromaWheelRn({ variant, selected, onToggle }: Props) {
                       paddingHorizontal: 12,
                       borderRadius: 9999,
                       borderWidth: 1,
-                      borderColor: isOn ? brand.wineRed : light.border.default,
+                      borderColor: isOn ? brand.gold : light.border.default,
                       backgroundColor: isOn
-                        ? withAlpha(brand.wineRed, 0.12)
+                        ? withAlpha(brand.gold, 0.12)
                         : 'transparent',
                     }}
                   >
                     {isOn ? (
-                      <Check size={11} strokeWidth={2.5} color={brand.wineRed} />
+                      <Check size={11} strokeWidth={2.5} color={brand.gold} />
                     ) : null}
                     <Text
                       allowFontScaling={false}

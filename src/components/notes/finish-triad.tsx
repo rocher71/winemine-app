@@ -58,9 +58,9 @@ export function FinishTriad({ value, onChange }: Props) {
                   alignItems: 'center',
                   paddingVertical: 10,
                   borderRadius: 8,
-                  backgroundColor: active ? brand.wineRed : surfaceBg,
+                  backgroundColor: active ? brand.gold : surfaceBg,
                   borderWidth: 1,
-                  borderColor: active ? brand.wineRed : borderDefault,
+                  borderColor: active ? brand.gold : borderDefault,
                 }}
               >
                 <Text
@@ -69,7 +69,7 @@ export function FinishTriad({ value, onChange }: Props) {
                     fontFamily: 'Freesentation_4Regular',
                     fontSize: 13,
                     lineHeight: 15.6,
-                    color: active ? brand.cream : idleText,
+                    color: active ? brand.deepestDark : idleText,
                   }}
                 >
                   {label}

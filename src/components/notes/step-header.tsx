@@ -19,9 +19,10 @@ interface Props {
   variant?: 'beginner' | 'expert';
 }
 
-export function StepHeader({ step, title, variant = 'beginner' }: Props) {
-  const badgeBg = variant === 'beginner' ? brand.wineRed : brand.gold;
-  const badgeText = variant === 'beginner' ? brand.cream : brand.deepestDark;
+export function StepHeader({ step, title }: Props) {
+  // 빨강 포인트 → 골드 통일: variant 무관 동일 골드 뱃지 + 어두운 텍스트(대비).
+  const badgeBg = brand.gold;
+  const badgeText = brand.deepestDark;
 
   return (
     <View

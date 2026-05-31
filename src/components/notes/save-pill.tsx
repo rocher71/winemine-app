@@ -45,19 +45,19 @@ export function SavePill({ onPress, disabled = false, saving = false }: Props) {
       <View
         style={{
           borderRadius: 9999,
-          backgroundColor: brand.wineRed,
+          backgroundColor: brand.gold,
           paddingVertical: 14,
           paddingHorizontal: 16,
           alignItems: 'center',
         }}
       >
         {saving ? (
-          <ActivityIndicator color={brand.cream} />
+          <ActivityIndicator color={brand.deepestDark} />
         ) : (
           <Text
             allowFontScaling={false}
             className="font-inter-semibold"
-            style={{ fontSize: 15, color: brand.cream, textAlign: 'center' }}
+            style={{ fontSize: 15, color: brand.deepestDark, textAlign: 'center' }}
           >
             {t('notes.writeForm.save')}
           </Text>

@@ -68,22 +68,22 @@ export function TanninPanelRn({
     <View
       style={{
         padding: 14,
-        backgroundColor: withAlpha(brand.wineRed, 0.06),
+        backgroundColor: withAlpha(brand.gold, 0.06),
         borderWidth: 1,
-        borderColor: brand.wineRed,
+        borderColor: brand.gold,
         borderRadius: 12,
         rowGap: 10,
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', columnGap: 8 }}>
-        <Wine size={14} strokeWidth={2} color={brand.wineRed} />
+        <Wine size={14} strokeWidth={2} color={brand.gold} />
         <Text
           allowFontScaling={false}
           style={{
             fontFamily: 'Inter_700Bold',
             fontSize: 11,
             lineHeight: 13.2,
-            color: brand.wineRed,
+            color: brand.gold,
             letterSpacing: 1.32,
             textTransform: 'uppercase',
           }}
@@ -163,8 +163,8 @@ export function TanninPanelRn({
                     alignItems: 'center',
                     borderRadius: 6,
                     borderWidth: 1,
-                    backgroundColor: active ? brand.wineRed : 'transparent',
-                    borderColor: active ? brand.wineRed : light.border.default,
+                    backgroundColor: active ? brand.gold : 'transparent',
+                    borderColor: active ? brand.gold : light.border.default,
                   }}
                 >
                   <Text
@@ -173,7 +173,7 @@ export function TanninPanelRn({
                       fontFamily: 'Inter_400Regular',
                       fontSize: 12,
                       lineHeight: 14.4,
-                      color: active ? brand.cream : light.text.muted,
+                      color: active ? brand.deepestDark : light.text.muted,
                     }}
                   >
                     {t(`notes.expert.tanninRipeness.${r}`)}
@@ -445,9 +445,9 @@ export function BubblePanelRn({
                     alignItems: 'center',
                     rowGap: 2,
                     borderRadius: 8,
-                    backgroundColor: active ? brand.wineRed : 'transparent',
+                    backgroundColor: active ? brand.gold : 'transparent',
                     borderWidth: 1,
-                    borderColor: active ? brand.wineRed : light.border.default,
+                    borderColor: active ? brand.gold : light.border.default,
                   }}
                 >
                   <Text
@@ -456,7 +456,7 @@ export function BubblePanelRn({
                       fontFamily: active ? 'Inter_700Bold' : 'Inter_400Regular',
                       fontSize: 11,
                       lineHeight: 13.2,
-                      color: active ? brand.cream : light.text.secondary,
+                      color: active ? brand.deepestDark : light.text.secondary,
                     }}
                   >
                     {DOSAGE_LABELS[d][locale]}
@@ -467,7 +467,7 @@ export function BubblePanelRn({
                       fontFamily: 'Inter_400Regular',
                       fontSize: 9,
                       lineHeight: 11,
-                      color: active ? withAlpha(brand.cream, 0.7) : light.text.muted,
+                      color: active ? withAlpha(brand.deepestDark, 0.7) : light.text.muted,
                     }}
                   >
                     {DOSAGE_LABELS[d].range}

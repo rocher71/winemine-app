@@ -321,10 +321,10 @@ export function OpeningTimelineRn({
                 borderRadius: 4,
                 borderWidth: 1.5,
                 borderColor: activeTp?.reductionPresent
-                  ? brand.wineRed
+                  ? brand.gold
                   : light.text.muted,
                 backgroundColor: activeTp?.reductionPresent
-                  ? brand.wineRed
+                  ? brand.gold
                   : 'transparent',
               }}
             />

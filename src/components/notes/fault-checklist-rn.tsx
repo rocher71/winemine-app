@@ -59,7 +59,7 @@ export function FaultChecklistRn({ selected, onToggle }: Props) {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', columnGap: 8, flex: 1 }}>
-            <AlertTriangle size={16} strokeWidth={2} color={brand.wineRed} />
+            <AlertTriangle size={16} strokeWidth={2} color={brand.gold} />
             <Text
               allowFontScaling={false}
               style={{
@@ -78,7 +78,7 @@ export function FaultChecklistRn({ selected, onToggle }: Props) {
                   fontFamily: 'Inter_600SemiBold',
                   fontSize: 13,
                   lineHeight: 15.6,
-                  color: brand.wineRed,
+                  color: brand.gold,
                 }}
               >
                 ({selected.length})
@@ -124,7 +124,7 @@ export function FaultChecklistRn({ selected, onToggle }: Props) {
                     style={{
                       padding: 12,
                       backgroundColor: isOn
-                        ? withAlpha(brand.wineRed, 0.08)
+                        ? withAlpha(brand.gold, 0.08)
                         : light.bg.deep,
                       borderWidth: 1,
                       borderColor: isOn ? brand.gold : light.border.default,
