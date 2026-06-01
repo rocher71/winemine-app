@@ -17,7 +17,7 @@ import { MapPin } from 'lucide-react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
-import { brand, bottleColorDefault, radius, type TypeCanonical } from '@/lib/design-tokens';
+import { brand, bottleColorDefault, typography, shadows, withAlpha, type TypeCanonical } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { WMBottle } from '@/components/shared/wm-bottle';
 import { WMGlassRating } from '@/components/shared/wm-glass-rating';
@@ -78,19 +78,20 @@ export function WineFeedRow({ wine }: WineFeedRowProps) {
           flexDirection: 'row',
           alignItems: 'stretch',
           gap: 16,
-          padding: 16,
-          borderRadius: radius['14'],
+          padding: 18,
+          borderRadius: 18,
           backgroundColor: tokens.bg.surface,
           borderWidth: 1,
-          borderColor: tokens.border.default,
+          borderColor: withAlpha(brand.gold, 0.24),
+          ...shadows.homeCard,
         }}
       >
-        <View style={{ width: 96, alignItems: 'center', justifyContent: 'center' }}>
-          <WMBottle width={90} height={150} bottleColor={bottleColor} type={wine.type} />
+        <View style={{ width: 62, alignItems: 'center', justifyContent: 'center' }}>
+          <WMBottle width={58} height={97} bottleColor={bottleColor} type={wine.type} />
         </View>
         <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
           <Text
-            style={{ fontSize: 19, lineHeight: 23, fontFamily: 'Freesentation_6SemiBold', color: tokens.text.primary }}
+            style={{ fontSize: typography.homeWineName21.size, lineHeight: typography.homeWineName21.lineHeight, letterSpacing: typography.homeWineName21.letterSpacing, fontFamily: typography.homeWineName21.family, color: tokens.text.primary }}
             numberOfLines={2}
           >
             {wine.name}

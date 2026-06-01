@@ -1,23 +1,24 @@
 /**
- * WineFeed — 와인 둘러보기 (heavy + first-time 공용).
+ * WineFeed — 와인 둘러보기 (Editorial Stack 재설계, 사양 home.md §3-8).
  *
- * 사양 home.md §2-1 line 130-150, §3-8 + §3-8-PATCH (2026-05-21):
- * - section mt 24
- * - header padding 0_20_8 baseline justify-between
- *   - h2 "와인 둘러보기" Playfair 18 cream
- *   - subtitle Inter 11 text-muted "카드 탭하면 상세로"
- * - tab chips: Sparkles/Flame/Globe2 — TabChip 컴포넌트
- * - list column gap 8 padding 0_16 — WineFeedRow 컴포넌트
+ * BrowseTabs h-scroll(TabChip × 3: 추천/트렌딩/탐험) → WineCard × N(gap 13) → InfiniteLoader.
+ *  - 카드: WineFeedRow (bottle 58, name 21, radius 18, padding 18, shadows.homeCard).
+ *  - infinite loader: 리더 Q7 — v0.1.0은 mock first-page + loader 시각 스텁 (가짜 무한 mock 금지).
+ *    실 list/pagination hook 부재(useWine은 단일 lwin) → onEndReached 실 fetch 없음, loader는 표시만.
  *
- * v0.1.0: featured wines 데이터 소스 미정 (사양 §12 Q3). mock 사용.
+ * SectionHeader(타이틀)는 상위 home-feed 컨테이너가 제공. 본 모듈은 탭+카드+loader만.
+ * 데이터: v0.1.0 mock 2종(Château Margaux / Biondi-Santi) verbatim. 0건 → EmptyState.
  */
 import { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Sparkles, Flame, Globe2 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
+import { typography } from '@/lib/design-tokens';
+import { useThemeTokens } from '@/lib/use-theme-tokens';
 import { TabChip } from './tab-chip';
 import { WineFeedRow, type MockWine } from './wine-feed-row';
+import { InfiniteLoader } from '@/components/shared/infinite-loader';
 
 type TabKey = 'featured' | 'trending' | 'explore';
 
@@ -46,19 +47,6 @@ const MOCK_WINES_KO: MockWine[] = [
     grapes: '산지오베제',
     score: 4.5,
     priceKrw: 480000,
-    type: 'red',
-  },
-  {
-    id: 'w3',
-    lwin: '1011230',
-    name: '쟈코모 콘테르노 바롤로 카시나 프란치아 2017',
-    producer: '쟈코모 콘테르노',
-    vintage: 2017,
-    region: '피에몬테',
-    country: '이탈리아',
-    grapes: '네비올로',
-    score: 4.6,
-    priceKrw: 360000,
     type: 'red',
   },
 ];
@@ -90,28 +78,13 @@ const MOCK_WINES_EN: MockWine[] = [
     priceKrw: 480000,
     type: 'red',
   },
-  {
-    id: 'w3',
-    lwin: '1011230',
-    name: 'Giacomo Conterno Barolo Cascina Francia 2017',
-    producer: 'Giacomo Conterno',
-    vintage: 2017,
-    region: 'Piedmont',
-    country: 'Italy',
-    grapes: 'Nebbiolo',
-    score: 4.6,
-    priceKrw: 360000,
-    type: 'red',
-  },
 ];
 
 export function WineFeed() {
   const { t, i18n } = useTranslation();
+  const tokens = useThemeTokens();
   const [tab, setTab] = useState<TabKey>('featured');
-  const wines = i18n.language === 'en' ? MOCK_WINES_EN : MOCK_WINES_KO;
-
-  // 탭 별 mock filter (실 데이터는 v0.2.0)
-  const list = wines;
+  const list = i18n.language === 'en' ? MOCK_WINES_EN : MOCK_WINES_KO;
 
   const onTab = (next: TabKey) => {
     Haptics.selectionAsync().catch(() => undefined);
@@ -119,58 +92,33 @@ export function WineFeed() {
   };
 
   return (
-    <View style={{ marginTop: 24 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-          paddingBottom: 8,
-          paddingHorizontal: 20,
-        }}
-      >
-        <Text
-          className="font-playfair text-text-primary dark:text-text-primary"
-          style={{ fontSize: 18 }}
-        >
-          {t('home.wineFeed.heading')}
-        </Text>
-        <Text
-          className="font-inter text-text-muted dark:text-text-muted"
-          style={{ fontSize: 11 }}
-        >
-          {t('home.wineFeed.subtitle')}
-        </Text>
-      </View>
+    <View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 10, gap: 6 }}
+        contentContainerStyle={{ paddingHorizontal: 22, paddingBottom: 12, gap: 6 }}
       >
-        <TabChip
-          active={tab === 'featured'}
-          Icon={Sparkles}
-          label={t('home.wineFeed.tabs.featured')}
-          onPress={() => onTab('featured')}
-        />
-        <TabChip
-          active={tab === 'trending'}
-          Icon={Flame}
-          label={t('home.wineFeed.tabs.trending')}
-          onPress={() => onTab('trending')}
-        />
-        <TabChip
-          active={tab === 'explore'}
-          Icon={Globe2}
-          label={t('home.wineFeed.tabs.explore')}
-          onPress={() => onTab('explore')}
-        />
+        <TabChip active={tab === 'featured'} Icon={Sparkles} label={t('home.wineFeed.tabs.featured')} onPress={() => onTab('featured')} />
+        <TabChip active={tab === 'trending'} Icon={Flame} label={t('home.wineFeed.tabs.trending')} onPress={() => onTab('trending')} />
+        <TabChip active={tab === 'explore'} Icon={Globe2} label={t('home.wineFeed.tabs.explore')} onPress={() => onTab('explore')} />
       </ScrollView>
-      <View style={{ paddingHorizontal: 16, gap: 8 }}>
-        {list.map((w) => (
-          <WineFeedRow key={w.id} wine={w} />
-        ))}
-      </View>
+
+      {list.length === 0 ? (
+        <View style={{ paddingHorizontal: 22, paddingVertical: 28, alignItems: 'center' }}>
+          <Text style={{ fontFamily: typography.cardBody.family, fontSize: 13, color: tokens.text.muted }}>
+            {t('home.moduleEmpty.browse')}
+          </Text>
+        </View>
+      ) : (
+        <>
+          <View style={{ paddingHorizontal: 16, gap: 13 }}>
+            {list.map((w) => (
+              <WineFeedRow key={w.id} wine={w} />
+            ))}
+          </View>
+          <InfiniteLoader label={t('home.browseSection.loadingMore')} />
+        </>
+      )}
     </View>
   );
 }

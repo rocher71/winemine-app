@@ -114,6 +114,48 @@
     "progress": "{{current}} / {{total}}"
   },
   "home": {
+    "greetingEyebrow": "오늘의 셀러",
+    "greetingQuestion": "{{name}}님,\n오늘은 어떤 와인을 여실 건가요?",
+    "section": {
+      "activityEyebrow": "새 소식",
+      "activityTitle": "오늘 셀러에 {{count}}건의 새 소식",
+      "lessonEyebrow": "오늘의 와인 레슨",
+      "lessonTitle": "3줄로 끝내는 한 잔",
+      "lessonMore": "더 보기 →",
+      "curatedEyebrow": "큐레이션 리스트",
+      "curatedTitle": "지금 담아둘 와인 리스트",
+      "curatedAll": "전체 →",
+      "trendingEyebrow": "이번 주 트렌딩",
+      "trendingTitle": "커뮤니티에서 가장 많이 든 잔",
+      "trendingAll": "전체 →",
+      "browseEyebrow": "와인 둘러보기",
+      "browseTitle": "오늘의 추천 와인",
+      "browseHint": "카드 탭하면 상세로"
+    },
+    "lessonCard": {
+      "streakLabel": "연속 {{days}}일",
+      "dayLabel": "오늘의 레슨 · DAY {{day}}",
+      "metaRead": "읽기",
+      "metaTopic": "주제",
+      "metaProgress": "진행"
+    },
+    "trendingSection": {
+      "keywordHeader": "이번 주 키워드"
+    },
+    "browseSection": {
+      "loadingMore": "더 많은 와인을 불러오는 중…"
+    },
+    "list": {
+      "bottles": "{{count}}병"
+    },
+    "moduleEmpty": {
+      "activity": "아직 새 소식이 없어요",
+      "curated": "아직 리스트가 없어요",
+      "trending": "이번 주 트렌딩이 아직 없어요",
+      "browse": "추천할 와인을 준비 중이에요",
+      "lesson": "오늘의 레슨 준비 중"
+    },
+    "comingSoon": "곧 출시됩니다",
     "anonymousFallback": "익명 사용자",
     "greeting": "안녕하세요, {{name}}님",
     "greetingNew": "{{name}}님, 환영합니다",

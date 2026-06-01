@@ -554,6 +554,22 @@ export const typography = {
   notePeakNote:           { family: 'Freesentation_4Regular',           size: 12, lineHeight: 18,   fontStyle: 'italic' as const },
   chipLabelRegular:       { family: 'Freesentation_4Regular',           size: 11, lineHeight: 13.2 },
 
+  // ---- home Editorial Stack redesign (design-spec home.md §P0 — 시안 A) ----
+  //
+  // 리더 결정 Q1: 신규 homeLight 그룹 미생성 — 기존 brand/gold/wineRed 토큰에 하모나이즈.
+  // 핸드오프 라이트 hex(#C0992E/#7C1428 등)는 brand.gold(#C9A84C)/brand.wineRed(#8B1A2A)로 매핑.
+  // 폰트는 D7: Freesentation weight 분기 — 상대 size·weight 비율로 serif 위계 보존.
+  homeGreeting:     { family: 'Freesentation_7Bold',     size: 26, lineHeight: 34.3, letterSpacing: -0.39 },
+  homeStatValue30:  { family: 'PlayfairDisplay_400Regular', size: 30, lineHeight: 30 },
+  homeSectionTitle: { family: 'PlayfairDisplay_400Regular', size: 20, lineHeight: 26, letterSpacing: -0.2 },
+  homeEyebrowSerif: { family: 'Freesentation_6SemiBold',  size: 11, lineHeight: 11, letterSpacing: 1.76, textTransform: 'uppercase' as const },
+  homeLessonTitle:  { family: 'PlayfairDisplay_400Regular', size: 19, lineHeight: 24.3, letterSpacing: -0.19 },
+  homeActivityTitle:{ family: 'Freesentation_5Medium',    size: 14, lineHeight: 19.6 },
+  homeRankNum:      { family: 'PlayfairDisplay_700Bold',  size: 22, lineHeight: 22 },
+  homeWineName21:   { family: 'Freesentation_6SemiBold',  size: 21, lineHeight: 24.8, letterSpacing: -0.21 },
+  homeListTitle:    { family: 'Freesentation_7Bold',      size: 16, lineHeight: 20.8 },
+  homeKeywordChip:  { family: 'Freesentation_6SemiBold',  size: 12.5, lineHeight: 15 },
+
   // ---- onboarding step retroactive (design-spec onboarding-2-language.md §3-2 P0 — 3 신규) ----
   //
   // step 2/3/4 (language/experience/mode) 공유 위계. step 1 (welcome) 워드마크(56)는 별도.
@@ -590,6 +606,9 @@ export const shadows = {
   // lg: AddToCellarCta inline button (사양 §3-12)
   wineRedCardSm: { shadowColor: '#8B1A2A', shadowOpacity: 0.35, shadowOffset: { width: 0, height: 4 }, shadowRadius: 12, elevation: 4 },
   wineRedCardLg: { shadowColor: '#8B1A2A', shadowOpacity: 0.45, shadowOffset: { width: 0, height: 6 }, shadowRadius: 18, elevation: 6 },
+
+  // home Editorial Stack 카드 그림자 (design-spec home.md §P0 D2 — inset highlight 제거 근사).
+  homeCard: { shadowColor: '#2A1A14', shadowOpacity: 0.12, shadowOffset: { width: 0, height: 10 }, shadowRadius: 13, elevation: 3 },
 } as const;
 
 // ---- Gradients (expo-linear-gradient props 형태) ----
@@ -645,6 +664,19 @@ export const gradients = {
   // knowledge/FlameBadge — 135deg goldSoft→gold
   knowledgeFlame: {
     colors: ['#D4B85C', '#C9A84C'] as readonly string[],
+    start: { x: 0, y: 0 },
+    end:   { x: 1, y: 1 },
+  },
+
+  // home Editorial Stack — lesson 4px top-rule (90deg, gold-bright → wineRed).
+  homeLessonRule: {
+    colors: ['#C9A84C', '#8B1A2A'] as readonly string[],
+    start: { x: 0, y: 0.5 },
+    end:   { x: 1, y: 0.5 },
+  },
+  // home Editorial Stack — gold pill (135deg, gold-bright → gold-deep). CTA / avatar.
+  homeGoldPill: {
+    colors: ['#C9A84C', '#A07F2E'] as readonly string[],
     start: { x: 0, y: 0 },
     end:   { x: 1, y: 1 },
   },

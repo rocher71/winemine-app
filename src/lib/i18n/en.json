@@ -114,6 +114,48 @@
     "progress": "{{current}} / {{total}}"
   },
   "home": {
+    "greetingEyebrow": "Today's cellar",
+    "greetingQuestion": "{{name}},\nwhich wine will you open today?",
+    "section": {
+      "activityEyebrow": "What's new",
+      "activityTitle": "{{count}} new updates in your cellar",
+      "lessonEyebrow": "Today's wine lesson",
+      "lessonTitle": "One glass in three lines",
+      "lessonMore": "More →",
+      "curatedEyebrow": "Curated lists",
+      "curatedTitle": "Lists worth saving now",
+      "curatedAll": "All →",
+      "trendingEyebrow": "Trending this week",
+      "trendingTitle": "Most-poured in the community",
+      "trendingAll": "All →",
+      "browseEyebrow": "Discover wines",
+      "browseTitle": "Today's picks",
+      "browseHint": "Tap a card for details"
+    },
+    "lessonCard": {
+      "streakLabel": "{{days}}-day streak",
+      "dayLabel": "Today's lesson · DAY {{day}}",
+      "metaRead": "Read",
+      "metaTopic": "Topic",
+      "metaProgress": "Progress"
+    },
+    "trendingSection": {
+      "keywordHeader": "This week's keywords"
+    },
+    "browseSection": {
+      "loadingMore": "Loading more wines…"
+    },
+    "list": {
+      "bottles": "{{count}} bottles"
+    },
+    "moduleEmpty": {
+      "activity": "No updates yet",
+      "curated": "No lists yet",
+      "trending": "Nothing trending yet",
+      "browse": "Preparing recommendations",
+      "lesson": "Today's lesson is on the way"
+    },
+    "comingSoon": "Coming soon",
     "anonymousFallback": "Guest",
     "greeting": "Welcome back, {{name}}",
     "greetingNew": "Hello, {{name}}",

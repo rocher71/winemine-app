@@ -1,24 +1,20 @@
 /**
  * Home Screen — '/' (BottomNav 홈 탭).
  *
- * 사양 home.md §1, §2 verbatim 변환. retroactive hardening (2026-05-20).
- *  - SafeAreaView edges=['top'] (HomeHeader가 insets 처리)
- *  - HomeHeader (logo + bell + LevelChip/Avatar) — title 텍스트 없음
- *  - mode 분기: heavy → HeavyHome (8섹션) / first-time → FirstTimeHome (4섹션)
- *  - 진입 가드 (사양 §1, §1 a14): first-time + !onboardingComplete → /onboarding redirect
- *  - loading 시 ActivityIndicator + HomeHeader(first-time fallback)
- *  - scroll-aware sticky header (Blind 앱 패턴, community 동일)
+ * Editorial Stack 재설계 (사양 home.md, 2026-06). mode 분기 제거 — 단일 피드 홈(HomeFeed).
+ *  - SafeAreaView edges 처리: HomeHeader가 insets 처리
+ *  - HomeHeader (logo + bell + LevelChip) — mode 분기 없이 항상 LevelChip
+ *  - 진입 가드: first-time + !onboardingComplete → /onboarding redirect (mode 무관 보존)
+ *  - scroll-aware sticky header (community 동일 패턴)
  */
 import { useEffect, useRef } from 'react';
-import { View, ActivityIndicator, Animated } from 'react-native';
+import { View, Animated } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HomeHeader } from '@/components/home/home-header';
-import { FirstTimeHome } from '@/components/home/first-time-home';
-import { HeavyHome } from '@/components/home/heavy-home';
+import { HomeFeed } from '@/components/home/home-feed';
 import { useProfile } from '@/hooks/use-profile';
-import { brand } from '@/lib/design-tokens';
 import { currentLocale } from '@/lib/i18n';
 import { localizeAnonymousDisplay } from '@/lib/anonymize';
 import { isOnboarded } from '@/lib/onboarded';
@@ -39,7 +35,7 @@ function initialOf(name: string): string {
 
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const { profile, loading } = useProfile();
+  const { profile } = useProfile();
   const insets = useSafeAreaInsets();
 
   // ── Scroll-aware header (community 탭 동일 패턴) ───────────────────────────
@@ -70,7 +66,7 @@ export default function HomeScreen() {
   };
   // ──────────────────────────────────────────────────────────────────────────
 
-  // 진입 가드 — 사양 §1, §1 a14
+  // 진입 가드 — mode 무관하게 보존 (사양 §현재 구현 차이: 진입 가드 유지)
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -92,10 +88,8 @@ export default function HomeScreen() {
       ? localizeAnonymousDisplay(rawDisplay)
       : rawDisplay
     : t('home.anonymousFallback');
-  const mode = profile?.mode ?? 'first-time';
   const levelId = toLevelId(profile?.level);
   const displayInitial = initialOf(localizedDisplay);
-  const headerMode = mode === 'heavy' ? 'heavy' : 'first-time';
 
   return (
     <View className="flex-1 bg-bg-deepest dark:bg-bg-deepest">
@@ -110,22 +104,10 @@ export default function HomeScreen() {
           transform: [{ translateY: headerTranslateY }],
         }}
       >
-        <HomeHeader
-          mode={headerMode}
-          levelId={levelId}
-          displayInitial={displayInitial}
-        />
+        <HomeHeader levelId={levelId} displayInitial={displayInitial} />
       </Animated.View>
 
-      {loading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: HEADER_HEIGHT }}>
-          <ActivityIndicator color={brand.gold} />
-        </View>
-      ) : mode === 'heavy' ? (
-        <HeavyHome displayName={localizedDisplay} onScroll={handleScroll} paddingTop={HEADER_HEIGHT} />
-      ) : (
-        <FirstTimeHome displayName={localizedDisplay} onScroll={handleScroll} paddingTop={HEADER_HEIGHT} />
-      )}
+      <HomeFeed displayName={localizedDisplay} onScroll={handleScroll} paddingTop={HEADER_HEIGHT} />
     </View>
   );
 }
