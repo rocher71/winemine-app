@@ -1,42 +1,62 @@
 /**
- * StatHero — 방문 국가 / 마신 와인 / 작성 노트 3-col grid.
+ * StatHero — 방문 국가 / 마신 와인 / 작성 노트 3-col stat row.
  *
- * 사양 home.md §2-1 line 84-89, §3-4:
- * - grid 1fr 1fr 1fr, gap 6, padding 12_16_0
- * - card padding 8_10, radius 12, bg-surface, border-default
- * - value Playfair 20 cream lh 22 ls -0.4
- * - label Inter 10 text-muted tracking 0.2
+ * Editorial Stack 재설계 (사양 home.md §3-3):
+ * - row: gap 11, paddingHorizontal 22
+ * - card: bg-surface, border-gold 1px, radius 16, padding 15/14, shadows.homeCard
+ * - value Playfair 30 lh 30, label 12 sub marginTop 9
  *
- * v0.1.0: profile.stats RPC 없음 (사양 §11 P1). props로 단순 숫자 받음.
- * 부모(HeavyHome)에서 실제 데이터 또는 0 placeholder 주입.
+ * empty(0/0/0): "0" 그대로 표시 (핸드오프 자체가 0 노출). EmptyState 불필요.
+ * loading: value skeleton(width 24, h 30) × 3.
  */
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { brand, typography, shadows, withAlpha } from '@/lib/design-tokens';
+import { useThemeTokens } from '@/lib/use-theme-tokens';
 
 interface StatHeroProps {
   countries: number;
   wines: number;
   notes: number;
+  loading?: boolean;
 }
 
-function StatCard({ value, label }: { value: number; label: string }) {
+function StatCard({ value, label, loading }: { value: number; label: string; loading?: boolean }) {
+  const tokens = useThemeTokens();
+  const borderGold = withAlpha(brand.gold, 0.24);
   return (
     <View
-      className="rounded-xl bg-surface dark:bg-surface border border-border-default dark:border-border-default"
-      style={{ flex: 1, paddingVertical: 8, paddingHorizontal: 10, gap: 1 }}
+      style={{
+        flex: 1,
+        paddingVertical: 15,
+        paddingHorizontal: 14,
+        borderRadius: 16,
+        backgroundColor: tokens.bg.surface,
+        borderWidth: 1,
+        borderColor: borderGold,
+        ...shadows.homeCard,
+      }}
       accessibilityRole="text"
       accessibilityLabel={`${value} ${label}`}
     >
+      {loading ? (
+        <View style={{ width: 24, height: 30, borderRadius: 6, backgroundColor: tokens.bg.inset }} />
+      ) : (
+        <Text
+          allowFontScaling={false}
+          style={{
+            fontFamily: typography.homeStatValue30.family,
+            fontSize: typography.homeStatValue30.size,
+            lineHeight: typography.homeStatValue30.lineHeight,
+            color: tokens.text.primary,
+          }}
+        >
+          {value}
+        </Text>
+      )}
       <Text
-        className="font-playfair text-text-primary dark:text-text-primary"
-        style={{ fontSize: 20, lineHeight: 22, letterSpacing: -0.4 }}
-      >
-        {value}
-      </Text>
-      <Text
-        className="font-inter text-text-muted dark:text-text-muted"
-        style={{ fontSize: 10, letterSpacing: 0.2 }}
         allowFontScaling={false}
+        style={{ fontFamily: typography.cardMeta.family, fontSize: 12, color: tokens.text.secondary, marginTop: 9 }}
       >
         {label}
       </Text>
@@ -44,13 +64,13 @@ function StatCard({ value, label }: { value: number; label: string }) {
   );
 }
 
-export function StatHero({ countries, wines, notes }: StatHeroProps) {
+export function StatHero({ countries, wines, notes, loading }: StatHeroProps) {
   const { t } = useTranslation();
   return (
-    <View style={{ flexDirection: 'row', gap: 6, paddingTop: 12, paddingHorizontal: 16 }}>
-      <StatCard value={countries} label={t('home.statCountries')} />
-      <StatCard value={wines} label={t('home.statWines')} />
-      <StatCard value={notes} label={t('home.statNotes')} />
+    <View style={{ flexDirection: 'row', gap: 11, paddingHorizontal: 22 }}>
+      <StatCard value={countries} label={t('home.statCountries')} loading={loading} />
+      <StatCard value={wines} label={t('home.statWines')} loading={loading} />
+      <StatCard value={notes} label={t('home.statNotes')} loading={loading} />
     </View>
   );
 }
