@@ -3,11 +3,12 @@
  *
  * BrowseTabs h-scroll(TabChip × 3: 추천/트렌딩/탐험) → WineCard × N(gap 13) → InfiniteLoader.
  *  - 카드: WineFeedRow (bottle 58, name 21, radius 18, padding 18, shadows.homeCard).
- *  - infinite loader: 리더 Q7 — v0.1.0은 mock first-page + loader 시각 스텁 (가짜 무한 mock 금지).
- *    실 list/pagination hook 부재(useWine은 단일 lwin) → onEndReached 실 fetch 없음, loader는 표시만.
+ *  - 데이터: useWineBrowse (상위 home-feed가 보유, 본 모듈은 props로 받아 렌더).
+ *    실 wines_localized 카탈로그 (DEMO_MODE → 15와인 mock). rating/price는 VIEW 미보유로 카드에서 숨김.
+ *  - infinite scroll: home-feed ScrollView near-bottom → loadMore. loader는 hasMore/loadingMore일 때만.
+ *  - 탭(추천/트렌딩/탐험): v0.1.0은 시각 전환만(쿼리 분기 미정) — 동일 카탈로그 표시.
  *
  * SectionHeader(타이틀)는 상위 home-feed 컨테이너가 제공. 본 모듈은 탭+카드+loader만.
- * 데이터: v0.1.0 mock 2종(Château Margaux / Biondi-Santi) verbatim. 0건 → EmptyState.
  */
 import { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
@@ -22,74 +23,24 @@ import { InfiniteLoader } from '@/components/shared/infinite-loader';
 
 type TabKey = 'featured' | 'trending' | 'explore';
 
-const MOCK_WINES_KO: MockWine[] = [
-  {
-    id: 'w1',
-    lwin: '1011196',
-    name: '샤또 마고 2018',
-    producer: '샤또 마고',
-    vintage: 2018,
-    region: '보르도',
-    country: '프랑스',
-    grapes: '카베르네 소비뇽 · 메를로',
-    score: 4.7,
-    priceKrw: 1200000,
-    type: 'red',
-  },
-  {
-    id: 'w2',
-    lwin: '1011225',
-    name: '비온디 산티 브루넬로 디 몬탈치노 2016',
-    producer: '비온디 산티',
-    vintage: 2016,
-    region: '토스카나',
-    country: '이탈리아',
-    grapes: '산지오베제',
-    score: 4.5,
-    priceKrw: 480000,
-    type: 'red',
-  },
-];
+interface WineFeedProps {
+  wines: MockWine[];
+  loading: boolean;
+  loadingMore: boolean;
+  hasMore: boolean;
+}
 
-const MOCK_WINES_EN: MockWine[] = [
-  {
-    id: 'w1',
-    lwin: '1011196',
-    name: 'Château Margaux 2018',
-    producer: 'Château Margaux',
-    vintage: 2018,
-    region: 'Bordeaux',
-    country: 'France',
-    grapes: 'Cabernet Sauvignon · Merlot',
-    score: 4.7,
-    priceKrw: 1200000,
-    type: 'red',
-  },
-  {
-    id: 'w2',
-    lwin: '1011225',
-    name: 'Biondi-Santi Brunello di Montalcino 2016',
-    producer: 'Biondi-Santi',
-    vintage: 2016,
-    region: 'Tuscany',
-    country: 'Italy',
-    grapes: 'Sangiovese',
-    score: 4.5,
-    priceKrw: 480000,
-    type: 'red',
-  },
-];
-
-export function WineFeed() {
-  const { t, i18n } = useTranslation();
+export function WineFeed({ wines, loading, loadingMore, hasMore }: WineFeedProps) {
+  const { t } = useTranslation();
   const tokens = useThemeTokens();
   const [tab, setTab] = useState<TabKey>('featured');
-  const list = i18n.language === 'en' ? MOCK_WINES_EN : MOCK_WINES_KO;
 
   const onTab = (next: TabKey) => {
     Haptics.selectionAsync().catch(() => undefined);
     setTab(next);
   };
+
+  const isEmpty = !loading && wines.length === 0;
 
   return (
     <View>
@@ -103,7 +54,7 @@ export function WineFeed() {
         <TabChip active={tab === 'explore'} Icon={Globe2} label={t('home.wineFeed.tabs.explore')} onPress={() => onTab('explore')} />
       </ScrollView>
 
-      {list.length === 0 ? (
+      {isEmpty ? (
         <View style={{ paddingHorizontal: 22, paddingVertical: 28, alignItems: 'center' }}>
           <Text style={{ fontFamily: typography.cardBody.family, fontSize: 13, color: tokens.text.muted }}>
             {t('home.moduleEmpty.browse')}
@@ -112,11 +63,11 @@ export function WineFeed() {
       ) : (
         <>
           <View style={{ paddingHorizontal: 16, gap: 13 }}>
-            {list.map((w) => (
+            {wines.map((w) => (
               <WineFeedRow key={w.id} wine={w} />
             ))}
           </View>
-          <InfiniteLoader label={t('home.browseSection.loadingMore')} />
+          {loadingMore || hasMore ? <InfiniteLoader label={t('home.browseSection.loadingMore')} /> : null}
         </>
       )}
     </View>

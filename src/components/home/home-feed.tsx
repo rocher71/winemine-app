@@ -11,11 +11,12 @@
  *
  * 데이터(리더 Q2): 실 hook 연결 + empty fallback (fabricated mock 노출 금지).
  *   stats=useProfileStats, activity=useHomeActivity(cellar drink-window), lesson=useLessons,
- *   curated=useMyLists, trending=useCommunityFeed(모듈 내부), browse=mock first-page(useWine 단일 한계, Q7).
+ *   curated=useMyLists, trending=useCommunityFeed(모듈 내부),
+ *   browse=useWineBrowse(실 wines_localized 페이지네이션, DEMO→15와인 mock; rating/price는 VIEW 미보유로 숨김, 리더 Q7).
  * 섹션 헤더 action: 라우트 존재 시 navigate, 미구현 라우트는 "준비 중" Alert (리더 Q8).
  */
 import { useCallback } from 'react';
-import { ScrollView, RefreshControl, View, Alert } from 'react-native';
+import { ScrollView, RefreshControl, View, Alert, type NativeSyntheticEvent, type NativeScrollEvent } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { brand } from '@/lib/design-tokens';
@@ -31,6 +32,7 @@ import { useProfileStats } from '@/hooks/use-profile-stats';
 import { useHomeActivity } from '@/hooks/use-home-activity';
 import { useLessons, useLessonDetail } from '@/hooks/use-knowledge';
 import { useMyLists } from '@/hooks/use-wine-lists';
+import { useWineBrowse } from '@/hooks/use-wine-browse';
 
 interface HomeFeedProps {
   displayName: string;
@@ -45,22 +47,36 @@ export function HomeFeed({ displayName, onScroll, paddingTop }: HomeFeedProps) {
   const { todayLesson, streak } = useLessons();
   const { markComplete } = useLessonDetail(todayLesson.id);
   const { lists, isLoading: listsLoading, refetch: refetchLists } = useMyLists('recent');
+  const browse = useWineBrowse();
 
   const refreshing = statsLoading;
   const onRefresh = useCallback(async () => {
     await Promise.all([refreshStats(), refetchLists()]);
-  }, [refreshStats, refetchLists]);
+    browse.refresh();
+  }, [refreshStats, refetchLists, browse]);
 
   const comingSoon = useCallback(() => {
     Alert.alert(t('app.name'), t('home.comingSoon'));
   }, [t]);
+
+  // 헤더 애니메이션용 onScroll 전달 + wine browse infinite scroll(near-bottom) 트리거.
+  // browse.loadMore는 in-flight/hasMore 가드가 내부에 있어 연속 호출 안전.
+  const handleScroll = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      onScroll?.(e);
+      const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
+      const distanceFromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
+      if (distanceFromBottom < 600) browse.loadMore();
+    },
+    [onScroll, browse],
+  );
 
   return (
     <ScrollView
       className="flex-1 bg-bg-deepest dark:bg-bg-deepest"
       contentContainerStyle={{ paddingBottom: 32, paddingTop }}
       scrollEventThrottle={16}
-      onScroll={onScroll}
+      onScroll={handleScroll}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={brand.gold} />}
     >
       {/* Greeting (sp 18) */}
@@ -147,7 +163,12 @@ export function HomeFeed({ displayName, onScroll, paddingTop }: HomeFeedProps) {
           actionLabel={t('home.section.browseHint')}
         />
         <View style={{ marginTop: 14 }}>
-          <WineFeed />
+          <WineFeed
+            wines={browse.wines}
+            loading={browse.loading}
+            loadingMore={browse.loadingMore}
+            hasMore={browse.hasMore}
+          />
         </View>
       </View>
     </ScrollView>

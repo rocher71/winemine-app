@@ -30,9 +30,12 @@ export interface MockWine {
   vintage: number;
   region: string;
   country: string;
-  grapes: string;
-  score: number;
-  priceKrw: number;
+  /** 실 wines_localized 카탈로그엔 없음 — 있을 때만 렌더 */
+  grapes?: string;
+  /** tasting_notes 집계 VIEW 부재(v0.1.0) — 있을 때만 rating 렌더 */
+  score?: number;
+  /** 가격 소스(use-wine-prices) per-wine 미연결 — 있을 때만 price 렌더 */
+  priceKrw?: number;
   type: TypeCanonical;
 }
 
@@ -55,12 +58,19 @@ export function WineFeedRow({ wine }: WineFeedRowProps) {
   const bottleColor = bottleColorDefault[wine.type];
   const { t, i18n } = useTranslation();
 
-  const priceSpoken = `₩${formatKrwShort(wine.priceKrw, i18n.language)}`;
-  const scoreSpoken = wine.score.toFixed(1);
+  const hasScore = typeof wine.score === 'number';
+  const hasPrice = typeof wine.priceKrw === 'number';
+  const ratingMeta = hasScore && hasPrice
+    ? (i18n.language === 'en'
+        ? `, rated ${wine.score!.toFixed(1)} out of 5, price ₩${formatKrwShort(wine.priceKrw!, i18n.language)}`
+        : ` 평점 ${wine.score!.toFixed(1)} 가격 ₩${formatKrwShort(wine.priceKrw!, i18n.language)}`)
+    : hasScore
+      ? (i18n.language === 'en' ? `, rated ${wine.score!.toFixed(1)} out of 5` : ` 평점 ${wine.score!.toFixed(1)}`)
+      : '';
   const a11yLabel =
     i18n.language === 'en'
-      ? `${wine.name}, ${wine.producer}, ${wine.vintage}, rated ${scoreSpoken} out of 5, price ${priceSpoken}`
-      : `${wine.name} ${wine.producer} ${wine.vintage} 평점 ${scoreSpoken} 가격 ${priceSpoken}`;
+      ? `${wine.name}, ${wine.producer}, ${wine.vintage}${ratingMeta}`
+      : `${wine.name} ${wine.producer} ${wine.vintage}${ratingMeta}`;
 
   return (
     <Pressable
@@ -112,33 +122,41 @@ export function WineFeedRow({ wine }: WineFeedRowProps) {
               {wine.region}, {wine.country}
             </Text>
           </View>
-          <Text
-            style={{ fontSize: 11, marginTop: 1, opacity: 0.85, fontFamily: 'Freesentation_4Regular', color: tokens.text.muted }}
-            numberOfLines={1}
-          >
-            {wine.grapes}
-          </Text>
-        </View>
-        <View
-          style={{
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            flexShrink: 0,
-            minWidth: 76,
-          }}
-        >
-          <View style={{ alignItems: 'flex-end', gap: 6 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-              <WMGlassRating value={wine.score} size={10} />
-              <Text style={{ color: brand.gold, fontSize: 12, fontFamily: 'Freesentation_4Regular' }}>
-                {wine.score.toFixed(1)}
-              </Text>
-            </View>
-            <Text style={{ fontSize: 14, lineHeight: 16.8, fontFamily: 'Freesentation_4Regular', color: tokens.text.primary }}>
-              ₩{formatKrwShort(wine.priceKrw, i18n.language)}
+          {wine.grapes ? (
+            <Text
+              style={{ fontSize: 11, marginTop: 1, opacity: 0.85, fontFamily: 'Freesentation_4Regular', color: tokens.text.muted }}
+              numberOfLines={1}
+            >
+              {wine.grapes}
             </Text>
-          </View>
+          ) : null}
         </View>
+        {hasScore || hasPrice ? (
+          <View
+            style={{
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              flexShrink: 0,
+              minWidth: 76,
+            }}
+          >
+            <View style={{ alignItems: 'flex-end', gap: 6 }}>
+              {hasScore ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                  <WMGlassRating value={wine.score!} size={10} />
+                  <Text style={{ color: brand.gold, fontSize: 12, fontFamily: 'Freesentation_4Regular' }}>
+                    {wine.score!.toFixed(1)}
+                  </Text>
+                </View>
+              ) : null}
+              {hasPrice ? (
+                <Text style={{ fontSize: 14, lineHeight: 16.8, fontFamily: 'Freesentation_4Regular', color: tokens.text.primary }}>
+                  ₩{formatKrwShort(wine.priceKrw!, i18n.language)}
+                </Text>
+              ) : null}
+            </View>
+          </View>
+        ) : null}
       </View>
     </Pressable>
   );
