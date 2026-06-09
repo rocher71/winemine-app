@@ -16,7 +16,7 @@ import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { brand, typography, shadows, withAlpha } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
-import type { HomeActivityRow, HomeActivityKind } from '@/hooks/use-home-activity';
+import type { HomeActivityRow } from '@/hooks/use-home-activity';
 
 const KIND_ICON = {
   peak: Flame,
@@ -27,7 +27,7 @@ const KIND_ICON = {
 function ActivityRow({ row, isLast }: { row: HomeActivityRow; isLast: boolean }) {
   const tokens = useThemeTokens();
   const Icon = KIND_ICON[row.kind];
-  const isWine = row.kind === 'price';
+  const isWine = row.kind === 'price'; // 가격 변동 행만 wine-tint chip (핸드오프 §Activity feed)
   const chipBg = isWine ? withAlpha(brand.wineRed, 0.08) : withAlpha(brand.gold, 0.12);
   const chipBorder = isWine ? withAlpha(brand.wineRed, 0.18) : withAlpha(brand.gold, 0.24);
   const iconColor = isWine ? brand.wineRed : tokens.scheme === 'light' ? brand.goldDeep : brand.gold;
@@ -35,10 +35,10 @@ function ActivityRow({ row, isLast }: { row: HomeActivityRow; isLast: boolean })
 
   const onPress = () => {
     Haptics.selectionAsync().catch(() => undefined);
-    if (row.lwin) router.push(`/cellar/${row.lwin}` as never);
+    if (row.route) router.push(row.route as never);
   };
 
-  const a11yLabel = `${row.wineName ?? ''}${row.bodySuffix}`.trim();
+  const a11yLabel = `${row.titleLead}${row.emphasis}${row.titleTail}`.trim();
 
   return (
     <Pressable
@@ -83,18 +83,19 @@ function ActivityRow({ row, isLast }: { row: HomeActivityRow; isLast: boolean })
             }}
             numberOfLines={2}
           >
-            {row.wineName ? (
+            {row.titleLead}
+            {row.emphasis ? (
               <Text style={{ fontFamily: 'Freesentation_7Bold', color: brand.wineRed }}>
-                {row.wineName}
+                {row.emphasis}
               </Text>
             ) : null}
-            {row.bodySuffix}
+            {row.titleTail}
           </Text>
           <Text
             style={{ fontFamily: typography.cardMeta.family, fontSize: 11.5, color: tokens.text.muted }}
             numberOfLines={1}
           >
-            {row.metaPrefix}
+            {row.meta}
           </Text>
         </View>
 
