@@ -116,6 +116,7 @@ function CuratedListCard({ list }: { list: WineListStats }) {
             {list.title}
           </Text>
 
+          {/* 본문: 설명 > 와인명 미리보기 > 빈 fallback 순 (카드가 비어 보이지 않게) */}
           {list.description ? (
             <Text
               style={{
@@ -129,7 +130,33 @@ function CuratedListCard({ list }: { list: WineListStats }) {
             >
               {list.description}
             </Text>
-          ) : null}
+          ) : list.preview_names && list.preview_names.length > 0 ? (
+            <Text
+              style={{
+                fontFamily: typography.cardMeta.family,
+                fontSize: 12,
+                lineHeight: 17.4,
+                color: tokens.text.secondary,
+                marginTop: 8,
+              }}
+              numberOfLines={2}
+            >
+              {list.preview_names.join(', ')}
+            </Text>
+          ) : (
+            <Text
+              style={{
+                fontFamily: typography.cardMeta.family,
+                fontSize: 12,
+                lineHeight: 17.4,
+                color: tokens.text.muted,
+                marginTop: 8,
+              }}
+              numberOfLines={2}
+            >
+              {list.wine_count > 0 ? t('home.list.previewFallback') : t('home.list.emptyPreview')}
+            </Text>
+          )}
         </View>
 
         {/* footer (하단 고정) */}
