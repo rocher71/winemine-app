@@ -2,8 +2,8 @@
  * useHomeActivity — 홈 Activity feed 실 데이터 파생 (사양 home.md §3-4).
  *
  * 리더 결정 Q2/Q7: fabricated mock 노출 금지. 실 소스 있는 type만 row 생성.
- *  - 'peak' (음용 적기): cellared cellar_items 중 현재 연도가 drink_window 정점 구간(peak..to)에 든 와인.
- *    → useCellarList('cellared') drink_window_{peak,to}_year 기반 (genuine real data).
+ *  - 'peak' (지금 마시기 좋은): cellared cellar_items 중 현재 연도가 음용 가능 구간(from..to)에 든 와인.
+ *    → useCellarList('cellared') drink_window_{from,to}_year 기반 (genuine real data). (2026-06 peak→from 확장.)
  *  - 'price' (가격 변동): v0.1.0 실 가격 변동 이벤트 소스 부재 → row 미생성.
  *  - 'badge' (뱃지): v0.1.0 뱃지 이벤트 소스 부재 → row 미생성.
  *
@@ -53,15 +53,15 @@ export function useHomeActivity(): UseHomeActivityResult {
     for (const item of items) {
       const wine = item.wine;
       if (!wine) continue;
-      const peak = (wine as { drink_window_peak_year?: number | null }).drink_window_peak_year;
+      const from = (wine as { drink_window_from_year?: number | null }).drink_window_from_year;
       const to = (wine as { drink_window_to_year?: number | null }).drink_window_to_year;
-      // 현재 연도가 정점~만료 구간 안에 들면 "음용 적기" 활동으로 간주.
-      if (peak != null && to != null && year >= peak && year <= to) {
+      // 현재 연도가 음용 가능 구간(from~to) 안에 들면 "지금 마시기 좋은" 활동으로 간주 (사용자 결정 2026-06).
+      if (from != null && to != null && year >= from && year <= to) {
         peakRows.push({
           id: `peak-${item.id}`,
           kind: 'peak',
           wineName: localizedWineName(wine),
-          bodySuffix: locale === 'ko' ? '이(가) 음용 적기에 들어섰어요' : ' has entered its drinking window',
+          bodySuffix: locale === 'ko' ? '이(가) 지금 마시기 좋은 시기예요' : ' is ready to drink now',
           metaPrefix: locale === 'ko' ? '셀러' : 'Cellar',
           lwin: wine.lwin != null ? String(wine.lwin) : null,
         });
