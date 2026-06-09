@@ -158,6 +158,7 @@
       "browse": "추천할 와인을 준비 중이에요",
       "lesson": "오늘의 레슨 준비 중"
     },
+    "cellarBrowse": "셀러 둘러보기",
     "comingSoon": "곧 출시됩니다",
     "anonymousFallback": "익명 사용자",
     "greeting": "안녕하세요, {{name}}님",
