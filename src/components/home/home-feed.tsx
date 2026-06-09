@@ -47,7 +47,7 @@ export function HomeFeed({ displayName, onScroll, paddingTop }: HomeFeedProps) {
   const { rows: activityRows, loading: activityLoading } = useHomeActivity();
   const { todayLesson, streak } = useLessons();
   const { markComplete } = useLessonDetail(todayLesson.id);
-  const { lists, isLoading: listsLoading, refetch: refetchLists } = useMyLists('recent');
+  const { lists, isLoading: listsLoading, refetch: refetchLists } = useMyLists('recent', { preview: true });
   const browse = useWineBrowse();
 
   const refreshing = statsLoading;
