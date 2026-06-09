@@ -14,7 +14,8 @@ import { brand, typography } from '@/lib/design-tokens';
 import { useThemeTokens } from '@/lib/use-theme-tokens';
 
 interface SectionHeaderProps {
-  eyebrow: string;
+  /** eyebrow(작은 금색 라벨). 생략 시 title만 단독 렌더 */
+  eyebrow?: string;
   title: string;
   /** 우측 action 라벨. 없으면 미표시 */
   actionLabel?: string;
@@ -36,20 +37,22 @@ export function SectionHeader({ eyebrow, title, actionLabel, onActionPress }: Se
       }}
     >
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: typography.homeEyebrowSerif.family,
-            fontSize: typography.homeEyebrowSerif.size,
-            lineHeight: typography.homeEyebrowSerif.lineHeight,
-            letterSpacing: typography.homeEyebrowSerif.letterSpacing,
-            textTransform: typography.homeEyebrowSerif.textTransform,
-            color: goldAccent,
-            marginBottom: 6,
-          }}
-        >
-          {eyebrow}
-        </Text>
+        {eyebrow ? (
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontFamily: typography.homeEyebrowSerif.family,
+              fontSize: typography.homeEyebrowSerif.size,
+              lineHeight: typography.homeEyebrowSerif.lineHeight,
+              letterSpacing: typography.homeEyebrowSerif.letterSpacing,
+              textTransform: typography.homeEyebrowSerif.textTransform,
+              color: goldAccent,
+              marginBottom: 6,
+            }}
+          >
+            {eyebrow}
+          </Text>
+        ) : null}
         <Text
           style={{
             fontFamily: typography.homeSectionTitle.family,

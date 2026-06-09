@@ -3,8 +3,9 @@
  *
  * mode 분기 제거 (리더 Q3) — 모든 사용자에게 동일 피드. 각 모듈 0건 시 graceful EmptyState (리더 Q6).
  *
- * 순서(시안 A): Greeting → Stats(3) → Activity feed → Lesson card(full) →
- *   Curated lists(h-scroll) → Trending(kw chips + rank) → Wine browse(tabs + cards + loader).
+ * 순서: Greeting → Stats(3) → Activity feed → Curated lists(h-scroll) → Lesson card(full) →
+ *   Trending(kw chips + rank) → Wine browse(tabs + cards + loader).
+ *   (Curated를 Lesson 위로 스왑 — 사용자 요청 2026-06.)
  *
  * 섹션 간격: sp(n) → 모듈 marginTop (gap-N 글로벌 미사용). 섹션 px=22(헤더/모듈 inner).
  * RefreshControl gold tint. paddingBottom 32.
@@ -15,7 +16,7 @@
  *   browse=useWineBrowse(실 wines_localized 페이지네이션, DEMO→15와인 mock; rating/price는 VIEW 미보유로 숨김, 리더 Q7).
  * 섹션 헤더 action: 라우트 존재 시 navigate, 미구현 라우트는 "준비 중" Alert (리더 Q8).
  */
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ScrollView, RefreshControl, View, Alert, type NativeSyntheticEvent, type NativeScrollEvent } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -59,6 +60,19 @@ export function HomeFeed({ displayName, onScroll, paddingTop }: HomeFeedProps) {
     Alert.alert(t('app.name'), t('home.comingSoon'));
   }, [t]);
 
+  // Activity 빈 상태 문구: 셀러 비었으면 채우기 유도(단일), 와인 있으면 권유 문구 3종 day-of-year 로테이션.
+  const activityEmptyText = useMemo(() => {
+    if (stats.cellarCount === 0) return t('home.moduleEmpty.activityFill');
+    const variants = [
+      t('home.moduleEmpty.activityIdle1'),
+      t('home.moduleEmpty.activityIdle2'),
+      t('home.moduleEmpty.activityIdle3'),
+    ];
+    const now = new Date();
+    const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000);
+    return variants[dayOfYear % variants.length];
+  }, [stats.cellarCount, t]);
+
   // 헤더 애니메이션용 onScroll 전달 + wine browse infinite scroll(near-bottom) 트리거.
   // browse.loadMore는 in-flight/hasMore 가드가 내부에 있어 연속 호출 안전.
   const handleScroll = useCallback(
@@ -101,31 +115,11 @@ export function HomeFeed({ displayName, onScroll, paddingTop }: HomeFeedProps) {
           title={t('home.section.activityTitle', { count: activityRows.length })}
         />
         <View style={{ marginTop: 12 }}>
-          <HomeActivityFeed rows={activityRows} loading={activityLoading} />
+          <HomeActivityFeed rows={activityRows} loading={activityLoading} emptyText={activityEmptyText} />
         </View>
       </View>
 
-      {/* Lesson card (sp 26) */}
-      <View style={{ marginTop: 26 }}>
-        <SectionHeader
-          eyebrow={t('home.section.lessonEyebrow')}
-          title={t('home.section.lessonTitle')}
-          actionLabel={t('home.section.lessonMore')}
-          onActionPress={() => router.push('/knowledge' as never)}
-        />
-        <View style={{ marginTop: 12 }}>
-          <TodayLessonCard
-            lesson={todayLesson}
-            variant="home"
-            streakDays={streak.currentStreak}
-            onPress={() => {
-              void markComplete();
-            }}
-          />
-        </View>
-      </View>
-
-      {/* Curated lists (sp 26) */}
+      {/* Curated lists (sp 26) — 리스트를 레슨 위로 (순서 스왑) */}
       <View style={{ marginTop: 26 }}>
         <SectionHeader
           eyebrow={t('home.section.curatedEyebrow')}
@@ -138,6 +132,25 @@ export function HomeFeed({ displayName, onScroll, paddingTop }: HomeFeedProps) {
             lists={lists}
             loading={listsLoading}
             onCreatePress={() => router.push('/cellar/lists/create' as never)}
+          />
+        </View>
+      </View>
+
+      {/* Lesson card (sp 26) — eyebrow 생략, "오늘의 와인 레슨"을 단독 title로 */}
+      <View style={{ marginTop: 26 }}>
+        <SectionHeader
+          title={t('home.section.lessonEyebrow')}
+          actionLabel={t('home.section.lessonMore')}
+          onActionPress={() => router.push('/knowledge' as never)}
+        />
+        <View style={{ marginTop: 12 }}>
+          <TodayLessonCard
+            lesson={todayLesson}
+            variant="home"
+            streakDays={streak.currentStreak}
+            onPress={() => {
+              void markComplete();
+            }}
           />
         </View>
       </View>
