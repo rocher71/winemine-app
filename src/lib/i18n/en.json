@@ -149,7 +149,10 @@
       "bottles": "{{count}} bottles"
     },
     "moduleEmpty": {
-      "activity": "No updates yet",
+      "activityIdle1": "No news yet — why not open a bottle from your cellar?",
+      "activityIdle2": "A quiet day. Pick a wine to enjoy",
+      "activityIdle3": "Your cellar wines are waiting for their moment",
+      "activityFill": "Fill your cellar and get your first update",
       "curated": "No lists yet",
       "trending": "Nothing trending yet",
       "browse": "Preparing recommendations",

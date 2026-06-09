@@ -107,9 +107,11 @@ function ActivityRow({ row, isLast }: { row: HomeActivityRow; isLast: boolean })
 interface HomeActivityFeedProps {
   rows: HomeActivityRow[];
   loading?: boolean;
+  /** 0건 시 빈 상태 문구. 셀러 보유 여부에 따라 home-feed에서 결정·로테이션 (없으면 기본 fallback) */
+  emptyText?: string;
 }
 
-export function HomeActivityFeed({ rows, loading }: HomeActivityFeedProps) {
+export function HomeActivityFeed({ rows, loading, emptyText }: HomeActivityFeedProps) {
   const { t } = useTranslation();
   const tokens = useThemeTokens();
   const borderGold = withAlpha(brand.gold, 0.24);
@@ -152,7 +154,7 @@ export function HomeActivityFeed({ rows, loading }: HomeActivityFeedProps) {
             <Text
               style={{ fontFamily: typography.cardBody.family, fontSize: 13, color: tokens.text.muted }}
             >
-              {t('home.moduleEmpty.activity')}
+              {emptyText ?? t('home.moduleEmpty.activityFill')}
             </Text>
           </View>
         ) : (

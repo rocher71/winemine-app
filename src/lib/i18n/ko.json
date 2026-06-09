@@ -149,7 +149,10 @@
       "bottles": "{{count}}병"
     },
     "moduleEmpty": {
-      "activity": "아직 새 소식이 없어요",
+      "activityIdle1": "아직 새 소식이 없어요. 셀러의 와인 한 병을 열어볼까요?",
+      "activityIdle2": "오늘은 조용한 하루네요. 마실 와인을 골라보세요",
+      "activityIdle3": "셀러의 와인들이 좋은 때를 기다리고 있어요",
+      "activityFill": "셀러를 채우고 첫 소식을 받아보세요",
       "curated": "아직 리스트가 없어요",
       "trending": "이번 주 트렌딩이 아직 없어요",
       "browse": "추천할 와인을 준비 중이에요",
