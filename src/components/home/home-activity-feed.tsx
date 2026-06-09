@@ -104,6 +104,48 @@ function ActivityRow({ row, isLast }: { row: HomeActivityRow; isLast: boolean })
   );
 }
 
+// 소식이 3개 미만일 때 카드 최하단에 노출되는 "셀러 둘러보기" CTA (사용자 요청 2026-06).
+// §4-11: Pressable hit+opacity만, layout/visual inner View inline style.
+function CellarBrowseRow({ hasTopBorder }: { hasTopBorder: boolean }) {
+  const { t } = useTranslation();
+  const tokens = useThemeTokens();
+  const goldAccent = tokens.scheme === 'light' ? brand.goldDeep : brand.gold;
+
+  const onPress = () => {
+    Haptics.selectionAsync().catch(() => undefined);
+    router.push('/(tabs)/cellar');
+  };
+
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={t('home.cellarBrowse')}
+      style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 4,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          borderTopWidth: hasTopBorder ? 1 : 0,
+          borderTopColor: withAlpha(brand.textInk, 0.06),
+        }}
+      >
+        <Text
+          style={{ fontFamily: 'Freesentation_6SemiBold', fontSize: 13.5, color: goldAccent }}
+        >
+          {t('home.cellarBrowse')}
+        </Text>
+        <ChevronRight size={16} strokeWidth={1.9} color={goldAccent} />
+      </View>
+    </Pressable>
+  );
+}
+
 interface HomeActivityFeedProps {
   rows: HomeActivityRow[];
   loading?: boolean;
@@ -150,17 +192,24 @@ export function HomeActivityFeed({ rows, loading, emptyText }: HomeActivityFeedP
             </View>
           ))
         ) : rows.length === 0 ? (
-          <View style={{ paddingVertical: 26, paddingHorizontal: 16, alignItems: 'center' }}>
-            <Text
-              style={{ fontFamily: typography.cardBody.family, fontSize: 13, color: tokens.text.muted }}
-            >
-              {emptyText ?? t('home.moduleEmpty.activityFill')}
-            </Text>
-          </View>
+          <>
+            <View style={{ paddingVertical: 22, paddingHorizontal: 16, alignItems: 'center' }}>
+              <Text
+                style={{ fontFamily: typography.cardBody.family, fontSize: 13, color: tokens.text.muted }}
+              >
+                {emptyText ?? t('home.moduleEmpty.activityFill')}
+              </Text>
+            </View>
+            <CellarBrowseRow hasTopBorder />
+          </>
         ) : (
-          rows.map((row, i) => (
-            <ActivityRow key={row.id} row={row} isLast={i === rows.length - 1} />
-          ))
+          <>
+            {rows.map((row, i) => (
+              <ActivityRow key={row.id} row={row} isLast={i === rows.length - 1} />
+            ))}
+            {/* 소식 3개 미만이면 하단에 셀러 둘러보기 CTA */}
+            {rows.length < 3 ? <CellarBrowseRow hasTopBorder /> : null}
+          </>
         )}
       </View>
     </View>

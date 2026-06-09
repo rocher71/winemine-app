@@ -158,6 +158,7 @@
       "browse": "Preparing recommendations",
       "lesson": "Today's lesson is on the way"
     },
+    "cellarBrowse": "Browse cellar",
     "comingSoon": "Coming soon",
     "anonymousFallback": "Guest",
     "greeting": "Welcome back, {{name}}",

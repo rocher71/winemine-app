@@ -50,6 +50,9 @@ export function useHomeActivity(): UseHomeActivityResult {
   const rows = useMemo<HomeActivityRow[]>(() => {
     const year = new Date().getFullYear();
     const peakRows: HomeActivityRow[] = [];
+    // 같은 와인(동일 lwin)을 여러 병 보유해도 소식은 한 줄만 (셀러 list 화면과 동일 규칙).
+    // 빈티지가 다르면 lwin이 다르므로 별개 와인으로 각각 노출. lwin 없으면 dedupe 불가 → 그대로 노출.
+    const seenLwins = new Set<string>();
     for (const item of items) {
       const wine = item.wine;
       if (!wine) continue;
@@ -57,13 +60,18 @@ export function useHomeActivity(): UseHomeActivityResult {
       const to = (wine as { drink_window_to_year?: number | null }).drink_window_to_year;
       // 현재 연도가 음용 가능 구간(from~to) 안에 들면 "지금 마시기 좋은" 활동으로 간주 (사용자 결정 2026-06).
       if (from != null && to != null && year >= from && year <= to) {
+        const lwin = wine.lwin != null ? String(wine.lwin) : null;
+        if (lwin != null) {
+          if (seenLwins.has(lwin)) continue;
+          seenLwins.add(lwin);
+        }
         peakRows.push({
           id: `peak-${item.id}`,
           kind: 'peak',
           wineName: localizedWineName(wine),
           bodySuffix: locale === 'ko' ? '이(가) 지금 마시기 좋은 시기예요' : ' is ready to drink now',
           metaPrefix: locale === 'ko' ? '셀러' : 'Cellar',
-          lwin: wine.lwin != null ? String(wine.lwin) : null,
+          lwin,
         });
       }
     }
