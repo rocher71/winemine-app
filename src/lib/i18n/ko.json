@@ -146,7 +146,9 @@
       "loadingMore": "더 많은 와인을 불러오는 중…"
     },
     "list": {
-      "bottles": "{{count}}병"
+      "bottles": "{{count}}병",
+      "emptyPreview": "아직 와인을 담지 않았어요",
+      "previewFallback": "담긴 와인을 둘러보세요"
     },
     "moduleEmpty": {
       "activityIdle1": "아직 새 소식이 없어요. 셀러의 와인 한 병을 열어볼까요?",

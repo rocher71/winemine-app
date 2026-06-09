@@ -146,7 +146,9 @@
       "loadingMore": "Loading more wines…"
     },
     "list": {
-      "bottles": "{{count}} bottles"
+      "bottles": "{{count}} bottles",
+      "emptyPreview": "No wines added yet",
+      "previewFallback": "Tap to explore the wines"
     },
     "moduleEmpty": {
       "activityIdle1": "No news yet — why not open a bottle from your cellar?",
