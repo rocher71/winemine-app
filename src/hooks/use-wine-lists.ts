@@ -99,7 +99,13 @@ function sortMockLists(lists: MockWineListStats[], sort: ListSortKey): MockWineL
   }
 }
 
-export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
+export interface UseMyListsOptions {
+  /** 설명 없는 카드 본문용 와인명 미리보기(preview_names) 채울지. home 큐레이션만 true. 기본 false. */
+  preview?: boolean;
+}
+
+export function useMyLists(sort: ListSortKey = 'recent', opts: UseMyListsOptions = {}): UseMyListsResult {
+  const withPreview = opts.preview ?? false;
   const [lists, setLists] = useState<WineListStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -110,7 +116,7 @@ export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
     try {
       if (DEMO_MODE) {
         const sorted = sortMockLists(MOCK_LIST_STATS, sort) as WineListStats[];
-        setLists(sorted.map((l) => ({ ...l, preview_names: mockPreviewNames(l.id) })));
+        setLists(withPreview ? sorted.map((l) => ({ ...l, preview_names: mockPreviewNames(l.id) })) : sorted);
         return;
       }
       const uid = await getCurrentUserId();
@@ -129,12 +135,14 @@ export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
       let rows = (data ?? []) as WineListStats[];
       if (sort === 'count') rows = rows.sort((a, b) => b.wine_count - a.wine_count);
 
-      // 설명 없는 카드 본문용 와인명 미리보기 (리스트별 첫 3개) — 단일 쿼리로 N+1 회피.
-      if (rows.length) {
+      // 와인명 미리보기는 요청한 caller(home)만, 그중에서도 설명 없는 리스트만 조회.
+      // → 리스트 개수와 무관한 단일 쿼리(N+1 회피) + 불필요한 리스트는 애초에 제외.
+      const needPreview = withPreview ? rows.filter((r) => !r.description) : [];
+      if (needPreview.length) {
         const { data: itemRows } = await db
           .from('wine_list_items')
           .select('list_id, sort_order, wine:wines_localized!inner(display_name, name_ko)')
-          .in('list_id', rows.map((r) => r.id))
+          .in('list_id', needPreview.map((r) => r.id))
           .order('sort_order');
         if (itemRows) {
           const byList = new Map<string, string[]>();
@@ -144,7 +152,7 @@ export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
             const name = pickWineName(it.wine);
             if (name) { arr.push(name); byList.set(it.list_id, arr); }
           }
-          rows = rows.map((r) => ({ ...r, preview_names: byList.get(r.id) ?? [] }));
+          rows = rows.map((r) => (byList.has(r.id) ? { ...r, preview_names: byList.get(r.id) } : r));
         }
       }
       setLists(rows);
@@ -153,7 +161,7 @@ export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
     } finally {
       setIsLoading(false);
     }
-  }, [sort]);
+  }, [sort, withPreview]);
 
   useEffect(() => { void load(); }, [load]);
 
