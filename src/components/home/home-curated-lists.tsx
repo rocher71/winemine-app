@@ -20,6 +20,8 @@ import { useThemeTokens } from '@/lib/use-theme-tokens';
 import type { WineListStats } from '@/hooks/use-wine-lists';
 
 const CARD_WIDTH = 250;
+// 모든 카드 동일 높이 고정 — 내용 짧으면 footer가 하단에 정렬, 길면 numberOfLines로 '…' 생략.
+const CARD_HEIGHT = 158;
 
 function relativeAge(iso: string | null, locale: string): string {
   if (!iso) return '';
@@ -70,6 +72,7 @@ function CuratedListCard({ list }: { list: WineListStats }) {
       <View
         style={{
           width: CARD_WIDTH,
+          height: CARD_HEIGHT,
           borderRadius: 16,
           backgroundColor: tokens.bg.surface,
           borderWidth: 1,
@@ -92,46 +95,50 @@ function CuratedListCard({ list }: { list: WineListStats }) {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: tokens.bg.inset,
+            zIndex: 1,
           }}
         >
           <VisIcon size={13} strokeWidth={1.75} color={goldAccent} />
         </View>
 
-        <Text
-          style={{
-            fontFamily: typography.homeListTitle.family,
-            fontSize: typography.homeListTitle.size,
-            lineHeight: typography.homeListTitle.lineHeight,
-            color: tokens.text.primary,
-            paddingRight: 30,
-          }}
-          numberOfLines={2}
-        >
-          {list.title}
-        </Text>
-
-        {list.description ? (
+        {/* 본문(title+desc) — flex:1로 남는 공간을 흡수해 footer를 하단 고정 */}
+        <View style={{ flex: 1, minHeight: 0 }}>
           <Text
             style={{
-              fontFamily: typography.cardMeta.family,
-              fontSize: 12,
-              lineHeight: 17.4,
-              color: tokens.text.secondary,
-              marginTop: 8,
+              fontFamily: typography.homeListTitle.family,
+              fontSize: typography.homeListTitle.size,
+              lineHeight: typography.homeListTitle.lineHeight,
+              color: tokens.text.primary,
+              paddingRight: 30,
             }}
             numberOfLines={2}
           >
-            {list.description}
+            {list.title}
           </Text>
-        ) : null}
 
-        {/* footer */}
+          {list.description ? (
+            <Text
+              style={{
+                fontFamily: typography.cardMeta.family,
+                fontSize: 12,
+                lineHeight: 17.4,
+                color: tokens.text.secondary,
+                marginTop: 8,
+              }}
+              numberOfLines={2}
+            >
+              {list.description}
+            </Text>
+          ) : null}
+        </View>
+
+        {/* footer (하단 고정) */}
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginTop: 14,
+            marginTop: 12,
             paddingTop: 12,
             borderTopWidth: 1,
             borderTopColor: withAlpha(brand.textInk, 0.06),
@@ -179,7 +186,7 @@ export function HomeCuratedLists({ lists, loading, onCreatePress }: HomeCuratedL
         {[0, 1].map((i) => (
           <View
             key={i}
-            style={{ width: CARD_WIDTH, height: 130, borderRadius: 16, backgroundColor: tokens.bg.inset }}
+            style={{ width: CARD_WIDTH, height: CARD_HEIGHT, borderRadius: 16, backgroundColor: tokens.bg.inset }}
           />
         ))}
       </ScrollView>
