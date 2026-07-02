@@ -114,6 +114,54 @@
     "progress": "{{current}} / {{total}}"
   },
   "home": {
+    "greetingEyebrow": "Today's cellar",
+    "greetingQuestion": "{{name}},\nwhich wine will you open today?",
+    "section": {
+      "activityEyebrow": "What's new",
+      "activityTitle": "{{count}} new updates in your cellar",
+      "lessonEyebrow": "Today's wine lesson",
+      "lessonTitle": "One glass in three lines",
+      "lessonMore": "More →",
+      "curatedEyebrow": "Curated lists",
+      "curatedTitle": "Lists worth saving now",
+      "curatedAll": "All →",
+      "trendingEyebrow": "Trending this week",
+      "trendingTitle": "Most-poured in the community",
+      "trendingAll": "All →",
+      "browseEyebrow": "Discover wines",
+      "browseTitle": "Today's picks",
+      "browseHint": "Tap a card for details"
+    },
+    "lessonCard": {
+      "streakLabel": "{{days}}-day streak",
+      "dayLabel": "Today's lesson · DAY {{day}}",
+      "metaRead": "Read",
+      "metaTopic": "Topic",
+      "metaProgress": "Progress"
+    },
+    "trendingSection": {
+      "keywordHeader": "This week's keywords"
+    },
+    "browseSection": {
+      "loadingMore": "Loading more wines…"
+    },
+    "list": {
+      "bottles": "{{count}} bottles",
+      "emptyPreview": "No wines added yet",
+      "previewFallback": "Tap to explore the wines"
+    },
+    "moduleEmpty": {
+      "activityIdle1": "No news yet — why not open a bottle from your cellar?",
+      "activityIdle2": "A quiet day. Pick a wine to enjoy",
+      "activityIdle3": "Your cellar wines are waiting for their moment",
+      "activityFill": "Fill your cellar and get your first update",
+      "curated": "No lists yet",
+      "trending": "Nothing trending yet",
+      "browse": "Preparing recommendations",
+      "lesson": "Today's lesson is on the way"
+    },
+    "cellarBrowse": "Browse cellar",
+    "comingSoon": "Coming soon",
     "anonymousFallback": "Guest",
     "greeting": "Welcome back, {{name}}",
     "greetingNew": "Hello, {{name}}",
@@ -1982,5 +2030,68 @@
       "filterWhite": "Dry White",
       "verdict": "Verdict"
     }
+  },
+  "moderation": {
+    "reason": {
+      "spam": "Spam or advertising",
+      "harassment": "Harassment or hate",
+      "sexual": "Sexual content",
+      "misinfo": "Misinformation",
+      "impersonation": "Impersonation",
+      "other": "Other"
+    },
+    "report": {
+      "title": "Report",
+      "subtitle": "Select a reason for reporting",
+      "detailLabel": "Details (required)",
+      "detailPlaceholder": "Describe the reason in detail",
+      "duplicateNotice": "You have already reported this",
+      "submit": "Submit report",
+      "success": "Your report has been submitted"
+    },
+    "block": {
+      "confirmTitle": "Block {{name}}?",
+      "confirmBody": "Blocking hides each other's content, and existing follows are removed.",
+      "bulletHidden": "You won't see each other's posts, comments, or notes",
+      "bulletFollow": "Existing follows are removed on both sides",
+      "action": "Block",
+      "success": "Blocked {{name}}",
+      "undoTitle": "Unblock {{name}}?",
+      "undoBody": "Unblocking lets you see each other's content again. Follows are not restored automatically.",
+      "undo": "Unblock",
+      "undoSuccess": "Unblocked {{name}}"
+    },
+    "blocked": {
+      "title": "Blocked users",
+      "empty": "No blocked users",
+      "emptyDesc": "Users you block will appear here",
+      "unblock": "Unblock",
+      "error": "Could not load blocked users"
+    },
+    "menu": {
+      "report": "Report",
+      "block": "Block",
+      "unblock": "Unblock",
+      "edit": "Edit",
+      "delete": "Delete",
+      "a11yTrigger": "More options",
+      "deleteConfirmTitle": "Delete this?",
+      "deleteConfirmBody": "Deleted content cannot be recovered."
+    },
+    "contact": {
+      "row": "Contact & Report",
+      "email": "support@winemine.site",
+      "notice": "support@winemine.site",
+      "mailSubject": "winemine inquiry / report",
+      "mailFailed": "Could not open the mail app. Please contact support@winemine.site"
+    },
+    "settings": {
+      "sectionSafety": "Safety & Support",
+      "blockedRow": "Blocked users"
+    },
+    "comment": {
+      "removedTombstone": "This comment was removed due to reports"
+    },
+    "error": "Something went wrong. Please try again later"
   }
 }

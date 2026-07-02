@@ -19,12 +19,15 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
-import { Wine } from 'lucide-react-native';
+import { Wine, Flag, MoreVertical } from 'lucide-react-native';
 import { brand, communityPost, light, withAlpha } from '@/lib/design-tokens';
 import { CommUserAvatar } from './comm-user-avatar';
 import { CommentWineCard } from './comment-wine-card';
 import { getCommunityUser } from '@/lib/mock/community-posts';
 import type { CommComment } from '@/lib/mock/community-comments';
+
+/** moderation_status — 'removed' 면 본문 자리에 tombstone (원문 보존, 표시 계층만 교체). */
+export type CommentModerationStatus = 'visible' | 'pending' | 'removed';
 
 interface CommentRowProps {
   comment: CommComment;
@@ -34,13 +37,26 @@ interface CommentRowProps {
   onReact?: (commentId: string) => void;
   /** 멘션(`@닉네임`) 태프 시 프로필 이동 (요구2). */
   onMentionPress?: (userId: string) => void;
+  /** moderation 상태 (M3). 'removed' → tombstone + 메뉴/반응 비노출, 작성자명·시각·답글 유지. */
+  status?: CommentModerationStatus;
+  /** ... 메뉴 트리거 (M3). 호출처가 ActionMenuTrigger 주입. 'removed' 면 미렌더. */
+  onMore?: (comment: CommComment) => void;
 }
 
-export function CommentRow({ comment, text, onReply, onReact, onMentionPress }: CommentRowProps) {
+export function CommentRow({
+  comment,
+  text,
+  onReply,
+  onReact,
+  onMentionPress,
+  status = 'visible',
+  onMore,
+}: CommentRowProps) {
   const { t } = useTranslation();
   const user = getCommunityUser(comment.userId);
   if (!user) return null;
 
+  const removed = status === 'removed';
   const isReply = comment.isReply || !!comment.parentId;
   const expert = comment.isExpert ?? false;
   const reactions = comment.reactions ?? 0;
@@ -145,39 +161,61 @@ export function CommentRow({ comment, text, onReply, onReact, onMentionPress }: 
           ) : null}
         </View>
 
-        {/* Body (+ 멘션 파란 태그 prefix — 요구2) */}
-        <Text
-          allowFontScaling={false}
-          style={{
-            fontFamily: 'Freesentation_4Regular',
-            fontSize: 12,
-            lineHeight: 18.6,
-            color: light.text.secondary,
-          }}
-        >
-          {mentionUser && (
+        {/* Body — removed 면 tombstone (원문 비노출, 표시 계층만 교체 — M3) */}
+        {removed ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+            <Flag size={12} strokeWidth={1.9} color={light.text.muted} />
             <Text
-              onPress={() => {
-                Haptics.selectionAsync().catch(() => undefined);
-                onMentionPress?.(mentionUser.id);
-              }}
-              accessibilityRole="link"
-              accessibilityLabel={t('community.comment.mentionLabel', { name: mentionUser.name })}
+              allowFontScaling={false}
               style={{
-                fontFamily: 'Freesentation_6SemiBold',
-                color: communityPost.mentionBlue,
+                flex: 1,
+                fontFamily: 'Freesentation_4Regular',
+                fontSize: 12,
+                fontStyle: 'italic',
+                lineHeight: 18.6,
+                color: light.text.muted,
               }}
             >
-              {`@${mentionUser.name} `}
+              {t('moderation.comment.removedTombstone')}
             </Text>
-          )}
-          {text}
-        </Text>
+          </View>
+        ) : (
+          <>
+            {/* Body (+ 멘션 파란 태그 prefix — 요구2) */}
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontFamily: 'Freesentation_4Regular',
+                fontSize: 12,
+                lineHeight: 18.6,
+                color: light.text.secondary,
+              }}
+            >
+              {mentionUser && (
+                <Text
+                  onPress={() => {
+                    Haptics.selectionAsync().catch(() => undefined);
+                    onMentionPress?.(mentionUser.id);
+                  }}
+                  accessibilityRole="link"
+                  accessibilityLabel={t('community.comment.mentionLabel', { name: mentionUser.name })}
+                  style={{
+                    fontFamily: 'Freesentation_6SemiBold',
+                    color: communityPost.mentionBlue,
+                  }}
+                >
+                  {`@${mentionUser.name} `}
+                </Text>
+              )}
+              {text}
+            </Text>
 
-        {/* 첨부 와인 카드 (요구4) */}
-        {comment.wineLwin && <CommentWineCard lwin={comment.wineLwin} />}
+            {/* 첨부 와인 카드 (요구4) */}
+            {comment.wineLwin && <CommentWineCard lwin={comment.wineLwin} />}
+          </>
+        )}
 
-        {/* Footer */}
+        {/* Footer — removed 면 시각/답글만 유지(스레드 보존), 반응·메뉴 비노출 (M3) */}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 6 }}>
           <Text
             allowFontScaling={false}
@@ -213,29 +251,54 @@ export function CommentRow({ comment, text, onReply, onReact, onMentionPress }: 
 
           <View style={{ flex: 1 }} />
 
-          <Pressable
-            onPress={handleReact}
-            accessibilityRole="button"
-            accessibilityLabel={t('community.comment.reactLabel', { name: user.name, count: reactions })}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-            hitSlop={4}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-              <Wine size={11} strokeWidth={1.75} color={light.text.muted} />
-              <Text
-                allowFontScaling={false}
-                style={{
-                  fontFamily: 'Freesentation_4Regular',
-                  fontSize: 10,
-                  color: light.text.muted,
-                }}
-              >
-                {reactions}
-              </Text>
-            </View>
-          </Pressable>
+          {!removed && (
+            <Pressable
+              onPress={handleReact}
+              accessibilityRole="button"
+              accessibilityLabel={t('community.comment.reactLabel', { name: user.name, count: reactions })}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              hitSlop={4}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                <Wine size={11} strokeWidth={1.75} color={light.text.muted} />
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontFamily: 'Freesentation_4Regular',
+                    fontSize: 10,
+                    color: light.text.muted,
+                  }}
+                >
+                  {reactions}
+                </Text>
+              </View>
+            </Pressable>
+          )}
+
+          {/* ... 메뉴 트리거 (M3) — removed 면 비노출 (이미 처리된 콘텐츠) */}
+          {!removed && onMore && (
+            <Pressable
+              onPress={() => {
+                Haptics.selectionAsync().catch(() => undefined);
+                onMore(comment);
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={t('moderation.menu.a11yTrigger')}
+              style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+              hitSlop={6}
+            >
+              <View style={{ width: 22, height: 22, alignItems: 'center', justifyContent: 'center' }}>
+                <CommentMoreDots />
+              </View>
+            </Pressable>
+          )}
         </View>
       </View>
     </View>
   );
+}
+
+/** 댓글 행 작은 ... 트리거 아이콘 (reaction 과 시각 균형 — 14px). */
+function CommentMoreDots() {
+  return <MoreVertical size={14} strokeWidth={1.9} color={light.text.muted} />;
 }

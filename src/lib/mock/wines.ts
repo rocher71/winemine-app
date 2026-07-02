@@ -329,5 +329,11 @@ export function getMockWineByLwin(lwin: string | null | undefined): WineLocalize
   return WINE_BY_LWIN.get(lwin) ?? WINE_BY_LWIN.get('1011196') ?? null;
 }
 
+/** LWIN으로 mock wine 조회 (strict — 없으면 fallback 없이 null). 리스트 와인명 미리보기 등 정확성이 필요한 곳용. */
+export function getMockWineByLwinStrict(lwin: string | null | undefined): WineLocalizedRow | null {
+  if (!lwin) return null;
+  return WINE_BY_LWIN.get(lwin) ?? null;
+}
+
 /** Fallback LWIN — mock 매핑이 없는 wineId/lwin에 대한 시각 검증용 default. */
 export const FALLBACK_LWIN = '1011196'; // Château Margaux

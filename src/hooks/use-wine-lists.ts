@@ -15,7 +15,8 @@ import {
   type MockWineListStats,
   type MockWineListItem,
 } from '@/lib/mock/wine-lists';
-import { getMockWineByLwin } from '@/lib/mock/wines';
+import { getMockWineByLwin, getMockWineByLwinStrict } from '@/lib/mock/wines';
+import { currentLocale } from '@/lib/i18n';
 
 export type ListSortKey = 'recent' | 'created' | 'name' | 'count';
 export type ListVisibility = 'public' | 'private';
@@ -36,6 +37,24 @@ export interface WineListStats {
   like_count: number;
   creator_name: string | null;
   tasted_count?: number;
+  /** 설명 없을 때 카드 본문을 채울 와인명 미리보기 (최대 3). home 큐레이션 카드용. */
+  preview_names?: string[];
+}
+
+/** locale 우선 와인명 (ko면 한글명 우선). */
+function pickWineName(wine: { name_ko?: string | null; display_name?: string | null } | null): string | null {
+  if (!wine) return null;
+  if (currentLocale() === 'ko' && wine.name_ko) return wine.name_ko;
+  return wine.display_name ?? wine.name_ko ?? null;
+}
+
+/** DEMO: 리스트의 첫 3개 와인명 미리보기 (sort_order 순). */
+function mockPreviewNames(listId: string): string[] {
+  return MOCK_WINE_LIST_ITEMS.filter((i) => i.list_id === listId)
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .slice(0, 3)
+    .map((i) => pickWineName(getMockWineByLwinStrict(String(i.lwin))))
+    .filter((n): n is string => !!n);
 }
 
 export interface WineListItemWithWine {
@@ -80,7 +99,13 @@ function sortMockLists(lists: MockWineListStats[], sort: ListSortKey): MockWineL
   }
 }
 
-export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
+export interface UseMyListsOptions {
+  /** 설명 없는 카드 본문용 와인명 미리보기(preview_names) 채울지. home 큐레이션만 true. 기본 false. */
+  preview?: boolean;
+}
+
+export function useMyLists(sort: ListSortKey = 'recent', opts: UseMyListsOptions = {}): UseMyListsResult {
+  const withPreview = opts.preview ?? false;
   const [lists, setLists] = useState<WineListStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -90,7 +115,8 @@ export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
     setError(null);
     try {
       if (DEMO_MODE) {
-        setLists(sortMockLists(MOCK_LIST_STATS, sort) as WineListStats[]);
+        const sorted = sortMockLists(MOCK_LIST_STATS, sort) as WineListStats[];
+        setLists(withPreview ? sorted.map((l) => ({ ...l, preview_names: mockPreviewNames(l.id) })) : sorted);
         return;
       }
       const uid = await getCurrentUserId();
@@ -108,13 +134,34 @@ export function useMyLists(sort: ListSortKey = 'recent'): UseMyListsResult {
       if (err) throw err;
       let rows = (data ?? []) as WineListStats[];
       if (sort === 'count') rows = rows.sort((a, b) => b.wine_count - a.wine_count);
+
+      // 와인명 미리보기는 요청한 caller(home)만, 그중에서도 설명 없는 리스트만 조회.
+      // → 리스트 개수와 무관한 단일 쿼리(N+1 회피) + 불필요한 리스트는 애초에 제외.
+      const needPreview = withPreview ? rows.filter((r) => !r.description) : [];
+      if (needPreview.length) {
+        const { data: itemRows } = await db
+          .from('wine_list_items')
+          .select('list_id, sort_order, wine:wines_localized!inner(display_name, name_ko)')
+          .in('list_id', needPreview.map((r) => r.id))
+          .order('sort_order');
+        if (itemRows) {
+          const byList = new Map<string, string[]>();
+          for (const it of itemRows as { list_id: string; wine: { display_name: string | null; name_ko: string | null } }[]) {
+            const arr = byList.get(it.list_id) ?? [];
+            if (arr.length >= 3) continue;
+            const name = pickWineName(it.wine);
+            if (name) { arr.push(name); byList.set(it.list_id, arr); }
+          }
+          rows = rows.map((r) => (byList.has(r.id) ? { ...r, preview_names: byList.get(r.id) } : r));
+        }
+      }
       setLists(rows);
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
       setIsLoading(false);
     }
-  }, [sort]);
+  }, [sort, withPreview]);
 
   useEffect(() => { void load(); }, [load]);
 
