@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ModerationSheetProvider } from '@/components/moderation/moderation-sheet-provider';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { colorScheme } from 'nativewind';
@@ -111,6 +112,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <StatusBar style="auto" />
+        <ModerationSheetProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="onboarding" />
@@ -166,6 +168,7 @@ export default function RootLayout() {
           <Stack.Screen name="wine/[lwin]/prices" />
           <Stack.Screen name="wine/[lwin]/community-peak" />
         </Stack>
+        </ModerationSheetProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
