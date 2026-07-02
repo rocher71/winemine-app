@@ -13,7 +13,8 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import BottomSheet, {
+import {
+  BottomSheetModal,
   BottomSheetBackdrop,
   BottomSheetScrollView,
   BottomSheetTextInput,
@@ -59,7 +60,7 @@ export function ReportSheet({
   onSubmitted,
 }: ReportSheetProps) {
   const { t } = useTranslation();
-  const sheetRef = useRef<BottomSheet>(null);
+  const sheetRef = useRef<BottomSheetModal>(null);
   const { submit, loading } = useReport();
 
   const [reason, setReason] = useState<ReportReason | null>(null);
@@ -76,9 +77,9 @@ export function ReportSheet({
       setDetail('');
       setIsDuplicate(false);
       setFocused(false);
-      sheetRef.current?.expand();
+      sheetRef.current?.present();
     } else {
-      sheetRef.current?.close();
+      sheetRef.current?.dismiss();
     }
   }, [open]);
 
@@ -126,12 +127,11 @@ export function ReportSheet({
   };
 
   return (
-    <BottomSheet
+    <BottomSheetModal
       ref={sheetRef}
-      index={-1}
       snapPoints={snapPoints}
       enablePanDownToClose
-      onClose={onClose}
+      onDismiss={onClose}
       backgroundStyle={{ backgroundColor: light.bg.surface }}
       handleIndicatorStyle={{ backgroundColor: light.border.default, width: 44 }}
       backdropComponent={renderBackdrop}
@@ -275,7 +275,7 @@ export function ReportSheet({
           />
         </View>
       </BottomSheetScrollView>
-    </BottomSheet>
+    </BottomSheetModal>
   );
 }
 
