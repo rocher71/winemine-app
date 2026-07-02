@@ -1,7 +1,17 @@
 # 작업 재개 컨텍스트 — moderation (신고·차단)
 
-> 작성: 2026-06-01 · 상태: **기능 구현·검증·dev 머지 완료**, 원격 배포·후속 4건 미완
+> 작성: 2026-06-01 · 갱신: 2026-07-02 · 상태: **기능 구현·검증·dev 머지·원격 push·types 재생성 완료**. 남은 것은 출시 카피 다듬기 + dev→main/origin push(사용자 컨펌 대기).
 > 이 문서는 다음 세션이 막힘없이 재개하도록 현재 상태·남은 일·주의점을 기록한다.
+
+---
+
+## 0. 2026-07-02 업데이트 (원격 push 완료)
+
+- paused 상태였던 원격 프로젝트(mthxqkljhydguixsjvmr) restore → `supabase db push`로 moderation 7 마이그레이션 원격 적용 완료.
+- **wines 181,915 / wine_korean_names 5,240 손상 0 검증**(push 전후 동일). wine_metadata 181,915 동일.
+- 새 테이블 comments/reports/user_blocks RLS enabled + 정책 확인. 보안 advisor 신규 회귀 0(anon 접근·admin RPC security definer 경고는 익명 auth + assert_admin 설계상 의도. ERROR 2건 profiles_public/wine_lists_stats security definer view는 push 이전부터 존재, 이번 무관).
+- `shared/types/database.types.ts` `supabase gen types --linked` 전체 재생성 → 소비처 정합(profiles_public nullable coalesce, use-other-user-profile nickname, mock users/tasting-notes 신규 컬럼). tsc 신규 에러 0(pre-existing 12건 무관). worktree `types-regen-moderation`에서 작업 후 dev 머지(7b7910d), worktree 제거·브랜치 삭제 완료.
+- 아래 §5 item 1·2(원격 push, types 재생성)는 **완료**. §2의 "미push 5커밋"·§8의 "원격 push 지금 진행할지"는 해소됨. 남은 컨펌 대기: dev→main 머지 + origin push 시점(현재 dev가 origin/dev보다 2 커밋 앞섬).
 
 ---
 
