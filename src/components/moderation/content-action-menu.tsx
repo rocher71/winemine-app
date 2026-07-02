@@ -13,8 +13,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import {
-  BottomSheetModal,
+import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
   type BottomSheetBackdropProps,
@@ -118,7 +117,7 @@ export function ActionMenuTrigger({
 // ────────────────────────────────────────────────────────────────────────────
 
 export function ContentActionMenu({ open, actions, onClose }: ContentActionMenuProps) {
-  const sheetRef = useRef<BottomSheetModal>(null);
+  const sheetRef = useRef<BottomSheet>(null);
   const insets = useSafeAreaInsets();
 
   // 동적 높이: 항목수 × 행높이(52) + handle/padding 여유. (사양 §RN 제약 — 동적 권장.)
@@ -130,9 +129,9 @@ export function ContentActionMenu({ open, actions, onClose }: ContentActionMenuP
 
   useEffect(() => {
     if (open && actions.length > 0) {
-      sheetRef.current?.present();
+      sheetRef.current?.expand();
     } else {
-      sheetRef.current?.dismiss();
+      sheetRef.current?.close();
     }
   }, [open, actions.length]);
 
@@ -160,11 +159,12 @@ export function ContentActionMenu({ open, actions, onClose }: ContentActionMenuP
   if (actions.length === 0) return null;
 
   return (
-    <BottomSheetModal
+    <BottomSheet
       ref={sheetRef}
+      index={-1}
       snapPoints={snapPoints}
       enablePanDownToClose
-      onDismiss={onClose}
+      onClose={onClose}
       backgroundStyle={{ backgroundColor: light.bg.surface }}
       handleIndicatorStyle={{ backgroundColor: light.border.default, width: 44 }}
       backdropComponent={renderBackdrop}
@@ -180,7 +180,7 @@ export function ContentActionMenu({ open, actions, onClose }: ContentActionMenuP
           <ActionRow key={action.kind} action={action} onPress={() => handleItem(action)} />
         ))}
       </BottomSheetView>
-    </BottomSheetModal>
+    </BottomSheet>
   );
 }
 
