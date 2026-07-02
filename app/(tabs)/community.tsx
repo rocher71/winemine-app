@@ -196,14 +196,12 @@ export default function CommunityScreen() {
     setMenuOpen(true);
   };
 
-  const isMenuOwner =
-    !!currentUserId && !!morePost && morePost.userId === currentUserId;
+  // menuActions 는 항상 non-empty 상수 → ContentActionMenu(BottomSheet)를 미리 mount.
+  // (morePost 게이팅으로 비우면 탭 순간에야 mount돼 expand()가 레이아웃 전에 호출→시트 안 뜸.)
+  // 본인 글은 카드에서 onMore 미전달(=... 미노출)이라 메뉴가 열리지 않으므로 owner 분기 불필요.
   const menuActions: MenuAction[] = useMemo(
-    () =>
-      !morePost || isMenuOwner
-        ? []
-        : [{kind: 'report', onPress: () => setReportOpen(true)}],
-    [morePost, isMenuOwner],
+    () => [{kind: 'report', onPress: () => setReportOpen(true)}],
+    [],
   );
 
   const showModToast = (msg: string) => {
