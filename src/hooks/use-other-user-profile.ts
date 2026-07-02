@@ -19,7 +19,7 @@ import type { Database } from '@shared/types/database.types';
 export type Profile = Database['public']['Views']['profiles_public']['Row'];
 
 const PUBLIC_PROFILE_COLUMNS =
-  'id, anonymous_display, handle, bio, level, public_wines_count, public_countries_count, public_regions_count, public_notes_count, follower_count, following_count, created_at';
+  'id, anonymous_display, handle, bio, nickname, level, public_wines_count, public_countries_count, public_regions_count, public_notes_count, follower_count, following_count, created_at';
 
 export interface UseOtherUserProfileResult {
   profile: Profile | null;
@@ -46,6 +46,7 @@ export function useOtherUserProfile(
           anonymous_display: m.anonymous_display,
           handle: m.handle,
           bio: m.bio,
+          nickname: m.nickname,
           level: m.level,
           public_wines_count: m.public_wines_count,
           public_countries_count: m.public_countries_count,

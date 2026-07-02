@@ -270,22 +270,22 @@ export default function OtherUserProfileScreen() {
         }
       >
         <OtherUserHero
-          anonymousDisplay={profile.anonymous_display}
+          anonymousDisplay={profile.anonymous_display ?? ''}
           handle={profile.handle}
           joinedAt={profile.created_at}
-          levelId={clampLevel(profile.level)}
+          levelId={clampLevel(profile.level ?? 1)}
           isFollowing={isFollowing}
-          followerCount={profile.follower_count}
-          followingCount={profile.following_count}
+          followerCount={profile.follower_count ?? 0}
+          followingCount={profile.following_count ?? 0}
           onPressFollow={handleToggleFollow}
           onPressUnfollow={handleToggleFollow}
           followPending={followPending}
         />
 
         <SlimStatRow
-          winesCount={profile.public_wines_count}
-          countriesCount={profile.public_countries_count}
-          notesCount={profile.public_notes_count}
+          winesCount={profile.public_wines_count ?? 0}
+          countriesCount={profile.public_countries_count ?? 0}
+          notesCount={profile.public_notes_count ?? 0}
         />
 
         {compatibility ? (
@@ -385,7 +385,7 @@ export default function OtherUserProfileScreen() {
       <BlockConfirmSheet
         open={blockOpen}
         mode={blocked ? 'unblock' : 'block'}
-        anonymousDisplay={profile.anonymous_display}
+        anonymousDisplay={profile.anonymous_display ?? ''}
         isLoading={blocking}
         onClose={() => {
           if (!blocking) setBlockOpen(false);
