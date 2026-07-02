@@ -64,16 +64,16 @@ winemine-app/
   ```
 - **4-11. CRITICAL — Pressable layout 패턴** — 이 stack(React19 + RN0.81 + Reanimated4 + NativeWind4.1 + Fabric)에서 `Pressable`에 `className` + 함수형 `style` + 복잡한 nested 자식이 동시에 있으면 layout 스타일이 무시됨. **규칙**: Pressable은 hit target + opacity press feedback만, 모든 layout/visual은 inner `<View>`에 inline `style`로 분리, 부모 flex 자식이면 `flex`도 outer View로(3-layer 구조). 상세 패턴·before/after: [docs/NEXT_TO_RN_TRANSLATION.md §8c](./docs/NEXT_TO_RN_TRANSLATION.md). 점검 `bash scripts/audit-pressable.sh` (DANGEROUS 0건이어야 PR 가능).
 - **4-12. 스택 버전 정책** — pre-1.0 패키지 직접 사용 금지: `react-native-worklets`(0.5.1)는 Reanimated 내부 의존성으로만, 직접 `useWorklet`/`runOnUI` 추가 금지. `reanimated`(4.1.1)/`nativewind`(4.1.0) 직접 사용·`className` 추가 시 §4-11 위반 즉시 점검. 신규 UI primitive는 `src/components/__spike__/`에서 spike test(라이트 스크린샷 확인) 후 도입, 통과하면 실제 위치로 이동·spike 삭제.
-- **4-13. 브랜치/워크트리 워크플로우 (모든 코드 작업 필수)** — `main`/`dev`에서 직접 작업·커밋 **금지**. 절차: ① `dev` 기준 워크트리 생성 (`git worktree add .claude/worktrees/<task> -b <task> dev`, 하네스는 EnterWorktree, base는 항상 `dev`) → ② 워크트리에서만 커밋 → ③ 완료 후 `git switch dev && git merge --no-ff <task>` (사용자가 UI 확인) → ④ 사용자 명시 요청 전까지 `dev`→`main` 머지 금지 → ⑤ `git worktree remove`. 예외: CLAUDE.md 같은 메타 작업은 사용자 지시 시 직접 처리 가능 (코드/화면은 예외 없이 워크트리 경유).
+- **4-13. 브랜치 워크플로우 (2026-07-02 개정)** — **`main`에서 직접 작업·커밋한다.** worktree/`dev` 경유 워크플로우는 **폐지**(EnterWorktree 사용 안 함). 절차: ① 작업 전 `git pull`로 main 최신화 → ② main에 직접 커밋 → ③ 원격 반영은 **사용자 명시 확인 후에만** `git push origin main`(push는 outward-facing이라 임의 금지). `dev` 브랜치는 더 이상 사용하지 않음.
 - **4-14. UI 컴포넌트 재사용 우선** — 화면·UI 설계 시 **무조건 기존 컴포넌트 중 재사용 가능한 것을 먼저 확인**(`src/components/`, [docs/component-catalog/](./docs/component-catalog/)). 있으면 활용, 없으면 **새 컴포넌트 구조를 최우선으로 정의**하고 최대한 재사용 가능하게 설계 — 동일 UI를 화면마다 중복 구현하지 말 것. 신규 공용 컴포넌트는 component-catalog에 기록.
 
 ---
 
 ## 5. AI(Claude Code) 협업 지침
 
-**할 일**: 키스크린 → RN+Expo 변환(§4-10 사전 거치기) · migration SQL(테이블+RLS) · `supabase gen types` 후 타입 import · Edge Functions(최소한) · 익명화 유틸 · 정책 점검(emoji·locale·RLS·익명화·hex) · 시각 게이트(화면 완성 시 keyscreen-shot + RN **라이트** 스크린샷 `_workspace/`에 두고 design-reviewer 멀티모달 비교 통과) · 워크트리 경유(§4-13) · 컴포넌트 재사용 우선(§4-14).
+**할 일**: 키스크린 → RN+Expo 변환(§4-10 사전 거치기) · migration SQL(테이블+RLS) · `supabase gen types` 후 타입 import · Edge Functions(최소한) · 익명화 유틸 · 정책 점검(emoji·locale·RLS·익명화·hex) · 시각 게이트(화면 완성 시 keyscreen-shot + RN **라이트** 스크린샷 `_workspace/`에 두고 design-reviewer 멀티모달 비교 통과) · main 직접 작업(§4-13) · 컴포넌트 재사용 우선(§4-14).
 
-**금지**: `main`/`dev` 직접 작업(§4-13) · `specs/`·키스크린 수정 · 정책 임의 변경(XP·익명화는 specs/domain/policies/) · `SERVICE_ROLE_KEY` RN import · RLS 비활성 테이블 · 시크릿·hex 하드코딩 · CSS primitive 직역(§4-10) · 스크린샷 없이 디자인 PASS.
+**금지**: 사용자 확인 없는 `git push`(§4-13) · `specs/`·키스크린 수정 · 정책 임의 변경(XP·익명화는 specs/domain/policies/) · `SERVICE_ROLE_KEY` RN import · RLS 비활성 테이블 · 시크릿·hex 하드코딩 · CSS primitive 직역(§4-10) · 스크린샷 없이 디자인 PASS.
 
 **컨텍스트 흐름**: 화면 변환 → keyscreen `pages/{route}.md` + React 구현 동시 참조 / DB → `supabase.from()`(타입 `shared/types/database.types.ts`) / 도메인 결정 → `specs/domain/` 우선 / 정책 모호 → 사용자에게 질문(임의 결정 X).
 
