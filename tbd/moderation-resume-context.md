@@ -11,7 +11,18 @@
 - **wines 181,915 / wine_korean_names 5,240 손상 0 검증**(push 전후 동일). wine_metadata 181,915 동일.
 - 새 테이블 comments/reports/user_blocks RLS enabled + 정책 확인. 보안 advisor 신규 회귀 0(anon 접근·admin RPC security definer 경고는 익명 auth + assert_admin 설계상 의도. ERROR 2건 profiles_public/wine_lists_stats security definer view는 push 이전부터 존재, 이번 무관).
 - `shared/types/database.types.ts` `supabase gen types --linked` 전체 재생성 → 소비처 정합(profiles_public nullable coalesce, use-other-user-profile nickname, mock users/tasting-notes 신규 컬럼). tsc 신규 에러 0(pre-existing 12건 무관). worktree `types-regen-moderation`에서 작업 후 dev 머지(7b7910d), worktree 제거·브랜치 삭제 완료.
-- 아래 §5 item 1·2(원격 push, types 재생성)는 **완료**. §2의 "미push 5커밋"·§8의 "원격 push 지금 진행할지"는 해소됨. 남은 컨펌 대기: dev→main 머지 + origin push 시점(현재 dev가 origin/dev보다 2 커밋 앞섬).
+- 아래 §5 item 1·2(원격 push, types 재생성)는 **완료**. §2의 "미push 5커밋"·§8의 "원격 push 지금 진행할지"는 해소됨.
+- **dev→main 머지 완료** (2026-07-02, PR #2 MERGED, origin/main=c3a41ef). origin/dev·main 동기화됨.
+
+### 커뮤니티 피드 `...` 신고 버튼 (2026-07-02, 완료 · 실기기 검증됨)
+
+증상: 커뮤니티 리스트 피드 카드 우상단 `...` 탭 시 진동만 오고 무동작이던 것을 신고 흐름으로 배선. 3단계로 수정 완료:
+1. `onMore` 미배선 → `ContentActionMenu`(신고)에 배선. `comm-feed-card`는 `onMore` 있을 때만 `...` 렌더(본인 글 미노출).
+2. 시트 안 뜨는 mount 레이스 → `menuActions` 상수화로 사전 mount.
+3. 시트가 헤더/탭바/FAB 위로 안 덮이는 문제 → **이 스택(RN0.81 Fabric+Reanimated4)에서 `@gorhom BottomSheetModal`(포털) 미동작 확인.** plain BottomSheet 를 루트 `ModerationSheetProvider`(app/_layout, Stack 다음 형제)로 호스팅해 네비게이터 위 전체 오버레이 구현. `useModerationSheet().openPostActions({targetType,targetId})` 로 재사용.
+
+**실기기(iOS 시뮬레이터) 확인 완료** — 시트 정상 표시 + 헤더·탭바·FAB 어둡게 오버레이. dev 머지됨(ebc5294).
+주의(다음 세션): **BottomSheetModal 은 이 스택에서 쓰지 말 것.** 전체 오버레이가 필요한 시트는 `ModerationSheetProvider` 패턴(루트 plain BottomSheet)을 따를 것. 아직 origin push 안 됨(dev가 origin/dev보다 앞섬 — 사용자 확인 후 push 예정).
 
 ---
 
