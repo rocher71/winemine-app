@@ -194,25 +194,28 @@ export function CommFeedCard({
             </Text>
           </View>
 
-          <Pressable
-            onPress={handleMore}
-            accessibilityRole="button"
-            accessibilityLabel={t('community.feed.moreLabel')}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-            hitSlop={4}
-          >
-            <View
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+          {/* ... 는 액션이 배선된 경우(onMore 제공)만 노출 — 미배선 시 dead button 방지. */}
+          {onMore && (
+            <Pressable
+              onPress={handleMore}
+              accessibilityRole="button"
+              accessibilityLabel={t('community.feed.moreLabel')}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              hitSlop={4}
             >
-              <MoreHorizontal size={14} strokeWidth={1.75} color={light.text.muted} />
-            </View>
-          </Pressable>
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <MoreHorizontal size={14} strokeWidth={1.75} color={light.text.muted} />
+              </View>
+            </Pressable>
+          )}
         </View>
 
         {/* Title */}

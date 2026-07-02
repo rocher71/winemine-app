@@ -40,7 +40,7 @@
  *
  * BottomNav 자동 표시 (tabs). ScrollView paddingBottom 156 = FAB 56 + BottomNav 56 + gap 44.
  */
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {View, Text, ScrollView, Pressable, StyleSheet, Animated} from 'react-native';
 import {useRef} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -55,6 +55,11 @@ import {BellButton} from '@/components/nav/bell-button';
 import {LevelChip} from '@/components/shared/level-chip';
 import {CommFeedCard} from '@/components/community/comm-feed-card';
 import {PostTypeBadge} from '@/components/community/post-type-badge';
+import {DEMO_MODE} from '@/lib/demo-mode';
+import {getCurrentUserId} from '@/lib/auth';
+import {ContentActionMenu, type MenuAction} from '@/components/moderation/content-action-menu';
+import {ReportSheet} from '@/components/moderation/report-sheet';
+import {Toast} from '@/components/shared/toast';
 import {useCommunityFeed} from '@/hooks/use-community-posts';
 import {
   getCommunityUser,
@@ -123,6 +128,18 @@ export default function CommunityScreen() {
   const [tab, setTab] = useState<TabId>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilterId>('all');
 
+  // moderation (M3) — 피드 카드 ... → 타인 포스트 신고 (상세 화면과 동일 공용 컴포넌트).
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [morePost, setMorePost] = useState<CommPost | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [modToast, setModToast] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (DEMO_MODE) return;
+    void (async () => setCurrentUserId(await getCurrentUserId()))();
+  }, []);
+
   // 발행/실제 글을 mock 위에 prepend (useCommunityFeed). 화면 진입마다 refresh.
   const { posts, refresh: refreshFeed } = useCommunityFeed();
   useFocusEffect(useCallback(() => { refreshFeed(); }, [refreshFeed]));
@@ -166,6 +183,32 @@ export default function CommunityScreen() {
 
   const handlePostPress = (postId: string) => {
     router.push(`/community/${postId}` as never);
+  };
+
+  // moderation: ... 탭 → 타인 포스트 신고 메뉴 (targetType='post'). 본인 포스트는 카드에서 ... 미노출.
+  const handleMorePress = (postId: string) => {
+    const target =
+      followingPosts.find((p) => p.id === postId) ??
+      filteredPosts.find((p) => p.id === postId) ??
+      null;
+    if (!target) return;
+    setMorePost(target);
+    setMenuOpen(true);
+  };
+
+  const isMenuOwner =
+    !!currentUserId && !!morePost && morePost.userId === currentUserId;
+  const menuActions: MenuAction[] = useMemo(
+    () =>
+      !morePost || isMenuOwner
+        ? []
+        : [{kind: 'report', onPress: () => setReportOpen(true)}],
+    [morePost, isMenuOwner],
+  );
+
+  const showModToast = (msg: string) => {
+    setModToast(msg);
+    setTimeout(() => setModToast((prev) => (prev === msg ? null : prev)), 2500);
   };
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -277,6 +320,11 @@ export default function CommunityScreen() {
                     post={p}
                     mine={p.id === 'p1' ? 'glass' : null}
                     onPress={handlePostPress}
+                    onMore={
+                      currentUserId && p.userId === currentUserId
+                        ? undefined
+                        : handleMorePress
+                    }
                   />
                 ))
               ) : (
@@ -364,6 +412,11 @@ export default function CommunityScreen() {
                     post={p}
                     mine={p.id === 'p1' ? 'glass' : null}
                     onPress={handlePostPress}
+                    onMore={
+                      currentUserId && p.userId === currentUserId
+                        ? undefined
+                        : handleMorePress
+                    }
                   />
                 ))
               ) : (
@@ -517,6 +570,28 @@ export default function CommunityScreen() {
           </LinearGradient>
         </Pressable>
       </View>
+
+      {/* moderation (M3) — 피드 카드 ... 신고 흐름 (상세 화면과 동일 공용 컴포넌트) */}
+      <ContentActionMenu
+        open={menuOpen}
+        actions={menuActions}
+        onClose={() => setMenuOpen(false)}
+      />
+      <ReportSheet
+        open={reportOpen}
+        targetType="post"
+        targetId={morePost?.id ?? ''}
+        onClose={() => setReportOpen(false)}
+        onSubmitted={() => showModToast(t('moderation.report.success'))}
+      />
+      {!!modToast && (
+        <View
+          style={{position: 'absolute', bottom: insets.bottom + 24, left: 16, right: 16}}
+          pointerEvents="none"
+        >
+          <Toast message={modToast} tone="success" />
+        </View>
+      )}
     </View>
   );
 }
