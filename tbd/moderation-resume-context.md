@@ -22,7 +22,12 @@
 3. 시트가 헤더/탭바/FAB 위로 안 덮이는 문제 → **이 스택(RN0.81 Fabric+Reanimated4)에서 `@gorhom BottomSheetModal`(포털) 미동작 확인.** plain BottomSheet 를 루트 `ModerationSheetProvider`(app/_layout, Stack 다음 형제)로 호스팅해 네비게이터 위 전체 오버레이 구현. `useModerationSheet().openPostActions({targetType,targetId})` 로 재사용.
 
 **실기기(iOS 시뮬레이터) 확인 완료** — 시트 정상 표시 + 헤더·탭바·FAB 어둡게 오버레이. dev 머지됨(ebc5294).
-주의(다음 세션): **BottomSheetModal 은 이 스택에서 쓰지 말 것.** 전체 오버레이가 필요한 시트는 `ModerationSheetProvider` 패턴(루트 plain BottomSheet)을 따를 것. 아직 origin push 안 됨(dev가 origin/dev보다 앞섬 — 사용자 확인 후 push 예정).
+주의(다음 세션): **BottomSheetModal 은 이 스택에서 쓰지 말 것.** 전체 오버레이가 필요한 시트는 `ModerationSheetProvider` 패턴(루트 plain BottomSheet)을 따를 것.
+
+**[미완 — BE 연동] 신고가 실제로 저장되지 않음 (프런트만 완성):**
+- `use-report` 는 `reports` 테이블에 실제 INSERT 하고 테이블/RLS/트리거는 원격 배포됨(BE DDL 존재).
+- 그러나 **커뮤니티 피드가 mock 데이터**(`community_posts` 원격 0행 → `useCommunityFeed` 가 mock 글 표시). 신고 대상 `target_id` 가 mock post id('p1' 등)라 `reports.target_id`(uuid) INSERT 가 성립하지 않음 → **신고 제출이 실제로 저장 안 됨(에러, UI 무반응)**. 또한 `use-report` 는 `getCurrentUserId()` 없으면(비로그인/DEMO) 'error' 반환.
+- 즉 **신고 기능은 UI·시트만 완성**, 실데이터 end-to-end 미동작. **필요한 BE 작업: 커뮤니티 피드를 실 `community_posts` 로 연동(실 posts 생성/조회)** → 그래야 실 UUID 대상으로 신고가 저장됨. (block/기타 target_type=comment/note/list/profile 도 동일하게 실데이터 연동 필요.)
 
 ---
 
